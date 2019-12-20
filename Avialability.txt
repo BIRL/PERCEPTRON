@@ -1,4 +1,4 @@
-Homepage: URL link for PERCEPTRON homepage:
+Homepage: URL link for PERCEPTRON homepage: 
 https://perceptron.lums.edu.pk 
 
 Project Home: URL link for PERCEPTRON project 
