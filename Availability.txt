@@ -19,5 +19,5 @@ Example Files: A sample raw data file as well as its mzXML, mzML, MGF and Flat T
 https://github.com/BIRL/PERCEPTRON/tree/master/SampleDataandResults/ExampleFile
 
 Video Tutorials: Complete Playlist - The following  instructional videos have been made available in the form of a playlist titled “PERCEPTRON” at the link:
-https://www.youtube.com/watch?v=OkUqfADzBPc&list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA 
+https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA
 
