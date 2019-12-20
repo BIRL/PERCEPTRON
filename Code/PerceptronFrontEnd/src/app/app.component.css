@@ -1,0 +1,178 @@
+.example-icon {
+  padding: 0 14px;
+}
+.icon-spacer {
+  padding-right: 20px;
+}
+.example-spacer {
+  flex: 1 1 auto; 
+}
+.material-icons.navy { color: #0202c5; }
+.material-icons.color_red { color: rgb(104, 73, 112); }
+.material-icons.start { color: rgb(26, 59, 44); }
+.material-icons.orange600 { color: #FFFFFF; }
+.material-icons.md-36 { font-size: 36px; }
+
+.docs-navbar-header[_ngcontent-c1] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+
+.docs-navbar, .docs-navbar-header {
+  background: #3f51b5;
+}
+.example-card {
+  width: 400px;
+}
+
+.loading {
+    width: 20px;
+    height: 30px;
+    border: 5px solid #ccc;
+    /* position: fixed; */
+    /* left: 50%;
+    margin-left: -20px;
+    top: 50%;
+    margin-top: -20px; */
+    border-radius: 50%;
+  }
+
+  example-container {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+  
+  .example-sidenav-content {
+    display: flex;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+ 
+  }
+  
+  .example-sidenav {
+    padding: 20px;
+  }
+
+ss {
+    box-sizing: border-box;
+    display: block;
+    line-height: 47px;
+    transition: all .3s;
+    padding: 0 16px;
+}
+
+
+.navtitle {
+  border: none;
+  font-size: 10px;
+  letter-spacing: 1px;
+  line-height: 24px;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  padding-top: 20px;
+  padding-left: 8px;
+  padding-bottom: 20px;
+  padding-right: 8px;
+  background: #3F51B5;
+  color: hsla(0,0%,100%,.87);
+
+}
+
+
+.docs-component-viewer-sidenav li > a {
+  color: whitesmoke;
+  font-size: 20px;
+}
+
+.docs-component-viewer-sidenav li {
+  color: rgba(0,0,0,.54);
+}
+
+.docs-component-viewer-sidenav ul {
+  list-style-type: none;
+}
+
+.mat-drawer-container {
+  color: rgba(0,0,0,.87);
+}
+
+.mat-drawer {
+  color: rgba(0,0,0,.87);
+}
+.mat-tooltip {
+  /* your own custom styles here */ 
+  /* e.g. */
+  font:40px !important;
+}
+
+
+.md-tooltip {
+  height: 35px !important;
+  background-color: red !important;
+  color: white !important;
+  border-radius: 5px;
+}
+
+cc{
+  padding-bottom: 100vh;
+}
+
+.example-is-mobile .example-sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+.button{
+  height: 9vh;
+}
+
+.myCSSclass
+{
+  display: none;
+}
+
+i.icon-blue {
+  color: #5151fc;
+}
+
+i.icon-help {
+  color: #bafc51;
+}
+
+
+i.icon-green {
+  color: rgb(0, 173, 0);
+}
+
+i.icon-red {
+  color: #ff0000;
+}
+::ng-deep .mat-tooltip {
+  font-size: 15px;
+}
+
+
+i.icon-pink {
+  color: #693f00;
+}
+
+i.icon-purple {
+  color: #800080;
+}
+
+i.icon-purple2 {
+  color: #007a8a;
+}

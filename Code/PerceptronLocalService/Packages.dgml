@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="PerceptronLocalService" Label="PerceptronLocalService" Category="Project" />
+    <Node Id="CUDAfy.NET 1.29.5576.13786" Label="CUDAfy.NET 1.29.5576.13786" Category="Package" />
+    <Node Id="Dapper 1.50.4" Label="Dapper 1.50.4" Category="Package" />
+    <Node Id="EntityFramework 6.2.0" Label="EntityFramework 6.2.0" Category="Package" />
+    <Node Id="MySql.Data 6.9.9" Label="MySql.Data 6.9.9" Category="Package" />
+    <Node Id="MySql.Data.Entity 6.9.9" Label="MySql.Data.Entity 6.9.9" Category="Package" />
+    <Node Id="Newtonsoft.Json 10.0.3" Label="Newtonsoft.Json 10.0.3" Category="Package" />
+    <Node Id="System.Net.Http 4.3.1" Label="System.Net.Http 4.3.1" Category="Package" />
+    <Node Id="System.Web.Http.Common 4.0.20126.16343" Label="System.Web.Http.Common 4.0.20126.16343" Category="Package" />
+    <Node Id="Topshelf 4.0.3" Label="Topshelf 4.0.3" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="MySql.Data.Entity 6.9.9" Target="MySql.Data 6.9.9" Category="Package Dependency" />
+    <Link Source="MySql.Data.Entity 6.9.9" Target="EntityFramework 6.2.0" Category="Package Dependency" />
+    <Link Source="PerceptronLocalService" Target="CUDAfy.NET 1.29.5576.13786" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="Dapper 1.50.4" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="MySql.Data.Entity 6.9.9" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="Newtonsoft.Json 10.0.3" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="System.Net.Http 4.3.1" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="System.Web.Http.Common 4.0.20126.16343" Category="Installed Package" />
+    <Link Source="PerceptronLocalService" Target="Topshelf 4.0.3" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>

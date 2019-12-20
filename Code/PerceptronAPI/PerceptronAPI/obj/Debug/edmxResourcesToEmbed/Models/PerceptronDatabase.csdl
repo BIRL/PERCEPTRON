@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PerceptronDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="ExecutionTime">
+    <Key>
+      <PropertyRef Name="QueryId" />
+      <PropertyRef Name="FileName" />
+    </Key>
+    <Property Name="InsilicoTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PtmTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TunerTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MwFilterTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PstTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TotalTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PtmFixedModification">
+    <Key>
+      <PropertyRef Name="ModId" />
+    </Key>
+    <Property Name="ModId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModificationCode" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PtmVariableModification">
+    <Key>
+      <PropertyRef Name="ModId" />
+    </Key>
+    <Property Name="ModId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModificationCode" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ResultInsilicoMatchLeft">
+    <Key>
+      <PropertyRef Name="RowId" />
+    </Key>
+    <Property Name="ResultId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MatchedPeaks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RowId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="ResultInsilicoMatchRight">
+    <Key>
+      <PropertyRef Name="RowId" />
+    </Key>
+    <Property Name="ResultId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MatchedPeaks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RowId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <EntityType Name="ResultPtmSite">
+    <Key>
+      <PropertyRef Name="ResultId" />
+      <PropertyRef Name="Index" />
+    </Key>
+    <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Index" Type="Int32" Nullable="false" />
+    <Property Name="Score" Type="Double" Nullable="false" />
+    <Property Name="ModWeight" Type="Double" Nullable="false" />
+    <Property Name="ModName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AminoAcid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="SearchFile">
+    <Key>
+      <PropertyRef Name="FileId" />
+    </Key>
+    <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="SearchParameter">
+    <Key>
+      <PropertyRef Name="QueryId" />
+    </Key>
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProtDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InsilicoFragType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FilterDb" Type="Int32" Nullable="false" />
+    <Property Name="PtmTolerance" Type="Double" Nullable="false" />
+    <Property Name="MinimumPstLength" Type="Int32" Nullable="false" />
+    <Property Name="MaximumPstLength" Type="Int32" Nullable="false" />
+    <Property Name="MwTolerance" Type="Double" Nullable="false" />
+    <Property Name="MwTolUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="HopThreshhold" Type="Double" Nullable="false" />
+    <Property Name="HopTolUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GuiMass" Type="Double" Nullable="false" />
+    <Property Name="Autotune" Type="Int32" Nullable="false" />
+    <Property Name="HandleIons" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MwSweight" Type="Double" Nullable="false" />
+    <Property Name="PstSweight" Type="Double" Nullable="false" />
+    <Property Name="InsilicoSweight" Type="Double" Nullable="false" />
+    <Property Name="NumberOfOutputs" Type="Int32" Nullable="false" />
+    <Property Name="DenovoAllow" Type="Int32" Nullable="false" />
+    <Property Name="PtmAllow" Type="Int32" Nullable="false" />
+    <Property Name="NeutralLoss" Type="Double" />
+    <Property Name="PSTTolerance" Type="Double" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SearchQuery">
+    <Key>
+      <PropertyRef Name="QueryId" />
+    </Key>
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Progress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreationTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="SearchResult">
+    <Key>
+      <PropertyRef Name="QueryId" />
+      <PropertyRef Name="ResultId" />
+    </Key>
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Header" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Sequence" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PstScore" Type="Double" Nullable="false" />
+    <Property Name="InsilicoScore" Type="Double" Nullable="false" />
+    <Property Name="PtmScore" Type="Double" Nullable="false" />
+    <Property Name="Score" Type="Double" Nullable="false" />
+    <Property Name="MwScore" Type="Double" Nullable="false" />
+    <Property Name="Mw" Type="Double" Nullable="false" />
+    <Property Name="FileId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
+    <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModification" />
+    <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModification" />
+    <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />
+    <EntitySet Name="ResultInsilicoMatchRights" EntityType="Self.ResultInsilicoMatchRight" />
+    <EntitySet Name="ResultPtmSites" EntityType="Self.ResultPtmSite" />
+    <EntitySet Name="SearchFiles" EntityType="Self.SearchFile" />
+    <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
+    <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
+    <EntitySet Name="SearchResults" EntityType="Self.SearchResult" />
+  </EntityContainer>
+</Schema>

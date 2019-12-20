@@ -1,0 +1,14 @@
+Toolbar => Fix
+
+Side-Navbar => Fix
+
+Routing => How?
+
+Firebase Documentation Link: https://firebase.google.com/docs/auth/web/anonymous-auth 
+
+Find an Alternative to Grid and Expansion panel combination => https://material.angular.io/components/grid-list/overview
+Why we used it ?? (Protein Search)
+
+Front end review (Note Points)
+
+Power BI

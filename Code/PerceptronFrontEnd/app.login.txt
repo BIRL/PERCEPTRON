@@ -1,0 +1,329 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatToolbarModule, MatSidenavModule, MatCardModule, MatButtonModule, MatIconModule } from '@angular/material';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { Router } from '@angular/router';
+import * as firebase from 'firebase/app';
+import { Alert } from 'selenium-webdriver';
+import { find } from 'rxjs/operators';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+
+export class AppComponent {
+  // onMainEvent: EventEmitter = new EventEmitter();
+  title = 'app';
+  show: any;
+  loginButtonVisibility: any;
+  @ViewChild('my') my1;
+  sidebutton: any = '';
+  // menubutton: boolean;
+  
+  
+  disabled: boolean;
+  disabled1: boolean;
+  netImage:any = "../assets/images/fhh1.png";
+  @ViewChild("menubutton") menubutton;
+  buttonDisabled:any;
+  constructor(public af: AngularFireAuth,private router: Router) {
+    this.check();  
+    
+   }
+  isOn: boolean;
+
+  tables = [
+    { id: '1', Dataset: 'hela', Description: 'Hi', Download: 'Click' },
+    { id: '2', Dataset: 'hela2' , Description: 'Hi', Download: 'Click' },
+    { id: '3', Dataset: 'hela3', Description: 'Hi', Download: 'Click' },
+    { id: '4', Dataset: 'hela4' , Description: 'Hi', Download: 'Click'},
+    { id: '5', Dataset: 'hela5', Description: 'Hi', Download: 'Click' },
+  
+  ];
+
+    about() {
+     this.router.navigate(['/about']);
+    };
+
+    youtube() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/youtube']);
+    } else {
+      alert("Kindly login first!")
+      this.router.navigate(['/login']);
+      };
+     };
+
+     getting_started() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/getting']);
+    } else {
+      alert("Kindly login first!")
+      this.router.navigate(['/login']);
+      };
+     };
+ 
+
+    history() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/history']);
+    } else {
+        alert("Kindly login first!")
+        this.router.navigate(['/login']);
+      };
+     };
+
+
+
+check(){
+  var user = firebase.auth().currentUser;
+
+      if (user) {
+        this.disabled=true;
+        this.disabled1=false;
+        
+    } else {
+      this.disabled=false;
+      this.disabled1=true;
+    
+      };
+     };
+
+     team() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/team']);
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+      };
+     };
+
+    help() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/help']);
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+     
+    };
+  }
+   
+
+
+    demo() {
+      this.router.navigate(['/demo']);
+    };
+    hudiara(){
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/hudiara']);
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+    };
+      
+    }
+    maps() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/maps']);
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+    };
+  };
+
+    search() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/search']);
+        // this.disabled=false;
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+    // this.disabled=false;
+    };
+      
+    };
+    patterngenerator() {
+
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/patterngenerator']);
+        // this.disabled=true;
+    } else {
+    alert("Kindly login first!")
+    this.router.navigate(['/login']);
+    };  
+    }
+
+
+
+    
+    login() {
+      
+      var user = firebase.auth().currentUser;
+      debugger
+      if (user) {
+        alert("Already logged in!");
+        this.disabled=true;
+        this.disabled1=false;
+        
+
+      } 
+    else{
+      this.disabled=true;
+      this.disabled1=false;
+      
+      // alert(this.show);
+      // this.show="'true'";
+      // alert(this.show);
+      this.router.navigate(['/login']);
+      // this.loginButtonVisibility = true;
+      // alert(this.loginButtonVisibility);
+     
+      // alert(this.loginButtonVisibility);
+    };
+  }
+
+    perceptron(){
+      var user = firebase.auth().currentUser;
+      if (user) {
+      this.router.navigate(['/home']);
+    } else {
+      this.router.navigate(['/home']);
+    }
+    };
+
+    ngOnInit() {
+    
+     localStorage.getItem('login');
+      // var user = firebase.auth().currentUser;
+      // alert(user);
+      //       if (user.email != null) {
+      //   this.menubutton = false;
+      // }
+      // else {
+      //   alert(user);
+      //   this.menubutton = true;
+      // }
+      // let x = this.Bobblee.nativeElement;
+      // alert(x);
+      // x.className  = 'myCSSclass';
+      var p;
+      firebase.auth().onAuthStateChanged(function (user) {
+       
+        if (user) {
+          // alert(this.disabled);
+          // this.disabled=false;
+          // for(var i=0;i<1000;++i);
+          // alert(this.disabled);
+          // this.okk();
+          this.disabled=true;
+          this.disabled=true;
+          // alert(user);
+                    this.disabled=true;
+          this.disabled=true;      this.disabled=true;      this.disabled=true;      this.disabled=true;
+          this.disabled1=false;
+                    //this.loginButtonVisibility =true;
+        //  this.okk();
+        } else {
+          this.disabled=false;
+          this.disabled1=true;
+          // alert(this.disabled);
+          // this.disabled=false;
+          // for(var i=0;i<10000;++i);
+          // alert(this.disabled);
+          
+          // this.okk();
+          //this.loginButtonVisibility =false;
+      
+        }
+      });
+      // // var user = firebase.auth().currentUser;
+    
+      //  if (user) {
+      //   var menu = (<HTMLInputElement>document.getElementById("menubutton")).value;
+      //   alert(menu);
+      
+      // } else {
+      //   alert("Not logged in")
+  
+      // }
+      
+    }
+    okk(){
+      alert("in okk");
+      this.disabled=true;
+    }
+// ok(){
+    //   firebase.auth().onAuthStateChanged(function (user) {
+    //   if (user) {
+        
+    //    return true;
+    //               //this.loginButtonVisibility =true;
+       
+    //   } else {
+        
+        
+    //     return false;
+    //     //this.loginButtonVisibility =false;
+    
+    //   }
+    // });
+      
+    // }
+
+
+    data() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/repository']);
+    } else {
+      alert("Kindly login first!");
+      this.router.navigate(['/login']);
+    }
+      
+    };
+  
+    bug() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.router.navigate(['/bug-report']);
+    } else {
+      alert("Kindly login first!");
+      this.router.navigate(['/login']);
+    }
+      
+   
+    };
+    account() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+      if (confirm("Do you want to logout?"))
+      {
+        this.disabled=false;
+        this.disabled1=true;
+        this.af.auth.signOut();
+        console.log('logged out');
+        this.router.navigateByUrl('/home');
+      }
+      }
+      else {
+        alert("Kindly login first!");
+        this.router.navigate(['/login']);
+            }
+      };
+      
+
+  }
+
+
+

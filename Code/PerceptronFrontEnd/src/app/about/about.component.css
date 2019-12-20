@@ -1,0 +1,10 @@
+img.float_text_left {
+    float: right;
+    clear: none;
+    margin: 15px;
+  }
+  span.float_text_right p {
+    width: 65%;
+    height: auto;
+    float: right;
+  }

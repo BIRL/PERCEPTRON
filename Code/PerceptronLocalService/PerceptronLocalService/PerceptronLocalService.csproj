@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{67E88622-CEA3-49C3-812B-6C88946B88B5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PerceptronLocalService</RootNamespace>
+    <AssemblyName>PerceptronLocalService</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>D:\Perceptron\New folder\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <UpdateUrl>http://localhost/PerceptronLocalService/</UpdateUrl>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>3290D68C4879ECA0A5CA2927671F81BD018ECB0A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>PerceptronLocalService_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cudafy.NET, Version=1.29.5576.13786, Culture=neutral, PublicKeyToken=63a4c9931616906b, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUDAfy.NET.1.29.5576.13786\lib\net40\Cudafy.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.14.0.0.1\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.10.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.10.9\lib\net452\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.10.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Topshelf, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Topshelf.4.0.3\lib\net452\Topshelf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTO\ExecutionTimeDto.cs" />
+    <Compile Include="DTO\InsilicoObjectDto.cs" />
+    <Compile Include="DTO\MolecularWeightServiceParametersDto.cs" />
+    <Compile Include="DTO\MsPeaksDto.cs" />
+    <Compile Include="DTO\PeakData2DListDto.cs" />
+    <Compile Include="DTO\PostTranslationModificationsSiteDto.cs" />
+    <Compile Include="DTO\ProteinDto.cs" />
+    <Compile Include="DTO\PstTagsDto.cs" />
+    <Compile Include="DTO\SearchParametersDto.cs" />
+    <Compile Include="DTO\SearchQueryDto.cs" />
+    <Compile Include="DTO\SearchResultsDto.cs" />
+    <Compile Include="DTO\SerializedProteinDataDto.cs" />
+    <Compile Include="Engine\PSTCpuGpuCombineMethod.cs" />
+    <Compile Include="Engine\PSTFilterGPU.cs" />
+    <Compile Include="Engine\PSTGeneratorGPU.cs" />
+    <Compile Include="Engine\PtmCpu.cs" />
+    <Compile Include="Models\ExecutionTime.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PerceptronDatabase.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PerceptronDatabase.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PerceptronDatabase.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PerceptronDatabase.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PtmFixedModification.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PtmVariableModification.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultInsilicoMatchLeft.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultInsilicoMatchRight.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultPtmSite.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SearchFile.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SearchParameter.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SearchQuery.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SearchResult.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\Glycosylation.cs" />
+    <Compile Include="Utility\Hydroxylation.cs" />
+    <Compile Include="Utility\Methylation.cs" />
+    <Compile Include="Utility\PeakData2DList.cs" />
+    <Compile Include="Utility\Phosphorylation.cs" />
+    <Compile Include="Utility\PtmScoreNormalizer.cs" />
+    <Compile Include="Engine\BlindPtmCpu.cs" />
+    <Compile Include="Engine\BlindPtmGpu.cs" />
+    <Compile Include="Engine\InsilicoFilterCpu.cs" />
+    <Compile Include="Engine\InsilicoFilterGpu.cs" />
+    <Compile Include="Engine\InsilicoFragmentationPtmCpu.cs" />
+    <Compile Include="Engine\PeakListFileReader.cs" />
+    <Compile Include="Engine\PostTranslationalModificationGpu.cs" />
+    <Compile Include="Engine\ProteinRepositoryNamedPipes.cs" />
+    <Compile Include="Engine\ProteinRepositoryPersistentDictionary.cs" />
+    <Compile Include="Engine\ProteinRepositorySql.cs" />
+    <Compile Include="Engine\PSTGeneratorCPU.cs" />
+    <Compile Include="Engine\WholeProteinMassTunerCPU.cs" />
+    <Compile Include="Interfaces\IDataAccessLayer.cs" />
+    <Compile Include="Interfaces\IInsilicoFilter.cs" />
+    <Compile Include="Interfaces\IInsilicoFragmentsAdjustment.cs" />
+    <Compile Include="Interfaces\IMolecularWeightModule.cs" />
+    <Compile Include="Interfaces\IPeakListFileReader.cs" />
+    <Compile Include="Interfaces\IPostTranslationalModificationModule.cs" />
+    <Compile Include="Interfaces\IPeptideSequenceTagScoring.cs" />
+    <Compile Include="Interfaces\IPeptideSequenceTagGenerator.cs" />
+    <Compile Include="Interfaces\IProteinRepository.cs" />
+    <Compile Include="Interfaces\IWholeProteinMassTuner.cs" />
+    <Compile Include="Perceptron.cs" />
+    <Compile Include="PerceptronService.cs" />
+    <Compile Include="Engine\PSTFilterCPU.cs" />
+    <Compile Include="Engine\InsilicoFragmentsAdjustmentCpu.cs" />
+    <Compile Include="Engine\MwModule.cs" />
+    <Compile Include="Engine\WholeProteinMassTunerGPU.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Engine\PostTranslationalModificationCpu.cs" />
+    <Compile Include="Repository\MySQLDatabase.cs" />
+    <Compile Include="Repository\SQLDatabase.cs" />
+    <Compile Include="Utility\Acetylation.cs" />
+    <Compile Include="Utility\Amidation.cs" />
+    <Compile Include="Utility\AminoAcids.cs" />
+    <Compile Include="Utility\BlindPtmUtility.cs" />
+    <Compile Include="Utility\CleavageTypes.cs" />
+    <Compile Include="Utility\ConsoleWriter.cs" />
+    <Compile Include="Utility\Constants.cs" />
+    <Compile Include="Utility\CPersistentDictionary.cs" />
+    <Compile Include="Utility\MassAdjustment.cs" />
+    <Compile Include="Utility\SpecialIons.cs" />
+    <Compile Include="Utility\StringSearch.cs" />
+    <Compile Include="Utility\StringSearchResult.cs" />
+    <Compile Include="Utility\Ubiquitination.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <EntityDeploy Include="Models\PerceptronDatabase.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PerceptronDatabase.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ClassDiagram4.cd" />
+    <None Include="Models\PerceptronDatabase.edmx.diagram">
+      <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="PerceptronLocalService_TemporaryKey.pfx" />
+    <None Include="Tools\place_these_executables_in_same_folder_as_Cudafy.NET.dll_" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\PerceptronDatabase.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+      <LastGenOutput>PerceptronDatabase.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\PerceptronDatabase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+      <LastGenOutput>PerceptronDatabase.cs</LastGenOutput>
+    </Content>
+    <Content Include="Readme\CUDA.NET.Readme.txt" />
+    <Content Include="Readme\CUDAfy-License.txt" />
+    <Content Include="Readme\example_source_code.cs.txt" />
+    <Content Include="Readme\ILSpy-license.txt" />
+    <Content Include="Readme\README.txt" />
+    <Content Include="Tools\cudafycl.exe" />
+    <Content Include="Tools\CudafyViewer.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

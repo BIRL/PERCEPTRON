@@ -1,0 +1,49 @@
+<div style="width:90%; min-width: 600px; margin:0 auto;">
+  <mat-card>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">User Search History</h4>
+  </mat-card>
+  <div style="height:10px;font-size:1px;">&nbsp;</div> 
+ <div class="example-container mat-elevation-z8">
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Serial Column -->
+      <ng-container matColumnDef="serial">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.serial}} </mat-cell>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Search Title </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.title}} </mat-cell>
+      </ng-container>
+
+      <!-- Time Column -->
+      <ng-container matColumnDef="time">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Creation Time</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.time}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="progress">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Status</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.progress}} </mat-cell>
+        </ng-container>
+  
+
+      <!-- Qid Column -->
+      <ng-container matColumnDef="qid">
+        <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;">
+          Querry ID </mat-header-cell>
+        <mat-cell [style.display]="'none'" *matCellDef="let row"> {{row.qid}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getRecord(row)">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+  <br/>
+  <label style="color:red;">* Click on the table row for corresponding detailed results. </label>
+</div>

@@ -1,0 +1,54 @@
+<div style="width:20%; min-width:350px; margin:0 auto;">
+<mat-card style="width:100%; margin:0 auto;">
+
+  <mat-card-header  style="padding:0px; width:100%;">
+    <div style="padding:0px; width:100%;">
+        <a routerLink="/login" style="color: unset;" id="goback"><mat-icon style="font-size: 28px;font-weight: bold;" class="orange600">keyboard_backspace</mat-icon></a>
+      <br>
+    <h3 style="padding:0px; width:100%;">Join Now</h3>
+  </div>
+  </mat-card-header>
+  <mat-card-content style="width:100%; min-width: 150px; margin:0 auto;">
+    <form #formData='ngForm' (ngSubmit)="onSubmit(formData)" class="example-container">
+      <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+      <mat-grid-list cols="1" rows="4" style="padding:0px;" rowHeight="80px">
+        
+        <mat-grid-tile colspan="1" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%">
+            <input matInput placeholder="Enter your user name" maxlength='7' (ngModel)="name" name="name" type="name"  required>
+          </mat-form-field>
+        </mat-grid-tile>
+        
+          <mat-grid-tile colspan="1" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%">
+            <input matInput placeholder="Enter your email" (ngModel)="email" name="email" type="email"  required>
+            <mat-error *ngIf="email.invalid">
+              {{getErrorMessage()}}
+            </mat-error>
+          </mat-form-field>
+
+        </mat-grid-tile>
+        
+        <mat-grid-tile colspan="1" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%;">
+            <input matInput placeholder="Enter your password" (ngModel)="password" name="password" id = "password" [type]="hide ? 'password' : 'text'" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="1" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%;">
+            <input matInput placeholder="Confirm Password" (click) = "passcheck()" (ngModel)="password2" id = "password2" name="password2" [type]="hide ? 'password' : 'text'" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        
+        <mat-grid-tile colspan="1" rowspan="1" style="padding:0px;">
+          <button mat-raised-button type="submit" color="primary" [disabled]="!formData.valid">Create my account</button>
+        </mat-grid-tile>
+        
+      </mat-grid-list>
+    </form>
+  </mat-card-content>
+</mat-card>
+</div>

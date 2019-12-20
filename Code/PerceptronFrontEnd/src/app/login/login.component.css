@@ -1,0 +1,63 @@
+
+.example-card {
+    width: 400px;
+  }
+  
+  .example-header-image {
+    background-image: url('http://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+#lock {
+    width:30%;
+    margin: 1em auto 1em auto;
+    display:block;
+}
+
+#fb {
+    background:#3B5998 url('../../assets/images/facebook.svg') no-repeat 15px 5px;
+    background-size: 35px;
+    color:#fff;
+    padding: 15px;
+}
+
+#google {
+    border: 1px solid #95989A;
+    background: #fff  url('../../assets/images/google.svg') no-repeat 25px;
+    background-size: 25px;
+    padding: 15px;
+}
+
+#email {
+    border: 1px solid #95989A;
+    background: #ECECEC  url('../../assets/images/email.svg') no-repeat 25px;
+    background-size: 25px;
+    padding: 15px;
+}
+
+#guest{
+    border: 1px solid #95989A;
+    background: #ECECEC  url('../../assets/images/person.svg') no-repeat 25px;
+    background-size: 25px;
+    padding: 15px;
+}
+
+@media (max-width: 400px) {
+    #page {
+        padding:0.5em;
+    }
+    #toolbar {
+        width:70%;
+        margin-left: -45%;
+    }
+    #fb {
+        background:#3B5998;
+    }
+
+    #google {
+        background: #fff;
+    }
+
+    #email {
+        background: #ECECEC;
+    }
+}
