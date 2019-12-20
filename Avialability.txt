@@ -1,0 +1,23 @@
+Homepage: URL link for PERCEPTRON homepage:
+https://perceptron.lums.edu.pk 
+
+Project Home: URL link for PERCEPTRON project 
+home:
+https://github.com/BIRL/PERCEPTRON
+
+User’s Manual: PERCEPTRON user manual can be 
+found here:
+https://github.com/BIRL/PERCEPTRON/tree/master/Documentation  
+
+Issues: Issues and related discussions can be made at the issues page for PERCEPTRON:
+https://github.com/BIRL/PERCEPTRON/issues 
+
+Sample Dataset: Sample Data files used for performing PERCEPTRON case study 1 and 2 are available at the following link: 
+https://github.com/BIRL/PERCEPTRON/tree/master/SampleDataandResults 
+
+Example Files: A sample raw data file as well as its mzXML, mzML, MGF and Flat Text versions for searching with PERCEPTRON is available at the following link:
+https://github.com/BIRL/PERCEPTRON/tree/master/SampleData/ExampleFile 
+
+Video Tutorials: Complete Playlist - The following  instructional videos have been made available in the form of a playlist titled “PERCEPTRON” at the link:
+https://www.youtube.com/watch?v=OkUqfADzBPc&list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA 
+
