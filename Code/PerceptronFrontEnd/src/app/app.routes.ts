@@ -40,7 +40,8 @@ export const router: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'youtube', component: YoutubeComponent, canActivate: [AuthGuard]  },
-    { path: 'getting', component: GettingStartedComponent, canActivate: [AuthGuard]  },
+    { path: 'getting', component: GettingStartedComponent}, // There will be no need to Login
+    // { path: 'getting', component: GettingStartedComponent, canActivate: [AuthGuard]  },
     { path: 'login-email', component: EmailComponent },
     { path: 'reset', component: ResetPasswordComponent},
     { path: 'search', component: ProteinSearchComponent, canActivate: [AuthGuard] },

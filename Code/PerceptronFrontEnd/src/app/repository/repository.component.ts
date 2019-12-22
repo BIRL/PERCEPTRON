@@ -19,17 +19,17 @@ import { Router } from '@angular/router';
 export class RepositoryComponent implements OnInit {
   onReset:any;
   constructor( private _httpService: ConfigService) { }
-  tables1 = [
-    { dataset: '2013_11_20_pellet_NC_07_04_MSMS_msdeconv_129.txt', id: 1, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_20_pellet_NC_07_04_MSMS_msdeconv_129.txt' },
-    { dataset: '2013_11_20_pellet_NC_08_88_MSMS_msdeconv_127.txt', id: 2, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_20_pellet_NC_08_88_MSMS_msdeconv_127.txt' },
-    { dataset: '2013_11_20_pellet_PD_10_83_MSMS_131121073654_msdeconv_133.txt', id: 3, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_20_pellet_PD_10_83_MSMS_131121073654_msdeconv_133.txt' },
-    { dataset: '2013_11_20_pellet_PD_10_83_MSMS_131121073654_msdeconv_143.txt', id: 4, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_20_pellet_PD_10_83_MSMS_131121073654_msdeconv_143.txt'},
-    { dataset: '2013_11_21_pellet_NC_05_10_MSMS_msdeconv_140.txt', id: 5, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_NC_05_10_MSMS_msdeconv_140.txt' },
-    { dataset: '2013_11_21_pellet_NC_05_10_MSMS_msdeconv_147.txt', id: 6, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_NC_05_10_MSMS_msdeconv_147.txt' },
-    { dataset: '2013_11_21_pellet_NC_09_57_MSMS_msdeconv_128.txt', id: 7, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_NC_09_57_MSMS_msdeconv_128.txt' },
-    { dataset: '2013_11_21_pellet_NC_09_57_MSMS_msdeconv_166.txt', id: 8, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_NC_09_57_MSMS_msdeconv_166.txt' },
-    { dataset: '2013_11_21_pellet_PD_00_27_MSMS_msdeconv_129.txt', id: 9, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_PD_00_27_MSMS_msdeconv_129.txt' },
-    { dataset: '2013_11_21_pellet_PDAD_02_10_MSMS_msdeconv_141.txt', id: 10, download: 'http://perceptron.lums.edu.pk/assets/images/data/2013_11_21_pellet_PDAD_02_10_MSMS_msdeconv_141.txt' },
+  tables1 = [//During build "DataFiles" will in "\PerceptronFrontEnd\src\assets\DataFiles" but in wwwroot all files will be in "\wwwroot\assets\DataFiles" so, give this given below path for downloading files e.g.  http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk13_sw1_66sc_mono.txt
+    { dataset: 'HELA_pk13_sw1_66sc_mono.txt', id: 1, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk13_sw1_66sc_mono.txt'},  //"src/assets" used 
+    { dataset: 'HELA_pk17_sw1_140sc_mono.txt', id: 2, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk17_sw1_140sc_mono.txt' },
+    { dataset: 'HELA_pk18_sw1_160sc_mono.txt', id: 3, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk18_sw1_160sc_mono.txt' },
+    { dataset: 'HELA_pk18_sw2_160sc_mono.txt', id: 4, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk18_sw2_160sc_mono.txt'},
+    { dataset: 'HELA_pk19_sw1_210sc_mono.txt', id: 5, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk19_sw1_210sc_mono.txt' },
+    { dataset: 'HELA_pk19_sw2_255sc_mono.txt', id: 6, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk19_sw2_255sc_mono.txt' },
+    { dataset: 'HELA_pk19_sw3.1_147sc_mono.txt', id: 7, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk19_sw3.1_147sc_mono.txt' },
+    { dataset: 'HELA_pk20_sw1_205sc_mono.txt', id: 8, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk20_sw1_205sc_mono.txt' },
+    { dataset: 'HELA_pk20_sw2_202sc_mono.txt', id: 9, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk20_sw2_202sc_mono.txt' },
+    { dataset: 'HELA_pk20_sw3_215sc_mono.txt', id: 10, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk20_sw3_215sc_mono.txt' },
   
   ];
 
@@ -73,9 +73,9 @@ export class RepositoryComponent implements OnInit {
   
   ];
   tables5 = [
-    { dataset: 'BW_20_1_cidetd_msdecv28715.txt', description: "Text Text Text Text Text Text Text Text Text Text \n Text Text Text Text Text TextText Text Text Text", id: '1', download: 'http://perceptron.lums.edu.pk/assets/images/data/BW_20_1_111106004325_cidetd_msdeconv2815.txt' },
-    { dataset: 'BW_20_2_cidetd_msdecv28197.txt', description: "Text Text Text Text Text Text Text Text Text Text \n Text Text Text Text Text TextText Text Text Text", id: '2',  download: 'http://perceptron.lums.edu.pk/assets/images/data/BW_20_1_111106004325_cidetd_msdeconv2817.txt' },
-    { dataset: 'BW_20_5_cidetd_msdecv28139.txt', description: "Text Text Text Text Text Text Text Text Text Text \n Text Text Text Text Text TextText Text Text Text", id: '3',  download: 'http://perceptron.lums.edu.pk/assets/images/data/BW_20_1_111106004325_cidetd_msdeconv2819.txt' }, 
+    //During build "DataFiles" will in "\PerceptronFrontEnd\src\assets\DataFiles" but in wwwroot all files will be in "\wwwroot\assets\DataFiles" so, give this given below path for downloading files e.g.  http://perceptron.lums.edu.pk/assets/DataFiles/HelaDataset/HELA_pk13_sw1_66sc_mono.txt
+    { dataset: 'EcoliDataset_CID.zip', id: 1, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/EcoliDataset/EcoliDataset_CID.zip'},  //"src/assets" used 
+    { dataset: 'EcoliDataset_ETD.zip', id: 2, download: 'http://perceptron.lums.edu.pk/assets/DataFiles/EcoliDataset/EcoliDataset_ETD.zip' },
   ];
   ngOnInit() {
   }

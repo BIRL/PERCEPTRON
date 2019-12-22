@@ -89,7 +89,7 @@ import { UpdateUsernameComponent } from './update-username/update-username.compo
     ContactComponent,
     SettingsComponent,
     UpdatePasswordComponent,
-    UpdateUsernameComponent
+    UpdateUsernameComponent,
   ],
   imports: [
     MatIconModule,

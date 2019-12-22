@@ -66,14 +66,18 @@ export class AppComponent {
      };
 
      getting_started() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/getting']);
-    } else {
-      alert("Kindly login first!")
-      this.router.navigate(['/login']);
-      };
+      this.router.navigate(['/getting']);    // /about
      };
+     
+    //  {
+    //   var user = firebase.auth().currentUser;
+    //   if (user) {
+    //     this.router.navigate(['/getting']);
+    // } else {
+    //   alert("Kindly login first!")
+    //   this.router.navigate(['/login']);
+    //   };
+    //  };
  
 
     history() {
