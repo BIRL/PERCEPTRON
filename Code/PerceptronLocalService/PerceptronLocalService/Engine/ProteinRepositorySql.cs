@@ -33,7 +33,7 @@ namespace PerceptronLocalService.Engine
                 var insilico = new InsilicoObjectDto()
                 {
                     InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
-                    InsilicoMassRight = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList()
+                    InsilicoMassRight = proteinInfo.InsilicoR.Split(',').Select(double.Parse).ToList() // InsilicoR
                 };
 
                 var protein = new ProteinDto()
