@@ -782,6 +782,11 @@ namespace PerceptronAPI.Repository
                             qp.PtmAllow = Convert.ToInt32(reader.GetValue(24));
                             qp.NeutralLoss = Convert.ToDouble(reader.GetValue(25));   //NeutralLoss Added!!!
                             qp.PSTTolerance = Convert.ToDouble(reader.GetValue(26));   //PSTTolerance Added!!!
+
+
+
+                            qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(27));
+                            qp.PeptideToleranceUnit = reader.GetValue(28).ToString();
                         }
 
                         reader.Close();

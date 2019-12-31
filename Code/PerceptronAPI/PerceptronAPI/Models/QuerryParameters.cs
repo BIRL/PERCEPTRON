@@ -32,5 +32,8 @@ namespace PerceptronAPI.Models
         public int DenovoAllow;
         public int PtmAllow;
         public double PSTTolerance; //PSTTolerance Added!!!
+
+        public double PeptideTolerance;
+        public string PeptideToleranceUnit;
     }
 }
