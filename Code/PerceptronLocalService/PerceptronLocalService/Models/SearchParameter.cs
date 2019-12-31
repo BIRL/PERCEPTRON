@@ -38,5 +38,7 @@ namespace PerceptronLocalService.Models
         public int PtmAllow { get; set; }
         public Nullable<double> NeutralLoss { get; set; }
         public double PSTTolerance { get; set; }
+        public double PeptideTolerance { get; set; }
+        public string PeptideToleranceUnit { get; set; }
     }
 }

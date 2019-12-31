@@ -36,6 +36,9 @@ namespace PerceptronLocalService.Engine
                     InsilicoMassRight = proteinInfo.InsilicoR.Split(',').Select(double.Parse).ToList() // InsilicoR
                 };
 
+                insilico.InsilicoMassLeft.RemoveAt(insilico.InsilicoMassLeft.Count - 1); // JUST IN CASE::: as this will be the MW of protein - water
+                insilico.InsilicoMassRight.RemoveAt(insilico.InsilicoMassRight.Count - 1);
+
                 var protein = new ProteinDto()
                 {
                     Header = proteinInfo.ID,

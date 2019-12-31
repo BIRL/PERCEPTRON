@@ -157,8 +157,8 @@ namespace PerceptronLocalService
                         massSpectrometryData.WholeProteinMolecularWeight = old;
                     //Logging.DumpMwTunerResult(massSpectrometryData);
 
-
-                    //Step 2 - 1st Candidate Protein List  --- (In SPECTRUM: Score_Mol_Weight)
+                    int DELME;
+                    //Step 2 - 1st Candidate Protein List  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                     var candidateProteins = GetCandidateProtein(parameters, massSpectrometryData);
                     double mass, error, mw_score;
                     for (var i = 0; i < candidateProteins.Count; ++i)
@@ -169,7 +169,7 @@ namespace PerceptronLocalService
                             mw_score = 1;
                         else
                             mw_score = 1 / (Math.Pow(2, error));
-                        candidateProteins[i].MwScore = mw_score;
+                        candidateProteins[i].MwScore = mw_score; //FARHAN!!! HERE VALUES MAY VARY BUT ITS ROUNDING OFF AT 10th PLACE...
                     }
                     //Logging.DumpCandidateProteins(candidateProteins);
 
@@ -187,20 +187,23 @@ namespace PerceptronLocalService
 
 
 
-                    //Step X - ??? Algorithm - Post Translational Modifications (PTMs)    {{*****FARHAN!!! FOR THE TIME BEING ITS PTM IS AFTER INSILICO COMPARISON*****}}
-                    //string candidateProteins = "xyz";
-                    candidateProteins = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, massSpectrometryData, executionTimes);
-                    for (var i = 0; i < candidateProteins.Count; ++i)
-                    {
-                        if (candidateProteins[i].PstScore > score)
-                        {
-                            score = candidateProteins[i].PstScore;
-                            lol = candidateProteins[i].Header;
-                            t = i;
-                        }
-                    }
+                    //************************************************************************************************//
+                    //******************ITS ORIGINAL******************//                    //************************************************//
+                    //************************************************************************************************//
 
-
+                    ////Step X - ??? Algorithm - Post Translational Modifications (PTMs)    {{*****FARHAN!!! FOR THE TIME BEING ITS PTM IS AFTER INSILICO COMPARISON*****}}
+                    ////string candidateProteins = "xyz";
+                    //candidateProteins = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, massSpectrometryData, executionTimes);
+                    //for (var i = 0; i < candidateProteins.Count; ++i)
+                    //{
+                    //    if (candidateProteins[i].PstScore > score)
+                    //    {
+                    //        score = candidateProteins[i].PstScore;
+                    //        lol = candidateProteins[i].Header;
+                    //        t = i;
+                    //    }
+                    //}
+                    //************************************************************************************************//
 
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
@@ -218,15 +221,8 @@ namespace PerceptronLocalService
                         }
                     }
 
-
-
-
-
-
                     candidateProteins = ExecuteProteoformScoringModule(parameters, candidateProteins);
                     //Logging.DumpTotalScores(candidateProteins);
-
-
 
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
@@ -249,14 +245,50 @@ namespace PerceptronLocalService
 
         }
 
-        private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes,
-            int fileNumber)
+        //Mass Tunner
+        private void ExecuteMassTunerModule(SearchParametersDto parameters, MsPeaksDto peakData, ExecutionTimeDto executionTimes)
         {
-            if (candidateProteins.Count > Constants.NumberOfResultsToStore)
-                candidateProteins = candidateProteins.Take(Constants.NumberOfResultsToStore).ToList<ProteinDto>();
+            Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
-            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], fileNumber);
+            if (parameters.Autotune == 1)
+            {
+                //double a = parameters.NeutralLoss;
+                _wholeProteinMassTuner.TuneWholeProteinMass(peakData, parameters.MwTolerance);
+            }
+            moduleTimer.Stop();
+            executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
+        }
+
+
+        //PST: Peptide Sequence Tags
+        private void ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, List<ProteinDto> candidateProteins,
+            ExecutionTimeDto executionTimes)
+        {
+            Stopwatch moduleTimer = Stopwatch.StartNew();
+
+            var pstTags = _pstGenerator.GeneratePeptideSequenceTags(parameters, massSpectrometryData);
+
+            //Logging.DumpPstTags(pstTags);
+
+            if (candidateProteins.Count > 0)
+            {
+                _pstFilter.ScoreProteinsByPst(pstTags, candidateProteins);
+            }
+
+            //Logging.DumpPstScores(candidateProteins);
+            pstTags.Clear();
+            moduleTimer.Stop();
+            executionTimes.PstTime = moduleTimer.Elapsed.ToString();
+        }
+
+        private List<ProteinDto> GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData)
+        {
+            Stopwatch moduleTimer = Stopwatch.StartNew();
+
+            var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters);
+
+            moduleTimer.Stop();
+            return listOfProteins;
         }
 
         private static List<ProteinDto> ExecuteProteoformScoringModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
@@ -289,20 +321,13 @@ namespace PerceptronLocalService
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            /////Starting From Here !!!!
 
-            _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+            if (parameters.PtmAllow == 0)
+                _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
 
-
-
-            ////
-            //if (parameters.PtmAllow == 0) // (parameters.PtmAllow == 0)
-            //    _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType,
-            //        parameters.HandleIons);
-
-            ////"Module 7 of 9:  Insilico Filteration.";                                  //FARHAN
-            //if (true)   // (parameters.PtmAllow == 0)
-            //    _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.HopThreshhold);
+            //"Module 7 of 9:  Insilico Filteration.";                                  //FARHAN
+            if (parameters.PtmAllow == 0)
+                _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.HopThreshhold);
 
             moduleTimer.Stop();
             executionTimes.InsilicoTime = moduleTimer.Elapsed.ToString();
@@ -338,49 +363,17 @@ namespace PerceptronLocalService
             executionTimes.PtmTime = moduleTimer.Elapsed.ToString();
             return proteoformsList;
         }
-        //PST: Peptide Sequence Tags
-        private void ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, List<ProteinDto> candidateProteins,
-            ExecutionTimeDto executionTimes)
+
+        private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
-            Stopwatch moduleTimer = Stopwatch.StartNew();
+            if (candidateProteins.Count > Constants.NumberOfResultsToStore)
+                candidateProteins = candidateProteins.Take(Constants.NumberOfResultsToStore).ToList<ProteinDto>();
 
-            var pstTags = _pstGenerator.GeneratePeptideSequenceTags(parameters, massSpectrometryData);
-
-            //Logging.DumpPstTags(pstTags);
-
-            if (candidateProteins.Count > 0)
-            {
-                _pstFilter.ScoreProteinsByPst(pstTags, candidateProteins);
-            }
-
-            //Logging.DumpPstScores(candidateProteins);
-            pstTags.Clear();
-            moduleTimer.Stop();
-            executionTimes.PstTime = moduleTimer.Elapsed.ToString();
+            var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
+            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], fileNumber);
         }
 
-        private List<ProteinDto> GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData)
-        {
-            Stopwatch moduleTimer = Stopwatch.StartNew();
-
-            var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters);
-
-            moduleTimer.Stop();
-            return listOfProteins;
-        }
-        //Mass Tunner
-        private void ExecuteMassTunerModule(SearchParametersDto parameters, MsPeaksDto peakData, ExecutionTimeDto executionTimes)
-        {
-            Stopwatch moduleTimer = Stopwatch.StartNew();
-
-            if (parameters.Autotune == 1)
-            {
-                //double a = parameters.NeutralLoss;
-                _wholeProteinMassTuner.TuneWholeProteinMass(peakData, parameters.MwTolerance);
-            }
-            moduleTimer.Stop();
-            executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
-        }
+        
         //Peak List: Extracting from data file 
         private MsPeaksDto PeakListFileReaderModuleModule(SearchParametersDto parameters, int fileNumber, ExecutionTimeDto executionTimes)
         {

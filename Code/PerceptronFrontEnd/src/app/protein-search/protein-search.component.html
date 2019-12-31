@@ -143,7 +143,7 @@
               </mat-form-field>
             </div>
           <mat-form-field style="padding:0px;  width:20%">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Mass_Tolerance_Unit" name="Mass_Tolerance_Unit" ngModel>
+            <mat-select matTooltip="Choose Units" [(ngModel)]="Mass_Tolerance_Unit" name="MwTolUnit" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
@@ -178,11 +178,11 @@
             <div style="width: 95%">
               <mat-form-field style="padding:0px; padding-left:15px; width:100%">
                 <input matInput matTooltip="Set the tolerance value for peptide search during de novo sequencing and spectral comparison" (keypress)="keyPress($event)" [(ngModel)]="Peptide_Tolerance"
-                  matTooltipPosition="before" placeholder="Peptide Tolerance" name="Peptide_Tolerance" ngModel>
+                  matTooltipPosition="before" placeholder="Peptide Tolerance" name="PeptideTolerance" ngModel>
               </mat-form-field>
             </div>
           <mat-form-field style="padding:0px; width:20%">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Peptide_Tolerance_Unit" name="Peptide_Tolerance_Unit" ngModel>
+            <mat-select matTooltip="Choose Units" [(ngModel)]="Peptide_Tolerance_Unit" name="PeptideToleranceUnit" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
