@@ -22,7 +22,6 @@ namespace PerceptronLocalService.DTO
         public double HopThreshhold;
         public string HopTolUnit;
         public double GuiMass;
-        public double PeptideTolerance;
         public string PeptideTolUnit;
 
         public List<int> PtmCodeVar;
@@ -40,6 +39,9 @@ namespace PerceptronLocalService.DTO
         public int PtmAllow;
         public double? NeutralLoss; //Added 12Sep2019
         public double PSTTolerance; //Added 11Dec2019
+
+        public double PeptideTolerance;
+        public string PeptideToleranceUnit;
 
 
         public bool HasFixedAndVariableModifications()

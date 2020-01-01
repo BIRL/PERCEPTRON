@@ -244,7 +244,10 @@ namespace PerceptronLocalService.Repository
                 FileType = fileType,
                 PeakListFileName = fileName,
                 NeutralLoss = searchParameters.NeutralLoss,  //Added 12Sep2019
-                PSTTolerance = searchParameters.PSTTolerance
+                PSTTolerance = searchParameters.PSTTolerance,
+
+                PeptideTolerance = searchParameters.PeptideTolerance,
+                PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
 
             };
             return searchParametersDto;

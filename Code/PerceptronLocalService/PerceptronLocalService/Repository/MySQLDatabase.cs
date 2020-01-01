@@ -284,8 +284,11 @@ namespace PerceptronLocalService.Repository
                 qp.NumberOfOutputs = Convert.ToInt32(reader.GetValue(19));
                 qp.DenovoAllow = Convert.ToInt32(reader.GetValue(20));
                 qp.PtmAllow = Convert.ToInt32(reader.GetValue(21));
-                qp.NeutralLoss = Convert.ToDouble(reader.GetValue(22)); //#Ididntgetthis  -- {reader.GetValue(22)}
+                qp.NeutralLoss = Convert.ToDouble(reader.GetValue(22));
                 qp.PSTTolerance = Convert.ToDouble(reader.GetValue(23));
+                qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(24));
+                qp.PeptideToleranceUnit = reader.GetValue(25).ToString();
+
             }
 
             reader.Close();
