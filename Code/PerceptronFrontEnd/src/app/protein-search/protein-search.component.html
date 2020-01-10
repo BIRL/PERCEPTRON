@@ -124,7 +124,7 @@
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1">
-          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Trunc" name="Trunc" ngModel>Handle Truncated Proteoforms</mat-checkbox>
+          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
         </mat-grid-tile>
 
       </mat-grid-list>
@@ -177,7 +177,7 @@
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <div style="width: 95%">
               <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-                <input matInput matTooltip="Set the tolerance value for peptide search during de novo sequencing and spectral comparison" (keypress)="keyPress($event)" [(ngModel)]="Peptide_Tolerance"
+                <input matInput matTooltip="Set the tolerance value for spectral comparison" (keypress)="keyPress($event)" [(ngModel)]="Peptide_Tolerance"
                   matTooltipPosition="before" placeholder="Peptide Tolerance" name="PeptideTolerance" ngModel>
               </mat-form-field>
             </div>
@@ -313,8 +313,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Terminal_Modification"
-              placeholder="Terminal Modification" name="Terminal_Modification" ngModel multiple>
+            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification"
+              placeholder="Terminal Modification" name="TerminalModification" ngModel multiple>
               <mat-option *ngFor="let TerminalMod of TerminalMods" [value]="TerminalMod.value">
                 {{ TerminalMod.viewValue }}
               </mat-option>
