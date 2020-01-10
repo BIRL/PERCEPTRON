@@ -313,15 +313,17 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification"
+            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification" 
               placeholder="Terminal Modification" name="TerminalModification" ngModel multiple>
               <mat-option *ngFor="let TerminalMod of TerminalMods" [value]="TerminalMod.value">
                 {{ TerminalMod.viewValue }}
+                
+                <!-- class = "form-control" aria-required="TerminalModification -->
               </mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
-
+        
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">

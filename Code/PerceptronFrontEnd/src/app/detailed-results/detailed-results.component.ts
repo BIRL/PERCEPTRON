@@ -62,7 +62,7 @@ export class DetailedResultsComponent implements OnInit {
     let MatchedFrags = <HTMLLabelElement>document.getElementById("MatchedFrags");
     let TermMods = <HTMLLabelElement>document.getElementById("TermMods");
     let TermMod = <HTMLLabelElement>document.getElementById("TermMod");
-    let Trunc = <HTMLLabelElement>document.getElementById("Trunc");
+    let Truncation = <HTMLLabelElement>document.getElementById("Truncation"); //
     let Mods = <HTMLLabelElement>document.getElementById("Mods");
     let totalTime = <HTMLLabelElement>document.getElementById("totalTime");
     let MWModule = "N/A";
@@ -122,7 +122,7 @@ export class DetailedResultsComponent implements OnInit {
     MatchedFrags.innerHTML = "12";
     TermMods.innerHTML = "NME";
     TermMod.innerHTML = "NME";
-    Trunc.innerHTML = "No";
+    Truncation.innerHTML = "No";
     Mods.innerHTML = "3";
     let constant = ProteinID.innerHTML;
   let met = constant;

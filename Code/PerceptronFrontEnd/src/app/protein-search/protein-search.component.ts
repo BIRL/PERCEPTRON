@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { DemoComponent } from '../demo/demo.component';
+import { CloseScrollStrategy } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -83,14 +84,14 @@ export class ProteinSearchComponent implements OnInit {
   MaximumPstLength: any = '';
   Meth_Chem_Modifications: any = '';
   Cyst_Chem_Modifications: any = '';
-  Trunc: any = '';
+  Truncation: any = '';  //Trunc
   Units_mass: any = '';
   selectedValue1: any = '';
   selectedValue2: any = ''; s
   selectedFrag: any = '';
   selectedIons: any = '';
   DenovoAllow: any = '';
-  Terminal_Modification: any = '';
+  TerminalModification: any = ''; //[];
   HopThreshhold: any;
   PSTTolerance: any;
 
@@ -99,6 +100,8 @@ export class ProteinSearchComponent implements OnInit {
 
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
+
+
 
 
   fragments = [
@@ -139,6 +142,12 @@ export class ProteinSearchComponent implements OnInit {
     { value: 'NME_Acetylation', viewValue: 'N-Methionine Excision and Acetylation' },
     { value: 'M_Acetylation', viewValue: 'N-Methionine Acetylation' }
   ];
+
+  
+  //let newTerminalModsvalue =  //this.TerminalMods.toString();
+  //newTerminalModsvalue1 = this.TerminalMods.toString;
+  
+  //console.log(newTerminalModsvalue);
 
   Cys = [
     { value: 'None', viewValue: 'None' },
@@ -261,7 +270,7 @@ export class ProteinSearchComponent implements OnInit {
     }
   }
 
-  LoadDefaults() {
+  LoadDefaults() { // Here is Load Default Parameters
     this.Title = "Default Run";
     this.GuiMass = 10000;
     this.selectedValue1 = 'Human';
@@ -276,21 +285,22 @@ export class ProteinSearchComponent implements OnInit {
     this.Slider1 = '100';
     this.Slider2 = '100';
     this.Slider3 = '100';
-    this.Trunc = 0;
-
-
+    this.Truncation = 0;  //Trunc
     this.MinimumPstLength = '3';
     this.SetMaxTagLength()
     this.MaximumPstLength = 6;
     this.HopThreshhold = 0.1;
     this.PSTTolerance = 0.45
-
-    this.Terminal_Modification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];
+    this.TerminalModification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";
+    
+    
     this.Cyst_Chem_Modifications ='None';
     this.Meth_Chem_Modifications ='None';
     this.selectedFrag = 'HCD';
-    this.selectIons();// = ['bo']
-    //this.selectIons();
+    this.selectIons() //();// = ['bo']
+    //this.SpecialIonz = this.Special1
+
+
 
   }
 
@@ -418,11 +428,11 @@ export class ProteinSearchComponent implements OnInit {
       form.FilterDb = 0;
     }
 
-    if (form.Trunc == true) {
-      form.Trunc = 1;
+    if (form.Truncation == true) {  // Trunc REPLACED WITH Truncation
+      form.Truncation = 1;
     }
     else {
-      form.Trunc = 0;
+      form.Truncation = 0;
     }
 
 

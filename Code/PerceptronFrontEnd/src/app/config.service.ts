@@ -52,16 +52,20 @@ export class ConfigService {
     postJSON(form, file) {
 
         let formData: FormData = new FormData();
-        var json = JSON.stringify(form);
-        
-        formData.append('Jsonfile', json);
 
+        // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
+        const stringofTerminalModification = form.TerminalModification.toString();
+        form.TerminalModification = stringofTerminalModification;
+        ///////////////////////////////////////////////////////////////////////////////////
+
+        var json = JSON.stringify(form);
+                
+        formData.append('Jsonfile', json);
         for (let i = 0; i < file.length; i++) {
             formData.append('uploadFile', file[i], file[i].name);
         }
 
         console.log(json);
-
         let headers = new Headers();
         headers.append('Accept', 'application/json');
         return this._http.post( this.baseApiUrl + '/api/search/File_upload', formData, { headers: headers })
