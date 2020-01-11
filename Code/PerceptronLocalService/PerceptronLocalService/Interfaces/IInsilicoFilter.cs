@@ -5,6 +5,6 @@ namespace PerceptronLocalService.Interfaces
 {
     public interface IInsilicoFilter
     {
-        void ComputeInsilicoScore(List<ProteinDto> proteinList, List<double> peakList, double tol);
+        void ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit);
     }
 }

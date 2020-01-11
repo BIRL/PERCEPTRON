@@ -12,6 +12,8 @@ using PerceptronAPI.Models;
 using PerceptronAPI.Repository;
 using PerceptronAPI.ServiceLayer;
 using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
+
 namespace PerceptronAPI.Controllers
 {
     public class SearchController : ApiController
@@ -57,9 +59,12 @@ namespace PerceptronAPI.Controllers
                 var i = 0;
                 await Request.Content.ReadAsMultipartAsync(provider);
                 var jsonData = provider.FormData.GetValues("Jsonfile");
-                if (jsonData != null)
-                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
 
+                if (jsonData != null)
+                {
+                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                }                     
+                    
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
                 //parametersDto.SearchParameters.FilterDb = 1;
@@ -69,11 +74,8 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.Progress = progress;
                 parametersDto.SearchQuerry.CreationTime = creationTime;
 
-
-
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
                 
-
                 foreach (var file in provider.FileData)
                 {
                     i++;

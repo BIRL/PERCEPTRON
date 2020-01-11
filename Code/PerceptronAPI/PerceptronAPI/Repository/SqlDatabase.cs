@@ -104,7 +104,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -155,7 +155,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -197,7 +197,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -235,7 +235,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -259,7 +259,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -290,7 +290,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -373,7 +373,18 @@ namespace PerceptronAPI.Repository
                 NumberOfOutputs = searchParameters.NumberOfOutputs,
                 PtmAllow = searchParameters.PtmAllow,
                 NeutralLoss = searchParameters.NeutralLoss,
-                PSTTolerance = searchParameters.PSTTolerance
+                PSTTolerance = searchParameters.PSTTolerance,
+
+
+                PeptideTolerance = searchParameters.PeptideTolerance,
+                PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
+                TerminalModification = searchParameters.TerminalModification
+
+                //Terminal_Modification = searchParameters.Terminal_Modification,
+                //
+
+
+
             };
             return searchParameter;
         }

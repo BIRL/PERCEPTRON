@@ -15,6 +15,9 @@ namespace PerceptronLocalService.DTO
         public List<PostTranslationModificationsSiteDto> PtmParticulars;
         public InsilicoObjectDto InsilicoDetails;
 
+        public double MatchesScore;   // Change My Name 
+        public int Match;             // Change My Name
+
         public ProteinDto()
         {
             Header = "";
@@ -26,6 +29,9 @@ namespace PerceptronLocalService.DTO
             MwScore = 0;
             PtmParticulars = new List<PostTranslationModificationsSiteDto>();
             InsilicoDetails = new InsilicoObjectDto();
+
+            MatchesScore = 0.0;
+            Match = 0;
         }
 
         public ProteinDto(string h, string s, double mw, double mwScore)
@@ -39,6 +45,10 @@ namespace PerceptronLocalService.DTO
             Score = 0;
             Mw = mw;
             //PtmParticulars = new List<Sites>();
+
+            MatchesScore = 0.0;
+            Match = 0;
+
         }
 
         public string GetSequence()

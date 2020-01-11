@@ -32,5 +32,6 @@ namespace PerceptronLocalService.DTO
             InsilicoMassRightZo = new List<double>();
             InsilicoMassRightZoo = new List<double>();
         }
+
     }
 }

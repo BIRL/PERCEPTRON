@@ -79,7 +79,7 @@ namespace PerceptronLocalService
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     PerformSearch(searchParameters);
                 }
-                System.Threading.Thread.Sleep(10000);
+                //System.Threading.Thread.Sleep(10000);
             }
 
         }
@@ -158,6 +158,7 @@ namespace PerceptronLocalService
                     //Logging.DumpMwTunerResult(massSpectrometryData);
 
                     int DELME;
+                    List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Temporary
                     //Step 2 - 1st Candidate Protein List  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                     var candidateProteins = GetCandidateProtein(parameters, massSpectrometryData);
                     double mass, error, mw_score;
@@ -207,7 +208,18 @@ namespace PerceptronLocalService
 
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
-                    ExecuteSpectralComparisonModule(parameters, candidateProteins, massSpectrometryData, executionTimes);
+                    ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+
+
+                    //Step Next -- Truncation
+                    //parameters.Truncation = 1;
+
+                    
+                    //ExecuteTruncationModule(parameters);
+
+
+
+
 
                     //Logging.DumpInsilicoScores(candidateProteins);
                     score = 0;
@@ -297,7 +309,7 @@ namespace PerceptronLocalService
             //"Module 8 of 9:  Evaluating Final Scores.";                                  //FARHAN
             foreach (var protein in candidateProteins)
             {
-                protein.set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);
+                protein.set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);  //MwSweight is Intact Protein Mass Score Weightage
             }
             double score = 0;
             string lol;
@@ -317,7 +329,7 @@ namespace PerceptronLocalService
 
         //SPECTRAL COMPARISON ALGORITHM: 
         private void ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins,
-            MsPeaksDto massSpectrometryData, ExecutionTimeDto executionTimes)
+            List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
@@ -327,8 +339,17 @@ namespace PerceptronLocalService
 
             //"Module 7 of 9:  Insilico Filteration.";                                  //FARHAN
             if (parameters.PtmAllow == 0)
-                _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.HopThreshhold);
+            {
+                //_insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.HopThreshhold); //Commented
 
+                //newProgram Object = new peakData2DList();
+                //Object.peakDataList = new List<peakData2DList>();
+                //var peakList = new List<peakData2DList>();
+                //peakList = peakData2DList.peakDataList(massSpectrometryData);
+
+                _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+                //_insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+            }
             moduleTimer.Stop();
             executionTimes.InsilicoTime = moduleTimer.Elapsed.ToString();
         }
@@ -344,8 +365,10 @@ namespace PerceptronLocalService
                 proteoformsList = _postTranslationalModificationModule.ExecutePtmModule(candidateProteins,
                    massSpectrometryData, parameters);
 
-                _insilicoFilter.ComputeInsilicoScore(proteoformsList, massSpectrometryData.Mass, parameters.HopThreshhold);
-
+                //_insilicoFilter.ComputeInsilicoScore(proteoformsList, massSpectrometryData.Mass, parameters.HopThreshhold);//Commented
+                /* #CFTTB
+                 * _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+                 */
                 _molecularWeightModule.FilterModifiedProteinsByWholeProteinMass(parameters, proteoformsList,
                massSpectrometryData);
             }
@@ -363,6 +386,15 @@ namespace PerceptronLocalService
             executionTimes.PtmTime = moduleTimer.Elapsed.ToString();
             return proteoformsList;
         }
+
+        //private List<ProteinDto> ExecuteTruncationModule(SearchParametersDto parameters)
+        //{
+        //    if (parameters.Truncation == "true")
+        //    {
+        //        int abc = 0;
+        //    }
+
+        //}
 
         private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
@@ -394,10 +426,22 @@ namespace PerceptronLocalService
                 peakData.Mass[peakDataindex] = peakData.Mass[peakDataindex] + 1.00727647; //monoisotopic to m/z value
                 peakData.Intensity[peakDataindex] = peakData.Intensity[peakDataindex] / maxIntensity; //Normalized by dividing the selected maximum intensity 
             }
-
+            
             moduleTimer.Stop();
             executionTimes.FileReadingTime = moduleTimer.Elapsed.ToString();
             return peakData;
+        }
+
+        public List<newMsPeaksDto> peakDataList(MsPeaksDto peakData) // #En Temporary Until Adjustments 
+        {
+            newMsPeaksDto tempData;
+            List<newMsPeaksDto> peakList = new List<newMsPeaksDto>();
+            for (int index = 0; index < peakData.Mass.Count; index++)
+            {
+                tempData = new newMsPeaksDto(peakData.Mass[index], peakData.Intensity[index]);
+                peakList.Add(tempData);
+            }
+            return peakList;
         }
     }
 }

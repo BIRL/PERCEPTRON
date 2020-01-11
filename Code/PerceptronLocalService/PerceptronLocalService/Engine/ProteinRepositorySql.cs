@@ -60,16 +60,16 @@ namespace PerceptronLocalService.Engine
             {
                 case  "Ecoli":
                     return  ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                    break;
+                    //break;
                 case "Bacteria":
                     return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                    break;
+                    //break;
                 case "TrEMBL":// FARHAN's TESTING
                     return ConfigurationManager.ConnectionStrings["TrEMBLConnectionStringName"].ConnectionString;
-                    break;
+                    //break;
                 case "Human":
                     return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
-                    break;
+                    //break;
                 default:  // Default is also Human
                     return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
 

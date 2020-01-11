@@ -35,5 +35,7 @@ namespace PerceptronAPI.Models
 
         public double PeptideTolerance;
         public string PeptideToleranceUnit;
+        
+        public string TerminalModification;
     }
 }

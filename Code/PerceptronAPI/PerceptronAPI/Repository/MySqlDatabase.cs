@@ -27,7 +27,7 @@ namespace PerceptronAPI.Repository
             const string connectionString = "Data Source=localhost;" +
                                             "Initial Catalog=proteomics;" +
                                             "User id= root;" +
-                                            "Password=Birl1234;";
+                                            "Password=****;";
             _connection = new MySqlConnection(connectionString);
         }
 
@@ -784,9 +784,10 @@ namespace PerceptronAPI.Repository
                             qp.PSTTolerance = Convert.ToDouble(reader.GetValue(26));   //PSTTolerance Added!!!
 
 
-
                             qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(27));
                             qp.PeptideToleranceUnit = reader.GetValue(28).ToString();
+                            qp.TerminalModification = reader.GetValue(29).ToString();
+
                         }
 
                         reader.Close();
