@@ -248,6 +248,8 @@ namespace PerceptronLocalService.Repository
 
                 PeptideTolerance = searchParameters.PeptideTolerance,
                 PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
+                TerminalModification = searchParameters.TerminalModification,
+                Truncation = searchParameters.Truncation 
 
             };
             return searchParametersDto;

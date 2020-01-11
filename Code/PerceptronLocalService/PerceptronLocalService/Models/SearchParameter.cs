@@ -40,5 +40,8 @@ namespace PerceptronLocalService.Models
         public double PSTTolerance { get; set; }
         public double PeptideTolerance { get; set; }
         public string PeptideToleranceUnit { get; set; }
+        public int Truncation { get; set; }
+        public string TerminalModification { get; set; }
+        public Nullable<double> SliderValue { get; set; }
     }
 }

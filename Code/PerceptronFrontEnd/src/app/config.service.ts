@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ConfigService {
     resultant: any;
-    baseApiUrl = "http://testperceptron.lums.edu.pk/PerceptronAPI"; // testperceptron.lums.edu.pk    //
+    baseApiUrl = "http://testperceptron.lums.edu.pk/PerceptronAPI"; // testperceptron.lums.edu.pk
     
     constructor(private _http: Http) { }
 
@@ -55,6 +55,7 @@ export class ConfigService {
 
         // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
         const stringofTerminalModification = form.TerminalModification.toString();
+        //Replacing Data in form
         form.TerminalModification = stringofTerminalModification;
         ///////////////////////////////////////////////////////////////////////////////////
 
