@@ -79,7 +79,7 @@ namespace PerceptronLocalService
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     PerformSearch(searchParameters);
                 }
-                //System.Threading.Thread.Sleep(10000);
+                //System.Threading.Thread.Sleep(10000);                 /*UNCOMMENT ME....*/
             }
 
         }
@@ -89,22 +89,72 @@ namespace PerceptronLocalService
             //ignored
         }
 
+
+        //public void Send_Results_Link(SearchParametersDto p)
+        //{
+        //    var creationtime = _dataLayer.GetCreationTime(p.Queryid);
+        //    var emailaddress = p.UserId;
+
+        //    using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
+        //    {
+        //        mm.Subject = "Perceptron: Protein Search Results";
+        //        var body = "Dear User,";
+        //        body += "<br /><br /> The results for protein search query submitted at " + creationtime + " with job title \""
+        //                + "<span style='font-weight:bold;font-size:15px;'>" + p.Title + "</span>" + "\" have been computed. To see the results please click on following link(s).<br />";
+        //        body += "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\'http://perceptron.lums.edu.pk/index.html#/scans/" + p.Queryid + " \'>Click here to see your Results of Protein Identification.</a>";
+        //        body += "<br /><br />Thank You for using Perceptron.";
+        //        body += "<br />Best Regards,";
+        //        body += "<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-family:calibri;font-weight:bold;font-size:12.5px;color:rgb(90, 60, 140);'>Team Proteomics,</span>";
+        //        body += "<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-family:calibri;font-size:12.5px;color:rgb(90, 60, 140);'>Biomedical Informatics Research Laboratory (BIRL),<br/>" +
+        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department of Biology, SBA School of Science and Engineering," +
+        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lahore University of Management Sciences (LUMS), Lahore, Pakistan>" +
+        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voice:<a href=\'http://biolabs.lums.edu.pk/BIRL/\'> +92 321 4255171</a> | Fax: +92 42 3560 8317" +
+        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email: <a href=\'http://perceptron@lums.edu.pk/\'>perceptron@lums.edu.pk</a>, <a href=\'http://chaudhary.safee.ullah@gmail.com/\'>chaudhary.safee.ullah@gmail.com</a>" +
+        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web:<a href=\'http://biolabs.lums.edu.pk/BIRL/\'> biolabs.lums.edu.pk/BIRL</a></span>";
+        //        mm.Body = body;
+        //        mm.IsBodyHtml = true;
+
+        //        var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "LUMSProT@comBio");
+        //        var smtp = new SmtpClient
+        //        {
+        //            Host = "smtp.office365.com",
+        //            EnableSsl = true,
+        //            UseDefaultCredentials = true,
+        //            Credentials = networkCred,
+        //            Port = 587
+        //        };
+        //        try
+        //        {
+        //            smtp.Send(mm);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Debug.WriteLine(e.Message);
+        //        }
+        //    }
+        //}
+
+        
         public static void Send_Results_Link(SearchParametersDto p)
         {
             var emailaddress = p.UserId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
+                string BaseUrl = "http://203.135.63.99/";
                 mm.Subject = "Perceptron: Protein Search Results";
                 var body = "Dear User,";
                 body += "<br /><br /> The results for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
-                        p.Title + "\" have been computed. To see the results please click on following link(s).<br />";
-                body += "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\'http://perceptron.lums.edu.pk/index.html#/scans/" + p.Queryid + " \'>Click here to see your Results.</a>";
-                body += "<br /><br />Thank You for using Perceptron.";
-                body += "<br /><br />Best Regards,";
-                body += "<br />Team Perceptron";
+                        p.Title + "\" have been completed. The complete results are available at";
+                body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
+                body += "<br />";
+                body += "<br />If you need help check out the Getting Started Guide and our Video Tutorials. If you encounter any kind of problems, please contact us at <a href=\'" + BaseUrl + "/index.html#/contact'> link</a>.";
+                body += "<br />Thank You for using Perceptron.";
+                body += "<br />The PERCEPTRON Team";
+                body += "<br />Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
                 mm.Body = body;
+            
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "LUMSProT@comBio");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "*******");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
@@ -125,6 +175,7 @@ namespace PerceptronLocalService
                 }
             }
         }
+        
 
         private void PerformSearch(SearchParametersDto parameters)
         {
@@ -145,22 +196,35 @@ namespace PerceptronLocalService
                     var pipeLineTimer = new Stopwatch();
                     pipeLineTimer.Start();
 
-                    //Step 0 - Read the Peaklist File
+                    //Step 0 - Read the Peaklist File Read the Peaklist File Read the Peaklist File Read the Peaklist File Read the Peaklist File Read the Peaklist File Read the Peaklist File
                     var massSpectrometryData = PeakListFileReaderModuleModule(parameters, fileNumber, executionTimes);
                     //  Logging.DumpMsData(massSpectrometryData);
 
 
-                    //Step 1 - 1st Algorithm - Mass Tuner
+                    //Step 1 - 1st Algorithm - Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner Mass Tuner 
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                         massSpectrometryData.WholeProteinMolecularWeight = old;
                     //Logging.DumpMwTunerResult(massSpectrometryData);
 
-                    int DELME;
+
+                    //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)    PST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PST
+                    if (parameters.DenovoAllow == 1)
+                    {
+                        var PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
+                    }
+                    var t = 0;
+                    double score = 0;
+                    string lol;
+                    //Logging.DumpModifiedProteins(candidateProteins);
+
+
                     List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Temporary
                     //Step 2 - 1st Candidate Protein List  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
-                    var candidateProteins = GetCandidateProtein(parameters, massSpectrometryData);
+                    int SimpleCandidateProteinList = 0; // For selecting Simple Candidate Protein List
+
+                    var candidateProteins = GetCandidateProtein(parameters, massSpectrometryData, executionTimes, SimpleCandidateProteinList);
                     double mass, error, mw_score;
                     for (var i = 0; i < candidateProteins.Count; ++i)
                     {
@@ -174,17 +238,16 @@ namespace PerceptronLocalService
                     }
                     //Logging.DumpCandidateProteins(candidateProteins);
 
+                    ///////////////////////////////////////////////////////////////////////
+                    //Step 2B: Getting Candidate Protein List Truncated -- 
+
+                    int TruncatedCandidateProteinList = 1;
+                    var CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, executionTimes, TruncatedCandidateProteinList);
+
+                    ///////////////////////////////////////////////////////////////////////
 
 
-                    //Step 3 - 2nd Algorithm - Peptide Sequence Tags (PSTs)
-                    if (parameters.DenovoAllow == 1)
-                    {
-                        ExecuteDenovoModule(parameters, massSpectrometryData, candidateProteins, executionTimes);
-                    }
-                    var t = 0;
-                    double score = 0;
-                    string lol;
-                    //Logging.DumpModifiedProteins(candidateProteins);
+                    
 
 
 
@@ -273,8 +336,7 @@ namespace PerceptronLocalService
 
 
         //PST: Peptide Sequence Tags
-        private void ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, List<ProteinDto> candidateProteins,
-            ExecutionTimeDto executionTimes)
+        private List<PstTagList> ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
@@ -282,24 +344,35 @@ namespace PerceptronLocalService
 
             //Logging.DumpPstTags(pstTags);
 
-            if (candidateProteins.Count > 0)
-            {
-                _pstFilter.ScoreProteinsByPst(pstTags, candidateProteins);
-            }
+
+            //////////if (candidateProteins.Count > 0)                                                          #MAJOR_MODIFICATIONS
+            //////////{
+            //////////    _pstFilter.ScoreProteinsByPst(pstTags, candidateProteins);  
+            //////////}
 
             //Logging.DumpPstScores(candidateProteins);
-            pstTags.Clear();
+            // pstTags.Clear();                                  #MAJOR_MODIFICATIONS
             moduleTimer.Stop();
             executionTimes.PstTime = moduleTimer.Elapsed.ToString();
+            return pstTags;
         }
 
-        private List<ProteinDto> GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData)
+        private List<ProteinDto> GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData,ExecutionTimeDto executionTimes, int CandidateList) // Added "int CandidateList". 20200112
         {
+
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters);
+            var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, CandidateList);// Added "int CandidateList". 20200112
 
             moduleTimer.Stop();
+            
+            if (CandidateList == 1)
+            {
+                TimeSpan time = TimeSpan.Parse(executionTimes.InsilicoTime);
+                //var totaltime = moduleTimer + time;
+                
+            }
+            executionTimes.InsilicoTime = moduleTimer.Elapsed.ToString();
             return listOfProteins;
         }
 
