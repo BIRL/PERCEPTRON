@@ -140,13 +140,12 @@ namespace PerceptronLocalService
             var emailaddress = p.UserId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
-                string BaseUrl = "http://203.135.63.99/";
+                string BaseUrl = "http://perceptron.lums.edu.pk/";
                 mm.Subject = "Perceptron: Protein Search Results";
                 var body = "Dear User,";
                 body += "<br /><br /> The results for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
                         p.Title + "\" have been completed. The complete results are available at";
                 body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                body += "<br />";
                 body += "<br />If you need help check out the Getting Started Guide and our Video Tutorials. If you encounter any kind of problems, please contact us at <a href=\'" + BaseUrl + "/index.html#/contact'> link</a>.";
                 body += "<br />Thank You for using Perceptron.";
                 body += "<br />The PERCEPTRON Team";
@@ -154,7 +153,7 @@ namespace PerceptronLocalService
                 mm.Body = body;
             
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "*******");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "********");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
