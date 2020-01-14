@@ -1323,7 +1323,7 @@ namespace PerceptronLocalService.Engine
          * \param FilterDb an integer variable which tells us about user decision regarding filteration of DB on protein MW
          * \return the List of shortlisted proteins
          */
-        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters)
+        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList". 20200112
         {
             var tol = parameters.MwTolerance;
             var database = parameters.ProtDb;

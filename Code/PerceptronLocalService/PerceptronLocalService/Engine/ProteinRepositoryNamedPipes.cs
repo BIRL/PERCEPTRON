@@ -13,7 +13,7 @@ namespace PerceptronLocalService.Engine
 {
     class ProteinRepositoryNamedPipes : IProteinRepository
     {
-        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters)
+        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList".
         {
             var fPam = new MolecularWeightServiceParametersDto()
             {

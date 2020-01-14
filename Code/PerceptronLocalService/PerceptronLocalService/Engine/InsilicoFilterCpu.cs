@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using PerceptronLocalService.Interfaces;
@@ -7,236 +8,291 @@ using PerceptronLocalService.DTO;
 namespace PerceptronLocalService.Engine
 {
     public class InsilicoFilterCpu : IInsilicoFilter
-
     {
-        
-        public  void Insilico_filter1(List<ProteinDto> proteinList, List<double> peakList, double tol)
+
+        //public void Insilico_filter1(List<ProteinDto> proteinList, List<double> peakList, double tol)
+        //{
+        //    tol = 15;
+        //    var pepUnit = "ppm";
+
+        //    foreach (var protein in proteinList)
+        //    {
+        //        double insilicoScore = 0;
+        //        var insilico = protein.InsilicoDetails;
+        //        foreach (var experimentalPeakMass in peakList)
+        //        {
+        //            var peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, experimentalPeakMass);
+
+        //            for (var insilicoIndex = 0; insilicoIndex < insilico.InsilicoMassLeft.Count; insilicoIndex++)
+        //            {
+        //                //left
+        //                var diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeft[insilicoIndex]);
+        //                if (diff <= peakDifferenceTolerance)
+        //                    insilicoScore++;
+
+        //                //Right
+        //                diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRight[insilicoIndex]);
+        //                if (diff <= peakDifferenceTolerance)
+        //                    insilicoScore++;
+
+        //                //ao
+        //                if (insilico.InsilicoMassLeftAo.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftAo[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //bo
+        //                if (insilico.InsilicoMassLeftBo.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftBo[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //yo
+        //                if (insilico.InsilicoMassRightYo.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightYo[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //zo
+        //                if (insilico.InsilicoMassRightZo.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightZo[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //zoo
+        //                if (insilico.InsilicoMassRightZoo.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightZoo[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //a*
+        //                if (insilico.InsilicoMassLeftAstar.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftAstar[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //b*
+        //                if (insilico.InsilicoMassLeftBstar.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftBstar[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+
+        //                //y*
+        //                if (insilico.InsilicoMassRightYstar.Any())
+        //                {
+        //                    diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightYstar[insilicoIndex]);
+        //                    if (diff <= peakDifferenceTolerance)
+        //                        insilicoScore++;
+        //                }
+        //            }
+        //        }
+
+
+        //        insilicoScore = insilicoScore / peakList.Count;
+        //        insilicoScore = insilicoScore * Math.Pow(2, 1 - insilicoScore);
+        //        protein.InsilicoScore = insilicoScore;
+        //        protein.InsilicoDetails = insilico;
+
+        //    }
+        //}
+
+        public void ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
         {
-            tol = 15;
-            var pepUnit = "ppm";
+            //tol = 15;
+            //var pepUnit = "ppm";
+            int delme; var delmeList = new List<ProteinDto>();
 
-            foreach (var protein in proteinList)
+            for (int indexIntensity = 0; indexIntensity < peakData2DList.Count; indexIntensity++)
             {
-                double insilicoScore = 0;
-                var insilico = protein.InsilicoDetails;
-                foreach (var experimentalPeakMass in peakList)
+                if (peakData2DList[indexIntensity].Intensity < 0.000092)
+                    peakData2DList[indexIntensity].Intensity = 0.001;
+                else
+                    peakData2DList[indexIntensity].Intensity = 1;
+            }
+            if (peakData2DList.Count > 16) //Just to avoid small data. Because its hardly possible to get Spectral Matches with small peak Count
+            {
+                for (int indexProteinList = 0; indexProteinList < proteinList.Count; indexProteinList++)//foreach (var protein in proteinList) //Run Loop on Candidate Protein List (proteinList)
                 {
-                    var peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, experimentalPeakMass);
+                    //if (proteinList[indexProteinList].Header == "P02652")
+                    //    delme = 0;
 
-                    for (var insilicoIndex = 0; insilicoIndex < insilico.InsilicoMassLeft.Count; insilicoIndex++)
+                    var insilico = proteinList[indexProteinList].InsilicoDetails; //Insilico Detail of Specific Protein(according to indexProteinList)
+
+                    double Matches_Score = 0;  // Variable is Reference Type //double[] Matches_Score = new double[] { 0 };
+                    int MatchCounter = 0; // Variable is Reference Type // int[] MatchCounter = new int[] { 0 };  
+                    var LeftMatched_Index = new List<int>();
+                    var RightMatched_Index = new List<int>();
+                    var LeftPeak_Index = new List<int>();
+                    var RightPeak_Index = new List<int>();
+                    int IdxL = 0;
+                    int IdxR = 0;
+                    //LeftType = [];
+                    //RightType = [];
+
+                    int SpecialLeftFragments = insilico.InsilicoMassLeftAo.Count + insilico.InsilicoMassLeftBo.Count + insilico.InsilicoMassLeftAstar.Count + insilico.InsilicoMassLeftBstar.Count;
+                    int SpecialRightFragments = insilico.InsilicoMassRightYo.Count + insilico.InsilicoMassRightYstar.Count + insilico.InsilicoMassRightZo.Count + insilico.InsilicoMassRightZoo.Count;
+
+                    //For Finding consecutive region & Variables are Reference Type
+                    int Counter = 0; // 
+                    int OldConsec = 0;
+                    int OldConsec2 = 0;
+                    int ConsecutiveRegion = 0;
+
+                    for (int indexPeakList = 1; indexPeakList < peakData2DList.Count; indexPeakList++)//Starts from One!!! Do not interested in Intact Protein Mass  /////EXPERIMENTAL PEAK LIST
                     {
-                        //left
-                        var diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeft[insilicoIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                        insilicoScore++;
+                        double peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakData2DList[indexPeakList].Mass); //peakList[0]
+                        //if (proteinList[indexProteinList].Header == "P02652" && indexPeakList == 31)
+                        //    delme = 0;
 
-                        //Right
-                        diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRight[insilicoIndex]);
-                         if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
+                        int Consecutive = indexPeakList;
 
-                        //ao
-                         if (insilico.InsilicoMassLeftAo.Any())
+                        for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count; indexLeftSide++)
                         {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftAo[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
+                            double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeft[indexLeftSide];
+                            //Check in Left Ions
+                            SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+
+                            if (SpecialLeftFragments > 0)
+                            {
+                                if (insilico.InsilicoMassLeftAo.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAo[indexLeftSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                }
+                                if (insilico.InsilicoMassLeftBo.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBo[indexLeftSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                }
+                                if (insilico.InsilicoMassLeftAstar.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAstar[indexLeftSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                }
+                                if (insilico.InsilicoMassLeftBstar.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBstar[indexLeftSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                }
+                            }
+                            if (difference < -peakDifferenceTolerance && indexLeftSide > 1)
+                            {
+                                IdxL = indexLeftSide - 1;
+                                break;
+                            }
                         }
 
-                        //bo
-                        if (insilico.InsilicoMassLeftBo.Any())
+                        for (int indexRightSide = IdxR; indexRightSide < insilico.InsilicoMassRight.Count; indexRightSide++)
                         {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftBo[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //yo
-                        if (insilico.InsilicoMassRightYo.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightYo[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //zo
-                        if (insilico.InsilicoMassRightZo.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightZo[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //zoo
-                        if (insilico.InsilicoMassRightZoo.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightZoo[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //a*
-                        if (insilico.InsilicoMassLeftAstar.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftAstar[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //b*
-                        if (insilico.InsilicoMassLeftBstar.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassLeftBstar[insilicoIndex]);
-                             if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
-                        }
-
-                        //y*
-                        if (insilico.InsilicoMassRightYstar.Any())
-                        {
-                            diff = Math.Abs(experimentalPeakMass - insilico.InsilicoMassRightYstar[insilicoIndex]);
-                            if (diff <= peakDifferenceTolerance)
-                                insilicoScore++;
+                            ///Check in Right Ions
+                            double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRight[indexRightSide];
+                            SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                            if (SpecialRightFragments > 0)
+                            {
+                                if (insilico.InsilicoMassRightYo.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYo[indexRightSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                }
+                                if (insilico.InsilicoMassRightZo.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZo[indexRightSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                }
+                                if (insilico.InsilicoMassRightZoo.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZoo[indexRightSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                }
+                                if (insilico.InsilicoMassRightYstar.Count > 0)
+                                {
+                                    difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYstar[indexRightSide];
+                                    SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                }
+                            }
+                            if (difference < -peakDifferenceTolerance && indexRightSide > 1)
+                            {
+                                IdxR = indexRightSide - 1;
+                                break;
+                            }
                         }
                     }
+
+
+                    proteinList[indexProteinList].MatchesScore = Matches_Score / peakData2DList.Count;
+                    proteinList[indexProteinList].Match = MatchCounter;
+
+                    //experimentalPeakIndex = 0;
+                    //theoreticalPeakIndex = insilico.InsilicoMassRight.Count - 1;
+                    //peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakData2DList[0].Mass);
                 }
+            }
+            var Matches = new List<ProteinDto>();
+            //var Match_Score_greater = new List<ProteinDto>();  // DEL ME
 
-
-                insilicoScore = insilicoScore/peakList.Count;
-                insilicoScore = insilicoScore*Math.Pow(2, 1 - insilicoScore);
-                protein.InsilicoScore = insilicoScore;
-                protein.InsilicoDetails = insilico;
-
+            for (int MatchIndex = 0; MatchIndex < proteinList.Count; MatchIndex++)
+            {
+                if (proteinList[MatchIndex].Match >0)
+                {
+                    Matches.Add(proteinList[MatchIndex]);
+                }
+                /// FOR TESTINGS...!!!
+                //if (proteinList[MatchIndex].Match >1)
+                //{
+                //    Match_Score_greater.Add(proteinList[MatchIndex]);
+                //}
             }
         }
 
-        public void ComputeInsilicoScore(List<ProteinDto> proteinList, List<double> peakList, double tol)
+        private void SpectralComparison(double difference, newMsPeaksDto OnepeakData2DList, int indexPeakList, double peakDifferenceTolerance, ref int Consecutive, ref int Counter, ref int OldConsec, ref int OldConsec2, ref int ConsecutiveRegion, ref double Matches_Score, ref int MatchCounter, List<int> Matched_IndexList, List<int> Peak_IndexList, int indexSide) // Matched_Index == LeftMatched_Index OR RightMatched_Index  /// Peak_IndexPeak_IndexList ==  LeftPeak_Index  OR  RightPeak_Index
         {
-            tol = 15;
-            var pepUnit = "ppm";
+            double absdifference = Math.Abs(difference);  //Taking Absoulte difference {Doesn't matter}
 
-            foreach (var protein in proteinList)
+            if (absdifference <= peakDifferenceTolerance)
             {
-                double insilicoScore = 0;
-                var insilico = protein.InsilicoDetails;
-
-                var experimentalPeakIndex = 0;
-                var theoreticalPeakIndex = 0;
-                var peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakList[0]);
-
-                while (experimentalPeakIndex < peakList.Count && theoreticalPeakIndex < insilico.InsilicoMassLeft.Count)
+                if (Consecutive == OldConsec + 1 && OldConsec == OldConsec2 + 1)
                 {
-                    //left
-                    var diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeft[theoreticalPeakIndex]);
-                    if (diff <= peakDifferenceTolerance)
+                    if (Counter == 0)
                     {
-                        insilicoScore++;
-                        //experimentalPeakIndex++;
-                        break;
+                        ConsecutiveRegion = ConsecutiveRegion + 1;
                     }
 
-                    //ao
-                    if (insilico.InsilicoMassLeftAo.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeftAo[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    //bo
-                    if (insilico.InsilicoMassLeftBo.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeftBo[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    //a*
-                    if (insilico.InsilicoMassLeftAstar.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeftAstar[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    //b*
-                    if (insilico.InsilicoMassLeftBstar.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeftBstar[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    if (peakList[experimentalPeakIndex]  >
-                        insilico.InsilicoMassLeft[theoreticalPeakIndex] + peakDifferenceTolerance)
-                    {
-                        theoreticalPeakIndex++;
-                    }
-                    else
-                    {
-                        experimentalPeakIndex++;
-                    }
+                    Counter = Counter + 1;
+                    Matches_Score = Matches_Score + 1.5;
+                    OldConsec2 = OldConsec;
+                    OldConsec = Consecutive;
                 }
-
-                experimentalPeakIndex = 0;
-                theoreticalPeakIndex = insilico.InsilicoMassRight.Count-1;
-                peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakList[0]);
-
-                while (experimentalPeakIndex < peakList.Count && theoreticalPeakIndex >= 0)
+                else if (Consecutive == OldConsec && OldConsec == OldConsec2 + 1)
                 {
-                    //Right
-                    var diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassLeft[theoreticalPeakIndex]);
-                    if (diff <= peakDifferenceTolerance)
-                        insilicoScore++;
-
-                    //yo
-                    if (insilico.InsilicoMassRightYo.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassRightYo[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    //zo
-                    if (insilico.InsilicoMassRightZo.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassRightZo[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    //zoo
-                    if (insilico.InsilicoMassRightZoo.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassRightZoo[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }               
-
-                    //y*
-                    if (insilico.InsilicoMassRightYstar.Any())
-                    {
-                        diff = Math.Abs(peakList[experimentalPeakIndex] - insilico.InsilicoMassRightYstar[theoreticalPeakIndex]);
-                        if (diff <= peakDifferenceTolerance)
-                            insilicoScore++;
-                    }
-
-                    if (peakList[experimentalPeakIndex] >
-                        insilico.InsilicoMassLeft[theoreticalPeakIndex] + peakDifferenceTolerance)
-                    {
-                        theoreticalPeakIndex--;
-                    }
-                    else
-                    {
-                        experimentalPeakIndex++;
-                    }
-                }               
-
-                insilicoScore = insilicoScore / peakList.Count;
-                insilicoScore = insilicoScore * Math.Pow(2, 1 - insilicoScore);
-                protein.InsilicoScore = insilicoScore;
-                protein.InsilicoDetails = insilico;
-
+                    Counter = Counter + 1;
+                    Matches_Score = Matches_Score + 1.5;
+                }
+                else
+                {
+                    Counter = 0;
+                    Matches_Score = Matches_Score + OnepeakData2DList.Intensity;
+                    OldConsec2 = OldConsec;
+                    OldConsec = Consecutive;
+                }
+                // Only Update Score
+                Matched_IndexList.Add(indexSide);
+                Peak_IndexList.Add(indexPeakList);
+                /////////LeftType = [LeftType; {'Left'} ];
+                MatchCounter = MatchCounter + 1;
             }
         }
 
@@ -249,7 +305,7 @@ namespace PerceptronLocalService.Engine
                     return tol;
                 case "ppm":
                     return (tol * peak) / 1000000;
-                default:
+                default: //No Need
                     return (tol * peak) / 100;
             }
 

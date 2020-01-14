@@ -14,9 +14,9 @@ namespace PerceptronLocalService.Engine
 {
     class ProteinRepositorySql : IProteinRepository
     {
-        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters)
-        {            
-            var query = GetQuery(mw, parameters);
+        public List<ProteinDto> ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateList) // Added "int CandidateList". 20200112
+        {
+            var query = GetQuery(IntactMass, parameters, CandidateList);
 
             var connectionString = GetConnectionString(parameters.ProtDb);
             List<SerializedProteinDataDto> prot;
@@ -47,41 +47,51 @@ namespace PerceptronLocalService.Engine
                     Sequence = proteinInfo.Seq
 
                 };
-                
-                proteins.Add(protein);
 
+                if (parameters.FilterDb == 1)
+                {
+                    if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
+                    {
+                        proteins.Add(protein);
+                    }
+                    else if (CandidateList == 1)  // Candidate Protein List with Truncation     // parameters.Truncation == 1 && 
+                    {
+                        if (parameters.DenovoAllow == 1)
+                        {
+                            for (int indexPstTags = 0; indexPstTags < PstTags.Count; indexPstTags++)
+                            {
+                                if (proteinInfo.Seq.Contains(PstTags[indexPstTags].PstTags))
+                                {
+                                    proteins.Add(protein);
+                                    break;  //Any Tag is Reported....??? Good!  BREAK THE LOOP AND KEEP THE PROTEIN
+                                }
+                            }
+                        }
+                        else
+                        {
+                            proteins.Add(protein);
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    proteins.Add(protein);
+                }
             }
             return proteins;
         }
 
-        private string GetConnectionString(string db)
-        {
-            switch (db)
-            {
-                case  "Ecoli":
-                    return  ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                    //break;
-                case "Bacteria":
-                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                    //break;
-                case "TrEMBL":// FARHAN's TESTING
-                    return ConfigurationManager.ConnectionStrings["TrEMBLConnectionStringName"].ConnectionString;
-                    //break;
-                case "Human":
-                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
-                    //break;
-                default:  // Default is also Human
-                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
+        //private FilteringDatabase()
 
-            }
-        
-        }
+        //private List<ProteinDto
 
-        private string GetQuery(double mw, SearchParametersDto parameters)
+
+        private string GetQuery(double IntactMass, SearchParametersDto parameters, int CandidateList) // Added "int CandidateList". 20200112
         {
             string DatabaseName = parameters.ProtDb;
 
-            if (parameters.ProtDb == "Bacteria")
+            if (parameters.ProtDb == "Bacteria") // Was Needed: When FE also showing Bacteria but same ConnectionStrings {So, Doesn't Matter}
             {
                 parameters.ProtDb = "Ecoli";
                 DatabaseName = parameters.ProtDb;
@@ -92,11 +102,47 @@ namespace PerceptronLocalService.Engine
 
 
             string query = subquery1 + DatabaseName + subquery2;   //"Select * From  [ProteinDB].[dbo].[ProteinInfoes]";
+            
+            
             if (parameters.FilterDb == 1)
             {
-                query += " Where MW > " + (mw - parameters.MwTolerance) + " AND MW < " + (mw + parameters.MwTolerance);
+                if (CandidateList == 0) //For Simple Candidate Protein List >>>> CandidateList == 0
+                {
+                    query += " Where MW >= " + (IntactMass - parameters.MwTolerance) + " AND MW <= " + (IntactMass + parameters.MwTolerance);    // SAME AS abs(DBProtein_MW + MWeight - Protein_ExperimentalMW)<= MWTolerance + TolExt
+                }
+                else if (CandidateList == 1)  //For Truncated Candidate Protein List >>>> CandidateList == 1      // parameters.Truncation == 1 && 
+                {
+                    query += " Where MW -" + IntactMass + ">" + parameters.MwTolerance;  //MW is Protein Mass  // (DBProtein_MW - Protein_ExperimentalMW) > MWTolerance
+                }
+            }
+            else
+            {
+                return query;
             }
             return query;
+        }
+
+
+
+        private string GetConnectionString(string db)
+        {
+            switch (db)
+            {
+                case "Ecoli":
+                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
+                //break;
+                case "Bacteria":
+                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
+                //break;
+                case "TrEMBL":// FARHAN's TESTING
+                    return ConfigurationManager.ConnectionStrings["TrEMBLConnectionStringName"].ConnectionString;
+                //break;
+                case "Human":
+                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
+                //break;
+                default:  // Default is also Human
+                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
+            }
         }
     }
 }
