@@ -18,7 +18,9 @@ namespace PerceptronAPI
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Filters.Add(new RequireHttpsAttribute());
+            //config.Filters.Add(new RequireHttpsAttribute());  //THIS IS COMMENTED JUST FOR...
+            
+            
             //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
 
            // config.Routes.MapHttpRoute(
