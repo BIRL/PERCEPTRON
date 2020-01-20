@@ -14,6 +14,11 @@ namespace PerceptronLocalService.Engine
 {
     class ProteinRepositorySql : IProteinRepository
     {
+        public void Dummy()
+        {
+
+        }
+
         public List<ProteinDto> ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateList) // Added "int CandidateList". 20200112
         {
             var query = GetQuery(IntactMass, parameters, CandidateList);
@@ -30,21 +35,27 @@ namespace PerceptronLocalService.Engine
 
             foreach (var proteinInfo in prot)
             {
+                //if (proteinInfo.ID == "P04439")  // Was for Testing
+                //{
+                //    int wait;
+                //}
                 var insilico = new InsilicoObjectDto()
                 {
                     InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
                     InsilicoMassRight = proteinInfo.InsilicoR.Split(',').Select(double.Parse).ToList() // InsilicoR
                 };
 
-                insilico.InsilicoMassLeft.RemoveAt(insilico.InsilicoMassLeft.Count - 1); // JUST IN CASE::: as this will be the MW of protein - water
-                insilico.InsilicoMassRight.RemoveAt(insilico.InsilicoMassRight.Count - 1);
+                //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water)
+                //insilico.InsilicoMassLeft.RemoveAt(insilico.InsilicoMassLeft.Count - 1); // JUST IN CASE::: as this will be the MW of protein - water
+                //insilico.InsilicoMassRight.RemoveAt(insilico.InsilicoMassRight.Count - 1);
 
                 var protein = new ProteinDto()
                 {
                     Header = proteinInfo.ID,
                     InsilicoDetails = insilico,
                     Mw = proteinInfo.MW,
-                    Sequence = proteinInfo.Seq
+                    Sequence = proteinInfo.Seq,
+                    OriginalSequence = proteinInfo.Seq
 
                 };
 
