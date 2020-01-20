@@ -5,9 +5,9 @@ namespace PerceptronLocalService.DTO
     public class ProteinDto
     {
         public string Header;
+        public string OriginalSequence;
         public string Sequence;
         public double PstScore;
-        public double InsilicoScore;
         public double PtmScore;
         public double Score;
         public double MwScore;
@@ -15,12 +15,27 @@ namespace PerceptronLocalService.DTO
         public List<PostTranslationModificationsSiteDto> PtmParticulars;
         public InsilicoObjectDto InsilicoDetails;
 
-        public double MatchesScore;   // Change My Name 
-        public int Match;             // Change My Name
+        public int TruncationIndex;
+        public string Truncation;
+        public string TruncatedSequence;
+        public double TruncatedMolecaularWeight;
+        public string TerminalModification;
+
+        //Insilico Scoring
+        public double InsilicoScore;
+        public int MatchCounter;
+        public List<int> LeftMatchedIndex;
+        public List<int> RightMatchedIndex;
+        public List<int> LeftPeakIndex;
+        public List<int> RightPeakIndex;
+        public List<string> LeftType;
+        public List<string> RightType;
+        public double Evalue;
 
         public ProteinDto()
         {
             Header = "";
+            OriginalSequence = "";
             Sequence = "";
             PstScore = 0;
             InsilicoScore = 0;
@@ -30,13 +45,18 @@ namespace PerceptronLocalService.DTO
             PtmParticulars = new List<PostTranslationModificationsSiteDto>();
             InsilicoDetails = new InsilicoObjectDto();
 
-            MatchesScore = 0.0;
-            Match = 0;
+            MatchCounter = 0;
+            Truncation = "None";
+            TruncationIndex = -1;
+            TruncatedSequence = "";
+            TruncatedMolecaularWeight = 0;
+            TerminalModification = "";
         }
 
         public ProteinDto(string h, string s, double mw, double mwScore)
         {
             Header = h;
+            OriginalSequence = s;
             Sequence = s;
             PstScore = 0;
             MwScore = mwScore;
@@ -46,8 +66,7 @@ namespace PerceptronLocalService.DTO
             Mw = mw;
             //PtmParticulars = new List<Sites>();
 
-            MatchesScore = 0.0;
-            Match = 0;
+            
 
         }
 
@@ -57,9 +76,14 @@ namespace PerceptronLocalService.DTO
         }
 
 
+
         public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
         {
-            Score = (pstSweight * PstScore / 100 + insilicoSweight * InsilicoScore / 100 + mwSweight * MwScore / 100) / 3.0;
+            Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
         }
+        //public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
+        //{
+        //    Score = (pstSweight * PstScore / 100 + insilicoSweight * InsilicoScore / 100 + mwSweight * MwScore / 100) / 3.0;
+        //}
     }
 }

@@ -153,7 +153,7 @@ namespace PerceptronLocalService.Engine
         //STEP 2: Generate theoretical fragments of each protein 
         private static void MakeAdjustment(ProteinDto prot, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
         {
-            for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count; index++) //for Fragment
+            for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count - 1; index++) ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
             {
                 prot.InsilicoDetails.InsilicoMassLeft[index] = prot.InsilicoDetails.InsilicoMassLeft[index] + leftOffset;
                 prot.InsilicoDetails.InsilicoMassRight[index] = prot.InsilicoDetails.InsilicoMassRight[index] + rightOffset;
@@ -164,7 +164,7 @@ namespace PerceptronLocalService.Engine
         private static void MakeAdjustmentInSpecialIons(List<double> MainIon, List<double> SpecialFragmentIonList, double Offset)
         {
 
-            for (int iter = 0; iter < MainIon.Count; iter++)
+            for (int iter = 0; iter < MainIon.Count -1; iter++)////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
             {
                 SpecialFragmentIonList.Add(MainIon[iter] + Offset);
             }

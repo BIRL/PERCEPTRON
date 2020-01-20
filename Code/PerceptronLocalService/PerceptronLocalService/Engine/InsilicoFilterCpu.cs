@@ -159,8 +159,8 @@ namespace PerceptronLocalService.Engine
                         //    delme = 0;
 
                         int Consecutive = indexPeakList;
-
-                        for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count; indexLeftSide++)
+                        //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
+                        for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count - 1; indexLeftSide++)
                         {
                             double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeft[indexLeftSide];
                             //Check in Left Ions
@@ -195,8 +195,8 @@ namespace PerceptronLocalService.Engine
                                 break;
                             }
                         }
-
-                        for (int indexRightSide = IdxR; indexRightSide < insilico.InsilicoMassRight.Count; indexRightSide++)
+                        //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
+                        for (int indexRightSide = IdxR; indexRightSide < insilico.InsilicoMassRight.Count - 1; indexRightSide++)
                         {
                             ///Check in Right Ions
                             double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRight[indexRightSide];
@@ -232,9 +232,8 @@ namespace PerceptronLocalService.Engine
                         }
                     }
 
-
-                    proteinList[indexProteinList].MatchesScore = Matches_Score / peakData2DList.Count;
-                    proteinList[indexProteinList].Match = MatchCounter;
+                    proteinList[indexProteinList].InsilicoScore = Matches_Score / peakData2DList.Count;
+                    proteinList[indexProteinList].MatchCounter = MatchCounter;
 
                     //experimentalPeakIndex = 0;
                     //theoreticalPeakIndex = insilico.InsilicoMassRight.Count - 1;
@@ -246,7 +245,7 @@ namespace PerceptronLocalService.Engine
 
             for (int MatchIndex = 0; MatchIndex < proteinList.Count; MatchIndex++)
             {
-                if (proteinList[MatchIndex].Match >0)
+                if (proteinList[MatchIndex].MatchCounter > 0)
                 {
                     Matches.Add(proteinList[MatchIndex]);
                 }
