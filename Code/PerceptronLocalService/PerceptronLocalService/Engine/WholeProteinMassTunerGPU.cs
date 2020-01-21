@@ -14,8 +14,10 @@ namespace PerceptronLocalService.Engine
     {
         private const int NumberOfThreads = 1024;
 
-        public void TuneWholeProteinMass(MsPeaksDto peakData, double molTolerance)
-        {//peakData a data extracted from INPUT FILE
+        public void TuneWholeProteinMass(MsPeaksDto peakData, SearchParametersDto parameters)
+        {
+            double molTolerance = parameters.MwTolerance;
+            //peakData a data extracted from INPUT FILE
          //molTolerance is Intact Mass Tolerance
             //var peakDataMassSort = new int [peakData.Mass.Count]; Make an array of size of peakData.Mass for storing peakData.Mass
             ////////////peakData.Mass.Sort(); // SORTING OF MASSES  WHY SORTING FOR ...????
@@ -193,7 +195,7 @@ namespace PerceptronLocalService.Engine
             double olddiff = 1, newdiff = 0;
             //HARD CODE NOW FOR WORKING WILL ADD THIS FEATURE INTO THE FRONTEND FOR USER DEFINED   #FutureWork3a(GPU)/#HARDCODE -             //Add here SliderValue(BELOW)
             double SliderValueHardCode = 50;
-            double SliderValue = (SliderValueHardCode + peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//double SliderValue = 50; //
+            double SliderValue = (SliderValueHardCode * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//double SliderValue = 50; //
             
             
             int gpushortlistedpeaklistindex = gpushortlistedpeaklist.Count - 1;

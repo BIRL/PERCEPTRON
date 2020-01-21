@@ -11,8 +11,10 @@ namespace PerceptronLocalService.Engine
     public class WholeProteinMassTunerCpu : IWholeProteinMassTuner
     {
 
-        public void TuneWholeProteinMass(MsPeaksDto peakData, double molTolerance)
-        {   //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
+        public void TuneWholeProteinMass(MsPeaksDto peakData, SearchParametersDto parameters)
+        {   
+            double molTolerance = parameters.MwTolerance;
+            //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             var peakDatalist = new List<peakData2Dlist>();
             for (int row = 0; row <= peakData.Mass.Count - 1; row++)
             {
@@ -42,6 +44,7 @@ namespace PerceptronLocalService.Engine
             }
            
             //FIGURE 5: STEP 3 Running window have size of Proton (and starts from smallest mass of FIGURE 5: STEP 2 list) [REF: SPCTRUM PAPER]
+            summationMassandaverageintensity = summationMassandaverageintensity.OrderBy(n => n.Mass).ToList(); //20200120 AG - Sorting is being done here!
             double windowposition = summationMassandaverageintensity[0].Mass; //Smallest mass selected from Tuple Sums for creating a window positon
             const double proton = 1.00727647; //Mass of proton
 
@@ -50,7 +53,9 @@ namespace PerceptronLocalService.Engine
             var count = new List<int>();   //CHANGE MY NAME...
             double olddiff = 1, newdiff = 0;
             //Add here SliderValue(BELOW)
-            double SliderValue = 0.5699;  //HARD CODE NOW FOR WORKING WILL ADD THIS FEATURE INTO THE FRONTEND FOR USER DEFINED   #FutureWork3b(CPU)
+
+            double SliderValue = 50;  //HARD CODE NOW FOR WORKING WILL ADD THIS FEATURE INTO THE FRONTEND FOR USER DEFINED   #FutureWork3b(CPU)
+            SliderValue = (SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 AG - Slider value will be changed according to Intact Protein Mass
 
             int summationMassandaverageintensityindex = summationMassandaverageintensity.Count - 1;
             while (windowposition < summationMassandaverageintensity[summationMassandaverageintensityindex].Mass)

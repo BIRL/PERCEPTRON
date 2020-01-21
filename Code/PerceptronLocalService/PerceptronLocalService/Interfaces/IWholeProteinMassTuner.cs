@@ -4,7 +4,7 @@ namespace PerceptronLocalService.Interfaces
 {
     public interface IWholeProteinMassTuner
     {
-        void TuneWholeProteinMass(MsPeaksDto peakData, double molTolerance);
+        void TuneWholeProteinMass(MsPeaksDto peakData, SearchParametersDto parameters);
         
     }
 }
