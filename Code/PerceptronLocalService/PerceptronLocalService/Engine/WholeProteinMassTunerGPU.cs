@@ -173,14 +173,16 @@ namespace PerceptronLocalService.Engine
                 }
             }
 
-            if (gpushortlistedpeaklist.Count == 0) //numel(Peak.Sums) == 0 #FutureWork2
+            if (gpushortlistedpeaklist.Count == 0) //numel(Peak.Sums) == 0 #FutureWork2  // LAST UPDATE 20200121
             {
-                // Featuring Baad ma..#FutureWork1
-                int Tuned_MolWt = 0;
-                int Fragments_SumofMolWt = 0;
-                int Fragments_MaxIntensity = 0;
-                int Histc_Unique_Fragments_MolWt = 0;
-                int Unique_Fragments_Occurrences = 0;
+                peakData.WholeProteinMolecularWeight = 0;
+                return;
+                //// Featuring Baad ma..#FutureWork1
+                //int Tuned_MolWt = 0;
+                //int Fragments_SumofMolWt = 0;
+                //int Fragments_MaxIntensity = 0;
+                //int Histc_Unique_Fragments_MolWt = 0;
+                //int Unique_Fragments_Occurrences = 0;
             }
             //FIGURE 5: STEP 3 Running window have size of Proton (and starts from smallest mass of FIGURE 5: STEP 2 list) [REF: SPCTRUM PAPER]
 /////////////

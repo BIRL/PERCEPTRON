@@ -110,7 +110,7 @@ namespace PerceptronLocalService.Engine
         //    }
         //}
 
-        public void ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
+        public void ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit, List<ProteinDto> CandidateProteinswithInsilicoScores) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
         {
             //tol = 15;
             //var pepUnit = "ppm";
@@ -247,7 +247,8 @@ namespace PerceptronLocalService.Engine
             {
                 if (proteinList[MatchIndex].MatchCounter > 0)
                 {
-                    Matches.Add(proteinList[MatchIndex]);
+                    //Matches.Add(proteinList[MatchIndex]);
+                    CandidateProteinswithInsilicoScores.Add(proteinList[MatchIndex]);
                 }
                 /// FOR TESTINGS...!!!
                 //if (proteinList[MatchIndex].Match >1)

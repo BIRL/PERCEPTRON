@@ -36,12 +36,12 @@ namespace PerceptronAPI.Models
         public int NumberOfOutputs { get; set; }
         public int DenovoAllow { get; set; }
         public int PtmAllow { get; set; }
-        public Nullable<double> NeutralLoss { get; set; }
+        public double NeutralLoss { get; set; }
         public double PSTTolerance { get; set; }
         public double PeptideTolerance { get; set; }
         public string PeptideToleranceUnit { get; set; }
         public int Truncation { get; set; }
         public string TerminalModification { get; set; }
-        public Nullable<double> SliderValue { get; set; }
+        public double SliderValue { get; set; }
     }
 }

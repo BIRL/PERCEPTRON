@@ -378,7 +378,8 @@ namespace PerceptronAPI.Repository
 
                 PeptideTolerance = searchParameters.PeptideTolerance,
                 PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
-                TerminalModification = searchParameters.TerminalModification
+                TerminalModification = searchParameters.TerminalModification,
+                SliderValue = searchParameters.SliderValue
 
                 //Terminal_Modification = searchParameters.Terminal_Modification,
                 //

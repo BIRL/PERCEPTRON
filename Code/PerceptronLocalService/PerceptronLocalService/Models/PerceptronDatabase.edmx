@@ -99,13 +99,13 @@
           <Property Name="NumberOfOutputs" Type="int" Nullable="false" />
           <Property Name="DenovoAllow" Type="int" Nullable="false" />
           <Property Name="PtmAllow" Type="int" Nullable="false" />
-          <Property Name="NeutralLoss" Type="float" />
+          <Property Name="NeutralLoss" Type="float" Nullable="false" />
           <Property Name="PSTTolerance" Type="float" Nullable="false" />
           <Property Name="PeptideTolerance" Type="float" Nullable="false" />
           <Property Name="PeptideToleranceUnit" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Truncation" Type="int" Nullable="false" />
           <Property Name="TerminalModification" Type="nvarchar" MaxLength="128" />
-          <Property Name="SliderValue" Type="float" />
+          <Property Name="SliderValue" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
@@ -245,13 +245,13 @@
           <Property Name="NumberOfOutputs" Type="Int32" Nullable="false" />
           <Property Name="DenovoAllow" Type="Int32" Nullable="false" />
           <Property Name="PtmAllow" Type="Int32" Nullable="false" />
-          <Property Name="NeutralLoss" Type="Double" />
+          <Property Name="NeutralLoss" Type="Double" Nullable="false" />
           <Property Name="PSTTolerance" Type="Double" Nullable="false" />
           <Property Name="PeptideTolerance" Type="Double" Nullable="false" />
           <Property Name="PeptideToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Truncation" Type="Int32" Nullable="false" />
           <Property Name="TerminalModification" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="SliderValue" Type="Double" />
+          <Property Name="SliderValue" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
