@@ -16,7 +16,7 @@ namespace PerceptronLocalService.DTO
         public InsilicoObjectDto InsilicoDetails;
 
         public int TruncationIndex;
-        public string Truncation;
+        public string Truncation; //20200122 ITS JUST FOR EVALUE.CS
         public string TruncatedSequence;
         public double TruncatedMolecaularWeight;
         public string TerminalModification;
@@ -42,16 +42,46 @@ namespace PerceptronLocalService.DTO
             PtmScore = 0;
             Score = 0;
             MwScore = 0;
+            Mw = 0; // 20200122
             PtmParticulars = new List<PostTranslationModificationsSiteDto>();
             InsilicoDetails = new InsilicoObjectDto();
 
             MatchCounter = 0;
-            Truncation = "None";
+            Truncation = "";  //20200122  //20200122 ITS JUST FOR EVALUE.CS
             TruncationIndex = -1;
             TruncatedSequence = "";
             TruncatedMolecaularWeight = 0;
-            TerminalModification = "";
+            TerminalModification = "None";
         }
+
+        public ProteinDto(ProteinDto protein)
+        {
+            Header = protein.Header;
+            OriginalSequence = protein.OriginalSequence;
+            Sequence = protein.Sequence;
+            PstScore = protein.PstScore;
+            InsilicoScore = protein.InsilicoScore;
+            PtmScore = protein.PtmScore;
+            Score = protein.Score;
+            MwScore = protein.MwScore;
+            PtmParticulars = new List<PostTranslationModificationsSiteDto>(protein.PtmParticulars);
+            InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
+
+            TruncationIndex = protein.TruncationIndex;
+            TerminalModification = protein.TerminalModification;
+            Truncation = protein.Truncation;
+            InsilicoScore = protein.InsilicoScore;
+            MatchCounter = protein.MatchCounter;
+
+            LeftMatchedIndex = protein.LeftMatchedIndex;
+            RightMatchedIndex = protein.RightMatchedIndex;
+            LeftPeakIndex = protein.LeftPeakIndex;
+            RightPeakIndex = protein.RightPeakIndex;
+            LeftType = protein.LeftType;
+            RightType = protein.RightType;
+
+        }
+
 
         public ProteinDto(string h, string s, double mw, double mwScore)
         {

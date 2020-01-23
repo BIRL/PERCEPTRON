@@ -12,7 +12,7 @@ namespace PerceptronLocalService.DTO
         public string UserId;
         public string Title;
         public string ProtDb;
-        public string InsilicoFragType;
+        public string InsilicoFragType; // Its Specical Ions
         public int FilterDb;
         public double PtmTolerance;
         public int MinimumPstLength;
@@ -37,7 +37,8 @@ namespace PerceptronLocalService.DTO
         public int NumberOfOutputs;
         public int DenovoAllow;
         public int PtmAllow;
-        public double? NeutralLoss; //Added 12Sep2019
+
+        public double NeutralLoss; //  UPDATED: 20200121  -  public double? NeutralLoss; //Added 12Sep2019
         public double PSTTolerance; //Added 11Dec2019
 
         public double PeptideTolerance;
@@ -45,6 +46,8 @@ namespace PerceptronLocalService.DTO
 
         public string TerminalModification;
         public int? Truncation;
+
+        public double SliderValue;  //20200121
 
 
 

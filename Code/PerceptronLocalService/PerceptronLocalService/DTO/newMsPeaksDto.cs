@@ -16,7 +16,5 @@ namespace PerceptronLocalService.DTO
             Mass = cMass;
             Intensity = cIntensity;
         }
-
-    }
-     
+    } 
 }
