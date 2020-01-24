@@ -124,8 +124,11 @@
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1">
+            <mat-checkbox matTooltip="Check the option for tuning protein mass by using MS2 data" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Autotune" name="Autotune" ngModel>Tune Intact Protein Mass</mat-checkbox>
+          </mat-grid-tile>
+        <!-- <mat-grid-tile colspan="2" rowspan="1">
           <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
 
       </mat-grid-list>
 
@@ -154,9 +157,20 @@
 
         <mat-grid-tile></mat-grid-tile>
 
-        <mat-grid-tile colspan="2" rowspan="1">
+        <!-- <mat-grid-tile colspan="2" rowspan="1">
           <mat-checkbox matTooltip="Check the option for tuning protein mass by using MS2 data" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Autotune" name="Autotune" ngModel>Tune Intact Protein Mass</mat-checkbox>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
+
+        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+            <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
+              <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
+                id="selectedFrag" name="InsilicoFragType" (change)="selectIons()">
+                <mat-option *ngFor="let fragment of fragments" [value]="fragment.value">
+                  {{ fragment.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
 
         <mat-grid-tile></mat-grid-tile>
 
@@ -167,6 +181,8 @@
             <span matSuffix>Da</span>
           </mat-form-field>
         </mat-grid-tile>
+
+
 
 
       </mat-grid-list>
@@ -193,6 +209,31 @@
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+            <mat-form-field style="padding-left:15px; width:100%;">
+              <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" placeholder="Select Corresponding Special Ions"
+                name="HandleIons" multiple>
+                <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
+                  {{ Special.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile></mat-grid-tile>
+
+          <!-- SLIDERVALUE -->
+          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+              <mat-form-field matTooltip="Set the tolerance value for mass tuner" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
+
+                <input matInput (keypress)="keyPress($event)" [(ngModel)]="SliderValue" [disabled]="!Autotune" placeholder="Intact Mass Tolerance"
+                  name="SliderValue" ngModel>
+                
+              </mat-form-field>
+            </mat-grid-tile> -->
+            
+            <!-- <span matSuffix>Da</span> -->
+
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
             <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
               id="selectedFrag" name="InsilicoFragType" (change)="selectIons()">
@@ -201,11 +242,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
 
         <mat-grid-tile></mat-grid-tile>
 
-        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding-left:15px; width:100%;">
             <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" placeholder="Select Corresponding Special Ions"
               name="HandleIons" multiple>
@@ -214,7 +255,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
       </mat-grid-list>
     </mat-expansion-panel>
     <div style="height:10px;font-size:1px;">&nbsp;</div>
@@ -266,7 +307,7 @@
         <mat-grid-tile colspan="2" rowspan="1">
         <div style="width: 95%">
           <mat-form-field matTooltip="Set the tolerance for matching peak difference with standard amino acid masses" style="padding:0px; width:100%; padding-left:15px;">
-            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" 
+            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)"
               matTooltipPosition="before" placeholder="Tolerance For Each Hop" [(ngModel)]="HopThreshhold" name="HopThreshhold"
               [disabled]="!DenovoAllow" ngModel>
           </mat-form-field>
@@ -284,7 +325,7 @@
 
         <mat-grid-tile colspan="2" rowspan="1">
           <mat-form-field matTooltip="Enter Error Margin For Whole Peptide Sequence Tag." style="padding:0px; width:100%; padding-left:15px;">
-            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" [disabled]="!DenovoAllow" 
+            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" [disabled]="!DenovoAllow"
               matTooltipPosition="before" placeholder="Set the overall mass error tolerance for the complete PST" [(ngModel)]="PSTTolerance" name="PSTTolerance"
               ngModel>
           </mat-form-field>
@@ -309,21 +350,28 @@
 
       <div style="height:30px; font-size:1px;">&nbsp;</div>
       <!-- <br> -->
-      <mat-grid-list cols="8" rowHeight="45px">
+
+      <mat-grid-list cols="8" rowHeight="70px">
+      <mat-grid-tile colspan="2" rowspan="1">
+          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="8" rowHeight="75px">
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification" 
+            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification"
               placeholder="Terminal Modification" name="TerminalModification" ngModel multiple>
               <mat-option *ngFor="let TerminalMod of TerminalMods" [value]="TerminalMod.value">
                 {{ TerminalMod.viewValue }}
-                
+
                 <!-- class = "form-control" aria-required="TerminalModification -->
               </mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
-        
+
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
