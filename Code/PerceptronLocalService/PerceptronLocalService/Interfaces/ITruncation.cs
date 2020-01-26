@@ -12,7 +12,7 @@ namespace PerceptronLocalService.Interfaces
         void PreTruncation(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<ProteinDto> CandidateProteinListTruncatedLeft, List<ProteinDto> CandidateProteinListTruncatedRight, List<newMsPeaksDto> peakData2DList);
 
         void TruncationLeft(List<ProteinDto> CandidateProteinListTruncatedLeft, List<newMsPeaksDto>  peakData2DList);
-        void TruncationRight(List<ProteinDto> CandidateProteinListTruncatedLeft, List<newMsPeaksDto> peakData2DList);
+        //void TruncationRight(List<ProteinDto> CandidateProteinListTruncatedLeft, List<newMsPeaksDto> peakData2DList);
 
 
 

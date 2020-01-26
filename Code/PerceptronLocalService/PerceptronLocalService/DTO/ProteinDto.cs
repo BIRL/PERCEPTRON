@@ -16,7 +16,7 @@ namespace PerceptronLocalService.DTO
         public InsilicoObjectDto InsilicoDetails;
 
         public int TruncationIndex;
-        public string Truncation; //20200122 ITS JUST FOR EVALUE.CS
+        public string Truncation; //20200126
         public string TruncatedSequence;
         public double TruncatedMolecaularWeight;
         public string TerminalModification;
@@ -47,7 +47,7 @@ namespace PerceptronLocalService.DTO
             InsilicoDetails = new InsilicoObjectDto();
 
             MatchCounter = 0;
-            Truncation = "";  //20200122  //20200122 ITS JUST FOR EVALUE.CS
+            Truncation = "None";  //20200126
             TruncationIndex = -1;
             TruncatedSequence = "";
             TruncatedMolecaularWeight = 0;
