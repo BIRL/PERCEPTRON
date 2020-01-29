@@ -410,6 +410,16 @@ export class ProteinSearchComponent implements OnInit {
       email = user.email;
       form.UserId = email;
     }
+    if(form.NumberOfOutputs == ""){
+      form.NumberOfOutputs = '10';
+      alert("No, number of ouptut results were selected. So, we will select Top 10 resutls for you. \n Happy Searching!");
+    }
+    
+    if(form.MwSweight == "" || form.PstSweight == "" || form.InsilicoSweight == ""){
+      form.MwSweight == 0;
+      form.PstSweight = 0; 
+      form.InsilicoSweight = 0;
+    }
 
     if (form.PtmTolerance == ""){
       form.PtmTolerance = 0;

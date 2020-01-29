@@ -64,6 +64,7 @@ namespace PerceptronLocalService.DTO
             PtmScore = protein.PtmScore;
             Score = protein.Score;
             MwScore = protein.MwScore;
+            Mw = protein.Mw;
             PtmParticulars = new List<PostTranslationModificationsSiteDto>(protein.PtmParticulars);
             InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
 
@@ -109,7 +110,9 @@ namespace PerceptronLocalService.DTO
 
         public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
         {
-            Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
+            Score = (mwSweight * MwScore + pstSweight * PstScore + insilicoSweight * InsilicoScore) / 3.0;
+
+            //Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
         }
         //public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
         //{
