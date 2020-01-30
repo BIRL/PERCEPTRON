@@ -15,30 +15,13 @@ namespace PerceptronLocalService.Interfaces
 
         void TruncationRight(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedRight, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList);
 
+        List<ProteinDto> FilterTruncatedProteins(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListUnModified, List<PstTagList> PstTags);
+
         //(List<ProteinDto> CandidateProteinListTruncatedLeft, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft, List<newMsPeaksDto> peakData2DList)
 
         //void TruncationRight(List<ProteinDto> CandidateProteinListTruncatedRight, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList);
 
 
         //void TruncationRight(List<ProteinDto> CandidateProteinListTruncatedLeft, List<newMsPeaksDto> peakData2DList);
-
-
-
-
-
-        //void PreTruncation(List<ProteinDto> proteinList, MsPeaksDto peakData, SearchParametersDto parameters,
-        //    List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight
-
-        //void TruncationLeft(List<ProteinDto> proteinList, MsPeaksDto peakData, SearchParametersDto parameters,
-        //    List<ProteinDto> proteinListTruncated, List<ProteinDto> proteinListRemaining);
-
-        //void TruncationRight(List<ProteinDto> proteinList, MsPeaksDto peakData, SearchParametersDto parameters,
-        //    List<ProteinDto> proteinListTruncated, List<ProteinDto> proteinListRemaining);
-
-        //void TruncationLeftWithMoification(List<ProteinDto> proteinList, MsPeaksDto peakData,
-        //    SearchParametersDto parameters, List<ProteinDto> proteinListTruncated);
-
-        //void TruncationRightWithModification(List<ProteinDto> proteinList, MsPeaksDto peakData,
-        //    SearchParametersDto parameters, List<ProteinDto> proteinListTruncated);
     }
 }
