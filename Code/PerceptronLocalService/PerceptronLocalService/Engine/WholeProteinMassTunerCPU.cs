@@ -33,7 +33,7 @@ namespace PerceptronLocalService.Engine
             {
                 for (int j = i + 1; j <= peakDatalistsort.Count - 1; j++)//j starts from 0 so that's why peakDatalistsort.Count - 1 and according to Formula just "n"
                 {
-                    double cpusummationMassData = peakDatalistsort[i].Mass + peakDatalistsort[j].Mass; //Making Tuple sums of MS2 masses
+                    double cpusummationMassData = peakDatalistsort[i].Mass + peakDatalistsort[j].Mass + parameters.NeutralLoss; //Making Tuple sums of MS2 masses + Neutral Loss Mass if user know the Loss of Mass during experimentation // 20200121 - - NeutralLoss Added 
                     if (peakData.WholeProteinMolecularWeight - molTolerance <= cpusummationMassData && cpusummationMassData <= peakData.WholeProteinMolecularWeight + molTolerance)//Masses & Intensities filter out due to the selected RANGE OF INTACT MASS +/- PROTEIN MASS TOLERANCE
                     {
                         double cpuaverageIntensityData = (peakDatalistsort[i].Intensity + peakDatalistsort[j].Intensity) / 2;
@@ -42,9 +42,16 @@ namespace PerceptronLocalService.Engine
                     }
                 }
             }
-           
+
+            if (summationMassandaverageintensity.Count == 0) // LAST UPDATE 20200121
+            {
+                peakData.WholeProteinMolecularWeight = 0;
+                return;
+                
+            }
+
             //FIGURE 5: STEP 3 Running window have size of Proton (and starts from smallest mass of FIGURE 5: STEP 2 list) [REF: SPCTRUM PAPER]
-            summationMassandaverageintensity = summationMassandaverageintensity.OrderBy(n => n.Mass).ToList(); //20200120 AG - Sorting is being done here!
+            summationMassandaverageintensity = summationMassandaverageintensity.OrderBy(n => n.Mass).ToList(); //20200120 - Sorting is being done here!
             double windowposition = summationMassandaverageintensity[0].Mass; //Smallest mass selected from Tuple Sums for creating a window positon
             const double proton = 1.00727647; //Mass of proton
 
@@ -52,10 +59,12 @@ namespace PerceptronLocalService.Engine
             var oldindex = new List<int>();   //CHANGE MY NAME...
             var count = new List<int>();   //CHANGE MY NAME...
             double olddiff = 1, newdiff = 0;
-            //Add here SliderValue(BELOW)
-
-            double SliderValue = 50;  //HARD CODE NOW FOR WORKING WILL ADD THIS FEATURE INTO THE FRONTEND FOR USER DEFINED   #FutureWork3b(CPU)
-            SliderValue = (SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 AG - Slider value will be changed according to Intact Protein Mass
+            
+            
+            //Add here SliderValue(BELOW)//
+            parameters.SliderValue = 50;  //#FutureWork3b(CPU)
+            double SliderValue;
+            SliderValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 - Slider value will be changed according to Intact Protein Mass
 
             int summationMassandaverageintensityindex = summationMassandaverageintensity.Count - 1;
             while (windowposition < summationMassandaverageintensity[summationMassandaverageintensityindex].Mass)
