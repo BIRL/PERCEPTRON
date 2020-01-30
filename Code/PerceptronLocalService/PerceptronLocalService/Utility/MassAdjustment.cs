@@ -9,7 +9,7 @@ namespace PerceptronLocalService.Utility
     public class MassAdjustment 
     {
         public const double Proton = 1.00727647;
-        public const double H = 1.007825035;  // 1.0078250321??
+        public const double H = 1.0078250321;  // 1.0078250321??  WHICH ONE SHOULD BE USE...?   this (1.007825035) is used in Insilico
         public const double C = 12.0000;
         public const double O = 15.9949146221;   // 15.99491463
         public const double N = 14.003074;
