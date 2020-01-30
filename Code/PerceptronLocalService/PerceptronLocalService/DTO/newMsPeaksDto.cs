@@ -11,10 +11,18 @@ namespace PerceptronLocalService.DTO
         public double Mass;
         public double Intensity;
 
+        //public List<double> MassList;
+        //public List<double> IntensityList;
+
         public newMsPeaksDto(double cMass, double cIntensity)
         {
             Mass = cMass;
             Intensity = cIntensity;
         }
+        //public newMsPeaksDto(newMsPeaksDto peakDataList)
+        //{
+        //    Mass = peakDataList.Select(x => x.Mass).ToList();
+        //}
+
     } 
 }
