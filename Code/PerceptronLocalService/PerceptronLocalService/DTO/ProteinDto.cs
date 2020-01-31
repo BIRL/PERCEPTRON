@@ -110,7 +110,7 @@ namespace PerceptronLocalService.DTO
 
         public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
         {
-            Score = (mwSweight * MwScore + pstSweight * PstScore + insilicoSweight * InsilicoScore) / 3.0;
+            Score = (mwSweight * MwScore + pstSweight * PstScore + insilicoSweight * InsilicoScore) / (mwSweight + pstSweight + insilicoSweight); //3.0;
 
             //Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
         }
