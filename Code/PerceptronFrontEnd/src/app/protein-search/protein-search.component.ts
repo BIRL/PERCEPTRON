@@ -414,10 +414,18 @@ export class ProteinSearchComponent implements OnInit {
       form.NumberOfOutputs = '10';
       alert("No, number of ouptut results were selected. So, we will select Top 10 resutls for you. \n Happy Searching!");
     }
-    
-    if(form.MwSweight == "" || form.PstSweight == "" || form.InsilicoSweight == ""){
+    if (form.TerminalModification == ""){
+      form.TerminalModification = ['None'];
+    }
+
+    if(form.MwSweight == ""){
       form.MwSweight == 0;
+    } 
+    if (form.PstSweight == ""){
       form.PstSweight = 0; 
+    }
+    
+    if (form.InsilicoSweight == ""){
       form.InsilicoSweight = 0;
     }
 
