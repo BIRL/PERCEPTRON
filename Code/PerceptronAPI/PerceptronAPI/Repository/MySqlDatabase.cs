@@ -188,7 +188,7 @@ namespace PerceptronAPI.Repository
                     var reader = cmd.ExecuteReader();
                     if (reader.Read())
                     {
-                        returnString = "Login Successfull!";
+                        returnString = "You are Logged In Successfully, Happy Searching!";
                         reader.Close();
                         query = "INSERT INTO session VALUES('" + id + "','" + g + "', now() , Null);";
                         cmd = new MySqlCommand(query, _connection);
@@ -787,6 +787,8 @@ namespace PerceptronAPI.Repository
                             qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(27));
                             qp.PeptideToleranceUnit = reader.GetValue(28).ToString();
                             qp.TerminalModification = reader.GetValue(29).ToString();
+                            qp.SliderValue = Convert.ToDouble(reader.GetValue(27));
+
 
                         }
 
