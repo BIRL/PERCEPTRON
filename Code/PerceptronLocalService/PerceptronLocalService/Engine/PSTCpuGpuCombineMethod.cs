@@ -17,7 +17,7 @@ namespace PerceptronLocalService.Engine
             //E.g. larger tag (SDTI)         divided into smaller tags         S,SD,SDT,SDTI
             //Break the larger Tags into all possible smaller tags
             // This breakage of PST is for Filtering the Tags according to Minimum-Maximum Range Length of PST
-            int length_tags = 0;
+            
             List<List<PstTagsDto>> breakmultipleLenghtTags = new List<List<PstTagsDto>>();
             for (int outerindex = 0; outerindex <= multipleLenghtTagList.Count - 1; outerindex++)  // outer index is the index of big list in list of lists
             {
