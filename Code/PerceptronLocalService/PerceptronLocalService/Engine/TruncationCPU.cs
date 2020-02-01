@@ -10,9 +10,9 @@ namespace PerceptronLocalService.Engine
 {
     public class TruncationCPU : ITruncation
     {
-        double AcetylationWeight = MassAdjustment.AcetylationWeight;
-        //private const double MethionineWeight = 42.0106;
-        double MethionineWeight = 131.04049; //RECEIVING so for the #TIMEBEING//= AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
+        //double AcetylationWeight = MassAdjustment.AcetylationWeight;
+        ////private const double MethionineWeight = 42.0106;
+        //double MethionineWeight = 131.04049; //RECEIVING so for the #TIMEBEING//= AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
 
         public void PreTruncation(SearchParametersDto parameters, List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
         {
@@ -82,7 +82,7 @@ namespace PerceptronLocalService.Engine
 
                 leftIons = leftIons.GetRange(0, preTruncationIndex + factor);
 
-                var molW = leftIons[tmpSeqLength - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
+                var molW = leftIons[tmpSeqLength - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;  // newProtein.Mw    //#FreeTimeTesting
 
                 // Right Ion Stuff
 
@@ -93,67 +93,72 @@ namespace PerceptronLocalService.Engine
                     rightIons = rightIons.GetRange(truncationIndex, prtLength - truncationIndex);
                     rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();
                 }
+               
+                int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
 
-                if (IndividualModifications[0] == "None")
-                {
-                    newProtein.TerminalModification = "None";
-                    newProtein.Mw = molW;
-                    newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
-                    newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
-                    proteinListRight.Add(newProtein);
-                }
+                TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, protein, proteinListRight);
 
-                if (tmpSeq[0] == 'M')
-                {
-                    if (IndividualModifications[0] == "NME" || IndividualModifications[1] == "NME") //Its Seems Like hard Code but not in Actual because We know the position of NME will always be either 0 or 1  //// Just checking NME with this method so to avoid conflict between NME and NME_Acetylation
-                    {
-                        newProtein = new ProteinDto(protein)
-                        {
-                            TerminalModification = "NME",
-                            Mw = molW - MethionineWeight,
-                            InsilicoDetails =
-                            {
-                                InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight).ToList(),
-                                InsilicoMassRight = rightIons.ToList()
-                            },
-                            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
-                        };
-                        proteinListRight.Add(newProtein);
-                    }
 
-                    if (parameters.TerminalModification.Contains("NME_Acetylation"))
-                    {
+                //if (IndividualModifications[0] == "None")
+                //{
+                //    newProtein.TerminalModification = "None";
+                //    newProtein.Mw = molW;
+                //    newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
+                //    newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
+                //    proteinListRight.Add(newProtein);
+                //}
 
-                        newProtein = new ProteinDto(protein)
-                        {
-                            TerminalModification = "NME_Acetylation",
-                            Mw = molW - MethionineWeight + AcetylationWeight,
-                            InsilicoDetails =
-                            {
-                                InsilicoMassLeft =
-                                    leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),
-                                InsilicoMassRight = rightIons.ToList()
-                            },
-                            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
-                        };
-                        proteinListRight.Add(newProtein);
-                    }
-                    if (parameters.TerminalModification.Contains("M_Acetylation"))
-                    {
-                        newProtein = new ProteinDto(protein)
-                        {
-                            TerminalModification = "M_Acetylation",
-                            Sequence = tmpSeq,
-                            Mw = molW + AcetylationWeight,
-                            InsilicoDetails =
-                            {
-                                InsilicoMassLeft = leftIons.Select(x => x + AcetylationWeight).ToList(),
-                                InsilicoMassRight = rightIons.ToList()
-                            }
-                        };
-                        proteinListRight.Add(newProtein);
-                    }
-                }
+                //if (tmpSeq[0] == 'M')
+                //{
+                //    if (IndividualModifications[0] == "NME" || IndividualModifications[1] == "NME") //Its Seems Like hard Code but not in Actual because We know the position of NME will always be either 0 or 1  //// Just checking NME with this method so to avoid conflict between NME and NME_Acetylation
+                //    {
+                //        newProtein = new ProteinDto(protein)
+                //        {
+                //            TerminalModification = "NME",
+                //            Mw = molW - MethionineWeight,
+                //            InsilicoDetails =
+                //            {
+                //                InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight).ToList(),
+                //                InsilicoMassRight = rightIons.ToList()
+                //            },
+                //            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
+                //        };
+                //        proteinListRight.Add(newProtein);
+                //    }
+
+                //    if (parameters.TerminalModification.Contains("NME_Acetylation"))
+                //    {
+
+                //        newProtein = new ProteinDto(protein)
+                //        {
+                //            TerminalModification = "NME_Acetylation",
+                //            Mw = molW - MethionineWeight + AcetylationWeight,
+                //            InsilicoDetails =
+                //            {
+                //                InsilicoMassLeft =
+                //                    leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),
+                //                InsilicoMassRight = rightIons.ToList()
+                //            },
+                //            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
+                //        };
+                //        proteinListRight.Add(newProtein);
+                //    }
+                //    if (parameters.TerminalModification.Contains("M_Acetylation"))
+                //    {
+                //        newProtein = new ProteinDto(protein)
+                //        {
+                //            TerminalModification = "M_Acetylation",
+                //            Sequence = tmpSeq,
+                //            Mw = molW + AcetylationWeight,
+                //            InsilicoDetails =
+                //            {
+                //                InsilicoMassLeft = leftIons.Select(x => x + AcetylationWeight).ToList(),
+                //                InsilicoMassRight = rightIons.ToList()
+                //            }
+                //        };
+                //        proteinListRight.Add(newProtein);
+                //    }
+                //}
 
                 //Save Copy for Left Truncation
                 //protein = proteinList[i];
@@ -418,7 +423,6 @@ namespace PerceptronLocalService.Engine
         public List<ProteinDto> FilterTruncatedProteins(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListInput, List<PstTagList> PstTags)
         {
             var CandidateProteinsListFinal = new List<ProteinDto>();
-            var HeaderList = new List<string>(); //#J4TDM
 
             string tag;
             if (parameters.DenovoAllow == 1)
@@ -437,12 +441,10 @@ namespace PerceptronLocalService.Engine
                         tag = PstTags[iteration].PstTags;
                         if (protein.Sequence.Contains(tag))
                         {
-                            LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1);
-                            RightIons = RightIons.GetRange(0, RightIons.Count - 1);
+                            LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1);   // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                            RightIons = RightIons.GetRange(0, RightIons.Count - 1); // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
 
-                            CandidateProteinsListFinal.Add(protein); // DEME
-
-                            HeaderList.Add(protein.Header);
+                            CandidateProteinsListFinal.Add(protein);
                             break;
                         }
                     }
@@ -458,8 +460,8 @@ namespace PerceptronLocalService.Engine
                     var LeftIons = protein.InsilicoDetails.InsilicoMassLeft;
                     var RightIons = protein.InsilicoDetails.InsilicoMassRight;
 
-                    LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1);
-                    RightIons = RightIons.GetRange(0, RightIons.Count - 1);
+                    LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1); // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                    RightIons = RightIons.GetRange(0, RightIons.Count - 1);// For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
 
                     CandidateProteinsListFinal.Add(protein);
                 }
