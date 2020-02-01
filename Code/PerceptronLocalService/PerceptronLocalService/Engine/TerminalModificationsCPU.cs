@@ -20,8 +20,8 @@ namespace PerceptronLocalService.Engine
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
             {
-                if (candidateProteins[index].Header == "Q9BTM9")
-                {
+                //if (candidateProteins[index].Header == "Q9BTM9")
+                //{
                     //Preparing Protein Info
                     var protein = candidateProteins[index];
                     var tempprotein = new ProteinDto(protein);
@@ -45,7 +45,7 @@ namespace PerceptronLocalService.Engine
                     int tmpSeqLength = sequence.Length;
 
                     TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
-                }
+                //}
             }
 
             return tempCandidateProteins;
