@@ -107,7 +107,23 @@ namespace PerceptronLocalService.Repository
                 searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName) : new SearchParametersDto();
             }
             return searchParametersDto;
-        }       
+        }
+
+        //public string GetCreationTime(string qid)
+        //{
+        //    var temp = new SearchQuery();
+
+        //    using (var db = new PerceptronDatabaseEntities())
+        //    {
+        //        var query = (from b in db.SearchQueryTable
+        //                     where b.QueryId == qid
+        //                     select b).ToList();
+        //        temp = query[0];
+        //    }
+        //    return temp.CreationTime;
+        //}
+
+
 
         public int Set_Progress(string qid, int progress)
         {
@@ -249,7 +265,8 @@ namespace PerceptronLocalService.Repository
                 PeptideTolerance = searchParameters.PeptideTolerance,
                 PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
                 TerminalModification = searchParameters.TerminalModification,
-                Truncation = searchParameters.Truncation 
+                Truncation = searchParameters.Truncation,
+                SliderValue = searchParameters.SliderValue
 
             };
             return searchParametersDto;
