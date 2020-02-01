@@ -291,6 +291,8 @@ namespace PerceptronLocalService.Repository
                 qp.TerminalModification = reader.GetValue(26).ToString();  // 26 to 29
                 qp.Truncation = Convert.ToInt32(reader.GetValue(27));
 
+                qp.SliderValue = Convert.ToDouble(reader.GetValue(28));
+
             }
 
             reader.Close();
