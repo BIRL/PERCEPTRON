@@ -114,7 +114,7 @@ namespace PerceptronLocalService.Engine
         {
             //tol = 15;
             //var pepUnit = "ppm";
-            int delme; var delmeList = new List<ProteinDto>();
+            //int delme; var delmeList = new List<ProteinDto>();
 
             for (int indexIntensity = 0; indexIntensity < peakData2DList.Count; indexIntensity++)
             {
@@ -159,8 +159,9 @@ namespace PerceptronLocalService.Engine
                         //    delme = 0;
 
                         int Consecutive = indexPeakList;
-                        //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
-                        for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count - 1; indexLeftSide++)
+                        ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+                        ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+                        for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count; indexLeftSide++)
                         {
                             double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeft[indexLeftSide];
                             //Check in Left Ions
@@ -195,8 +196,9 @@ namespace PerceptronLocalService.Engine
                                 break;
                             }
                         }
-                        //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
-                        for (int indexRightSide = IdxR; indexRightSide < insilico.InsilicoMassRight.Count - 1; indexRightSide++)
+                        //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+                        ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+                        for (int indexRightSide = IdxR; indexRightSide < insilico.InsilicoMassRight.Count; indexRightSide++)
                         {
                             ///Check in Right Ions
                             double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRight[indexRightSide];
