@@ -18,6 +18,9 @@ namespace PerceptronLocalService.Utility
         public const double NH = N + H;
         public const double NH3 = N + H + H + H;
         public const double H2O = H + H + O;
+
+
+        public const double AcetylationWeight = 42.0106;
     }
 }
 
