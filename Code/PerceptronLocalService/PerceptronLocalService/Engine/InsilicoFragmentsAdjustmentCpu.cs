@@ -11,16 +11,16 @@ namespace PerceptronLocalService.Engine
     {
         public void adjustForFragmentTypeAndSpecialIons(List<ProteinDto> prot, string clevageType, string ions)
         {
-            int del = 0;//DELME
-            int a;//DELME
+            //int del = 0;//DELME
+            //int a;//DELME
             
             for (int protIndex = 0; protIndex < prot.Count; protIndex++)
             {
 
 
                 //string headerprot = protein.Header;// = "Q5T292";//DELME
-                if (prot[protIndex].Header == "A0A0B4J280")  //"Q3ZAQ7"//DELME
-                    a = 1;//DELME
+                //if (prot[protIndex].Header == "A0A0B4J280")  //"Q3ZAQ7"//DELME
+                //    a = 1;//DELME
 
 
                 adjustProteinForFragmentTypeAndSpecialIons(prot[protIndex], clevageType, ions);
@@ -153,7 +153,9 @@ namespace PerceptronLocalService.Engine
         //STEP 2: Generate theoretical fragments of each protein 
         private static void MakeAdjustment(ProteinDto prot, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
         {
-            for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count - 1; index++) ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
+            ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+            ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+            for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count; index++)  
             {
                 prot.InsilicoDetails.InsilicoMassLeft[index] = prot.InsilicoDetails.InsilicoMassLeft[index] + leftOffset;
                 prot.InsilicoDetails.InsilicoMassRight[index] = prot.InsilicoDetails.InsilicoMassRight[index] + rightOffset;
@@ -163,8 +165,9 @@ namespace PerceptronLocalService.Engine
 
         private static void MakeAdjustmentInSpecialIons(List<double> MainIon, List<double> SpecialFragmentIonList, double Offset)
         {
-
-            for (int iter = 0; iter < MainIon.Count -1; iter++)////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1 
+            ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+            ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+            for (int iter = 0; iter < MainIon.Count; iter++)
             {
                 SpecialFragmentIonList.Add(MainIon[iter] + Offset);
             }
