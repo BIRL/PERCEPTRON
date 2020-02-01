@@ -30,7 +30,8 @@ namespace PerceptronLocalService
         private readonly IInsilicoFilter _insilicoFilter;
         private readonly IPeakListFileReader _peakListFileReader;
         private readonly IProteinRepository _proteinRepository;
-        readonly ITruncation _Truncation;  // Protection Level Decided Later
+        private readonly ITruncation _Truncation;  // Protection Level Decided Later
+        private readonly ITerminalModifications _TerminalModifications; //Protection Level Decided Later
 
 
 
@@ -49,7 +50,8 @@ namespace PerceptronLocalService
             _insilicoFragmentsAdjustment = new InsilicoFragmentsAdjustmentCpu();
             _insilicoFilter = new InsilicoFilterCpu();
             _peakListFileReader = new PeakListFileReader();
-            _Truncation = new Truncation();
+            _Truncation = new TruncationCPU();
+            _TerminalModifications = new TerminalModificationsCPU();
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////// THAT CODE WILL RUN THE GPU FILES(*Gpu.cs/*GPU.cs) FOR PROCESSING THE JOB/////////////////
@@ -281,12 +283,20 @@ namespace PerceptronLocalService
                     }
 
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
-                    ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
-                    ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
+ //                   ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
+   //                 ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
 
                     //Logging.DumpCandidateProteins(candidateProteins);
 
-                    //////UpdatedParse_database //////****** Need to be Come HERE...
+
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
+                    candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
+
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
                     var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
@@ -413,6 +423,7 @@ namespace PerceptronLocalService
         }
 
 
+
         //PST: Peptide Sequence Tags
         private List<PstTagList> ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, ExecutionTimeDto executionTimes)
         {
@@ -449,6 +460,22 @@ namespace PerceptronLocalService
             
             return listOfProteins;
         }
+
+        private List<ProteinDto> UpdateGetCandidateProtein(SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> candidateProteins)
+        {
+            if (parameters.DenovoAllow == 1)
+            {
+                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
+            }
+
+
+            if (parameters.TerminalModification != "")
+            {
+                candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins); 
+            }
+            return candidateProteins;
+        }
+
 
         private static List<ProteinDto> ExecuteProteoformScoringModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
         {
