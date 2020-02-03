@@ -22,5 +22,6 @@ namespace PerceptronLocalService.Models
         public string TotalTime { get; set; }
         public string QueryId { get; set; }
         public string FileName { get; set; }
+        public string TruncationEngineTime { get; set; }
     }
 }
