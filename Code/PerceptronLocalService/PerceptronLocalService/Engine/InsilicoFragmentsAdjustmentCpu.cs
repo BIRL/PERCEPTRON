@@ -9,156 +9,161 @@ namespace PerceptronLocalService.Engine
 
     public class InsilicoFragmentsAdjustmentCpu : IInsilicoFragmentsAdjustment
     {
-        public void adjustForFragmentTypeAndSpecialIons(List<ProteinDto> prot, string clevageType, string ions)
+        public List<ProteinDto> adjustForFragmentTypeAndSpecialIons(List<ProteinDto> prot, string clevageType, string ions)
         {
             //int del = 0;//DELME
             //int a;//DELME
-            
+            var tempProteinList = new List<ProteinDto>();
+
             for (int protIndex = 0; protIndex < prot.Count; protIndex++)
             {
-
-
-                //string headerprot = protein.Header;// = "Q5T292";//DELME
-                //if (prot[protIndex].Header == "A0A0B4J280")  //"Q3ZAQ7"//DELME
-                //    a = 1;//DELME
-
-
-                adjustProteinForFragmentTypeAndSpecialIons(prot[protIndex], clevageType, ions);
-                //string headerprot2 = protein.Header;
+                //if (prot[protIndex].Header == "A6NDN8")  //"Q3ZAQ7"//DELME
+                {
+                    var a = adjustProteinForFragmentTypeAndSpecialIons(prot[protIndex], clevageType, ions);
+                    tempProteinList.AddRange(a);
+                }
             }
+
+            return tempProteinList;
         }
 
-        private void adjustProteinForFragmentTypeAndSpecialIons(ProteinDto prot, string clevageType, string handleIon)
+        private List<ProteinDto> adjustProteinForFragmentTypeAndSpecialIons(ProteinDto prot, string clevageType, string handleIon)
         {
+            var tempProtein = new List<ProteinDto>();
+
+            var leftString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassLeft);
+            var leftIons = Clone.Decrypt<List<double>>(leftString);
+
+            var rightString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassRight);
+            var rightIons = Clone.Decrypt<List<double>>(rightString);
+
+
 
             var strprotein = prot.Sequence.ToUpper();
             var prtlength = strprotein.Length; //Gives length of Protein
 
 
-            if (prot.PtmParticulars != null && prot.PtmParticulars.Count != 0)
+            if (clevageType == "CID" || clevageType == "BIRD" || clevageType == "IMD" || clevageType == "HCD" || clevageType == "SID")
             {
-                for (var seqIndex = 0; seqIndex < prtlength - 1; seqIndex++) //for Fragment
-                {
+                var boList = new List<double>();
+                var bstarList = new List<double>();
+                var ystarList = new List<double>();
+                var yoList = new List<double>();
 
-                    foreach (var ptmSite in prot.PtmParticulars)
+                MakeAdjustment(leftIons, rightIons, MassAdjustment.OH + 2 * MassAdjustment.H, MassAdjustment.Proton);
+
+                if (handleIon.Contains("bo"))
+                {
+                    MakeAdjustmentInSpecialIons(leftIons, boList, -MassAdjustment.H2O);
+                }
+
+                if (handleIon.Contains("bstar"))
+                {
+                    MakeAdjustmentInSpecialIons(leftIons, bstarList, -MassAdjustment.NH3);
+                }
+
+                if (handleIon.Contains("ystar"))
+                {
+                    MakeAdjustmentInSpecialIons(rightIons, ystarList, -MassAdjustment.NH3);
+                }
+
+                if (handleIon.Contains("yo"))
+                {
+                    MakeAdjustmentInSpecialIons(rightIons, yoList, -MassAdjustment.H2O);
+                }
+
+                var subtempProtein = new ProteinDto(prot)
+                {
+                    InsilicoDetails =
                     {
-                        if (seqIndex >= ptmSite.Index)
-                            prot.InsilicoDetails.InsilicoMassLeft[seqIndex] =
-                                prot.InsilicoDetails.InsilicoMassLeft[seqIndex] + ptmSite.ModWeight;
-                        else
-                            prot.InsilicoDetails.InsilicoMassRight[seqIndex] =
-                                prot.InsilicoDetails.InsilicoMassRight[seqIndex] + ptmSite.ModWeight;
-                    }
-                }
+                        InsilicoMassLeft = leftIons,
+                        InsilicoMassRight = rightIons,
+                        InsilicoMassLeftBo = boList,
+                        InsilicoMassLeftBstar = bstarList,
+                        InsilicoMassRightYstar = ystarList,
+                        InsilicoMassRightYo = yoList
+                    },
+                };
+                tempProtein.Add(subtempProtein);
             }
 
 
-            string[] IndividualHandleIonArray = handleIon.Split(',');  // We got string of handle ions with comma separated. So, converting it into (string array) with separated ion
 
-            for (int HandleIonIteration = 0; HandleIonIteration < IndividualHandleIonArray.Length; HandleIonIteration++)
+
+            else if (clevageType == "ECD" || clevageType == "ETD")
             {
-                string IndividualHandleIon = IndividualHandleIonArray[HandleIonIteration];
+                var zoList = new List<double>();
+                var zooList = new List<double>();
 
-                //for (var seqIndex = 0; seqIndex < prtlength - 1; seqIndex++) //for Fragment
-                //{
-                switch (clevageType.ToUpper())
+                MakeAdjustment(leftIons, rightIons, MassAdjustment.OH - MassAdjustment.NH, MassAdjustment.Proton + MassAdjustment.N + 3 * MassAdjustment.H);
+
+                if (handleIon.Contains("zo"))
                 {
-                    case CleavageTypes.CID:
-                    case CleavageTypes.BIRD:
-                    case CleavageTypes.IMD:
-                    case CleavageTypes.HCD:
-                    case CleavageTypes.SID:
+                    MakeAdjustmentInSpecialIons(rightIons, zoList, MassAdjustment.Proton);
 
-                        if (HandleIonIteration == 0)
-                        {
-                            MakeAdjustment(prot, MassAdjustment.OH + 2 * MassAdjustment.H, MassAdjustment.Proton);
-                        }
-
-
-                        switch (IndividualHandleIon)//(handleIon)   //IndividualHandleIon
-                        {
-                            case SpecialIons.BO:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftBo, -MassAdjustment.H2O);
-                                break;
-                            case SpecialIons.BSTAR:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftBstar, -MassAdjustment.NH3);
-                                break;
-                            case SpecialIons.YSTAR:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightYstar, -MassAdjustment.NH3);
-                                break;
-                            case SpecialIons.YO:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightYo, -MassAdjustment.H2O);
-                                break;
-                        }
-
-
-                        break;
-
-                    case CleavageTypes.ECD:
-                    case CleavageTypes.ETD:
-
-                        if (HandleIonIteration == 0)
-                        {
-                            MakeAdjustment(prot, MassAdjustment.OH - MassAdjustment.NH, MassAdjustment.Proton + MassAdjustment.N + 3 * MassAdjustment.H);
-                        }
-
-                        switch (IndividualHandleIon)//(handleIon)
-                        {
-                            case SpecialIons.ZD:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightZo, MassAdjustment.Proton);
-
-                                break;
-                            case SpecialIons.ZDD:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightZoo, 2 * MassAdjustment.Proton);    //HERE IS Zoo
-
-                                break;
-                        }
-                        break;
-
-                    case CleavageTypes.EDD:
-
-                    case CleavageTypes.NETD:
-
-                        if (HandleIonIteration == 0)
-                        {
-                            MakeAdjustment(prot, MassAdjustment.OH + MassAdjustment.CO, MassAdjustment.Proton - MassAdjustment.CO);
-                        }
-
-
-                        switch (IndividualHandleIon)//(handleIon)
-                        {
-                            case SpecialIons.AO:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftAo, -MassAdjustment.H2O);
-
-                                break;
-                            case SpecialIons.ASTAR:
-
-                                MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftAstar, -MassAdjustment.NH3);
-                                break;
-                        }
-                        break;
                 }
-                //}
+
+                if (handleIon.Contains("zoo"))
+                {
+                    MakeAdjustmentInSpecialIons(rightIons, zooList, 2 * MassAdjustment.Proton);
+                }
+
+                var subtempProtein = new ProteinDto(prot)
+                {
+                    InsilicoDetails =
+                    {
+                        InsilicoMassLeft = leftIons,
+                        InsilicoMassRight = rightIons,
+                        InsilicoMassRightZo = zoList,
+                        InsilicoMassRightZoo = zooList,
+                    },
+                };
+                tempProtein.Add(subtempProtein);
             }
 
+            else if (clevageType == "EDD" || clevageType == "NETD")
+            {
+                var aoList = new List<double>();
+                var astarList = new List<double>();
+
+                MakeAdjustment(leftIons, rightIons, MassAdjustment.OH + MassAdjustment.CO, MassAdjustment.Proton - MassAdjustment.CO);
+
+                if (handleIon.Contains("ao"))
+                {
+                    MakeAdjustmentInSpecialIons(leftIons, aoList, -MassAdjustment.H2O);
+                }
+
+                if (handleIon.Contains("astar"))
+                {
+                    MakeAdjustmentInSpecialIons(leftIons, astarList, -MassAdjustment.NH3);
+                }
+
+                var subtempProtein = new ProteinDto(prot)
+                {
+                    InsilicoDetails =
+                    {
+                        InsilicoMassLeft = leftIons,
+                        InsilicoMassRight = rightIons,
+                        InsilicoMassLeftAo = aoList,
+                        InsilicoMassLeftAstar = astarList,
+                    },
+                };
+                tempProtein.Add(subtempProtein);
+            }
+
+            return tempProtein;
 
         }
+
         //STEP 2: Generate theoretical fragments of each protein 
-        private static void MakeAdjustment(ProteinDto prot, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
+        private static void MakeAdjustment(List<double> leftIons, List<double> rightIons, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
         {
             ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
             ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
-            for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count; index++)  
+            for (int index = 0; index < leftIons.Count; index++)
             {
-                prot.InsilicoDetails.InsilicoMassLeft[index] = prot.InsilicoDetails.InsilicoMassLeft[index] + leftOffset;
-                prot.InsilicoDetails.InsilicoMassRight[index] = prot.InsilicoDetails.InsilicoMassRight[index] + rightOffset;
+                leftIons[index] = leftIons[index] + leftOffset;
+                rightIons[index] = rightIons[index] + rightOffset;
 
             }
         }
@@ -173,24 +178,176 @@ namespace PerceptronLocalService.Engine
             }
 
         }
-
-        //private static void MakeAdjustmentInSpecialIons(ProteinDto prot, List<double> MainIon, List<double> SpecialFragmentIonList, double Offset)
-        //{
-        //    for (int iter = 0; iter < MainIon.Count; iter++)
-        //    {
-        //        SpecialFragmentIonList.Add(MainIon[iter] + Offset);
-        //    }
-
-        //}
     }
 }
 
 
-//for (var seqIndex = 0; seqIndex < prot.Sequence.Length - 1; seqIndex++) //for Fragment
+
+//ITS HEALTHY BEFORE VERSION 20200203
+//public class InsilicoFragmentsAdjustmentCpu : IInsilicoFragmentsAdjustment
 //{
-//    prot.InsilicoDetails.InsilicoMassLeft[seqIndex] = prot.InsilicoDetails.InsilicoMassLeft[seqIndex] + leftOffset;                                                                 // ;
-//    prot.InsilicoDetails.InsilicoMassRight[seqIndex] = prot.InsilicoDetails.InsilicoMassRight[seqIndex] + rightOffset;
+//    public void adjustForFragmentTypeAndSpecialIons(List<ProteinDto> prot, string clevageType, string ions)
+//    {
+//        //int del = 0;//DELME
+//        //int a;//DELME
+
+//        for (int protIndex = 0; protIndex < prot.Count; protIndex++)
+//        {
 
 
-//    SpecialFragmentIonList.Add(specialDependecy[seqIndex] + s);
+//            //string headerprot = protein.Header;// = "Q5T292";//DELME
+//            //if (prot[protIndex].Header == "A0A0B4J280")  //"Q3ZAQ7"//DELME
+//            //    a = 1;//DELME
+
+
+//            adjustProteinForFragmentTypeAndSpecialIons(prot[protIndex], clevageType, ions);
+//            //string headerprot2 = protein.Header;
+//        }
+//    }
+
+//    private void adjustProteinForFragmentTypeAndSpecialIons(ProteinDto prot, string clevageType, string handleIon)
+//    {
+
+//        var strprotein = prot.Sequence.ToUpper();
+//        var prtlength = strprotein.Length; //Gives length of Protein
+
+
+//        if (prot.PtmParticulars != null && prot.PtmParticulars.Count != 0)
+//        {
+//            for (var seqIndex = 0; seqIndex < prtlength - 1; seqIndex++) //for Fragment
+//            {
+
+//                foreach (var ptmSite in prot.PtmParticulars)
+//                {
+//                    if (seqIndex >= ptmSite.Index)
+//                        prot.InsilicoDetails.InsilicoMassLeft[seqIndex] =
+//                            prot.InsilicoDetails.InsilicoMassLeft[seqIndex] + ptmSite.ModWeight;
+//                    else
+//                        prot.InsilicoDetails.InsilicoMassRight[seqIndex] =
+//                            prot.InsilicoDetails.InsilicoMassRight[seqIndex] + ptmSite.ModWeight;
+//                }
+//            }
+//        }
+
+
+//        string[] IndividualHandleIonArray = handleIon.Split(',');  // We got string of handle ions with comma separated. So, converting it into (string array) with separated ion
+
+//        for (int HandleIonIteration = 0; HandleIonIteration < IndividualHandleIonArray.Length; HandleIonIteration++)
+//        {
+//            string IndividualHandleIon = IndividualHandleIonArray[HandleIonIteration];
+
+//            //for (var seqIndex = 0; seqIndex < prtlength - 1; seqIndex++) //for Fragment
+//            //{
+//            switch (clevageType.ToUpper())
+//            {
+//                case CleavageTypes.CID:
+//                case CleavageTypes.BIRD:
+//                case CleavageTypes.IMD:
+//                case CleavageTypes.HCD:
+//                case CleavageTypes.SID:
+
+//                    if (HandleIonIteration == 0)
+//                    {
+//                        MakeAdjustment(prot, MassAdjustment.OH + 2 * MassAdjustment.H, MassAdjustment.Proton);
+//                    }
+
+
+//                    switch (IndividualHandleIon)//(handleIon)   //IndividualHandleIon
+//                    {
+//                        case SpecialIons.BO:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftBo, -MassAdjustment.H2O);
+//                            break;
+//                        case SpecialIons.BSTAR:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftBstar, -MassAdjustment.NH3);
+//                            break;
+//                        case SpecialIons.YSTAR:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightYstar, -MassAdjustment.NH3);
+//                            break;
+//                        case SpecialIons.YO:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightYo, -MassAdjustment.H2O);
+//                            break;
+//                    }
+
+
+//                    break;
+
+//                case CleavageTypes.ECD:
+//                case CleavageTypes.ETD:
+
+//                    if (HandleIonIteration == 0)
+//                    {
+//                        MakeAdjustment(prot, MassAdjustment.OH - MassAdjustment.NH, MassAdjustment.Proton + MassAdjustment.N + 3 * MassAdjustment.H);
+//                    }
+
+//                    switch (IndividualHandleIon)//(handleIon)
+//                    {
+//                        case SpecialIons.ZD:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightZo, MassAdjustment.Proton);
+
+//                            break;
+//                        case SpecialIons.ZDD:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassRight, prot.InsilicoDetails.InsilicoMassRightZoo, 2 * MassAdjustment.Proton);    //HERE IS Zoo
+
+//                            break;
+//                    }
+//                    break;
+
+//                case CleavageTypes.EDD:
+
+//                case CleavageTypes.NETD:
+
+//                    if (HandleIonIteration == 0)
+//                    {
+//                        MakeAdjustment(prot, MassAdjustment.OH + MassAdjustment.CO, MassAdjustment.Proton - MassAdjustment.CO);
+//                    }
+
+
+//                    switch (IndividualHandleIon)//(handleIon)
+//                    {
+//                        case SpecialIons.AO:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftAo, -MassAdjustment.H2O);
+
+//                            break;
+//                        case SpecialIons.ASTAR:
+
+//                            MakeAdjustmentInSpecialIons(prot.InsilicoDetails.InsilicoMassLeft, prot.InsilicoDetails.InsilicoMassLeftAstar, -MassAdjustment.NH3);
+//                            break;
+//                    }
+//                    break;
+//            }
+//            //}
+//        }
+
+
+//    }
+//    //STEP 2: Generate theoretical fragments of each protein 
+//    private static void MakeAdjustment(ProteinDto prot, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
+//    {
+//        ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+//        ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+//        for (int index = 0; index < prot.InsilicoDetails.InsilicoMassLeft.Count; index++)
+//        {
+//            prot.InsilicoDetails.InsilicoMassLeft[index] = prot.InsilicoDetails.InsilicoMassLeft[index] + leftOffset;
+//            prot.InsilicoDetails.InsilicoMassRight[index] = prot.InsilicoDetails.InsilicoMassRight[index] + rightOffset;
+
+//        }
+//    }
+
+//    private static void MakeAdjustmentInSpecialIons(List<double> MainIon, List<double> SpecialFragmentIonList, double Offset)
+//    {
+//        ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+//        ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
+//        for (int iter = 0; iter < MainIon.Count; iter++)
+//        {
+//            SpecialFragmentIonList.Add(MainIon[iter] + Offset);
+//        }
+
+//    }
 //}
