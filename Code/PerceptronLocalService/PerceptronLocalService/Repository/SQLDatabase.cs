@@ -266,7 +266,10 @@ namespace PerceptronLocalService.Repository
                 PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
                 TerminalModification = searchParameters.TerminalModification,
                 Truncation = searchParameters.Truncation,
-                SliderValue = searchParameters.SliderValue
+                SliderValue = searchParameters.SliderValue,
+
+                CysteineChemicalModification = searchParameters.CysteineChemicalModification,
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification
 
             };
             return searchParametersDto;
