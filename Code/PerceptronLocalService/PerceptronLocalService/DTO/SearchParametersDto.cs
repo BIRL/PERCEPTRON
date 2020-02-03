@@ -48,6 +48,8 @@ namespace PerceptronLocalService.DTO
         public int? Truncation;
 
         public double SliderValue;  //20200121
+        public string CysteineChemicalModification;
+        public string MethionineChemicalModification;
 
 
 
