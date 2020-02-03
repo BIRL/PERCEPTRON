@@ -283,8 +283,17 @@ namespace PerceptronLocalService
                     }
 
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
- //                   ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
+                    ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
    //                 ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
+
+                    for (int i = 0; i < candidateProteins.Count; i++)
+                    {
+                        if (candidateProteins[i].Header == "A0A0B4J280")
+                        {
+                            int DELME = 0; 
+                        }
+                    }
+
 
                     //Logging.DumpCandidateProteins(candidateProteins);
 
@@ -507,8 +516,10 @@ namespace PerceptronLocalService
             Stopwatch moduleTimer = Stopwatch.StartNew();
             if (parameters.InsilicoSweight != 0)
             {
-                _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
-                _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinswithInsilicoScores);
+                var CandidateProteins = new List<ProteinDto>();
+                CandidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+                //ITS HEALTHY!!! 20200203
+                _insilicoFilter.ComputeInsilicoScore(CandidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinswithInsilicoScores);
             }
 
             //if (parameters.PtmAllow == 0)  // ITS HEALTHY
