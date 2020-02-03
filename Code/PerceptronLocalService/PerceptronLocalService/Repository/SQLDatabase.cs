@@ -211,7 +211,9 @@ namespace PerceptronLocalService.Repository
                 PstTime = res.Times.PstTime,
                 PtmTime = res.Times.PtmTime,
                 TotalTime = res.Times.TotalTime,
-                TunerTime = res.Times.TunerTime
+                TunerTime = res.Times.TunerTime,
+                TruncationEngineTime = res.Times.TruncationEngineTime
+
             };
 
             return executionTime;
