@@ -82,8 +82,8 @@ export class ProteinSearchComponent implements OnInit {
   Special_Ions: any = '';
   MinimumPstLength: any = '';
   MaximumPstLength: any = '';
-  Meth_Chem_Modifications: any = '';
-  Cyst_Chem_Modifications: any = '';
+  MethionineChemicalModification: any = '';
+  CysteineChemicalModification: any = '';
   Truncation: any = '';  //Trunc
   Units_mass: any = '';
   selectedValue1: any = '';
@@ -294,8 +294,8 @@ export class ProteinSearchComponent implements OnInit {
     this.TerminalModification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";
     
     
-    this.Cyst_Chem_Modifications ='None';
-    this.Meth_Chem_Modifications ='None';
+    this.CysteineChemicalModification ='None';
+    this.MethionineChemicalModification ='None';
     this.selectedFrag = 'HCD';
     this.selectIons() //();// = ['bo']
     //this.SpecialIonz = this.Special1
