@@ -455,8 +455,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%;">
-            <mat-select matTooltip="Select methionine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Meth_Chem_Modifications"
-              placeholder="Methionine Chemical Modifications" name="Meth_Chem_Modifications">
+            <mat-select matTooltip="Select methionine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="MethionineChemicalModification"
+              placeholder="Methionine Chemical Modifications" name="MethionineChemicalModification">
               <mat-option *ngFor="let mod of Meth" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
@@ -497,8 +497,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select cysteine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Cyst_Chem_Modifications"
-              placeholder="Cysteine Chemical Modifications" name="Cyst_Chem_Modifications" ngModel>
+            <mat-select matTooltip="Select cysteine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="CysteineChemicalModification"
+              placeholder="Cysteine Chemical Modifications" name="CysteineChemicalModification" ngModel>
               <mat-option *ngFor="let mod of Cys" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
