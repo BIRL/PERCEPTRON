@@ -38,5 +38,8 @@ namespace PerceptronAPI.Models
         
         public string TerminalModification;
         public double SliderValue;
+
+        public string CysteineChemicalModification;
+        public string MethionineChemicalModification;
     }
 }
