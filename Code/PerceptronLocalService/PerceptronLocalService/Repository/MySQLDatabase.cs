@@ -292,6 +292,8 @@ namespace PerceptronLocalService.Repository
                 qp.Truncation = Convert.ToInt32(reader.GetValue(27));
 
                 qp.SliderValue = Convert.ToDouble(reader.GetValue(28));
+                qp.CysteineChemicalModification = reader.GetValue(29).ToString();
+                qp.MethionineChemicalModification = reader.GetValue(30).ToString(); 
 
             }
 
