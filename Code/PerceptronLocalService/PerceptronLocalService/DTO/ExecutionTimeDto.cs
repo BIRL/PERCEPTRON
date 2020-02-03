@@ -9,5 +9,6 @@
         public string PstTime;
         public string TotalTime;
         public string FileReadingTime;
+        public string TruncationEngineTime;
     }
 }
