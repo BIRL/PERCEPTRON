@@ -16,7 +16,6 @@ namespace PerceptronLocalService.Engine
 
         public void PreTruncation(SearchParametersDto parameters, List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
         {
-            string[] IndividualModifications = parameters.TerminalModification.Split(',');
             var proteinExperimentalMw = peakData2DList[0].Mass;
 
             for (var i = 0; i < proteinList.Count; i++)
