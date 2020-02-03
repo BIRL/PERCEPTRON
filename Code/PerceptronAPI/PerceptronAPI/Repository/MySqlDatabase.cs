@@ -747,6 +747,7 @@ namespace PerceptronAPI.Repository
                             res.Times.PstTime = reader.GetValue(5).ToString();
                             res.Times.TotalTime = reader.GetValue(6).ToString();
                             res.Times.FileName = reader.GetValue(7).ToString();
+                            res.Times.TruncationEngineTime = reader.GetValue(8).ToString();
                         }
                         reader.Close();
 
@@ -787,7 +788,9 @@ namespace PerceptronAPI.Repository
                             qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(27));
                             qp.PeptideToleranceUnit = reader.GetValue(28).ToString();
                             qp.TerminalModification = reader.GetValue(29).ToString();
-                            qp.SliderValue = Convert.ToDouble(reader.GetValue(27));
+                            qp.SliderValue = Convert.ToDouble(reader.GetValue(30));
+                            qp.CysteineChemicalModification = reader.GetValue(31).ToString();
+                            qp.MethionineChemicalModification = reader.GetValue(32).ToString();
 
 
                         }
