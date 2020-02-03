@@ -17,36 +17,70 @@ namespace PerceptronLocalService.Engine
         {
             int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
 
+            //DELME TESTING
+            int countDELME = 0;
+            var DELMELIST = new List<ProteinDto>();
+
+            //
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
             {
-                //if (candidateProteins[index].Header == "Q9BTM9")
-                //{
-                    //Preparing Protein Info
-                    var protein = candidateProteins[index];
-                    var tempprotein = new ProteinDto(protein);
+                if (candidateProteins[index].PstScore > 0)
+                {
 
-                    //BELOW: Just for Safe Level
-                    var leftString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassLeft);
-                    var leftIons = Clone.Decrypt<List<double>>(leftString);
 
-                    var seqString = Clone.CloneObject(tempprotein.Sequence);
-                    var sequence = Clone.Decrypt<string>(seqString);
+                    //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
+                    {
+                        countDELME = 1;
 
-                    var rightString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassRight);
-                    var rightIons = Clone.Decrypt<List<double>>(rightString);
-                    //ABOVE: Just for Safe Level
+                        //Preparing Protein Info
+                        var protein = candidateProteins[index];
+                        var tempprotein = new ProteinDto(protein);
 
-                    //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
-                    leftIons.RemoveAt(leftIons.Count-1);
-                    rightIons.RemoveAt(rightIons.Count-1);
+                        //BELOW: Just for Safe Level
+                        var leftString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassLeft);
+                        var leftIons = Clone.Decrypt<List<double>>(leftString);
 
-                    double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
-                    int tmpSeqLength = sequence.Length;
+                        var seqString = Clone.CloneObject(tempprotein.Sequence);
+                        var sequence = Clone.Decrypt<string>(seqString);
 
-                    TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
-                //}
+                        var rightString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassRight);
+                        var rightIons = Clone.Decrypt<List<double>>(rightString);
+                        //ABOVE: Just for Safe Level
+
+                        //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                        leftIons.RemoveAt(leftIons.Count - 1);
+                        rightIons.RemoveAt(rightIons.Count - 1);
+
+                        double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
+                        int tmpSeqLength = sequence.Length;
+
+                        TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
+
+                        //}  // COMMENT ME !!!
+
+                        //if (candidateProteins[index].PstScore > 0)
+                        //{
+                        //    countDELME = countDELME + 1;
+                        //    DELMELIST.Add(candidateProteins[index]);
+                        //}
+
+                    }
+                }
             }
+
+            //for (int i = 0; i < tempCandidateProteins.Count; i++)
+            //{
+            //    if (tempCandidateProteins[i].PstScore > 0)
+            //    {
+            //        DELMELIST.Add(candidateProteins[i]);
+            //    }
+                
+                
+            //}
+
+
+
 
             return tempCandidateProteins;
             //candidateProteins = tempCandidateProteins;
