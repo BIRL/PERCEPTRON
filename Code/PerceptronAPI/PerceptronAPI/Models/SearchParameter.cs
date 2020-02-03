@@ -43,5 +43,7 @@ namespace PerceptronAPI.Models
         public int Truncation { get; set; }
         public string TerminalModification { get; set; }
         public double SliderValue { get; set; }
+        public string CysteineChemicalModification { get; set; }
+        public string MethionineChemicalModification { get; set; }
     }
 }
