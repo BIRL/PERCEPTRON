@@ -379,12 +379,9 @@ namespace PerceptronAPI.Repository
                 PeptideTolerance = searchParameters.PeptideTolerance,
                 PeptideToleranceUnit = searchParameters.PeptideToleranceUnit,
                 TerminalModification = searchParameters.TerminalModification,
-                SliderValue = searchParameters.SliderValue
-
-                //Terminal_Modification = searchParameters.Terminal_Modification,
-                //
-
-
+                SliderValue = searchParameters.SliderValue,
+                CysteineChemicalModification = searchParameters.CysteineChemicalModification,
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification
 
             };
             return searchParameter;
