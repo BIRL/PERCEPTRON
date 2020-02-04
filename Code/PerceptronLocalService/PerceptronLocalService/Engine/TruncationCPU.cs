@@ -20,6 +20,8 @@ namespace PerceptronLocalService.Engine
 
             for (var i = 0; i < proteinList.Count; i++)
             {
+                //if (proteinList[i].Header == "A6NC98")
+
                 //if (proteinList[i].Header == "P31689")
                 //{
                 /////////////////////////////////////////////////////////// #J4TDM  ///////////////////////////////////////////////////////////
@@ -29,174 +31,112 @@ namespace PerceptronLocalService.Engine
                 ///////////////////////////////////////////////////////////
                 //if (proteinList[i].Header == "A0A1B0GUU1" || proteinList[i].Header == "A6NNS2" || proteinList[i].Header == "Q9NQR1" || proteinList[i].Header == "Q7Z7E8" || proteinList[i].Header == "P31930" || proteinList[i].Header == "Q8IWU6" || proteinList[i].Header == "Q9NX05" ||
                 //proteinList[i].Header == "Q9BWD1" || proteinList[i].Header == "Q9H8M9" || proteinList[i].Header == "Q5BKX8" || proteinList[i].Header == "Q496J9" || proteinList[i].Header == "P35250" || proteinList[i].Header == "P17661" || proteinList[i].Header == "A6H8Y1" || proteinList[i].Header == "P53801")
-                //{
-                /////////////////////////////////////////////////////////// #J4TDM  ///////////////////////////////////////////////////////////
-
-
-                var protein1 = proteinList[i];
-
-                var protein = new ProteinDto(protein1);
-
-                var prtLength = protein.Sequence.Length;
-                var preTruncationIndex = prtLength;
-                var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + parameters.MwTolerance) / 168) - 1);
-
-
-                var leftString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassLeft);
-                var leftIons = Clone.Decrypt<List<double>>(leftString);
-
-                var seqString = Clone.CloneObject(protein.Sequence);
-                var sequence = Clone.Decrypt<string>(seqString);
-
-                var rightString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassRight);
-                var rightIons = Clone.Decrypt<List<double>>(rightString);
-
-
-                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, leftIons, prtLength);
-
-                // GIVE BELOW CODE IS JUST FOR COMPENSATING ZERO BASED INDEXING
-                int factor = 0; /// factor is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
-                int minusfactorPreTruncationIndex = 0; /// minusfactorPreTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
-                int minusfactorTruncationIndex = 0; /// minusfactorTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
-
-
-                if (preTruncationIndex != prtLength)  //#TESTING: 2 CONDITIONS 
                 {
-                    factor = 1;
-                }
-                else
-                {
-                    minusfactorPreTruncationIndex = -1;/// minusfactorPreTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
-                    minusfactorTruncationIndex = 1; /// minusfactorTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
-                }
-                // GIVE ABOVE CODE IS JUST FOR COMPENSATING ZERO BASED INDEXING
+                    /////////////////////////////////////////////////////////// #J4TDM  ///////////////////////////////////////////////////////////
 
 
-                protein.TruncationIndex = preTruncationIndex + minusfactorPreTruncationIndex;
-                var newProtein = new ProteinDto(protein);
+                    var protein1 = proteinList[i];
 
-                var tmpSeq = sequence.Substring(0, preTruncationIndex + factor);
-                var tmpSeqLength = tmpSeq.Length;
-                newProtein.Sequence = tmpSeq;
+                    var protein = new ProteinDto(protein1);
 
-                leftIons = leftIons.GetRange(0, preTruncationIndex + factor);
-
-                var molW = leftIons[tmpSeqLength - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;  // newProtein.Mw    //#FreeTimeTesting
-
-                // Right Ion Stuff
-
-                var truncationIndex = prtLength - (preTruncationIndex + factor);
-                if (truncationIndex != 0)
-                {
-                    var insilicoTruncationIdxMass = rightIons[truncationIndex - 1];
-                    rightIons = rightIons.GetRange(truncationIndex, prtLength - truncationIndex);
-                    rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();
-                }
-               
-                int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
-
-                TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, protein, proteinListRight);
+                    var prtLength = protein.Sequence.Length;
+                    var preTruncationIndex = prtLength;
+                    var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + parameters.MwTolerance) / 168) - 1);
 
 
-                //if (IndividualModifications[0] == "None")
-                //{
-                //    newProtein.TerminalModification = "None";
-                //    newProtein.Mw = molW;
-                //    newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
-                //    newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
-                //    proteinListRight.Add(newProtein);
-                //}
+                    var leftString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassLeft);
+                    var leftIons = Clone.Decrypt<List<double>>(leftString);
 
-                //if (tmpSeq[0] == 'M')
-                //{
-                //    if (IndividualModifications[0] == "NME" || IndividualModifications[1] == "NME") //Its Seems Like hard Code but not in Actual because We know the position of NME will always be either 0 or 1  //// Just checking NME with this method so to avoid conflict between NME and NME_Acetylation
-                //    {
-                //        newProtein = new ProteinDto(protein)
-                //        {
-                //            TerminalModification = "NME",
-                //            Mw = molW - MethionineWeight,
-                //            InsilicoDetails =
-                //            {
-                //                InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight).ToList(),
-                //                InsilicoMassRight = rightIons.ToList()
-                //            },
-                //            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
-                //        };
-                //        proteinListRight.Add(newProtein);
-                //    }
+                    var seqString = Clone.CloneObject(protein.Sequence);
+                    var sequence = Clone.Decrypt<string>(seqString);
 
-                //    if (parameters.TerminalModification.Contains("NME_Acetylation"))
-                //    {
-
-                //        newProtein = new ProteinDto(protein)
-                //        {
-                //            TerminalModification = "NME_Acetylation",
-                //            Mw = molW - MethionineWeight + AcetylationWeight,
-                //            InsilicoDetails =
-                //            {
-                //                InsilicoMassLeft =
-                //                    leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),
-                //                InsilicoMassRight = rightIons.ToList()
-                //            },
-                //            Sequence = tmpSeq.Substring(1, tmpSeqLength - 1) // "-1" Added
-                //        };
-                //        proteinListRight.Add(newProtein);
-                //    }
-                //    if (parameters.TerminalModification.Contains("M_Acetylation"))
-                //    {
-                //        newProtein = new ProteinDto(protein)
-                //        {
-                //            TerminalModification = "M_Acetylation",
-                //            Sequence = tmpSeq,
-                //            Mw = molW + AcetylationWeight,
-                //            InsilicoDetails =
-                //            {
-                //                InsilicoMassLeft = leftIons.Select(x => x + AcetylationWeight).ToList(),
-                //                InsilicoMassRight = rightIons.ToList()
-                //            }
-                //        };
-                //        proteinListRight.Add(newProtein);
-                //    }
-                //}
-
-                //Save Copy for Left Truncation
-                //protein = proteinList[i];
-                //newProtein = new ProteinDto(protein);
-                protein = new ProteinDto(protein1);
-                sequence = Clone.Decrypt<string>(seqString);
-                prtLength = sequence.Length;
-                preTruncationIndex = prtLength;
-                rightIons = Clone.Decrypt<List<double>>(rightString);
-
-                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, rightIons, prtLength);
-
-                truncationIndex = prtLength - (preTruncationIndex + 1);
-
-                protein.TruncationIndex = truncationIndex + minusfactorTruncationIndex;
-                newProtein = new ProteinDto(protein);
+                    var rightString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassRight);
+                    var rightIons = Clone.Decrypt<List<double>>(rightString);
 
 
+                    preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, leftIons, prtLength);
 
-                if (truncationIndex + minusfactorTruncationIndex > 0) //#TESTING: 3 CONDITIONS 
-                {
-                    newProtein.TruncationIndex = truncationIndex;
-                    tmpSeq = sequence.Substring(truncationIndex, prtLength - truncationIndex);
+                    // GIVE BELOW CODE IS JUST FOR COMPENSATING ZERO BASED INDEXING
+                    int factor = 0; /// factor is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
+                    int minusfactorPreTruncationIndex = 0; /// minusfactorPreTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
+                    int minusfactorTruncationIndex = 0; /// minusfactorTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
+
+
+                    if (preTruncationIndex != prtLength)  //#TESTING: 2 CONDITIONS 
+                    {
+                        factor = 1;
+                    }
+                    else
+                    {
+                        minusfactorPreTruncationIndex = -1;/// minusfactorPreTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
+                        minusfactorTruncationIndex = 1; /// minusfactorTruncationIndex is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
+                    }
+                    // GIVE ABOVE CODE IS JUST FOR COMPENSATING ZERO BASED INDEXING
+
+
+                    protein.TruncationIndex = preTruncationIndex + minusfactorPreTruncationIndex;
+                    var newProtein = new ProteinDto(protein);
+
+                    var tmpSeq = sequence.Substring(0, preTruncationIndex + factor);
+                    var tmpSeqLength = tmpSeq.Length;
                     newProtein.Sequence = tmpSeq;
-                    rightIons = rightIons.GetRange(0, preTruncationIndex + 1).ToList();
 
-                    newProtein.Mw = rightIons[rightIons.Count - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
-                    newProtein.TerminalModification = "None";
-                    leftIons = Clone.Decrypt<List<double>>(leftString);
+                    leftIons = leftIons.GetRange(0, preTruncationIndex + factor);
 
-                    double insilicoTruncationIdxMass1 = leftIons[truncationIndex - 1];
-                    leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
+                    var molW = leftIons[tmpSeqLength - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;  // newProtein.Mw    //#FreeTimeTesting
 
-                    leftIons = leftIons.Select(x => x - insilicoTruncationIdxMass1).ToList();
-                    newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
-                    newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
-                    proteinListLeft.Add(newProtein);
-                }
-                //}  //COMMENT ME
+                    // Right Ion Stuff
+
+                    var truncationIndex = prtLength - (preTruncationIndex + factor);
+                    if (truncationIndex != 0)
+                    {
+                        var insilicoTruncationIdxMass = rightIons[truncationIndex - 1];
+                        rightIons = rightIons.GetRange(truncationIndex, prtLength - truncationIndex);
+                        rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();
+                    }
+
+                    int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
+
+                    TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //
+
+                    //Save Copy for Left Truncation
+                    //protein = proteinList[i];
+                    //newProtein = new ProteinDto(protein);
+                    protein = new ProteinDto(protein1);
+                    sequence = Clone.Decrypt<string>(seqString);
+                    prtLength = sequence.Length;
+                    preTruncationIndex = prtLength;
+                    rightIons = Clone.Decrypt<List<double>>(rightString);
+
+                    preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, rightIons, prtLength);
+
+                    truncationIndex = prtLength - (preTruncationIndex + 1);
+
+                    protein.TruncationIndex = truncationIndex + minusfactorTruncationIndex;
+                    newProtein = new ProteinDto(protein);
+
+
+
+                    if (truncationIndex + minusfactorTruncationIndex > 0) //#TESTING: 3 CONDITIONS 
+                    {
+                        newProtein.TruncationIndex = truncationIndex;
+                        tmpSeq = sequence.Substring(truncationIndex, prtLength - truncationIndex);
+                        newProtein.Sequence = tmpSeq;
+                        rightIons = rightIons.GetRange(0, preTruncationIndex + 1).ToList();
+
+                        newProtein.Mw = rightIons[rightIons.Count - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
+                        newProtein.TerminalModification = "None";
+                        leftIons = Clone.Decrypt<List<double>>(leftString);
+
+                        double insilicoTruncationIdxMass1 = leftIons[truncationIndex - 1];
+                        leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
+
+                        leftIons = leftIons.Select(x => x - insilicoTruncationIdxMass1).ToList();
+                        newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
+                        newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
+                        proteinListLeft.Add(newProtein);
+                    }
+                }  //COMMENT ME
             }
         }
 
@@ -338,9 +278,9 @@ namespace PerceptronLocalService.Engine
 
         public void subTruncationRight(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedRight, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight)
         {
-            var isLeftRightIonEqualTrunRight = new List<ProteinDto>();
+            var isLeftRightIonEqualTrunRight = new List<ProteinDto>();//DELME
 
-            for (var index = 1; index < CandidateProteinListTruncatedRight.Count; index++)
+            for (var index = 0; index < CandidateProteinListTruncatedRight.Count; index++) // 0 //index = 1
             {
                 //if (CandidateProteinListTruncatedRight[index].Header == "P31689")
                 //{
