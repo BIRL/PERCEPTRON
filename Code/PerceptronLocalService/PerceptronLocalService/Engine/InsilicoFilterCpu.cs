@@ -141,10 +141,16 @@ namespace PerceptronLocalService.Engine
                         var RightMatched_Index = new List<int>();
                         var LeftPeak_Index = new List<int>();
                         var RightPeak_Index = new List<int>();
+
+                        var Left = new List<string>();
+                        var Right = new List<string>();
+
                         int IdxL = 0;
                         int IdxR = 0;
-                        //LeftType = [];
-                        //RightType = [];
+                        var LeftType = new List<string>();
+                        var RightType = new List<string>();
+
+                        string Type = "";
 
                         int SpecialLeftFragments = insilico.InsilicoMassLeftAo.Count + insilico.InsilicoMassLeftBo.Count + insilico.InsilicoMassLeftAstar.Count + insilico.InsilicoMassLeftBstar.Count;
                         int SpecialRightFragments = insilico.InsilicoMassRightYo.Count + insilico.InsilicoMassRightYstar.Count + insilico.InsilicoMassRightZo.Count + insilico.InsilicoMassRightZoo.Count;
@@ -166,31 +172,36 @@ namespace PerceptronLocalService.Engine
                             ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
                             for (int indexLeftSide = IdxL; indexLeftSide < insilico.InsilicoMassLeft.Count; indexLeftSide++)
                             {
+                                Type = "Left";
                                 double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeft[indexLeftSide];
                                 //Check in Left Ions
-                                SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
 
                                 if (SpecialLeftFragments > 0)
                                 {
                                     if (insilico.InsilicoMassLeftAo.Count > 0)
                                     {
+                                        Type = "Ao";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAo[indexLeftSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftBo.Count > 0)
                                     {
+                                        Type = "Bo";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBo[indexLeftSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftAstar.Count > 0)
                                     {
+                                        Type = "Astar";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAstar[indexLeftSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftBstar.Count > 0)
                                     {
+                                        Type = "Bstar";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBstar[indexLeftSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                 }
                                 if (difference < -peakDifferenceTolerance && indexLeftSide > 1)
@@ -205,28 +216,33 @@ namespace PerceptronLocalService.Engine
                             {
                                 ///Check in Right Ions
                                 double difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRight[indexRightSide];
-                                SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                Type = "Right";
+                                SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                 if (SpecialRightFragments > 0)
                                 {
                                     if (insilico.InsilicoMassRightYo.Count > 0)
                                     {
+                                        Type = "Yo";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYo[indexRightSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightZo.Count > 0)
                                     {
+                                        Type = "Zo";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZo[indexRightSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightZoo.Count > 0)
                                     {
+                                        Type = "Zoo";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZoo[indexRightSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightYstar.Count > 0)
                                     {
+                                        Type = "Ystar";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYstar[indexRightSide];
-                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide);
+                                        SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                 }
                                 if (difference < -peakDifferenceTolerance && indexRightSide > 1)
@@ -240,6 +256,14 @@ namespace PerceptronLocalService.Engine
 
                         proteinList[indexProteinList].InsilicoScore = Matches_Score / peakData2DList.Count;
                         proteinList[indexProteinList].MatchCounter = MatchCounter;
+
+                        proteinList[indexProteinList].LeftMatchedIndex = LeftMatched_Index;
+                        proteinList[indexProteinList].LeftPeakIndex = LeftPeak_Index;
+                        proteinList[indexProteinList].LeftType = LeftType;
+
+                        proteinList[indexProteinList].RightMatchedIndex = RightMatched_Index;
+                        proteinList[indexProteinList].RightPeakIndex = RightPeak_Index;
+                        proteinList[indexProteinList].RightType = RightType;
                     }
                     //experimentalPeakIndex = 0;
                     //theoreticalPeakIndex = insilico.InsilicoMassRight.Count - 1;
@@ -269,7 +293,7 @@ namespace PerceptronLocalService.Engine
 
         }
 
-        private void SpectralComparison(double difference, newMsPeaksDto OnepeakData2DList, int indexPeakList, double peakDifferenceTolerance, ref int Consecutive, ref int Counter, ref int OldConsec, ref int OldConsec2, ref int ConsecutiveRegion, ref double Matches_Score, ref int MatchCounter, List<int> Matched_IndexList, List<int> Peak_IndexList, int indexSide) // Matched_Index == LeftMatched_Index OR RightMatched_Index  /// Peak_IndexPeak_IndexList ==  LeftPeak_Index  OR  RightPeak_Index
+        private void SpectralComparison(double difference, newMsPeaksDto OnepeakData2DList, int indexPeakList, double peakDifferenceTolerance, ref int Consecutive, ref int Counter, ref int OldConsec, ref int OldConsec2, ref int ConsecutiveRegion, ref double Matches_Score, ref int MatchCounter, List<int> Matched_IndexList, List<int> Peak_IndexList, int indexSide, string Type, List<string> TypeList) // Matched_Index == LeftMatched_Index OR RightMatched_Index  /// Peak_IndexList ==  Peak List Index
         {
             double absdifference = Math.Abs(difference);  //Taking Absoulte difference {Doesn't matter}
 
@@ -300,8 +324,10 @@ namespace PerceptronLocalService.Engine
                     OldConsec = Consecutive;
                 }
                 // Only Update Score
-                Matched_IndexList.Add(indexSide);
-                Peak_IndexList.Add(indexPeakList);
+                Matched_IndexList.Add(indexSide);     // Left or Right Peak Index 
+                Peak_IndexList.Add(indexPeakList);   // Peak List Index
+                TypeList.Add(Type);
+                //Matched_IndexList.Add(indexPeakList);
                 /////////LeftType = [LeftType; {'Left'} ];
                 MatchCounter = MatchCounter + 1;
             }
