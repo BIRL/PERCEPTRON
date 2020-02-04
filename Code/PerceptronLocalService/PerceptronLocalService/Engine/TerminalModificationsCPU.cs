@@ -18,7 +18,7 @@ namespace PerceptronLocalService.Engine
             int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
 
             //DELME TESTING
-            int countDELME = 0;
+            //int countDELME = 0;
             var DELMELIST = new List<ProteinDto>();
 
             //
@@ -31,7 +31,7 @@ namespace PerceptronLocalService.Engine
 
                     //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
                     {
-                        countDELME = 1;
+                        //countDELME = 1;
 
                         //Preparing Protein Info
                         var protein = candidateProteins[index];
