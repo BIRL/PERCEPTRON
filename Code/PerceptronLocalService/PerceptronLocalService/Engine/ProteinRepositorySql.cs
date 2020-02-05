@@ -85,10 +85,15 @@ namespace PerceptronLocalService.Engine
                         
                     }
                 }
-                else
+                else if (parameters.FilterDb == 0 && CandidateList == 0)
                 {
                     proteins.Add(protein);
                 }
+                else if (parameters.FilterDb == 0 && CandidateList == 1)
+                {
+                    proteins.Add(protein);
+                }
+
             }
             return proteins;
         }
@@ -112,7 +117,7 @@ namespace PerceptronLocalService.Engine
             string subquery2 = "].[dbo].[ProteinInfoes]";
 
 
-            string query = subquery1 + DatabaseName + subquery2;   //"Select * From  [ProteinDB].[dbo].[ProteinInfoes]";
+            string query = subquery1 + DatabaseName + subquery2;   //"Select * From  [ProteinDB].[dbo].[ProteinInfoes]";  // If FilterDb == 0 then, we will take Whole Protein Database. So, query will be enough for this purpose
             
             
             if (parameters.FilterDb == 1)
