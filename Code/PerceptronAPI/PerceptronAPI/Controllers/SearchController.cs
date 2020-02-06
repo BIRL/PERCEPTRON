@@ -13,6 +13,7 @@ using PerceptronAPI.Repository;
 using PerceptronAPI.ServiceLayer;
 using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
+using System.Net.Mail;
 
 namespace PerceptronAPI.Controllers
 {
@@ -38,6 +39,8 @@ namespace PerceptronAPI.Controllers
             var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
             const string progress = "0";
 
+            var ErrorInfo = new BasicJobInfo();
+
             var parametersDto = new SearchParametersDto
             {
                 SearchFiles = new List<SearchFile>(),
@@ -62,12 +65,14 @@ namespace PerceptronAPI.Controllers
 
                 if (jsonData != null)
                 {
+                    ErrorInfo = JsonConvert.DeserializeObject<BasicJobInfo>(jsonData[0].Trim('"'));
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
-                }                     
-                    
+                }
+
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
                 //parametersDto.SearchParameters.FilterDb = 1;
+                
 
                 parametersDto.SearchParameters.QueryId = queryId;
                 parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
@@ -75,7 +80,7 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.CreationTime = creationTime;
 
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
-                
+
                 foreach (var file in provider.FileData)
                 {
                     i++;
@@ -93,6 +98,7 @@ namespace PerceptronAPI.Controllers
             }
             catch (Exception e)
             {
+                Sending_Email(ErrorInfo);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
@@ -110,7 +116,7 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Post_summary_results")]
         public List<SummaryResults> Post_summary_results([FromBody] string input)
         {
-            
+
             Debug.WriteLine(input);
             string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var qid = values[0];
@@ -135,7 +141,7 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Post_history")]
         public List<UserHistory> Post_history([FromBody] string input)
         {
-            
+
             Debug.WriteLine(input);
             var temp = _dataLayer.GetUserHistory(input);
             return temp;
@@ -168,10 +174,10 @@ namespace PerceptronAPI.Controllers
 
                 if (jsonData != null)
                 {
-                    string json = JsonConvert.SerializeObject(jsonData).Replace(@"\",string.Empty);
-                    System.IO.File.WriteAllText(@"C:\inetpub\wwwroot\assets\bug_form\"+queryId+".txt", json);
+                    string json = JsonConvert.SerializeObject(jsonData).Replace(@"\", string.Empty);
+                    System.IO.File.WriteAllText(@"C:\inetpub\wwwroot\assets\bug_form\" + queryId + ".txt", json);
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -180,5 +186,51 @@ namespace PerceptronAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, '1');
         }
 
+
+        public static void Sending_Email(BasicJobInfo p)//, int EmailMsg)
+        {
+            var emailaddress = p.UserId;
+            using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
+            {
+                string BaseUrl = "https://perceptron.lums.edu.pk/";
+
+
+                //if (EmailMsg == -1) // Email Msg for Something Wrong With Entered Query
+                //{
+                mm.Subject = "PERCEPTRON: Protein Search Results";
+                var body = "Dear User,";
+                body += "<br/><br/> Search couldn't complete for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
+                        p.Title + "\" Please check your search parameters and data file.";
+                //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
+                body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
+
+                body += "</br></br>Thank You for using Perceptron.";
+                body += "</br><b>The PERCEPTRON Team</b>";
+                body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
+                mm.Body = body;
+                //}  //I'M COMMENTED
+
+                mm.IsBodyHtml = true;
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "***");
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.office365.com",
+                    EnableSsl = true,
+                    UseDefaultCredentials = true,
+                    Credentials = networkCred,
+                    Port = 587
+                };
+                try
+                {
+                    smtp.Send(mm);
+                }
+                catch (Exception e)
+                {
+                    if (e is System.Net.Mail.SmtpException)
+                        emailaddress = "das bad";
+
+                }
+            }
+        }
     }
 }
