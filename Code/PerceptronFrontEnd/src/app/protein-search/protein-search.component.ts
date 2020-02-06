@@ -18,6 +18,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import { DemoComponent } from '../demo/demo.component';
 import { CloseScrollStrategy } from '@angular/cdk/overlay';
+import { from } from 'rxjs/observable/from';
 
 
 @Component({
@@ -410,9 +411,13 @@ export class ProteinSearchComponent implements OnInit {
       email = user.email;
       form.UserId = email;
     }
+    if(form.Title == ""){
+      form.Title = "Default Run";
+      alert("Dear User! \nYou did not enter Job Title so, your job title would be 'Default Run'.");
+    }
     if(form.NumberOfOutputs == ""){
       form.NumberOfOutputs = '10';
-      alert("No, number of ouptut results were selected. So, we will select Top 10 resutls for you. \n Happy Searching!");
+      alert("Dear User! \nNo, number of ouptut results were selected. So, we will select Top 10 resutls for you.");
     }
     if (form.TerminalModification == ""){
       form.TerminalModification = ['None'];
@@ -424,9 +429,19 @@ export class ProteinSearchComponent implements OnInit {
     if (form.PstSweight == ""){
       form.PstSweight = 0; 
     }
+
+    if(form.GuiMass == ""){
+      form.GuiMass = 10000;
+    }
+
     
     if (form.InsilicoSweight == ""){
       form.InsilicoSweight = 0;
+    }
+    if(Number(form.MaximumPstLength) < Number(form.MinimumPstLength)){
+      form.MaximumPstLength = 6;
+      form.MinimumPstLength = 3;
+      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \n Maximum Tag Length should be greater than Minimum Tag Length. \n So, we are taking default values.")
     }
 
     if (form.PtmTolerance == ""){
@@ -473,6 +488,12 @@ export class ProteinSearchComponent implements OnInit {
     else{
       form.ptmallow = 0;
     }
+    if(form.MethionineChemicalModification == ""){
+      form.MethionineChemicalModification = "None";
+    }
+    if(form.CysteineChemicalModification == ""){
+      form.CysteineChemicalModification = "None";
+    }
 
     if (form.HandleIons)
       form  .HandleIons= form.HandleIons.toString()
@@ -482,7 +503,7 @@ export class ProteinSearchComponent implements OnInit {
     console.log(form);
     stats = this._httpService.postJSON(form, fi.files);
     console.log(stats)
-    alert("Form submitted! Kindly check your email");
+    alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
   }
 
   onReset(form: any): void {
