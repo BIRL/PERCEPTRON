@@ -60,7 +60,7 @@ export class AppComponent {
       if (user) {
         this.router.navigate(['/youtube']);
     } else {
-      alert("Kindly login first!")
+      alert("Kindly login or use as a guest!")
       this.router.navigate(['/login']);
       };
      };
@@ -85,7 +85,7 @@ export class AppComponent {
       if (user) {
         this.router.navigate(['/history']);
     } else {
-        alert("Kindly login first!")
+        alert("Kindly login or use as a guest!")
         this.router.navigate(['/login']);
       };
      };
@@ -111,7 +111,7 @@ check(){
       if (user) {
         this.router.navigate(['/team']);
     } else {
-    alert("Kindly login first!")
+    alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
       };
      };
@@ -121,7 +121,7 @@ check(){
       if (user) {
         this.router.navigate(['/help']);
     } else {
-    alert("Kindly login first!")
+    alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
      
     };
@@ -132,7 +132,7 @@ check(){
     if (user) {
       this.router.navigate(['/contact']);
   } else {
-  alert("Kindly login first!")
+  alert("Kindly login or use as a guest!")
   this.router.navigate(['/login']);
    
   };
@@ -148,7 +148,7 @@ check(){
       if (user) {
         this.router.navigate(['/hudiara']);
     } else {
-    alert("Kindly login first!")
+    alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
     };
       
@@ -158,7 +158,7 @@ check(){
       if (user) {
         this.router.navigate(['/maps']);
     } else {
-    alert("Kindly login first!")
+    alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
     };
   };
@@ -169,7 +169,7 @@ check(){
     if (user) {
       this.router.navigate(['/update-password']);
   } else {
-  alert("Kindly login first!")
+  alert("Kindly login or use as a guest!")
   this.router.navigate(['/login']);
   };
 };
@@ -180,7 +180,7 @@ search() {
         this.router.navigate(['/search']);
         // this.disabled=false;
     } else {
-    alert("Kindly login first!")
+    alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
     // this.disabled=false;
     };
@@ -242,7 +242,7 @@ search() {
       if (user) {
         this.router.navigate(['/repository']);
     } else {
-      alert("Kindly login first!");
+      alert("Kindly login or use as a guest!");
       this.router.navigate(['/login']);
     }
       
@@ -253,7 +253,7 @@ search() {
       if (user) {
         this.router.navigate(['/bug-report']);
     } else {
-      alert("Kindly login first!");
+      alert("Kindly login or use as a guest!");
       this.router.navigate(['/login']);
     }
       
@@ -276,7 +276,7 @@ search() {
         if (user) {
           this.router.navigate(['/settings']);
       } else {
-        alert("Kindly login first!");
+        alert("Kindly login or use as a guest!");
         this.router.navigate(['/login']);
       }
 
