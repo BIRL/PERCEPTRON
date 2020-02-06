@@ -147,7 +147,7 @@ namespace PerceptronLocalService
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
-                                
+
                 if (EmailMsg == 1)
                 {
                     mm.Subject = "PERCEPTRON: Protein Search Results";
@@ -190,8 +190,8 @@ namespace PerceptronLocalService
                     body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
                     mm.Body = body;
                 }
-                
-            
+
+
                 mm.IsBodyHtml = true;
                 var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "******");
                 var smtp = new SmtpClient
@@ -214,7 +214,7 @@ namespace PerceptronLocalService
                 }
             }
         }
-        
+
 
         private void PerformSearch(SearchParametersDto parameters)
         {
@@ -251,7 +251,7 @@ namespace PerceptronLocalService
                         break;
 
                     }
-                        
+
                     //Logging.DumpMwTunerResult(massSpectrometryData);
 
 
@@ -271,40 +271,38 @@ namespace PerceptronLocalService
                     //Fetching Candidate Proteins From User Selected DataBase
                     int SimpleCandidateProteinList = 0; // For selecting Simple Candidate Protein List
                     candidateProteins = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, SimpleCandidateProteinList);
-                    
+
+                    int TruncatedCandidateProteinList = 1;
                     if (parameters.Truncation == 1 && parameters.FilterDb == 1)
                     {
-                        int TruncatedCandidateProteinList = 1;
+                        
                         CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, TruncatedCandidateProteinList);
                     }
                     else if (parameters.Truncation == 1 && parameters.FilterDb == 0)
                     {
-                        CandidateProteinListTruncated = candidateProteins;
+                        //CandidateProteinListTruncated = candidateProteins;  //ITS HEALTHY!!! BUT DISCARDED....!!!!
+                        CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, TruncatedCandidateProteinList);
+
                     }
 
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                     ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
-   //                 ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
-
-                    for (int i = 0; i < candidateProteins.Count; i++)
-                    {
-                        if (candidateProteins[i].Header == "A0A0B4J280")
-                        {
-                            int DELME = 0; 
-                        }
-                    }
+                    //                 ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
 
 
                     //Logging.DumpCandidateProteins(candidateProteins);
 
+                    //////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
 
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-//////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
+                    if (candidateProteins.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                    {
+                        EmailMsg = -1;
+                        //Sending_Email(parameters, EmailMsg);
+                        break;
+
+                    }
+                    
 
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
@@ -316,12 +314,41 @@ namespace PerceptronLocalService
                     //Executing Truncation 
                     var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList);
 
-                    candidateProteins = ExecuteProteoformScoringModule(parameters, candidateProteins);
+                    var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>();
+
+                    FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
+                    FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
+
+                    
+                    //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
+                    FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
+
                     //Logging.DumpTotalScores(candidateProteins);
+
+
+
+
+
+                    /////////////////////////////////ProteoformFinalAlgorithmsWeightage(parameters, candidateProteins);
+
+
+                    ////score = 0;
+                    ////for (var i = 0; i < candidateProteins.Count; ++i)
+                    ////{
+                    ////    if (candidateProteins[i].PstScore + candidateProteins[i].MwScore + candidateProteins[i].PtmScore > score)
+                    ////    {
+                    ////        score = candidateProteins[i].PstScore + candidateProteins[i].MwScore + candidateProteins[i].PtmScore;
+                    ////        lol = candidateProteins[i].Header;
+                    ////        t = i;
+                    ////    }
+                    ////}
+                    ////////////////////////
 
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
-                    StoreSearchResults(parameters, candidateProteins, executionTimes, fileNumber);
+
+                    //StoreSearchResults(parameters, candidateProteins, executionTimes, fileNumber);  // ITS HEALTHY...!!!
+                    StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
 
 
                 }
@@ -337,21 +364,20 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2)
+            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1)
             {
                 EmailMsg = 1;
                 //Sending_Email(parameters, EmailMsg);
             }
-            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2)
+            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1)
             {
                 EmailMsg = -1;
                 //Sending_Email(parameters, EmailMsg);
             }
-            
+
             _dataLayer.Set_Progress(parameters.Queryid, 100);
 
         }
-
 
         private void ScoringByMolecularWeight(SearchParametersDto parameters, double IntactProteinMass, List<ProteinDto> CandidateProteinsList)
         {
@@ -371,7 +397,7 @@ namespace PerceptronLocalService
             }
         }
 
-        private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<PstTagList> PstTags,  List<newMsPeaksDto> peakData2DList)
+        private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList)
         {
             Stopwatch modulerTimer = Stopwatch.StartNew();
 
@@ -379,13 +405,13 @@ namespace PerceptronLocalService
             var CandidateProteinListTrucnatedwithInsilicoScores = new List<ProteinDto>();
             if (parameters.Truncation == 1)
             {
-                
+
                 var CandidateProteinListTruncatedLeft = new List<ProteinDto>();
                 var CandidateProteinListTruncatedRight = new List<ProteinDto>();
 
                 var CandidateListTruncationLeftProcessed = new List<ProteinDto>();  // Processed by TruncationLeft
                 var RemainingProteinsLeft = new List<ProteinDto>();  // Processed by TruncationLeft
-                
+
                 var CandidateListTruncationRightProcessed = new List<ProteinDto>();  // Processed by TruncationRight
                 var RemainingProteinsRight = new List<ProteinDto>();  // Processed by TruncationRight
 
@@ -398,20 +424,21 @@ namespace PerceptronLocalService
                 CandidateProteinListUnModified.AddRange(CandidateListTruncationLeftProcessed);
                 CandidateProteinListUnModified.AddRange(CandidateListTruncationRightProcessed);
 
+                var TruncatedListwithFragAdjust = new List<ProteinDto>();
+                TruncatedListwithFragAdjust = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(CandidateProteinListUnModified, parameters.InsilicoFragType, parameters.HandleIons);
 
                 //#4ttB -  CandidateProteinListUnModified
-                var list = _Truncation.FilterTruncatedProteins(parameters, CandidateProteinListUnModified, PstTags);
+                //var list = _Truncation.FilterTruncatedProteins(parameters, CandidateProteinListUnModified, PstTags);
+                var FilteredTruncatedList = _Truncation.FilterTruncatedProteins(parameters, TruncatedListwithFragAdjust, PstTags);
 
 
-                if (parameters.InsilicoSweight != 0)
-                {
-                    _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(CandidateProteinListUnModified, parameters.InsilicoFragType, parameters.HandleIons);
-                    _insilicoFilter.ComputeInsilicoScore(CandidateProteinListUnModified, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinListTrucnatedwithInsilicoScores);
-                }
 
-                
+                _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinListTrucnatedwithInsilicoScores);
+              
 
-                   
+
+
+
             }
             modulerTimer.Stop(); // #FutureWork: Will be added into FE also for Truncation Time
             return CandidateProteinListTrucnatedwithInsilicoScores;
@@ -459,14 +486,14 @@ namespace PerceptronLocalService
             var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags, CandidateList);// Added "int CandidateList". 20200112
 
             moduleTimer.Stop();
-            
+
             if (CandidateList == 0)
             {
                 //TimeSpan time = TimeSpan.Parse(executionTimes.InsilicoTime);
                 //var totaltime = moduleTimer + time;
                 executionTimes.MwFilterTime = moduleTimer.Elapsed.ToString();
             }
-            
+
             return listOfProteins;
         }
 
@@ -480,41 +507,70 @@ namespace PerceptronLocalService
 
             if (parameters.TerminalModification != "")
             {
-                candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins); 
+                candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
             }
             return candidateProteins;
         }
 
-
+        //ProteoformFinalAlgorithmsWeightage
         private static List<ProteinDto> ExecuteProteoformScoringModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
         {
             List<ProteinDto> candidateProteins1 = new List<ProteinDto>();
-            //"Module 8 of 9:  Evaluating Final Scores.";                                  //FARHAN
-            foreach (var protein in candidateProteins)
-            {
-                protein.set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);  //MwSweight is Intact Protein Mass Score Weightage
-            }
-            double score = 0;
-            string lol;
-            for (var i = 0; i < candidateProteins.Count; ++i)
-            {
-                if (candidateProteins[i].Score > score)
-                {
 
-                    score = candidateProteins[i].Score;
-                    lol = candidateProteins[i].Header;
+            if (parameters.PstSweight != 0)
+            {
+                double MaxPstScore = candidateProteins.Max(x => x.PstScore);
+
+                if (MaxPstScore > 1)
+                {
+                    for (int iter = 0; iter < candidateProteins.Count; iter++)
+                    {
+                        candidateProteins[iter].PstScore = candidateProteins[iter].PstScore / MaxPstScore;
+                    }  
                 }
             }
+
+            //"Module 8 of 9:  Evaluating Final Scores.";                                  //FARHAN
+
+            //for (int iter = 0; iter < candidateProteins.Count; iter++)
+            //{
+            //    candidateProteins[iter].Score = candidateProteins[iter]
+            //}
+
+
+            for (int i = 0; i < candidateProteins.Count; i++)
+			{
+                candidateProteins[i].set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);
+			}
+
+            //foreach (var protein in candidateProteins)
+            //{
+            //    protein.set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);  //MwSweight is Intact Protein Mass Score Weightage
+            //}
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //double score = 0;
+            //string lol;
+            //for (var i = 0; i < candidateProteins.Count; ++i)
+            //{
+
+            //    if (candidateProteins[i].Score > score)
+            //    {
+
+            //        score = candidateProteins[i].Score;
+            //        lol = candidateProteins[i].Header;
+            //    }
+            //}
+            
             candidateProteins1 = candidateProteins.OrderByDescending(x => x.Score).ToList();
             return candidateProteins1;
-
         }
 
         //SPECTRAL COMPARISON ALGORITHM: 
         private void ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes, List<ProteinDto> CandidateProteinswithInsilicoScores)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
-            if (parameters.InsilicoSweight != 0)
+            //if (parameters.InsilicoSweight != 0)
             {
                 var CandidateProteins = new List<ProteinDto>();
                 CandidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
@@ -582,14 +638,18 @@ namespace PerceptronLocalService
 
         private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
-            if (candidateProteins.Count > Constants.NumberOfResultsToStore)
-                candidateProteins = candidateProteins.Take(Constants.NumberOfResultsToStore).ToList<ProteinDto>();
+
+            //if (candidateProteins.Count > Constants.NumberOfResultsToStore)                        //ITS HEALTHY.....!!!
+            //    candidateProteins = candidateProteins.Take(Constants.NumberOfResultsToStore).ToList<ProteinDto>();
+
+            if (candidateProteins.Count > parameters.NumberOfOutputs)
+                candidateProteins = candidateProteins.Take(parameters.NumberOfOutputs).ToList<ProteinDto>();
 
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
             _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], fileNumber);
         }
 
-        
+
         //Peak List: Extracting from data file 
         private MsPeaksDto PeakListFileReaderModuleModule(SearchParametersDto parameters, int fileNumber, ExecutionTimeDto executionTimes)
         {
@@ -610,7 +670,7 @@ namespace PerceptronLocalService
                 peakData.Mass[peakDataindex] = peakData.Mass[peakDataindex] + 1.00727647; //monoisotopic to m/z value
                 peakData.Intensity[peakDataindex] = peakData.Intensity[peakDataindex] / maxIntensity; //Normalized by dividing the selected maximum intensity 
             }
-            
+
             moduleTimer.Stop();
             executionTimes.FileReadingTime = moduleTimer.Elapsed.ToString();
             return peakData;
@@ -651,13 +711,4 @@ namespace PerceptronLocalService
 //************************************************************************************************//
 
 
-////score = 0;
-////for (var i = 0; i < candidateProteins.Count; ++i)
-////{
-////    if (candidateProteins[i].PstScore + candidateProteins[i].MwScore + candidateProteins[i].PtmScore > score)
-////    {
-////        score = candidateProteins[i].PstScore + candidateProteins[i].MwScore + candidateProteins[i].PtmScore;
-////        lol = candidateProteins[i].Header;
-////        t = i;
-////    }
-////}
+
