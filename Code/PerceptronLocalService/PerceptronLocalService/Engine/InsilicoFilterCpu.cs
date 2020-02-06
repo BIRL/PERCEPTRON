@@ -123,7 +123,7 @@ namespace PerceptronLocalService.Engine
                 else
                     peakData2DList[indexIntensity].Intensity = 1;
             }
-            if (peakData2DList.Count > 0)//16) //Just to avoid small data. Because its hardly possible to get Spectral Matches with small peak Count
+            if (peakData2DList.Count > 16)//16) //Just to avoid small data. Because its hardly possible to get Spectral Matches with small peak Count
             {
                 for (int indexProteinList = 0; indexProteinList < proteinList.Count; indexProteinList++)//foreach (var protein in proteinList) //Run Loop on Candidate Protein List (proteinList)
                 {
