@@ -25,48 +25,50 @@ namespace PerceptronLocalService.Engine
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
             {
-                if (candidateProteins[index].PstScore > 0)
+                if (parameters.DenovoAllow == 1 && candidateProteins[index].PstScore == 0)
                 {
-
-
-                    //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
-                    {
-                        //countDELME = 1;
-
-                        //Preparing Protein Info
-                        var protein = candidateProteins[index];
-                        var tempprotein = new ProteinDto(protein);
-
-                        //BELOW: Just for Safe Level
-                        var leftString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassLeft);
-                        var leftIons = Clone.Decrypt<List<double>>(leftString);
-
-                        var seqString = Clone.CloneObject(tempprotein.Sequence);
-                        var sequence = Clone.Decrypt<string>(seqString);
-
-                        var rightString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassRight);
-                        var rightIons = Clone.Decrypt<List<double>>(rightString);
-                        //ABOVE: Just for Safe Level
-
-                        //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
-                        leftIons.RemoveAt(leftIons.Count - 1);
-                        rightIons.RemoveAt(rightIons.Count - 1);
-
-                        double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
-                        int tmpSeqLength = sequence.Length;
-
-                        TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
-
-                        //}  // COMMENT ME !!!
-
-                        //if (candidateProteins[index].PstScore > 0)
-                        //{
-                        //    countDELME = countDELME + 1;
-                        //    DELMELIST.Add(candidateProteins[index]);
-                        //}
-
-                    }
+                    continue;
                 }
+
+
+                //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
+                //{
+                    //countDELME = 1;
+
+                    //Preparing Protein Info
+                    var protein = candidateProteins[index];
+                    var tempprotein = new ProteinDto(protein);
+
+                    //BELOW: Just for Safe Level
+                    var leftString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassLeft);
+                    var leftIons = Clone.Decrypt<List<double>>(leftString);
+
+                    var seqString = Clone.CloneObject(tempprotein.Sequence);
+                    var sequence = Clone.Decrypt<string>(seqString);
+
+                    var rightString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassRight);
+                    var rightIons = Clone.Decrypt<List<double>>(rightString);
+                    //ABOVE: Just for Safe Level
+
+                    //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                    leftIons.RemoveAt(leftIons.Count - 1);
+                    rightIons.RemoveAt(rightIons.Count - 1);
+
+                    double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
+                    int tmpSeqLength = sequence.Length;
+
+                    TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
+
+                    //}  // COMMENT ME !!!
+
+                    //if (candidateProteins[index].PstScore > 0)
+                    //{
+                    //    countDELME = countDELME + 1;
+                    //    DELMELIST.Add(candidateProteins[index]);
+                    //}
+
+                //}
+
             }
 
             //for (int i = 0; i < tempCandidateProteins.Count; i++)
@@ -75,8 +77,8 @@ namespace PerceptronLocalService.Engine
             //    {
             //        DELMELIST.Add(candidateProteins[i]);
             //    }
-                
-                
+
+
             //}
 
 
@@ -87,7 +89,6 @@ namespace PerceptronLocalService.Engine
             //return candidateProteins;
         }
 
-
         public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins) //#N2RIt!!!
         {
             double AcetylationWeight = MassAdjustment.AcetylationWeight;
@@ -96,7 +97,6 @@ namespace PerceptronLocalService.Engine
             string[] IndividualModifications = parameters.TerminalModification.Split(',');
 
             var DELMECandiList = new List<ProteinDto>();
-
 
             if (IndividualModifications[0] == "None")
             {
@@ -107,7 +107,6 @@ namespace PerceptronLocalService.Engine
                 newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
                 tempCandidateProteins.Add(newProtein);
             }
-
             if (tempseq[0] == 'M')
             {
                 if (IndividualModifications[0] == "NME" || IndividualModifications[1] == "NME") //Its Seems Like hard Code but not in Actual because We know the position of NME will always be either 0 or 1  //// Just checking NME with this method so to avoid conflict between NME and NME_Acetylation
@@ -174,11 +173,6 @@ namespace PerceptronLocalService.Engine
                     tempCandidateProteins.Add(newProtein);
                 }
             }
-
-
-
-
-
         }
     }
 }
