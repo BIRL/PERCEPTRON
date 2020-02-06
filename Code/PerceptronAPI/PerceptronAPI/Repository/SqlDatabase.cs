@@ -4,7 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using PerceptronAPI.Models;
-using System.ComponentModel.DataAnnotations;  //Added on 12Sep2019.. WHy its not needed before...???
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;  //Added on 12Sep2019.. WHy its not needed before...???
 
 namespace PerceptronAPI.Repository
 {
@@ -20,7 +21,9 @@ namespace PerceptronAPI.Repository
                 db.SearchFiles.AddRange(param.SearchFiles);
                 //db.PtmFixedModifications.AddRange(param.FixedMods);
                 //db.PtmVariableModifications.AddRange(param.VarMods);
+
                 db.SaveChanges();
+
             }
         }
 
@@ -173,7 +176,7 @@ namespace PerceptronAPI.Repository
                         ProteinId = dataReader["Header"].ToString(),
                         Mods = 2,
                         MolW = (double)dataReader["Mw"],
-                        ProteinName = "Protein "+j,
+                        ProteinName = "Protein " + j,
                         ProteinRank = 1,
                         ResultId = dataReader["ResultId"].ToString(),
                         Score = (double)dataReader["Score"],
@@ -214,7 +217,7 @@ namespace PerceptronAPI.Repository
                     {
                         title = dataReader["Title"].ToString(),
                         qid = dataReader["Queryid"].ToString(),
-                        time=dataReader["CreationTime"].ToString()
+                        time = dataReader["CreationTime"].ToString()
                     };
                     summaryResults.Add(temp);
                 }
@@ -223,8 +226,8 @@ namespace PerceptronAPI.Repository
                 sqlConnection1.Close();
             }
 
-           
-            return summaryResults.OrderByDescending(x=> x.time).ToList();
+
+            return summaryResults.OrderByDescending(x => x.time).ToList();
         }
 
         public stat stat()
@@ -321,7 +324,7 @@ namespace PerceptronAPI.Repository
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
 
 
-             
+
 
                 if (searchParameters.Count != 0)
                     detiledResults.Paramters.SearchParameters = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
