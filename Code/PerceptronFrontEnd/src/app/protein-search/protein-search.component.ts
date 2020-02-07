@@ -283,8 +283,8 @@ export class ProteinSearchComponent implements OnInit {
     this.DenovoAllow = 1;
     this.FilterDB = 1;
     this.ptmallow = 0;
-    this.Slider1 = '100';
-    this.Slider2 = '100';
+    this.Slider1 = '0'; //
+    this.Slider2 = '0'; //
     this.Slider3 = '100';
     this.Truncation = 0;  //Trunc
     this.MinimumPstLength = '3';
@@ -424,7 +424,7 @@ export class ProteinSearchComponent implements OnInit {
     }
 
     if(form.MwSweight == ""){
-      form.MwSweight == 0;
+      form.MwSweight = 0;
     } 
     if (form.PstSweight == ""){
       form.PstSweight = 0; 
