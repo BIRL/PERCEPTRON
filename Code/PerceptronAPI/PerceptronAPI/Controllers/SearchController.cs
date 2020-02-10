@@ -36,7 +36,11 @@ namespace PerceptronAPI.Controllers
         public async Task<HttpResponseMessage> File_upload()
         {
             var queryId = Guid.NewGuid().ToString();
-            var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+
+            //var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);  // Updated
+            DateTime time = DateTime.Now;             // Fetching Current Time
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var creationTime = time.ToString(format); // Formating creationTime and assigning
             const string progress = "0";
 
             var ErrorInfo = new BasicJobInfo();
