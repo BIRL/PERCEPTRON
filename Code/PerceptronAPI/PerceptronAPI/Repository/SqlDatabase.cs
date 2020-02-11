@@ -263,13 +263,18 @@ namespace PerceptronAPI.Repository
                 var sqlConnection1 =
                     new SqlConnection(
                         "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+
                 var cmd = new SqlCommand
-                {
-                    CommandText =
-                        "Select count( QueryId) as two FROM SearchResults",
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
+                    {
+                        CommandText = "Select count( QueryId) as two FROM SearchQueries WHERE Progress = 100",
+
+                        //"Select count( QueryId) as two FROM SearchResults",
+
+                        CommandType = CommandType.Text,
+                        Connection = sqlConnection1
+                    };
+
+
                 sqlConnection1.Open();
                 int j = 0;
                 var dataReader = cmd.ExecuteReader();
