@@ -34,6 +34,9 @@ export class AboutComponent implements OnInit {
   user :any;
   search :any;
 
+  displayedColumns: string[] = ['BrowserName', 'OSWindow', 'OSLinux', 'OSMac'];
+  dataSource = BrowserCompatibilityDataTable;
+
   ngOnInit() {
     this._httpService.stuff().subscribe(data => this.getpattern(data));
   }
@@ -42,3 +45,19 @@ export class AboutComponent implements OnInit {
     this.search=data.search;
   }
 }
+
+
+export interface BrowserCompatibilityTable {
+  BrowserName: string;
+  OSWindow: string;
+  OSLinux: string;
+  OSMac: string;
+}
+
+const BrowserCompatibilityDataTable: BrowserCompatibilityTable[] = [
+  {BrowserName: "Google Chrome", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "Supported"},
+  {BrowserName: "Opera", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "-"},
+  {BrowserName: "Firefox", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "Supported"},
+  {BrowserName: "Edge", OSWindow: 'Supported', OSLinux: "Not Available", OSMac: "Supported"},
+  {BrowserName: "Safari", OSWindow: 'Obsolete', OSLinux: "Not Available", OSMac: "Supported"},
+];
