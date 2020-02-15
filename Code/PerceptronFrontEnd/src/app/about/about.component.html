@@ -1,7 +1,10 @@
     <div style="width:92%;  margin:0 auto;">
     <mat-card style = "height: 100%">
         <label style="text-align:center; font-size: 25px; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">PERCEPTRON - Proteoform Identification Pipeline for Top-Down Proteomics</label>
-
+    </mat-card>
+    
+<br>
+    <mat-card>
         <mat-card-content>
                     <!-- <div class='a'>
                     <label class="test" style="padding-left:0px; font-size: 1.1vw; text-align: justify; font-family: roboto, arial, sans-serif;">
@@ -26,7 +29,11 @@
 
                                             Top-down proteomics (TDP) is an emerging experimental protocol for analysis of intact proteoforms using high resolution tandem mass spectrometry. PERCEPTRON searches spectral data from TDP and is available, freely, online.<br><br>
                                             PERCEPTRON's search pipeline brings together algorithms for:<br>
-                                            <br><b>(i)</b> intact mass tuning <br><b>(ii)</b> <i>de novo</i> peptide sequence tag extraction <br><b>(iii)</b> <i>in silico</i> spectral comparison <br><b>(iv)</b> characterization of post-translational modifications  <br><b>(v)</b> identification of truncated proteins<br><b>(vi)</b> composite scoring scheme of candidate protein scoring <br><br>
+                                            <br><b>(i)</b> intact mass tuning <br><b>(ii)</b> <i>de novo</i> peptide sequence tag extraction <br><b>(iii)</b> <i>in silico</i> spectral comparison <br><b>(iv)</b> characterization of post-translational modifications  <br><b>(v)</b> identification of truncated proteins<br><b>(vi)</b> composite scoring scheme of candidate protein scoring <br><br></p>
+
+
+                                            <img class="img-responsive shadow float_text_left" src="assets/images/Web Architecture.jpg" width="75%"/>
+                                            <p style= "font-size: 18px; text-align:justify" class="float_text_right; font-size:18px; letter-spacing:0px; font-weight:500; font-family: Roboto, Arial, sans-serif;">
                                             To support high-throughput data analysis, PERCEPTRON brings together these algorithms in a high-performance modality. This is achieved by leveraging <a href="https://www.nvidia.com/"><b>NVIDIA's</b></a> graphical processing units (GPU) technology coupled with <a href="https://dotnet.microsoft.com/apps/aspnet"><b>Microsoft ASP.NET</b></a> and <a href="https://angular.io"><b>ANGULAR frameworks</b></a>. The search results obtained include a ranked list of proteins, their scores and details on the matching information. This information can be visualized as well as downloaded.<br><br>
                                             With these features, PERCEPTRON aims to address the void due to lack of open-source and open-architecture protein identification software for TDP data.
                                             
@@ -51,4 +58,36 @@
                         </div>            
         </mat-card-content>
     </mat-card>
+
+    <br>
+
+    <mat-card style = "height: 100%">
+    <label style="text-align:center; font-size: 25px; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">PERCEPTRON - Browser Compatibility</label>
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    
+                    <ng-container matColumnDef="BrowserName">
+                      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.BrowserName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="OSWindow">
+                      <mat-header-cell *matHeaderCellDef> Windows </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.OSWindow}} </mat-cell>
+                    </ng-container>
+                                   
+                    <ng-container matColumnDef="OSLinux">
+                      <mat-header-cell *matHeaderCellDef> Linux(Ubuntu) </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.OSLinux}} </mat-cell>
+                    </ng-container> 
+                    
+                    <ng-container matColumnDef="OSMac">
+                      <mat-header-cell *matHeaderCellDef> Mac </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.OSMac}} </mat-cell>
+                    </ng-container>
+                  
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                </mat-card>
     </div>
+    
