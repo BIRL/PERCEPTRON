@@ -76,7 +76,7 @@ namespace PerceptronAPI.Controllers
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
                 //parametersDto.SearchParameters.FilterDb = 1;
-                
+
 
                 parametersDto.SearchParameters.QueryId = queryId;
                 parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
@@ -215,7 +215,7 @@ namespace PerceptronAPI.Controllers
                 //}  //I'M COMMENTED
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "***");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "****");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
