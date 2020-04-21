@@ -96,11 +96,14 @@ export class ProteinSearchComponent implements OnInit {
   HopThreshhold: any;
   PSTTolerance: any;
 
+  Guest: any;
+
   InstrumentAccuracy: any;
   InstrumentAccuracy1: any;
 
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
+
 
 
 
@@ -406,10 +409,15 @@ export class ProteinSearchComponent implements OnInit {
 
   onSubmit(form: any): void {
     var user = firebase.auth().currentUser;
-    var email;
-    if (user.email != null) {
-      email = user.email;
-      form.UserId = email;
+
+    //User should be logged in with verified email id
+    if (user.email != null && user.emailVerified == true) {
+      form.UserId = user.email;
+      form.Guest = 0;
+    }
+    else{
+      form.UserId = user.uid;
+      form.Guest = 1;
     }
     if(form.Title == ""){
       form.Title = "Default Run";
