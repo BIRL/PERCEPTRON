@@ -193,7 +193,7 @@ namespace PerceptronLocalService
 
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "******");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "BIRL123!@#Percep"); //LUMSProT@comBio
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
