@@ -17,11 +17,11 @@ namespace PerceptronLocalService.Engine
 
             for (int protIndex = 0; protIndex < prot.Count; protIndex++)
             {
-                //if (prot[protIndex].Header == "A6NDN8")  //"Q3ZAQ7"//DELME
-                {
+                //if (prot[protIndex].Header == "O00570")  //"Q3ZAQ7"//DELME //A6NDN8
+                //{
                     var a = adjustProteinForFragmentTypeAndSpecialIons(prot[protIndex], clevageType, ions);
                     tempProteinList.AddRange(a);
-                }
+                //}  //COMMENT ME
             }
 
             return tempProteinList;
