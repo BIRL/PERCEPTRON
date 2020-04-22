@@ -288,12 +288,14 @@ namespace PerceptronLocalService.Repository
                 qp.PSTTolerance = Convert.ToDouble(reader.GetValue(23));
                 qp.PeptideTolerance = Convert.ToDouble(reader.GetValue(24));
                 qp.PeptideToleranceUnit = reader.GetValue(25).ToString();
-                qp.TerminalModification = reader.GetValue(26).ToString();  // 26 to 29
+                qp.TerminalModification = reader.GetValue(26).ToString();  // 26 to 29s
                 qp.Truncation = Convert.ToInt32(reader.GetValue(27));
 
                 qp.SliderValue = Convert.ToDouble(reader.GetValue(28));
                 qp.CysteineChemicalModification = reader.GetValue(29).ToString();
-                qp.MethionineChemicalModification = reader.GetValue(30).ToString(); 
+                qp.MethionineChemicalModification = reader.GetValue(30).ToString();
+
+                qp.GuestEnabled = Convert.ToInt32(reader.GetValue(31));
 
             }
 
