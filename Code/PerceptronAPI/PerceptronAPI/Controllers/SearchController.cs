@@ -84,6 +84,7 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.CreationTime = creationTime;
 
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+                parametersDto.SearchQuerry.GuestEnabled = parametersDto.SearchParameters.GuestEnabled;
 
                 foreach (var file in provider.FileData)
                 {
@@ -102,7 +103,11 @@ namespace PerceptronAPI.Controllers
             }
             catch (Exception e)
             {
-                Sending_Email(ErrorInfo);
+                if (ErrorInfo.GuestEnabled == 0) // Error msgs will be sent to Users Only!
+                {
+                    Sending_Email(ErrorInfo);
+                }
+                
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
