@@ -96,7 +96,7 @@ export class ProteinSearchComponent implements OnInit {
   HopThreshhold: any;
   PSTTolerance: any;
 
-  Guest: any;
+  GuestEnabled: any;
 
   InstrumentAccuracy: any;
   InstrumentAccuracy1: any;
@@ -314,12 +314,12 @@ export class ProteinSearchComponent implements OnInit {
     this.Hop_Tolerance_Unit = 'Da';
     this.Peptide_Tolerance_Unit = 'ppm';
     var user = firebase.auth().currentUser;
-    if (user.email != null) {
+    if (user.email != null || user.email == null) {
       this.diableEmail = true;
     }
-    else {
-      this.diableEmail = false;
-    }
+    // else {
+    //   this.diableEmail = false;
+    // }
   }
 
   disableMods() {
@@ -411,13 +411,13 @@ export class ProteinSearchComponent implements OnInit {
     var user = firebase.auth().currentUser;
 
     //User should be logged in with verified email id
-    if (user.email != null && user.emailVerified == true) {
+    if (user.emailVerified == true) {  //user.email != null && 
       form.UserId = user.email;
-      form.Guest = 0;
+      form.GuestEnabled = 0;
     }
     else{
       form.UserId = user.uid;
-      form.Guest = 1;
+      form.GuestEnabled = 1;
     }
     if(form.Title == ""){
       form.Title = "Default Run";
@@ -425,7 +425,7 @@ export class ProteinSearchComponent implements OnInit {
     }
     if(form.NumberOfOutputs == ""){
       form.NumberOfOutputs = '10';
-      alert("Dear User! \nNo, number of ouptut results were selected. So, we will select Top 10 resutls for you.");
+      alert("Dear User! \nNo, number of ouptut results were selected. So, we will select Top resutls for you.");
     }
     if (form.TerminalModification == ""){
       form.TerminalModification = ['None'];
@@ -511,7 +511,12 @@ export class ProteinSearchComponent implements OnInit {
     console.log(form);
     stats = this._httpService.postJSON(form, fi.files);
     console.log(stats)
-    alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    if (user.emailVerified == true){
+      alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    }
+    else{   //For Guest's Search Results & History
+      alert("Dear Guest! \nYour search query has been submitted for results please visit 'Search Results & History' tab.  \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    }   
   }
 
   onReset(form: any): void {

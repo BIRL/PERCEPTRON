@@ -51,6 +51,8 @@ namespace PerceptronLocalService.DTO
         public string CysteineChemicalModification;
         public string MethionineChemicalModification;
 
+        public int GuestEnabled;
+
 
 
         public bool HasFixedAndVariableModifications()

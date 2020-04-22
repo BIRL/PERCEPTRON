@@ -82,9 +82,9 @@ export class AppComponent {
 
     history() {
       var user = firebase.auth().currentUser;
-      if (user) {
+      if (user || user.emailVerified == false) {
         this.router.navigate(['/history']);
-    } else {
+    } else {  //For Guest
         alert("Kindly login or use as a guest!")
         this.router.navigate(['/login']);
       };
@@ -262,15 +262,14 @@ search() {
     account() {
       var user = firebase.auth().currentUser;
       if (user.email == null){
-        confirm("Warning:\nYou are logged in as a Guest. Closing this window will result in loss of your search results.");
-
-        this.af.auth.signOut();  //Same make it common
+        if (confirm("Warning:\nYou are logged in as a Guest. Closing this window or logging out will result in the loss of your search results.")){
+          this.af.auth.signOut();  //Same make it common
         this.disabled=false;
         this.disabled1=true;
         localStorage.removeItem('login');
         localStorage.removeItem('logged_in_user');
         this.router.navigateByUrl('/home');
-
+        }
       }
       else if (confirm("Do you want to logout?"))
       {

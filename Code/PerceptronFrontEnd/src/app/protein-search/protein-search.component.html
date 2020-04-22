@@ -39,31 +39,35 @@
                 <label style="display:inline;">&nbsp;</label>
                 <label style="color:black;" style='display:inline;'><i>{{email.files.length}} Files Selected</i></label>
                 <input hidden #email type="file" #imgFileInput (ngModel)="email" name="FileName" id="FileName" (change)="upload(Uploaded_File)"
-                  accept=".txt, .mgf, .mzXML" multiple ngModel/>
+                  accept=".txt, .mgf, .mzXML. .mzML" multiple ngModel/>
               </div>
             </span>
           </mat-grid-tile>
 
           <mat-grid-tile></mat-grid-tile>
 
-          <mat-grid-tile colspan="2" rowspan="1">
+          <!-- Disabled Email address placeholder for No Login (Guest)-->  
+          <!-- 20200422 FARHAN-->
+          <!-- <mat-grid-tile colspan="2" rowspan="1">
             <mat-form-field style="padding-left:15px; width:100%">
-              <input matInput matTooltip="Enter an email address to receive search results" matTooltipPosition="before" placeholder="Enter your E-mail Address"
+              <input matInput matTooltip="Enter an email address to receive search results" matTooltipPosition="before" placeholder="Enter your Email Address"
                 pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" [required]="!diableEmail" [disabled]="diableEmail"
                 name="UserId" ngModel>
             </mat-form-field>
-          </mat-grid-tile>
+          </mat-grid-tile> -->
         </mat-grid-list>
 
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
         <mat-grid-list cols="8" style="padding:0px;" rowHeight="55px">
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+
+          <!-- 20200422 FARHAN-->
+          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Enter the value of precursor protein/peptide used in MS1" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
               <input matInput (keypress)="keyPress($event)" [(ngModel)]="GuiMass" placeholder="Intact Protein Mass" name="GuiMass" ngModel>
               <span matSuffix>Da</span>
             </mat-form-field>
-          </mat-grid-tile>
+          </mat-grid-tile> -->
 
           <mat-grid-tile></mat-grid-tile>
 

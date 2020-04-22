@@ -271,7 +271,9 @@ namespace PerceptronLocalService.Repository
                 SliderValue = searchParameters.SliderValue,
 
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
-                MethionineChemicalModification = searchParameters.MethionineChemicalModification
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification,
+
+                GuestEnabled = searchParameters.GuestEnabled
 
             };
             return searchParametersDto;

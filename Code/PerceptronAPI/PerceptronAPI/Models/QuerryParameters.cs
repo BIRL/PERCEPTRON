@@ -41,5 +41,7 @@ namespace PerceptronAPI.Models
 
         public string CysteineChemicalModification;
         public string MethionineChemicalModification;
+
+        public int GuestEnabled;
     }
 }

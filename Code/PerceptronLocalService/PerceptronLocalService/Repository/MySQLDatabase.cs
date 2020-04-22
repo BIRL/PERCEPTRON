@@ -30,7 +30,7 @@ namespace PerceptronLocalService.Repository
             const string connectionString = "Data Source=localhost;" +
                                             "Initial Catalog=proteomics;" +
                                             "User id= root;" +
-                                            "Password=****;";
+                                            "Password=Birl1234;";
             _connection = new MySqlConnection(connectionString);
         }
 

@@ -19,5 +19,6 @@ namespace PerceptronAPI.Models
         public string Progress { get; set; }
         public string CreationTime { get; set; }
         public string Email { get; set; }
+        public int GuestEnabled { get; set; }
     }
 }
