@@ -792,6 +792,8 @@ namespace PerceptronAPI.Repository
                             qp.CysteineChemicalModification = reader.GetValue(31).ToString();
                             qp.MethionineChemicalModification = reader.GetValue(32).ToString();
 
+                            qp.GuestEnabled = Convert.ToInt32(reader.GetValue(33));
+
 
                         }
 
