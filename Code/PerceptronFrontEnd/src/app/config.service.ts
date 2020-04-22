@@ -36,7 +36,6 @@ export class ConfigService {
                 data => console.log('success'),
                 error => console.log(error)
             )
-
     }
 
     stuff() {
@@ -143,10 +142,18 @@ export class ConfigService {
     getUserHistory(userId) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId, { headers: headers })
+        if (userId){
+            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId, { headers: headers })
             .map(res => {
                 return res.json()
             });
+        }
+        else{ //For Guest's Search Results & History
+            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=', { headers: headers })
+        .map(res => {
+            return res.json()
+        });
+        }
     }
 
     GetSummaryReslts(qid, fileId) {
