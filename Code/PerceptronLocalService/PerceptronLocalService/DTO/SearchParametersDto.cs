@@ -9,7 +9,7 @@ namespace PerceptronLocalService.DTO
     public class SearchParametersDto
     {
         public string Queryid;
-        public string UserId;
+        public string EmailId;
         public string Title;
         public string ProtDb;
         public string InsilicoFragType; // Its Specical Ions
