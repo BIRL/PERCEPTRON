@@ -7,5 +7,7 @@
         public string UserId;
         public string Progress;
         public string CreationTime;
+        public string EmailId;
+        public int GuestEnabled;
     }
 }
