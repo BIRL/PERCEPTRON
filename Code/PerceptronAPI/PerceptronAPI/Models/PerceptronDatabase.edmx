@@ -18,6 +18,7 @@
           <Property Name="TotalTime" Type="nvarchar(max)" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
@@ -78,9 +79,9 @@
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar(max)" />
-          <Property Name="Title" Type="nvarchar(max)" />
-          <Property Name="ProtDb" Type="nvarchar(max)" />
+          <Property Name="EmailId" Type="nvarchar(max)" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ProtDb" Type="nvarchar(max)" Nullable="false" />
           <Property Name="InsilicoFragType" Type="nvarchar(max)" />
           <Property Name="FilterDb" Type="int" Nullable="false" />
           <Property Name="PtmTolerance" Type="float" Nullable="false" />
@@ -104,18 +105,21 @@
           <Property Name="PeptideTolerance" Type="float" Nullable="false" />
           <Property Name="PeptideToleranceUnit" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Truncation" Type="int" Nullable="false" />
-          <Property Name="TerminalModification" Type="nvarchar" MaxLength="128" />
+          <Property Name="TerminalModification" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="SliderValue" Type="float" Nullable="false" />
+          <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Progress" Type="nvarchar(max)" />
           <Property Name="CreationTime" Type="nvarchar(max)" />
-          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="EmailId" Type="nvarchar(max)" />
+          <Property Name="GuestEnabled" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchResults">
           <Key>
@@ -164,6 +168,7 @@
           <Property Name="TotalTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
@@ -224,9 +229,9 @@
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ProtDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProtDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="InsilicoFragType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FilterDb" Type="Int32" Nullable="false" />
           <Property Name="PtmTolerance" Type="Double" Nullable="false" />
@@ -250,18 +255,21 @@
           <Property Name="PeptideTolerance" Type="Double" Nullable="false" />
           <Property Name="PeptideToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Truncation" Type="Int32" Nullable="false" />
-          <Property Name="TerminalModification" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="TerminalModification" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SliderValue" Type="Double" Nullable="false" />
+          <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Progress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreationTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GuestEnabled" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchResult">
           <Key>
@@ -309,6 +317,7 @@
                 <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -375,7 +384,7 @@
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchParameter">
               <MappingFragment StoreEntitySet="SearchParameters">
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="ProtDb" ColumnName="ProtDb" />
                 <ScalarProperty Name="InsilicoFragType" ColumnName="InsilicoFragType" />
@@ -403,6 +412,8 @@
                 <ScalarProperty Name="Truncation" ColumnName="Truncation" />
                 <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
                 <ScalarProperty Name="SliderValue" ColumnName="SliderValue" />
+                <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
+                <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -413,7 +424,8 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Progress" ColumnName="Progress" />
                 <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="GuestEnabled" ColumnName="GuestEnabled" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
