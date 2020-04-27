@@ -226,7 +226,9 @@ namespace PerceptronLocalService.Repository
                 QueryId = searchQuery.QueryId,
                 CreationTime = searchQuery.CreationTime,
                 Progress = searchQuery.Progress,
-                UserId = searchQuery.UserId
+                UserId = searchQuery.UserId,
+                EmailId = searchQuery.EmailId,
+                GuestEnabled = searchQuery.GuestEnabled
             };
             return searchQueryDto;
         }
@@ -245,7 +247,7 @@ namespace PerceptronLocalService.Repository
                 HopThreshhold = searchParameters.HopThreshhold,
                 HopTolUnit = searchParameters.HopTolUnit,
                 InsilicoFragType = searchParameters.InsilicoFragType,
-                UserId = searchParameters.UserId,
+                EmailId = searchParameters.EmailId,
                 Title = searchParameters.Title,
                 ProtDb = searchParameters.ProtDb,
                 PtmTolerance = searchParameters.PtmTolerance,
@@ -271,9 +273,7 @@ namespace PerceptronLocalService.Repository
                 SliderValue = searchParameters.SliderValue,
 
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
-                MethionineChemicalModification = searchParameters.MethionineChemicalModification,
-
-                GuestEnabled = searchParameters.GuestEnabled
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification
 
             };
             return searchParametersDto;
