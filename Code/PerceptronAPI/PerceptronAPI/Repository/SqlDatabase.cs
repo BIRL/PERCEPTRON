@@ -242,7 +242,7 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        "SELECT count( distinct UserId) as one  FROM SearchQueries",
+                        "SELECT count( distinct UserId) as one  FROM SearchQueries",   // UserId  to  EmailId: Just for registered users
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -368,7 +368,7 @@ namespace PerceptronAPI.Repository
                 HopThreshhold = searchParameters.HopThreshhold,
                 HopTolUnit = searchParameters.HopTolUnit,
                 InsilicoFragType = searchParameters.InsilicoFragType,
-                UserId = searchParameters.UserId,
+                EmailId = searchParameters.EmailId,
                 Title = searchParameters.Title,
                 ProtDb = searchParameters.ProtDb,
                 PtmTolerance = searchParameters.PtmTolerance,
@@ -389,8 +389,7 @@ namespace PerceptronAPI.Repository
                 TerminalModification = searchParameters.TerminalModification,
                 SliderValue = searchParameters.SliderValue,
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
-                MethionineChemicalModification = searchParameters.MethionineChemicalModification,
-                GuestEnabled = searchParameters.GuestEnabled
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification
 
             };
             return searchParameter;
