@@ -757,7 +757,7 @@ namespace PerceptronAPI.Repository
                         if (reader.Read())
                         {
                             qp.QueryId = reader.GetValue(0).ToString();
-                            qp.UserId = reader.GetValue(1).ToString();
+                            qp.EmailId = reader.GetValue(1).ToString();
                             qp.Title = reader.GetValue(2).ToString();
                             qp.ProtDb = reader.GetValue(3).ToString();
                             //qp.OutputFormat = Convert.ToInt32(reader.GetValue(4));
@@ -792,7 +792,7 @@ namespace PerceptronAPI.Repository
                             qp.CysteineChemicalModification = reader.GetValue(31).ToString();
                             qp.MethionineChemicalModification = reader.GetValue(32).ToString();
 
-                            qp.GuestEnabled = Convert.ToInt32(reader.GetValue(33));
+                            //qp.GuestEnabled = Convert.ToInt32(reader.GetValue(33));
 
 
                         }
