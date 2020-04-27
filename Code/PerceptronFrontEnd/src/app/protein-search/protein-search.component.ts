@@ -95,6 +95,7 @@ export class ProteinSearchComponent implements OnInit {
   TerminalModification: any = ''; //[];
   HopThreshhold: any;
   PSTTolerance: any;
+  EmailId: any;
 
   GuestEnabled: any;
 
@@ -314,12 +315,12 @@ export class ProteinSearchComponent implements OnInit {
     this.Hop_Tolerance_Unit = 'Da';
     this.Peptide_Tolerance_Unit = 'ppm';
     var user = firebase.auth().currentUser;
-    if (user.email != null || user.email == null) {
+    if (user.email != null)  {
       this.diableEmail = true;
     }
-    // else {
-    //   this.diableEmail = false;
-    // }
+    else {
+      this.diableEmail = false;
+    }
   }
 
   disableMods() {
@@ -413,9 +414,17 @@ export class ProteinSearchComponent implements OnInit {
     //User should be logged in with verified email id
     if (user.emailVerified == true) {  //user.email != null && 
       form.UserId = user.email;
+      form.EmailId = user.email;
       form.GuestEnabled = 0;
     }
     else{
+      if (form.UserId != null){
+        form.EmailId = form.UserId;  // If Guest provide email information for results
+
+      }
+      else{
+        form.EmailId = "";
+      }
       form.UserId = user.uid;
       form.GuestEnabled = 1;
     }
