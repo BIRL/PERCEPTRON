@@ -17,7 +17,7 @@ namespace PerceptronAPI.Models
             UserId = "";
             EmailId = "";
             Title = "";
-            GuestEnabled = 0; //Initializing Not as Guest
+            GuestEnabled = 0; //Initializing Not as Guest  
         }
 
         public BasicJobInfo(string cUserId,  string cEmailId, string cTitle, int cGuestEnabled)
