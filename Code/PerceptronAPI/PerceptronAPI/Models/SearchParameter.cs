@@ -15,7 +15,7 @@ namespace PerceptronAPI.Models
     public partial class SearchParameter
     {
         public string QueryId { get; set; }
-        public string UserId { get; set; }
+        public string EmailId { get; set; }
         public string Title { get; set; }
         public string ProtDb { get; set; }
         public string InsilicoFragType { get; set; }
@@ -45,6 +45,5 @@ namespace PerceptronAPI.Models
         public double SliderValue { get; set; }
         public string CysteineChemicalModification { get; set; }
         public string MethionineChemicalModification { get; set; }
-        public int GuestEnabled { get; set; }
     }
 }
