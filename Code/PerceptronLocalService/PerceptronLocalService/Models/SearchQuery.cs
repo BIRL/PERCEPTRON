@@ -18,7 +18,7 @@ namespace PerceptronLocalService.Models
         public string UserId { get; set; }
         public string Progress { get; set; }
         public string CreationTime { get; set; }
-        public string Email { get; set; }
+        public string EmailId { get; set; }
         public int GuestEnabled { get; set; }
     }
 }
