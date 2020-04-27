@@ -71,7 +71,9 @@ namespace PerceptronAPI.Controllers
                 {
                     ErrorInfo = JsonConvert.DeserializeObject<BasicJobInfo>(jsonData[0].Trim('"'));
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
                 }
+                    
 
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
@@ -83,8 +85,8 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.Progress = progress;
                 parametersDto.SearchQuerry.CreationTime = creationTime;
 
-                parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
-                parametersDto.SearchQuerry.GuestEnabled = parametersDto.SearchParameters.GuestEnabled;
+                //parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+                //parametersDto.SearchQuerry.GuestEnabled = parametersDto.SearchParameters.GuestEnabled;
 
                 foreach (var file in provider.FileData)
                 {
@@ -103,7 +105,7 @@ namespace PerceptronAPI.Controllers
             }
             catch (Exception e)
             {
-                if (ErrorInfo.GuestEnabled == 0) // Error msgs will be sent to Users Only!
+                if (ErrorInfo.EmailId != null) // Error msgs will be sent to Users Only!
                 {
                     Sending_Email(ErrorInfo);
                 }
@@ -198,7 +200,7 @@ namespace PerceptronAPI.Controllers
 
         public static void Sending_Email(BasicJobInfo p)//, int EmailMsg)
         {
-            var emailaddress = p.UserId;
+            var emailaddress = p.EmailId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
