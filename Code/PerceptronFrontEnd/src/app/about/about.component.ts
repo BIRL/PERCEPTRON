@@ -43,6 +43,7 @@ export class AboutComponent implements OnInit {
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 export interface BrowserCompatibilityTable {
@@ -59,5 +60,7 @@ const BrowserCompatibilityDataTable: BrowserCompatibilityTable[] = [
   {BrowserName: "Edge", OSWindow: 'Supported', OSLinux: "Tested", OSMac: "Supported"},
   {BrowserName: "Safari", OSWindow: 'N/A', OSLinux: "Tested", OSMac: "Tested"},
 ];
+=======
+>>>>>>> parent of f5af0c3c... Update about.component.ts
 =======
 >>>>>>> parent of f5af0c3c... Update about.component.ts
