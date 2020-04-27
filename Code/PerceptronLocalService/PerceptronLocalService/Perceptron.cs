@@ -143,7 +143,7 @@ namespace PerceptronLocalService
         //"<a href=\'" + BaseUrl + "/index.html#/getting >Getting Started</a>"
         public static void Sending_Email(SearchParametersDto p, int EmailMsg)
         {
-            var emailaddress = p.UserId;
+            var emailaddress = p.EmailId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
@@ -246,7 +246,7 @@ namespace PerceptronLocalService
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
                         //massSpectrometryData.WholeProteinMolecularWeight = old;
-                        if (parameters.GuestEnabled == 0)
+                        if (parameters.EmailId != null)
                         {
                             EmailMsg = -2;
                             //Sending_Email(parameters, EmailMsg); // EmailMsg = -2 where -2 is for Invalid Parameters etc. //20200121
@@ -300,7 +300,7 @@ namespace PerceptronLocalService
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
                     if (candidateProteins.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
-                        if (parameters.GuestEnabled == 0)
+                        if (parameters.EmailId != null)
                         {
                             EmailMsg = -1;
                             //Sending_Email(parameters, EmailMsg);
@@ -361,7 +361,7 @@ namespace PerceptronLocalService
                 }
                 catch (Exception r)
                 {
-                    if (parameters.GuestEnabled == 0)
+                    if (parameters.EmailId != null)
                     {
                         EmailMsg = -1;
                         //Sending_Email(parameters, EmailMsg);
@@ -376,12 +376,12 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.GuestEnabled == 0)
+            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
             {
                 EmailMsg = 1;
                 //Sending_Email(parameters, EmailMsg);
             }
-            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1&& parameters.GuestEnabled == 0)
+            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
             {
                 EmailMsg = -1;
                 //Sending_Email(parameters, EmailMsg);
