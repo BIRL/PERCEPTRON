@@ -263,7 +263,7 @@ namespace PerceptronLocalService.Repository
             if (reader.Read())
             {
                 qp.Queryid = reader.GetValue(0).ToString();
-                qp.UserId = reader.GetValue(1).ToString();
+                qp.EmailId = reader.GetValue(1).ToString();
                 qp.Title = reader.GetValue(2).ToString();
                 qp.ProtDb = reader.GetValue(3).ToString();
                 qp.InsilicoFragType = reader.GetValue(4).ToString();
@@ -294,8 +294,6 @@ namespace PerceptronLocalService.Repository
                 qp.SliderValue = Convert.ToDouble(reader.GetValue(28));
                 qp.CysteineChemicalModification = reader.GetValue(29).ToString();
                 qp.MethionineChemicalModification = reader.GetValue(30).ToString();
-
-                qp.GuestEnabled = Convert.ToInt32(reader.GetValue(31));
 
             }
 
