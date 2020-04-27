@@ -5,7 +5,7 @@ namespace PerceptronAPI.Models
     public class QuerryParameters
     {
         public string QueryId;
-        public string UserId;
+        public string EmailId;
         public string Title;
         public string ProtDb;
         public string InsilicoFragType;
@@ -42,6 +42,5 @@ namespace PerceptronAPI.Models
         public string CysteineChemicalModification;
         public string MethionineChemicalModification;
 
-        public int GuestEnabled;
     }
 }
