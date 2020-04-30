@@ -1,0 +1,48 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value); f.reset()"
+class="ui form">
+
+
+<div style="margin:0 auto; min-width: 600px; width:60%;">
+
+
+  <mat-card>
+      
+      <mat-card-content>
+      <h4 style="text-align:center; font-weight:bold; margin:0 auto;">Suggestions And Comments</h4>
+      <br>
+      <mat-card>
+
+          <!-- <p style="color:blue;font-size:18px;">For suggestions and bug report please visit at <a>https://github.com/BIRL/PERCEPTRON/issues</a></p>  -->
+          <!-- <mat-form-field style="width: 100%;">
+            <textarea matInput type="text" style=" height: 100px;"
+            id="skuInput" placeholder="Feedback form" name="Steps to Reproduce" ngModel></textarea>
+            
+          </mat-form-field>
+          <br>
+          <br> -->
+        
+      </mat-card>
+      
+       
+      <mat-card>
+        <mat-grid-list cols="10" rowHeight="60px">
+    
+          <mat-grid-tile colspan="2" rowspan="1" >
+              <label  style="padding-right:15px;"></label>
+              <button mat-raised-button type="submit"  style = "background-color: #212121; color:aliceblue" class="ui button">Reset</button>
+            <!-- <button mat-raised-button (click)="bug.reset()" color="warn">Reset</button> -->
+            
+          </mat-grid-tile>
+          <mat-grid-tile colspan = "6"></mat-grid-tile>
+          
+    
+          <mat-grid-tile colspan="2" rowspan="1" >
+            <label  style="padding-left:15px;"></label>
+            <button mat-raised-button type="submit"  style = "background-color: #201a93; color:aliceblue" class="ui button">Submit</button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    
+      </mat-card> 
+      <br>
+    
+    

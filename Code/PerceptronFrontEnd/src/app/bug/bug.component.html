@@ -1,0 +1,95 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value); f.reset()"
+class="ui form">
+
+
+<div style="margin:0 auto; min-width: 600px; width:90%;">
+
+
+  <mat-card>
+      <mat-card-header >
+          <img  style="margin: 0 auto;" src="assets/images/bug.svg" id="lock" height="10%">
+      </mat-card-header>
+      <mat-card-content>
+      <h4 style="text-align:center; font-weight:bold; margin:0 auto;">Suggestions & Report Bugs</h4></mat-card-content>
+  
+  </mat-card>
+  <br>
+      <mat-card>
+          <div style="height:10px;font-size:1px;">&nbsp;</div>
+          <p style="font-size:18px;">For suggestions and bug reports please visit at <a href="https://github.com/BIRL/PERCEPTRON/issues">here</a></p>
+
+          <!-- <p style="font-size:18px;">For suggestions and bug report please visit at <a href"https://github.com/BIRL/PERCEPTRON/issues">fsd</p> -->
+          <!-- <mat-form-field style="width: 100%;">
+            <mat-select placeholder="What kind of problem is this?" [(ngModel)]="selectedValue1" name="Kind">
+              <mat-option *ngFor="let problem of problems" [value]="problem.value">
+                {{problem.value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field style="width: 100%;">
+            <mat-select placeholder="Where did you encounter this problem?" [(ngModel)]="selectedValue2" name="Where">
+              <mat-option *ngFor="let location of locations" [value]="location.value">
+                {{location.value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field style="width: 100%;">
+            <input matInput type="text" id="skuInput2" placeholder="Brief Description of the problem encountered" name="Description" ngModel>
+          </mat-form-field>
+          <br>
+          <mat-form-field style="width: 100%;">
+            <textarea matInput type="text"
+            id="skuInput" placeholder="Suggestions" name="Steps to Reproduce" ngModel></textarea>
+            
+          </mat-form-field> -->
+        
+       
+          <!-- <span matTooltip="Select data files." matTooltipPosition="left" style="padding:0px; width:100%;"> -->
+            <!-- <label style='display:inline;'>Upload screenshot (Optional)</label>
+            <label style="display:inline;">&nbsp;</label> -->
+            <!-- <div style='display:inline' class="button-row">
+              <button mat-button style='display:inline; background-color:#212121; ' mat-mini-fab (click)="imgFileInput.click()">
+                <mat-icon>attachment</mat-icon>
+              </button>
+              <label style="display:inline;">&nbsp;</label>
+              <label style="color:black;" style='display:inline; text-decoration: underline;'>{{email.files.length}} Files Selected</label>
+              <input hidden #email type="file" #imgFileInput  name="Screenshot" ngModel/>
+            </div> -->
+          <!-- </span> -->
+          <!-- <div style = "margin-left:25em">
+          <button mat-raised-button style ="width:10em; font-weight:600; font-family:  Roboto, Arial, sans-serif" type="submit"   color = "primary" class="ui button">Submit</button>
+          </div>
+          <div style = "margin-bottom: 0em">
+          <button mat-raised-button style= "width: 10em; font-weight:600; font-family:  Roboto, Arial, sans-serif"  type="submit" color = "warn" class="ui button">Reset</button>
+        </div>  -->
+      
+     
+    <!-- <mat-grid-list cols="8" rowHeight="65px">
+
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+  
+        <!-- <mat-grid-tile colspan="1" rowspan="1">
+  
+          <button mat-raised-button matTooltipPosition="before" type="reset" style="background-color: #212121; color:aliceblue"
+            class="ui button">Reset</button>
+          <label style="padding-right:15px;"></label>
+        </mat-grid-tile> -->
+  
+  
+        <!-- <mat-grid-tile colspan="1" rowspan="1">
+          <label style="padding-left:15px;"></label>
+          <button mat-raised-button class="button-sumbit" [disabled]="!f.valid" matTooltipPosition="after" type="submit" style="background-color: #201a93; color:aliceblue"
+          class="ui button">Submit</button>
+        </mat-grid-tile> -->
+      <!-- </mat-grid-list> --> 
+      </mat-card> 
+      <br>
+    
+    

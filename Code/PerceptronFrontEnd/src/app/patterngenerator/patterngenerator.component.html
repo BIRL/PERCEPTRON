@@ -1,0 +1,175 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value); " (ngReset)="onReset(); f.reset() ;"
+class="ui form">
+
+
+<div style="width:90%; min-width: 600px; margin:0 auto;">
+   
+
+  <mat-card>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:900; ">Theoretical Protein Pattern Generator</h4>
+  </mat-card>
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+  <mat-card>
+
+      
+      <mat-grid-list cols="8" rowHeight="100px">
+  
+          <mat-grid-tile colspan="2" rowspan="1">
+            <mat-form-field style="padding:0px; width:100%">
+                <input matInput matTooltip="Enter Number of Carbon Atoms" (keypress)="keyPress($event)" [(ngModel)]="Carbon"  [disabled] = "TPGAllow" matTooltipPosition="before" placeholder="Enter Number of Carbons" name ="Carbon" ngModel required  >
+            </mat-form-field>
+          </mat-grid-tile>
+    
+          <mat-grid-tile></mat-grid-tile>
+    
+          <mat-grid-tile colspan="2" rowspan="1">
+              <mat-form-field style="width: 100%;">
+                  <input matInput matTooltip="Enter Number of Hydrogen Atoms"   (keypress)="keyPress($event)" [disabled] = "TPGAllow" [(ngModel)]="Hydrogen" matTooltipPosition="before" placeholder="Enter Number of Hydrogens" name ="Hydrogen" ngModel required >
+                </mat-form-field>
+          </mat-grid-tile>
+       
+        <mat-grid-tile></mat-grid-tile>
+  
+        <mat-grid-tile colspan="2" rowspan="1">
+            <mat-form-field style="width: 100%;">
+                <input matInput matTooltip="Enter Number of Oxygen Atoms"  (keypress)="keyPress($event)" [disabled] = "TPGAllow" [(ngModel)]="Oxygen" matTooltipPosition="before" placeholder="Enter Number of Oxygens" name ="Oxygen" ngModel required>
+              </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="8" rowHeight="65px">
+  
+          <mat-grid-tile colspan="2" rowspan="1">
+            <mat-form-field style="padding:0px; width:100%">
+                <input matInput matTooltip="Enter Number of Nitrogen Atoms" (keypress)="keyPress($event)" [disabled] = "TPGAllow" [(ngModel)]="Nitrogen" matTooltipPosition="before" placeholder="Enter Number of Nitrogens" name ="Nitrogen" ngModel required >
+            </mat-form-field>
+          </mat-grid-tile>
+    
+          <mat-grid-tile></mat-grid-tile>
+    
+          <mat-grid-tile colspan="2" rowspan="1">
+              <mat-form-field style="width: 100%;">
+                  <input matInput matTooltip="Enter Number of Sulphurs Atoms"   (keypress)="keyPress($event)" [disabled] = "TPGAllow" [(ngModel)]="Sulphur" matTooltipPosition="before" placeholder="Enter Number of Sulphurs" name ="Sulphur" ngModel required >
+                </mat-form-field>
+          </mat-grid-tile>
+       
+        <mat-grid-tile></mat-grid-tile>
+  
+        <!-- <mat-grid-tile colspan="2" rowspan="1">
+            <mat-form-field style="width: 100%;">
+                <input matInput matTooltip="Enter Number of Phosphorus Atoms"  (keypress)="keyPress($event)" [disabled] = "!TPGAllow" [(ngModel)]="Phosphorous" matTooltipPosition="before" placeholder="Enter Number of Phosphoruses" name ="Phosphorous" ngModel>
+              </mat-form-field>
+        </mat-grid-tile> -->
+      </mat-grid-list>
+
+
+
+      <mat-grid-list cols="8" rowHeight="65px">
+        
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+          
+    
+          <mat-grid-tile colspan="1" rowspan="1" >
+            <label  style="padding-left:15px;"></label>
+            
+            <button mat-raised-button  (click)="openSnackBar()" class = "button-sumbit" [disabled]="!f.valid" matTooltip="Submit"  matTooltipPosition="after" type="submit"  style = "background-color: #201a93; color:aliceblue" class="ui button">Generate</button>
+            </mat-grid-tile>
+            
+        </mat-grid-list>
+    
+     
+  </mat-card>
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+  <mat-card>
+    <!-- <div class="row">
+    <div class="col-md-6">
+      <div style="display: block;"> -->
+            <mat-grid-list cols="8" style="padding:0px;">
+                <mat-grid-tile colspan = "2"></mat-grid-tile>
+
+                <mat-grid-tile colspan = "4"  rowspan ="4">
+      <canvas baseChart width="100" height="100"
+                  [datasets]="lineChartData"
+                  [labels]="lineChartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                ></canvas>
+      <!-- </div>
+    </div>
+  </div> --></mat-grid-tile>
+            </mat-grid-list>
+
+            <label style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Masses (Dalton)</label>
+
+  </mat-card>
+  
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+  <!-- <div style="width:90%; min-width: 600px; margin:0 auto;"> -->
+    <mat-card>
+      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Results</h4>
+    </mat-card>
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+    
+  
+    <div class="example-container mat-elevation-z8">
+  
+      <mat-table [dataSource]="dataSource" matSort>
+  
+        <!-- Serial Column -->
+        <ng-container matColumnDef="serial">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.serial}} </mat-cell>
+        </ng-container>
+  
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Masses </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+        </ng-container>
+  
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Intensities </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+        </ng-container>
+  
+        
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" >
+        </mat-row>
+      </mat-table>
+  
+      
+    </div>
+    <br/>
+    <!-- <label style="color:red;">* Click on the table row for results by Spectral Count Quantitation. </label> -->
+  
+   
+    <mat-grid-list cols="8" rowHeight="65px">
+        
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+       
+        <mat-grid-tile></mat-grid-tile>
+  
+        <mat-grid-tile colspan="1" rowspan="1" >
+          
+            <label  style="padding-left:15px;"></label>
+          <button mat-raised-button  matTooltipPosition="after" [disabled]="!f.valid" style = " width: 80%; background-color: #201a93; color:aliceblue"> <a  href={{quid}}   style = " color:aliceblue" download="Result">Download</a></button>
+          </mat-grid-tile>
+         
+      </mat-grid-list>
+  </div>

@@ -1,0 +1,29 @@
+@media screen and (max-width:360px){
+    .a{
+        color:white;
+        font-size:25px !important;
+    }  
+}
+
+.abc{
+    text-align:left;
+    font-size: 23px;
+    font-family: Roboto, Arial, sans-serif;
+    font-weight:bold;
+}
+
+.abcd{
+    text-align:right;
+    font-size: 17px;
+    font-weight:bold;
+    color:rgb(53, 53, 233);
+}
+
+::ng-deep .mat-grid-tile .mat-figure{
+    /* align-items: unset!important; */
+    text-align: right!important;
+}
+.set{
+    position: absolute;
+    left: 0;
+}

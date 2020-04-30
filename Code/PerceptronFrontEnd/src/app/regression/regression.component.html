@@ -1,0 +1,66 @@
+<div style="width:80%; min-width: 600px; margin:0 auto;">
+  <mat-card>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Regressive Quantitation</h4>
+  </mat-card>
+  <br>
+  <div class="example-header">
+    <!-- <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field> -->
+  </div>
+
+  <div class="example-container mat-elevation-z8">
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Serial Column -->
+      <ng-container matColumnDef="serial">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.serial}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein ID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+      </ng-container>
+
+      
+
+      <!-- Molecular Weight Column -->
+      <ng-container matColumnDef="molW">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Molecular Weight </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.molW}} </mat-cell>
+      </ng-container>
+
+      <!-- Score Column -->
+      <ng-container matColumnDef="score">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Quantity </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.score}} </mat-cell>
+      </ng-container>
+    
+      <!-- FileId Column -->
+      <ng-container matColumnDef="fileId">
+        <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;">
+          File ID </mat-header-cell>
+        <mat-cell [style.display]="'none'" *matCellDef="let row"> {{row.fileId}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getRecord(row)">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+  <br/>
+  <label style="color:red;">* Click on the table row for results by Spectral Count Quantitation. </label>
+
+
+</div>

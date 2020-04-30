@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PerceptronLocalService.DTO.ExecutionTimeDto" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAgAAAAQAAAAAAAAAAEQAAAAAAAAUAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\ExecutionTimeDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.InsilicoObjectDto" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAEAAIAQQAAAAAAAAAEAAAAAQAAAAAAAQAAAAAAIg=</HashCode>
+      <FileName>DTO\InsilicoObjectDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.MolecularWeightServiceParametersDto" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>DTO\MolecularWeightServiceParametersDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.MsPeaksDto">
+    <Position X="17.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAIACAAAA=</HashCode>
+      <FileName>DTO\MsPeaksDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.PostTranslationModificationsSiteDto">
+    <Position X="23.5" Y="6.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAgIAAAAAAAAAAAAAAAAQAEAAAAAAgA=</HashCode>
+      <FileName>DTO\PostTranslationModificationsSiteDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.ProteinDto" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBAAAIIAIAQBAAgQAAAAAAAAAAAAAAAgBAAAAAEAAAA=</HashCode>
+      <FileName>DTO\ProteinDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.PstTagsDto" Collapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECAAAAAAAAAAAAAAAAAAABAAAQAAAAAgAICIAAEAAAA=</HashCode>
+      <FileName>DTO\PstTagsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.Psts" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAACEAAAAAAAAAAAABIAAAAAAAAAA=</HashCode>
+      <FileName>DTO\PstTagsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.PstTagList" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAEAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>DTO\PstTagsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.SearchParametersDto" Collapsed="true">
+    <Position X="12.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAOggAAAAABAkABACACAQiAAAAZBEIEAkwAAEAJAAI=</HashCode>
+      <FileName>DTO\SearchParametersDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.SearchQueryDto" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAIAAAAAgACAAAA=</HashCode>
+      <FileName>DTO\SearchQueryDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.SearchResultsDto" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\SearchResultsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.DTO.SerializedProteinDataDto" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAhAAAAAAAAAAAAEAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>DTO\SerializedProteinDataDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.InsilicoFilterCpu" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAQAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Engine\InsilicoFilterCpu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.InsilicoFilterGpu" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAACAAAAAIAAAAAACAAQAAABAAAA=</HashCode>
+      <FileName>Engine\InsilicoFilterGpu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.InsilicoFragmentationPtmCpu" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Engine\InsilicoFragmentationPtmCpu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.InsilicoFragmentsAdjustmentCpu" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="1.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgA=</HashCode>
+      <FileName>Engine\InsilicoFragmentsAdjustmentCpu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.MwModule" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Engine\MwModule.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.PeakListFileReader" BaseTypeListCollapsed="true">
+    <Position X="18" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAQAAAACAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\PeakListFileReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.PostTranslationalModificationModuleGpu" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\PostTranslationalModificationGpu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.ProteinRepositoryNamedPipes" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAIACAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\ProteinRepositoryNamedPipes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.ProteinRepositorySql" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Engine\ProteinRepositorySql.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.peakData2Dlist" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Engine\PSTGeneratorCPU.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Engine.PtmCpu" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAIAAAAAAAAAAQAAAgBAAAAAAAAAAAAAhAAAAA=</HashCode>
+      <FileName>Engine\PtmCpu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Models.PerceptronDatabaseEntities" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAABAAAAAAAABCAAAAAAAAEAAAAAMAEAEQAAAAAgA=</HashCode>
+      <FileName>Models\PerceptronDatabase.Context.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.ExecutionTime" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAgAAAAAAAAAAAAAAAEQAAAAAAAAcAAAAAAABAAAA=</HashCode>
+      <FileName>Models\ExecutionTime.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.PtmFixedModification">
+    <Position X="24.25" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAIAAAAAAAAAAAI=</HashCode>
+      <FileName>Models\PtmFixedModification.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.PtmVariableModification" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAIAAAAAAAAAAAI=</HashCode>
+      <FileName>Models\PtmVariableModification.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.ResultInsilicoMatchLeft" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Models\ResultInsilicoMatchLeft.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.ResultInsilicoMatchRight" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Models\ResultInsilicoMatchRight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.ResultPtmSite" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAgAgIAAAAAAAAAAAAAAAAQAEAAAAAAgA=</HashCode>
+      <FileName>Models\ResultPtmSite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.SearchFile" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAJAAAA=</HashCode>
+      <FileName>Models\SearchFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.SearchParameter" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAGgAAAAAABAEABACACAQiAAAARBEIAAgwAAEAIAAI=</HashCode>
+      <FileName>Models\SearchParameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.SearchQuery" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAgAAAAAAAIAAAAAgACAAAA=</HashCode>
+      <FileName>Models\SearchQuery.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Models.SearchResult" Collapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAIAIIAAAAAAAgQAAAAAAAAAAAAAAIgBAAAAAMAAAA=</HashCode>
+      <FileName>Models\SearchResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.PerceptronService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>PerceptronService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Program" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Repository.MySqlDatabase" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAICAAAgEQAAAACAABAAAQAAAAAAAAAAgAgABAA=</HashCode>
+      <FileName>Repository\MySQLDatabase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Repository.SQLDatabase" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAACAAAAgEAAAACEAAEIAAAIAAAAAAAAAgAAgAAA=</HashCode>
+      <FileName>Repository\SQLDatabase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Acetylation" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABFAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Acetylation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Amidation" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Amidation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.AminoAcids" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAEIIAQAAAACACAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Utility\AminoAcids.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.BlindPtmUtility" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAIAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\BlindPtmUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.CleavageTypes" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAACAIBoAQAAAAAAAAAAAAAAAAAABAAEA=</HashCode>
+      <FileName>Utility\CleavageTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.ConsoleWriter" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Utility\ConsoleWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Constants" Collapsed="true">
+    <Position X="14.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAQAgAAAAABAAAAAAAAAAAAAgCAAAAQ=</HashCode>
+      <FileName>Utility\Constants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.CPersistentDictionary" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAABBAACAAAAAACAAAJAQgAAAAAAAAAAACIACAEAA=</HashCode>
+      <FileName>Utility\CPersistentDictionary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Glycosylation" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Glycosylation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Hydroxylation" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Hydroxylation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.MassAdjustment" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAABgAAAEAAAAAAAAAAAAAgNgAAAA=</HashCode>
+      <FileName>Utility\MassAdjustment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Methylation" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Methylation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Phosphorylation" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAABAAAAA=</HashCode>
+      <FileName>Utility\Phosphorylation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.PtmScoreNormalizer" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\PtmScoreNormalizer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.SpecialIons" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQBIAQAAAAAAAAEAAAAAAAAAAAIAAAIAAAAA=</HashCode>
+      <FileName>Utility\SpecialIons.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.StringSearch" Collapsed="true">
+    <Position X="11" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAiAACAAQAAAABAAEAAABAAAQYAAAhwA=</HashCode>
+      <FileName>Utility\StringSearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.StringSearchResult" Collapsed="true">
+    <Position X="12.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIgAAAAAAAAAQAAAAEAQAAAAAA=</HashCode>
+      <FileName>Utility\StringSearchResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerceptronLocalService.Utility.Ubiquitination" Collapsed="true">
+    <Position X="14.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\Ubiquitination.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="PerceptronLocalService.Interfaces.IDataAccessLayer" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAgEAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Interfaces\IDataAccessLayer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IInsilicoFilter" Collapsed="true">
+    <Position X="2.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IInsilicoFilter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IInsilicoFragmentsAdjustment" Collapsed="true">
+    <Position X="4" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IInsilicoFragmentsAdjustment.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IMolecularWeightModule" Collapsed="true">
+    <Position X="5.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IMolecularWeightModule.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IPeakListFileReader" Collapsed="true">
+    <Position X="7.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPeakListFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IPeptideSequenceTagGenerator" Collapsed="true">
+    <Position X="9.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPeptideSequenceTagGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IPeptideSequenceTagScoring" Collapsed="true">
+    <Position X="11" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPeptideSequenceTagScoring.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IPostTranslationalModificationModule" Collapsed="true">
+    <Position X="12.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPostTranslationalModificationModule.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IProteinRepository" Collapsed="true">
+    <Position X="14.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IProteinRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PerceptronLocalService.Interfaces.IWholeProteinMassTuner" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IWholeProteinMassTuner.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

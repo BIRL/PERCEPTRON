@@ -1,0 +1,104 @@
+<div class="example-container" >
+  <mat-toolbar role="header" style="width:auto; background-color: #1b5e20;">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <i class="material-icons orange600 md-36">dehaze</i>
+    </button>
+    <span class="icon-spacer"></span>  <span class="icon-spacer"></span>
+    <button mat-button style="font-size:35px; width: auto; font-family: helvetica; letter-spacing: 0px; font-weight: 500; padding-left:18px; padding-bottom:14px; text-align:text-center;  padding-top:14px;  padding-right:18px; background-color:#1b5e20; color:white;"
+    (click)="perceptron()">
+    PERCEPTRON  <!-- PERCEPTROsN-->
+  </button>
+
+  <span class="icon-spacer"></span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button (click)="about()">
+    <mat-icon (click)="about()" class="orange600">phone</mat-icon>
+  </button>
+  <span class="icon-spacer"></span>
+  <button mat-icon-button (click)="bug()">
+    <i class="material-icons orange600">&#xE868;</i>
+  </button>
+  <span class="icon-spacer"></span>
+  <button mat-icon-button (click)="account()">
+    <mat-icon class="orange600">account_circle</mat-icon>
+  </button>
+  <span class="icon-spacer"></span>
+</mat-toolbar>
+
+
+<!-- <router-outlet></router-outlet> -->
+
+<mat-sidenav-container  class="example-sidenav-container">
+  <mat-sidenav #sidenav mode="side" fixedTopGap="56" style=" background-color:#F5F5F5;">
+  <nav>
+
+  <br>
+  <button mat-button style="color:grey; width:100%; text-align:left; padding-top:15px; padding-bottom:15px;  font-size:large;"
+  (click)="search()">
+  <i class="material-icons">search</i> Protein Search Query
+  <i class="material-icons">chevron_right</i>
+
+</button>
+<br>
+<br>
+<button mat-button style="color:grey;  width:100%; text-align:left; padding-top:15px; padding-bottom:15px;  font-size:large;"
+(click)="data()">
+<i class="material-icons">storage</i> Data Repository
+<i class="material-icons">chevron_right</i>
+
+</button>
+<br>
+<br>
+<button mat-button style="color:grey;  width:100%; text-align:left; padding-top:15px; padding-bottom:15px;  font-size:large;">
+  <i class="material-icons">help_outline</i> Help
+  <i class="material-icons">chevron_right</i>
+</button>
+<br>
+<br>
+<button mat-button style="color:grey; width:100%; text-align:left; padding-top:15px; padding-bottom:15px;  font-size:large;">
+  <i class="material-icons">video_library</i> Demo
+  <i class="material-icons">chevron_right</i>
+</button>
+<br>
+<br>
+<button mat-button style="color:grey; width:100%; text-align:left; padding-top:15px; padding-bottom:15px; font-size:large;">
+  <i class="material-icons">history</i> User Search History
+  <i class="material-icons">chevron_right</i>
+</button>
+<br>
+</nav>
+</mat-sidenav>
+<mat-sidenav-content>
+<br>
+  <router-outlet></router-outlet>
+</mat-sidenav-content>
+<br>
+<br>
+
+
+
+</mat-sidenav-container>
+
+
+<!-- <div style="background: green; width: 100%; height: 400px;">
+
+<div style="width: 50%; background: blue; height: 300px; margin: auto;">
+<router-outlet></router-outlet>
+</div>
+
+</div> -->
+
+
+<!-- <router-outlet class="loading"></router-outlet> -->
+
+
+<!--
+<mat-menu #menu="matMenu">
+<button mat-menu-item> Settings </button>
+<button mat-menu-item> Help </button>
+</mat-menu>
+<br/> -->
+
+<!-- <mat-card class=".example-card"> -->
+
+<!-- </mat-card> -->

@@ -1,0 +1,46 @@
+<div class="ui raised segment">
+  <h2 class="ui header">Demo Form: Sku</h2>
+  <form #f="ngForm"
+        (ngSubmit)="onSubmit(f.value)"
+        class="ui form">
+
+    <div class="field">
+      <label for="skuInput">SKU</label>
+      <input type="text"
+             id="skuInput"
+             placeholder="Describe in minimum possible steps, how to reproduce this bug:"
+             name="sku" ngModel>
+    </div>
+    <div class="field">
+      <label for="select1" class="col-md-4 col-lg-4 col-sm-2 align form-control-label">Langues:français/anglais: </label>
+      <select class="form-control" name="note1" id="select1" ngModel>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+
+      <label for="select2" class="col-md-4 col-lg-4 col-sm-2 align form-control-label">Langues:français/anglais: </label>
+      <select class="form-control" name="note2" id="select2" ngModel>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+
+      <label for="select3" class="col-md-4 col-lg-4 col-sm-2 align form-control-label">Langues:français/anglais: </label>
+      <select class="form-control" name="note3" id="select3" ngModel>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+
+    </div>
+
+    <button type="submit" class="ui button">Submit</button>
+  </form>
+</div>

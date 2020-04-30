@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PerceptronSessionInfoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ASPStateTempApplications">
+          <Key>
+            <PropertyRef Name="AppId" />
+          </Key>
+          <Property Name="AppId" Type="int" Nullable="false" />
+          <Property Name="AppName" Type="char" MaxLength="280" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ASPStateTempSessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="nvarchar" MaxLength="88" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Expires" Type="datetime" Nullable="false" />
+          <Property Name="LockDate" Type="datetime" Nullable="false" />
+          <Property Name="LockDateLocal" Type="datetime" Nullable="false" />
+          <Property Name="LockCookie" Type="int" Nullable="false" />
+          <Property Name="Timeout" Type="int" Nullable="false" />
+          <Property Name="Locked" Type="bit" Nullable="false" />
+          <Property Name="SessionItemShort" Type="varbinary" MaxLength="7000" />
+          <Property Name="SessionItemLong" Type="image" />
+          <Property Name="Flags" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="PerceptronSessionInfoModelStoreContainer">
+          <EntitySet Name="ASPStateTempApplications" EntityType="Self.ASPStateTempApplications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ASPStateTempSessions" EntityType="Self.ASPStateTempSessions" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PerceptronSessionInfoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ASPStateTempApplication">
+          <Key>
+            <PropertyRef Name="AppId" />
+          </Key>
+          <Property Name="AppId" Type="Int32" Nullable="false" />
+          <Property Name="AppName" Type="String" MaxLength="280" FixedLength="true" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ASPStateTempSession">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="String" MaxLength="88" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Expires" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LockDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LockDateLocal" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LockCookie" Type="Int32" Nullable="false" />
+          <Property Name="Timeout" Type="Int32" Nullable="false" />
+          <Property Name="Locked" Type="Boolean" Nullable="false" />
+          <Property Name="SessionItemShort" Type="Binary" MaxLength="7000" FixedLength="false" />
+          <Property Name="SessionItemLong" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Flags" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="PerceptronSessionInfoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ASPStateTempApplications" EntityType="Self.ASPStateTempApplication" />
+          <EntitySet Name="ASPStateTempSessions" EntityType="Self.ASPStateTempSession" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PerceptronSessionInfoModelStoreContainer" CdmEntityContainer="PerceptronSessionInfoEntities">
+          <EntitySetMapping Name="ASPStateTempApplications">
+            <EntityTypeMapping TypeName="PerceptronSessionInfoModel.ASPStateTempApplication">
+              <MappingFragment StoreEntitySet="ASPStateTempApplications">
+                <ScalarProperty Name="AppId" ColumnName="AppId" />
+                <ScalarProperty Name="AppName" ColumnName="AppName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASPStateTempSessions">
+            <EntityTypeMapping TypeName="PerceptronSessionInfoModel.ASPStateTempSession">
+              <MappingFragment StoreEntitySet="ASPStateTempSessions">
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Expires" ColumnName="Expires" />
+                <ScalarProperty Name="LockDate" ColumnName="LockDate" />
+                <ScalarProperty Name="LockDateLocal" ColumnName="LockDateLocal" />
+                <ScalarProperty Name="LockCookie" ColumnName="LockCookie" />
+                <ScalarProperty Name="Timeout" ColumnName="Timeout" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="SessionItemShort" ColumnName="SessionItemShort" />
+                <ScalarProperty Name="SessionItemLong" ColumnName="SessionItemLong" />
+                <ScalarProperty Name="Flags" ColumnName="Flags" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
