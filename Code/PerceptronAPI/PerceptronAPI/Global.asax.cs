@@ -19,17 +19,5 @@ namespace PerceptronAPI
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);            
         }
-
-
-        protected void Session_Start(Object sender, EventArgs e)
-        {
-            Session["init"] = 0;
-        }
-
-        protected void Application_PostAuthorizeRequest()
-        {
-            HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
-        } 
-
     }
 }
