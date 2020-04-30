@@ -234,6 +234,7 @@ namespace PerceptronAPI.Controllers
                 //}  //I'M COMMENTED
 
                 mm.IsBodyHtml = true;
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "*****");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
