@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ConfigService {
     resultant: any;
-    baseApiUrl = "http://203.135.63.99/PerceptronAPI"; // "https://perceptron.lums.edu.pk/PerceptronAPI"
+    baseApiUrl = "http://localhost:52340/";
     
     constructor(private _http: Http) { }
 
