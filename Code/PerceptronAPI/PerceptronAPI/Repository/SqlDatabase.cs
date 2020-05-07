@@ -389,7 +389,8 @@ namespace PerceptronAPI.Repository
                 TerminalModification = searchParameters.TerminalModification,
                 SliderValue = searchParameters.SliderValue,
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
-                MethionineChemicalModification = searchParameters.MethionineChemicalModification
+                MethionineChemicalModification = searchParameters.MethionineChemicalModification,
+                EmailId = searchParameters.EmailId,
 
             };
             return searchParameter;

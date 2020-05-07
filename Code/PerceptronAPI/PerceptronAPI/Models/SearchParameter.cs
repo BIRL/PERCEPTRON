@@ -45,5 +45,6 @@ namespace PerceptronAPI.Models
         public double SliderValue { get; set; }
         public string CysteineChemicalModification { get; set; }
         public string MethionineChemicalModification { get; set; }
+        public string EmailId { get; set; }
     }
 }

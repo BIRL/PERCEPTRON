@@ -37,7 +37,13 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
     var user = firebase.auth().currentUser;
-    this._httpService.getUserHistory(user.email).subscribe(data => this.what(data));
+    if (user.emailVerified==true){
+      this._httpService.getUserHistory(user).subscribe(data => this.what(data));
+    }
+    else{ //For Guest's Search Results & History
+      this._httpService.getUserHistory(user).subscribe(data => this.what(data));
+    }
+    
   }
 
   what(data: any) {

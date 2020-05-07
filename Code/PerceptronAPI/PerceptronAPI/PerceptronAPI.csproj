@@ -118,16 +118,6 @@
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
       <LastGenOutput>PerceptronDatabase.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\PerceptronSessionInfo.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PerceptronSessionInfo.edmx</DependentUpon>
-      <LastGenOutput>PerceptronSessionInfo.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\PerceptronSessionInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PerceptronSessionInfo.edmx</DependentUpon>
-      <LastGenOutput>PerceptronSessionInfo.cs</LastGenOutput>
-    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -142,13 +132,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IDataAccessLayer.cs" />
-    <Compile Include="Models\ASPStateTempApplication.cs">
-      <DependentUpon>PerceptronSessionInfo.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ASPStateTempSession.cs">
-      <DependentUpon>PerceptronSessionInfo.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BasicJobInfo.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\DetailedResults.cs" />
     <Compile Include="Models\ExecutionTime.cs">
@@ -170,21 +153,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PerceptronSessionInfo.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PerceptronSessionInfo.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PerceptronSessionInfo.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PerceptronSessionInfo.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PerceptronSessionInfo.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PerceptronSessionInfo.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Proteins.cs" />
     <Compile Include="Models\PtmFixedModification.cs">
@@ -247,13 +215,6 @@
     </EntityDeploy>
     <Content Include="Models\PerceptronDatabase.edmx.diagram">
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
-    </Content>
-    <EntityDeploy Include="Models\PerceptronSessionInfo.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>PerceptronSessionInfo.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\PerceptronSessionInfo.edmx.diagram">
-      <DependentUpon>PerceptronSessionInfo.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\farhan.pubxml" />
     <None Include="Properties\PublishProfiles\PERCEPTRON.pubxml" />

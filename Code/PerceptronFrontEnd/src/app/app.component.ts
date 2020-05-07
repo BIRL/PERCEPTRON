@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase/app';
 import { Alert } from 'selenium-webdriver';
 import { find } from 'rxjs/operators';
+//import { userInfo } from 'os';
 
 
 @Component({
@@ -260,7 +261,20 @@ search() {
    
     };
     account() {
-      if (confirm("Do you want to logout?"))
+      var user = firebase.auth().currentUser;
+      if (user.emailVerified == true){
+        if (confirm("Do you want to logout?"))
+        {
+          this.af.auth.signOut();
+          this.disabled=false;
+          this.disabled1=true;
+          localStorage.removeItem('login');
+          localStorage.removeItem('logged_in_user');
+          this.router.navigateByUrl('/home');
+        }
+      }
+
+      else if (confirm("Warning:\nYou are logged in as a Guest. Closing this window or logging out will result in the loss of your search results."))
       {
         this.af.auth.signOut();
         this.disabled=false;

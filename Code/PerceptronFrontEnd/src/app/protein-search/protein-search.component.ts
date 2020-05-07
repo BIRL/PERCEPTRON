@@ -406,11 +406,22 @@ export class ProteinSearchComponent implements OnInit {
 
   onSubmit(form: any): void {
     var user = firebase.auth().currentUser;
-    var email;
-    if (user.email != null) {
-      email = user.email;
-      form.UserId = email;
+
+    if (user.emailVerified == true) {
+      form.EmailId = user.email;
+      form.UserId = user.email;
     }
+    else{
+      if (form.UserId != null){
+        form.EmailId = form.UserId;
+        form.UserId = user.uid;
+      }
+      else{
+        form.EmailId = "";
+        form.UserId = user.uid;
+      }
+    }
+
     if(form.Title == ""){
       form.Title = "Default Run";
       alert("Dear User! \nYou did not enter Job Title so, your job title would be 'Default Run'.");
