@@ -14,14 +14,11 @@ using PerceptronAPI.ServiceLayer;
 using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
-using System.Web.SessionState; //For getting session id 
 
 namespace PerceptronAPI.Controllers
 {
    public class SearchController : ApiController
     {
-
-       public string CurrentSessionID = HttpContext.Current.Session.SessionID;
 
         readonly IDataAccessLayer _dataLayer;
 
@@ -41,10 +38,6 @@ namespace PerceptronAPI.Controllers
             var queryId = Guid.NewGuid().ToString();
 
             var a = HttpContext.Current.Response.Cookies.Count;
-            
-            //var SessionID = HttpContext.Current.Session.SessionID;
-
-            //string strSessionID = Request.Cookies["ASP.NET_SessionId"].Value;
 
             //var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);  // Updated
             DateTime time = DateTime.Now;             // Fetching Current Time
@@ -52,7 +45,6 @@ namespace PerceptronAPI.Controllers
             var creationTime = time.ToString(format); // Formating creationTime and assigning
             const string progress = "0";
 
-            var ErrorInfo = new BasicJobInfo();
 
             var parametersDto = new SearchParametersDto
             {
@@ -78,8 +70,9 @@ namespace PerceptronAPI.Controllers
 
                 if (jsonData != null)
                 {
-                    ErrorInfo = JsonConvert.DeserializeObject<BasicJobInfo>(jsonData[0].Trim('"'));
+                    //ErrorInfo = JsonConvert.DeserializeObject<BasicJobInfo>(jsonData[0].Trim('"'));
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
                 }
 
                 //parametersDto.SearchParameters.DenovoAllow = 1;
@@ -91,12 +84,6 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
                 parametersDto.SearchQuerry.Progress = progress;
                 parametersDto.SearchQuerry.CreationTime = creationTime;
-
-                if (parametersDto.SearchParameters.UserId == "")
-                {
-                    parametersDto.SearchParameters.UserId = "Guest" + CurrentSessionID;
-                }
-
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
 
                 foreach (var file in provider.FileData)
@@ -116,9 +103,9 @@ namespace PerceptronAPI.Controllers
             }
             catch (Exception e)
             {
-                if (ErrorInfo.UserId != "")
+                if (parametersDto.SearchParameters.EmailId != null || creationTime != "")
                 {
-                    Sending_Email(ErrorInfo);
+                    Sending_Email(parametersDto, creationTime);
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
@@ -162,9 +149,6 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Post_history")]
         public List<UserHistory> Post_history([FromBody] string input)
         {
-            //var SessionID2 = HttpContext.Current.Session.SessionID;
-            //var SessionID3 = HttpContext.Current.Session.SessionID;
-
             Debug.WriteLine(input);
             var temp = _dataLayer.GetUserHistory(input);
             return temp;
@@ -210,9 +194,9 @@ namespace PerceptronAPI.Controllers
         }
 
 
-        public static void Sending_Email(BasicJobInfo p)//, int EmailMsg)
+        public static void Sending_Email(SearchParametersDto p, string CreationTime)//, int EmailMsg)
         {
-            var emailaddress = p.UserId;
+            var emailaddress = p.SearchParameters.EmailId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
@@ -222,8 +206,8 @@ namespace PerceptronAPI.Controllers
                 //{
                 mm.Subject = "PERCEPTRON: Protein Search Results";
                 var body = "Dear User,";
-                body += "<br/><br/> Search couldn't complete for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
-                        p.Title + "\" Please check your search parameters and data file.";
+                body += "<br/><br/> Search couldn't complete for protein search query submitted at " + CreationTime + " with job title \"" +
+                        p.SearchParameters.Title + "\" Please check your search parameters and data file.";
                 //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
                 body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
 
