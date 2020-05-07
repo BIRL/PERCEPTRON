@@ -50,6 +50,7 @@ namespace PerceptronLocalService.DTO
         public double SliderValue;  //20200121
         public string CysteineChemicalModification;
         public string MethionineChemicalModification;
+        public string EmailId;
 
 
 

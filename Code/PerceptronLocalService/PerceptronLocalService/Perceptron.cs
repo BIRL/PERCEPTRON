@@ -85,7 +85,7 @@ namespace PerceptronLocalService
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     PerformSearch(searchParameters);
                 }
-                //System.Threading.Thread.Sleep(10000);                 /*UNCOMMENT ME....*/
+                System.Threading.Thread.Sleep(10000);
             }
 
         }
@@ -143,7 +143,7 @@ namespace PerceptronLocalService
         //"<a href=\'" + BaseUrl + "/index.html#/getting >Getting Started</a>"
         public static void Sending_Email(SearchParametersDto p, int EmailMsg)
         {
-            var emailaddress = p.UserId;
+            var emailaddress = p.EmailId;
             using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
@@ -295,10 +295,10 @@ namespace PerceptronLocalService
                     //////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
 
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
-                    if (candidateProteins.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                    if (candidateProteins.Count == 0 && parameters.EmailId != null) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
                         EmailMsg = -1;
-                        //Sending_Email(parameters, EmailMsg);
+                        Sending_Email(parameters, EmailMsg);
                         break;
 
                     }
@@ -354,8 +354,12 @@ namespace PerceptronLocalService
                 }
                 catch (Exception r)
                 {
-                    EmailMsg = -1;
-                    //Sending_Email(parameters, EmailMsg);
+                    if (parameters.EmailId != null)
+                    {
+                        EmailMsg = -1;
+                        //Sending_Email(parameters, EmailMsg);
+                    }
+                    
                     string k = r.Message;
                     System.Diagnostics.Debug.WriteLine(r.Message);
                 }
@@ -364,15 +368,15 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1)
+            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
             {
                 EmailMsg = 1;
-                //Sending_Email(parameters, EmailMsg);
+                Sending_Email(parameters, EmailMsg);
             }
-            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1)
+            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
             {
                 EmailMsg = -1;
-                //Sending_Email(parameters, EmailMsg);
+                Sending_Email(parameters, EmailMsg);
             }
 
             _dataLayer.Set_Progress(parameters.Queryid, 100);

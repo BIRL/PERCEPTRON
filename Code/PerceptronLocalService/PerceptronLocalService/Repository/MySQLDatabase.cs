@@ -263,7 +263,7 @@ namespace PerceptronLocalService.Repository
             if (reader.Read())
             {
                 qp.Queryid = reader.GetValue(0).ToString();
-                qp.UserId = reader.GetValue(1).ToString();
+                qp.EmailId = reader.GetValue(1).ToString();
                 qp.Title = reader.GetValue(2).ToString();
                 qp.ProtDb = reader.GetValue(3).ToString();
                 qp.InsilicoFragType = reader.GetValue(4).ToString();

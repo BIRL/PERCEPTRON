@@ -79,7 +79,7 @@
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ProtDb" Type="nvarchar(max)" Nullable="false" />
           <Property Name="InsilicoFragType" Type="nvarchar(max)" />
@@ -109,16 +109,16 @@
           <Property Name="SliderValue" Type="float" Nullable="false" />
           <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailId" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Progress" Type="nvarchar(max)" />
           <Property Name="CreationTime" Type="nvarchar(max)" />
-          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SearchResults">
           <Key>
@@ -228,7 +228,7 @@
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProtDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="InsilicoFragType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -258,16 +258,16 @@
           <Property Name="SliderValue" Type="Double" Nullable="false" />
           <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Progress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreationTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SearchResult">
           <Key>
@@ -412,6 +412,7 @@
                 <ScalarProperty Name="SliderValue" ColumnName="SliderValue" />
                 <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
                 <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -422,7 +423,6 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Progress" ColumnName="Progress" />
                 <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
