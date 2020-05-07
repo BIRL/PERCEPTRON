@@ -66,6 +66,7 @@ export class ProteinSearchComponent implements OnInit {
   PtmTolerance_Unit: any;
 
 
+  EmailId: string ='';
   Title: any = '';
   GuiMass: any = '';
   MassMode: any = '';
@@ -294,6 +295,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PSTTolerance = 0.45
     this.TerminalModification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";
     
+    this.EmailId = '';
     
     this.CysteineChemicalModification ='None';
     this.MethionineChemicalModification ='None';
@@ -412,14 +414,16 @@ export class ProteinSearchComponent implements OnInit {
       form.UserId = user.email;
     }
     else{
-      if (form.UserId != null){
-        form.EmailId = form.UserId;
-        form.UserId = user.uid;
-      }
-      else{
-        form.EmailId = "";
-        form.UserId = user.uid;
-      }
+      form.UserId = user.uid;
+
+      // if (form.UserId != ""){
+      //   form.EmailId = form.UserId;
+      //   form.UserId = user.uid;
+      // }
+      // else{
+      //   form.EmailId = "";
+      //   form.UserId = user.uid;
+      // }
     }
 
     if(form.Title == ""){

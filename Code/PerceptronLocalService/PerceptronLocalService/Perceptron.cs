@@ -295,7 +295,7 @@ namespace PerceptronLocalService
                     //////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
 
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
-                    if (candidateProteins.Count == 0 && parameters.EmailId != null) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                    if (candidateProteins.Count == 0 && parameters.EmailId != "") // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
                         EmailMsg = -1;
                         Sending_Email(parameters, EmailMsg);
@@ -354,10 +354,10 @@ namespace PerceptronLocalService
                 }
                 catch (Exception r)
                 {
-                    if (parameters.EmailId != null)
+                    if (parameters.EmailId != "")
                     {
                         EmailMsg = -1;
-                        //Sending_Email(parameters, EmailMsg);
+                        Sending_Email(parameters, EmailMsg);
                     }
                     
                     string k = r.Message;
@@ -368,12 +368,12 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
+            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
             {
                 EmailMsg = 1;
                 Sending_Email(parameters, EmailMsg);
             }
-            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != null)
+            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
             {
                 EmailMsg = -1;
                 Sending_Email(parameters, EmailMsg);
