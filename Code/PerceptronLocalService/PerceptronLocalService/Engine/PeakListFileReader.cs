@@ -98,31 +98,39 @@ namespace PerceptronLocalService.Engine
         {
             const string charge = "CHARGE";
             const string pepmass = "PEPMASS";
-            var i = 1;
+            var i = 1; //Keeps count of the number of text files to be made
             var fin = new FileStream(addressMgf, FileMode.Open);
-            var sr = new StreamReader(fin);
+            var sr = new StreamReader(fin); //converts bytes into strings/MOMINA/26-3-20
             var s = sr.ReadLine();
-            var maxCount = 1;
-            var maxFilename = "";
-            var mass = new List<double>();
-            var intensities = new List<double>();
+            var maxCount = 0; //Keeps count of the maximum peaklist file which has been read uptil 'i'
+            var maxFilename = ""; //Stores the name of the file containting max peaklist
+            var mass = new List<double>();//List for storing masses
+            var intensities = new List<double>();//List for storing intensities
             var splitAddress = addressMgf.Split('\\');
             var newAddress = "";
 
 
-            for (var k = 0; k < (splitAddress.Length) - 1; k++)
+            for (var k = 0; k < (splitAddress.Length) - 1; k++)//stores path //MOMINA
             {
                 newAddress += (splitAddress[k] + '\\');
             }
 
-            while (s != null)
+            //Stores name of mgf file which is being processed--------
+            var name = splitAddress[(splitAddress.Length) - 1];
+            var item = ".mgf";
+            if (name.EndsWith(item))
+            {
+                name = name.Substring(0, name.LastIndexOf(item));
+            }
+            //Reads mgf file--------------------------------------------
+            while (s != null)//runs till the end of mgf file/ it collects masses and intensities for ONE text file at every iteration
             {
                 var pepMass = "";
 
-                if (File.Exists(newAddress + "scan" + i + ".txt"))
-                    File.Delete(newAddress + "scan" + i + ".txt");
+                if (File.Exists(newAddress + name + "_" + i + ".txt")) //deleting preexisting files
+                    File.Delete(newAddress + name + "_" + i + ".txt");
 
-                var fout = new FileStream(newAddress + "scan" + i + ".txt", FileMode.OpenOrCreate);
+                var fout = new FileStream(newAddress + name + "_" + i + ".txt", FileMode.OpenOrCreate); //making a text file
                 var sw = new StreamWriter(fout);
                 while (s != "END IONS" && s != null)
                 {
@@ -130,30 +138,36 @@ namespace PerceptronLocalService.Engine
                     {
                     }
 
-                    if (s.Contains(pepmass))
+                    if (s.Contains(pepmass)) //stores intact mass
                     {
-                        pepMass = (s.Split('='))[1];
+                        pepMass = (s.Split('='))[1]; //splitting at = sign. stores whatever is after = sign/MOMINA/26-3-20
+                        pepMass = string.Format("{0:0.#}", Convert.ToDouble(pepMass));
                     }
 
-                    if (!s.Contains("BEGIN IONS") && !s.Contains("="))
+                    if (!s.Contains("BEGIN IONS") && !s.Contains("=")) //stores masses and their intensities
                     {
 
                         if (s.Contains(' '))
                         {
                             string[] arr = s.Split(' ');
+                            arr[0] = string.Format("{0:0.######}", Convert.ToDouble(arr[0]));
                             mass.Add(Convert.ToDouble(arr[0]));
+                            arr[1] = string.Format("{0:0.######}", Convert.ToDouble(arr[1]));
                             intensities.Add(Convert.ToDouble(arr[1]));
                         }
                         else if (s.Contains('\t'))
                         {
                             string[] arr = s.Split('\t');
+                            arr[0] = string.Format("{0:0.######}", Convert.ToDouble(arr[0]));
                             mass.Add(Convert.ToDouble(arr[0]));
+                            arr[1] = string.Format("{0:0.######}", Convert.ToDouble(arr[1]));
                             intensities.Add(Convert.ToDouble(arr[1]));
                         }
                         else
                         {
                             if (s != "")
                             {
+                                s = string.Format("{0:0.######}", Convert.ToDouble(s));
                                 mass.Add(Convert.ToDouble(s));
                                 intensities.Add(-7);
                             }
@@ -164,9 +178,13 @@ namespace PerceptronLocalService.Engine
                     s = sr.ReadLine();
                 }
 
-                sw.WriteLine(pepMass);
+                if (pepMass != "") //stores intensity of intact mass as 1
+                {
+                    sw.WriteLine(pepMass + ' ' + "1");
+                }
 
-                for (var x = 0; x < mass.Count; x++)
+
+                for (var x = 0; x < mass.Count; x++) //copies masses and intensities into the text file
                 {
                     if (intensities.ElementAt(x) == -7)
                     {
@@ -179,10 +197,10 @@ namespace PerceptronLocalService.Engine
 
                 }
 
-                if (mass.Count + 1 > maxCount)
+                if (mass.Count > maxCount) //checks new file for max peaklist
                 {
-                    maxFilename = "scan" + i + ".txt";
-                    maxCount = mass.Count + 1;
+                    maxCount = mass.Count;
+                    maxFilename = newAddress + name + "_" + i + ".txt";
                 }
 
                 mass.Clear();
@@ -193,7 +211,7 @@ namespace PerceptronLocalService.Engine
                 fout.Close();
 
             }
-            addressMgf = newAddress + maxFilename;
+            addressMgf = maxFilename; //redirects addressMgf to store the address of the file with max peaklist
         }
 
         public MsPeaksDto PeakListReader(SearchParametersDto parameters, int fileNumber)//EXTRACTING MASS & INTENSITY FROM FILE(s)
