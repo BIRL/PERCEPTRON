@@ -81,7 +81,7 @@ namespace PerceptronLocalService.Repository
             return searchQueryList;
         }      
 
-        public SearchParametersDto GetParameters(string qid)
+        public SearchParametersDto GetParameters(string qid)  // Getting search parameters from different tables of PerceptronDatabase
         {
             SearchParametersDto searchParametersDto;
             using (var db = new PerceptronDatabaseEntities())
@@ -103,8 +103,9 @@ namespace PerceptronLocalService.Repository
                                    select b).ToList();
                 var fileType = files.Select(b => b.FileType).ToArray();
                 var fileName = files.Select(b => b.FileName).ToArray();
+                var fileUniqueName = files.Select(b => b.UniqueFileName).ToArray();
 
-                searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName) : new SearchParametersDto();
+                searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName, fileUniqueName) : new SearchParametersDto();
             }
             return searchParametersDto;
         }
@@ -232,7 +233,7 @@ namespace PerceptronLocalService.Repository
         }
 
         private SearchParametersDto GetSearchParametersDtoModel(SearchParameter searchParameters, List<int> ptmVariable,
-          List<int> ptmFixed, string[] fileType, string[] fileName)
+          List<int> ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName)
         {
             var searchParametersDto = new SearchParametersDto
             {
@@ -261,6 +262,7 @@ namespace PerceptronLocalService.Repository
                 PtmCodeFix = ptmFixed,
                 FileType = fileType,
                 PeakListFileName = fileName,
+                PeakListUniqueFileNames = fileUniqueName,
                 NeutralLoss = searchParameters.NeutralLoss,  //Added 12Sep2019
                 PSTTolerance = searchParameters.PSTTolerance,
 

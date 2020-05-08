@@ -73,6 +73,7 @@
           <Property Name="QueryId" Type="nvarchar(max)" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="FileType" Type="nvarchar(max)" />
+          <Property Name="UniqueFileName" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SearchParameters">
           <Key>
@@ -222,6 +223,7 @@
           <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UniqueFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SearchParameter">
           <Key>
@@ -375,6 +377,7 @@
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="FileType" ColumnName="FileType" />
+                <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

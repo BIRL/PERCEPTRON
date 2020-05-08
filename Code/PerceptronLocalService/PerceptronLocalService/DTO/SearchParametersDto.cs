@@ -28,6 +28,7 @@ namespace PerceptronLocalService.DTO
         public List<int> PtmCodeFix;
         public string[] FileType;
         public string[] PeakListFileName;
+        public string[] PeakListUniqueFileNames;
 
         public int Autotune;
         public string HandleIons;

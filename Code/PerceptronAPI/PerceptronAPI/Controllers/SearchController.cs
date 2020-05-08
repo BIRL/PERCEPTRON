@@ -14,6 +14,7 @@ using PerceptronAPI.ServiceLayer;
 using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
+using System.IO;
 
 namespace PerceptronAPI.Controllers
 {
@@ -36,7 +37,7 @@ namespace PerceptronAPI.Controllers
         public async Task<HttpResponseMessage> File_upload()
         {
             var queryId = Guid.NewGuid().ToString();
-
+            
             var a = HttpContext.Current.Response.Cookies.Count;
 
             //var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);  // Updated
@@ -66,11 +67,11 @@ namespace PerceptronAPI.Controllers
             {
                 var i = 0;
                 await Request.Content.ReadAsMultipartAsync(provider);
+
                 var jsonData = provider.FormData.GetValues("Jsonfile");
 
                 if (jsonData != null)
                 {
-                    //ErrorInfo = JsonConvert.DeserializeObject<BasicJobInfo>(jsonData[0].Trim('"'));
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
                     parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
                 }
@@ -88,11 +89,16 @@ namespace PerceptronAPI.Controllers
 
                 foreach (var file in provider.FileData)
                 {
+                    var FileUniqueId = Guid.NewGuid().ToString();
+                    string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+
                     i++;
                     var x = new SearchFile
                     {
                         FileId = i,
                         FileName = file.LocalFileName,
+                        UniqueFileName = FileNameWithUniqueID,
                         FileType = System.IO.Path.GetExtension(file.LocalFileName),
                         QueryId = queryId
                     };
@@ -103,12 +109,20 @@ namespace PerceptronAPI.Controllers
             }
             catch (Exception e)
             {
-                if (parametersDto.SearchParameters.EmailId != null || creationTime != "")
+                if (parametersDto.SearchParameters.EmailId != "")
                 {
                     Sending_Email(parametersDto, creationTime);
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        string AddSuffix(string filename, string suffix) // For adding FileUniqueId before the extension of the file
+        {
+            string FileDirectory = Path.GetDirectoryName(filename);
+            string fName = Path.GetFileNameWithoutExtension(filename);
+            string fExt = Path.GetExtension(filename);
+            return Path.Combine(FileDirectory, String.Concat(fName, suffix, fExt));
         }
 
         [HttpPost]

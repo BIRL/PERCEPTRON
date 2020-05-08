@@ -202,7 +202,8 @@ namespace PerceptronLocalService.Engine
             var intensity = new List<double>();
             var mw = new List<double>();
 
-            var address = Path.Combine(Path.Combine(Constants.PeakListFolder, parameters.PeakListFileName[fileNumber])); //file address with name.. ALL files uploaded at App_Data folder (C:\inetpub\wwwroot\PerceptronAPI\App_Data). And then, PerceptronLocalService starts working on user data..
+            var address = Path.Combine(Path.Combine(Constants.PeakListFolder, parameters.PeakListUniqueFileNames[fileNumber])); // 20200509 //Replaced "PeakListFileName" by "PeakListUniqueFileNames"
+            //file address with name.. ALL files uploaded at App_Data folder (C:\inetpub\wwwroot\PerceptronAPI\App_Data). And then, PerceptronLocalService starts working on user data..
 
             if (parameters.FileType[fileNumber] == ".mzXML")//INSERT HERE THE SUPPORT OF .mzML
             {
