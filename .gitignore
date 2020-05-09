@@ -5,8 +5,6 @@
 *.cache
 *.pdb
 *.manifest
-*.exe
-*.exe
 *.pdb
 *.dll
 *.pdb
@@ -14,11 +12,9 @@
 *.cache
 *.pdb
 *.application
-*.exe
 *.manifest
 *.txt
 *.cache
-*.exe
 *.manifest
 *.pdb
 *.pdb
