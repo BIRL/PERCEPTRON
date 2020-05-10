@@ -5,6 +5,7 @@ using System.Linq;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Utility;
+using System.Diagnostics;
 
 namespace PerceptronLocalService.Engine
 {
@@ -12,7 +13,7 @@ namespace PerceptronLocalService.Engine
 
     public class PeakListFileReader : IPeakListFileReader
     {
-        private void MzXmlReader(List<string> raw, ref string addressMzXml)
+        private void UrwasMzXmlReader(List<string> raw, ref string addressMzXml)
         {
             string line;
 
@@ -40,7 +41,7 @@ namespace PerceptronLocalService.Engine
         private void Decrypt(ref string addr)
         {
             var rawList = new List<string>();
-            MzXmlReader(rawList, ref addr);        // calling the function
+            UrwasMzXmlReader(rawList, ref addr);        // calling the function
 
             var mzxmladdr2 = @"C:\Users\Urwa\Desktop\mzxmlTopDown2\";
             for (var t = 0; t < rawList.Count; t++)
@@ -100,7 +101,7 @@ namespace PerceptronLocalService.Engine
             const string pepmass = "PEPMASS";
             var i = 1; //Keeps count of the number of text files to be made
             var fin = new FileStream(addressMgf, FileMode.Open);
-            var sr = new StreamReader(fin); //converts bytes into strings/MOMINA/26-3-20
+            var sr = new StreamReader(fin); //converts bytes into strings//26-3-20
             var s = sr.ReadLine();
             var maxCount = 0; //Keeps count of the maximum peaklist file which has been read uptil 'i'
             var maxFilename = ""; //Stores the name of the file containting max peaklist
@@ -110,7 +111,7 @@ namespace PerceptronLocalService.Engine
             var newAddress = "";
 
 
-            for (var k = 0; k < (splitAddress.Length) - 1; k++)//stores path //MOMINA
+            for (var k = 0; k < (splitAddress.Length) - 1; k++)//stores path //
             {
                 newAddress += (splitAddress[k] + '\\');
             }
@@ -140,7 +141,7 @@ namespace PerceptronLocalService.Engine
 
                     if (s.Contains(pepmass)) //stores intact mass
                     {
-                        pepMass = (s.Split('='))[1]; //splitting at = sign. stores whatever is after = sign/MOMINA/26-3-20
+                        pepMass = (s.Split('='))[1]; //splitting at = sign. stores whatever is after = sign//26-3-20
                         pepMass = string.Format("{0:0.#}", Convert.ToDouble(pepMass));
                     }
 
@@ -214,6 +215,39 @@ namespace PerceptronLocalService.Engine
             addressMgf = maxFilename; //redirects addressMgf to store the address of the file with max peaklist
         }
 
+        private void mzXML_Reader(ref string addressmzXML)
+        {
+            var filepath = Directory.GetCurrentDirectory();
+            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));   // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
+            var MsDeconvConsolePath = Path.GetFullPath(Path.Combine(navigatepath, ".\\PerceptronLocalService\\Tools\\MsDeconvConsole.jar"));  // Navigated to the path where MsDeconvConsole.jar is exists
+
+            try
+            {
+
+                System.Diagnostics.Process clientProcess = new Process();
+                clientProcess.StartInfo.FileName = "java";//@"C:\Program Files\Java\jre1.8.0_251\bin\java.exe";
+                clientProcess.StartInfo.Arguments = @"-jar " + MsDeconvConsolePath + " " + addressmzXML;// + @"D:\PERCEPTRON_CODE\files\DT4_161116.mzXML";
+                clientProcess.Start();
+                clientProcess.WaitForExit();
+                int code = clientProcess.ExitCode;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: Just the Path of MsDeconvConsole.jar");
+                string k = e.Message;
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                
+            }
+            
+
+            addressmzXML = addressmzXML.Replace(".mzXML", "_msdeconv.mgf");
+
+            //return newFileName;
+            //mgf_reader(ref address);
+
+        }
+
         public MsPeaksDto PeakListReader(SearchParametersDto parameters, int fileNumber)//EXTRACTING MASS & INTENSITY FROM FILE(s)
         {
 
@@ -225,7 +259,9 @@ namespace PerceptronLocalService.Engine
 
             if (parameters.FileType[fileNumber] == ".mzXML")//INSERT HERE THE SUPPORT OF .mzML
             {
-                Decrypt(ref address);
+                mzXML_Reader(ref address);
+                mgf_reader(ref address);
+                //Decrypt(ref address);
             }
 
             if (parameters.FileType[fileNumber] == ".mgf")

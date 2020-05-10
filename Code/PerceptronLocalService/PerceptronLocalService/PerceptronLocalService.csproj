@@ -280,6 +280,7 @@
     <Content Include="Readme\README.txt" />
     <Content Include="Tools\cudafycl.exe" />
     <Content Include="Tools\CudafyViewer.exe" />
+    <Content Include="Tools\MsDeconvConsole.jar" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
