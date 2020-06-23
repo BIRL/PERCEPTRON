@@ -15,6 +15,8 @@ using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
 using System.IO;
+using PerceptronAPI.Utility;
+using System.Windows.Forms;
 
 namespace PerceptronAPI.Controllers
 {
@@ -156,8 +158,33 @@ namespace PerceptronAPI.Controllers
             //var qid = values[0];
             //var resultid = values[1];
             var temp = _dataLayer.Detailed_Results("1", input);
+
+            /// ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD
+            /// 
+
+            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+
+
+
+            var form = new Form1();
+
+            form.writeOnImage(temp2);
+
+            //Form1.ActiveForm.Activate();
+            ////System.Windows.Forms f = new Form();
             return temp;
         }
+
+        [HttpPost]
+        [Route("api/search/Post_detailed_results/Post_DetailedProteinHitView_results")]
+        public DetailedProteinHitView Post_DetailedProteinHitView_results ([FromBody] string input)
+        {
+            Debug.WriteLine(input);
+            var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
+            return temp;
+        }
+
+
 
         [HttpPost]
         [Route("api/search/Post_history")]
