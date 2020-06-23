@@ -188,6 +188,7 @@ namespace PerceptronLocalService.Repository
             {
                 QueryId = queryTd,
                 Sequence = protein.Sequence,
+                OriginalSequence = protein.OriginalSequence,
                 FileId = fileId.ToString(),
                 Header = headerTag,
                 InsilicoScore = protein.InsilicoScore,
@@ -196,7 +197,33 @@ namespace PerceptronLocalService.Repository
                 PstScore = protein.PstScore,
                 PtmScore = protein.PtmScore,
                 ResultId = resId.ToString(),
-                Score = protein.Score
+                Score = protein.Score,
+                TerminalModification = protein.TerminalModification,
+                PSTTags = protein.PstTagsWithComma,
+
+
+
+                //For Results Visualizations
+                RightMatchedIndex = string.Join(",", protein.RightMatchedIndex),
+                RightPeakIndex = string.Join(",", protein.RightPeakIndex),
+                RightType = string.Join(",", protein.RightType),
+                LeftMatchedIndex = string.Join(",", protein.LeftMatchedIndex),
+                LeftPeakIndex = string.Join(",", protein.LeftPeakIndex),
+                LeftType = string.Join(",", protein.LeftType),
+
+
+
+                InsilicoMassLeft = string.Join(",", protein.InsilicoDetails.InsilicoMassLeft),
+                InsilicoMassRight = string.Join(",", protein.InsilicoDetails.InsilicoMassRight),
+                InsilicoMassLeftAo = string.Join(",", protein.InsilicoDetails.InsilicoMassLeftAo),
+                InsilicoMassLeftBo = string.Join(",", protein.InsilicoDetails.InsilicoMassLeftBo),
+                InsilicoMassLeftAstar = string.Join(",", protein.InsilicoDetails.InsilicoMassLeftAstar),
+                InsilicoMassLeftBstar = string.Join(",", protein.InsilicoDetails.InsilicoMassLeftBstar),
+                InsilicoMassRightYo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightYo),
+                InsilicoMassRightYstar = string.Join(",", protein.InsilicoDetails.InsilicoMassRightYstar),
+                InsilicoMassRightZo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZo),
+                InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo)
+
             };
             return searchResult;
         }
