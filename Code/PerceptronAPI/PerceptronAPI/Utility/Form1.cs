@@ -44,26 +44,28 @@ namespace PerceptronAPI.Utility
 
         public void writeOnImage(DetailedProteinHitView RawData) /// CHANGE MY NAME
         {
-
+            /* Data Preparation*/
             var ResultsData = RawData.Results.Results;
 
             var ListPSTTags = ResultsData.PSTTags.Split(',').ToList();
             var PstIndex = PstIndexFind(ResultsData.Sequence, ListPSTTags);
 
-            //Bitmap image;
-           
-                var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-            //}
-            //catch (Exception e)
-            //{
-            //    int a = 0;
-            //}
+            var LeftMatchedIndex = ResultsData.LeftMatchedIndex.Split(',').ToList();
+            var LeftPeakIndex = ResultsData.LeftPeakIndex.Split(',').ToList();
+            var LeftType = ResultsData.LeftType.Split(',').ToList();
+            
+            var RightMatchedIndex = ResultsData.RightMatchedIndex.Split(',').ToList();
+            var RightPeakIndex = ResultsData.RightPeakIndex.Split(',').ToList();
+            var RightType = ResultsData.RightType.Split(',').ToList();
 
+
+
+
+            /* Image */
+            var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
             var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
             var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
-
             var graphics = Graphics.FromImage(image);
-            
             graphics.Clear(BackColor);
 
 
@@ -130,6 +132,8 @@ namespace PerceptronAPI.Utility
                     continue;
                 }
 
+                if (i == )
+
                 /* Peptide Sequence Tag */
                 //
                 if (!PstIndex.Contains(i)) //i >= PstStartIndex[] && i < PstStartIndex[] + ListPSTTags[]
@@ -141,8 +145,8 @@ namespace PerceptronAPI.Utility
                     graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Blue, new PointF(xPoint, yPoint));
                 }
 
+                /**/
 
-                
 
                 NumString = (i + 1 - NumCount).ToString();
                 graphics.DrawString(NumString, fontSeqNum, Brushes.Black, new PointF(xPoint + 13, yPoint + 10));
