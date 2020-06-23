@@ -25,5 +25,24 @@ namespace PerceptronAPI.Models
         public double MwScore { get; set; }
         public double Mw { get; set; }
         public string FileId { get; set; }
+        public string OriginalSequence { get; set; }
+        public string PSTTags { get; set; }
+        public string RightMatchedIndex { get; set; }
+        public string RightPeakIndex { get; set; }
+        public string RightType { get; set; }
+        public string LeftMatchedIndex { get; set; }
+        public string LeftPeakIndex { get; set; }
+        public string LeftType { get; set; }
+        public string InsilicoMassLeft { get; set; }
+        public string InsilicoMassRight { get; set; }
+        public string InsilicoMassLeftAo { get; set; }
+        public string InsilicoMassLeftBo { get; set; }
+        public string InsilicoMassLeftAstar { get; set; }
+        public string InsilicoMassLeftBstar { get; set; }
+        public string InsilicoMassRightYo { get; set; }
+        public string InsilicoMassRightYstar { get; set; }
+        public string InsilicoMassRightZo { get; set; }
+        public string InsilicoMassRightZoo { get; set; }
+        public string TerminalModification { get; set; }
     }
 }

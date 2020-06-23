@@ -239,12 +239,36 @@ namespace PerceptronLocalService.Engine
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 
             }
-            
 
-            addressmzXML = addressmzXML.Replace(".mzXML", "_msdeconv.mgf");
+            addressmzXML = Path.ChangeExtension(addressmzXML, ".mgf");  //addressmzXML = addressmzXML.Replace(".mzXML", "_msdeconv.mgf");
 
             //return newFileName;
             //mgf_reader(ref address);
+
+        }
+
+        private void mzML_Reader(ref string addressmzXML)
+        {
+            var filepath = Directory.GetCurrentDirectory();
+            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));   // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
+            var OpenMSPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\PerceptronLocalService\\Tools\\OpenMS"));  // Navigated to the path where OpenMS folder is exists
+
+
+
+            var newfilename = addressmzXML; //file name for mzXML
+            newfilename = Path.ChangeExtension(newfilename, ".mzXML");  //newfilename = newfilename.Replace(".mzML", ".mzXML");
+
+            System.Environment.SetEnvironmentVariable("OPENMS_DATA_PATH", OpenMSPath + "\\share"); //setting environment variable
+            
+            bool check = false;
+
+            System.Diagnostics.Process mzmlToMzxml = new Process();
+            mzmlToMzxml.StartInfo.FileName = OpenMSPath + "\\FileConverter.exe";
+            mzmlToMzxml.StartInfo.Arguments = " -in " + addressmzXML + " -out " + newfilename;
+
+            check = mzmlToMzxml.Start();
+            mzmlToMzxml.WaitForExit();
+            int code1 = mzmlToMzxml.ExitCode;
 
         }
 
@@ -257,15 +281,24 @@ namespace PerceptronLocalService.Engine
             var address = Path.Combine(Path.Combine(Constants.PeakListFolder, parameters.PeakListUniqueFileNames[fileNumber])); // 20200509 //Replaced "PeakListFileName" by "PeakListUniqueFileNames"
             //file address with name.. ALL files uploaded at App_Data folder (C:\inetpub\wwwroot\PerceptronAPI\App_Data). And then, PerceptronLocalService starts working on user data..
 
-            if (parameters.FileType[fileNumber] == ".mzXML")//INSERT HERE THE SUPPORT OF .mzML
+            
+
+            if (parameters.FileType[fileNumber] == ".mgf")
+            {
+                mgf_reader(ref address);
+            }
+
+            else if (parameters.FileType[fileNumber] == ".mzXML")
             {
                 mzXML_Reader(ref address);
                 mgf_reader(ref address);
                 //Decrypt(ref address);
             }
 
-            if (parameters.FileType[fileNumber] == ".mgf")
+            else if (parameters.FileType[fileNumber] == ".mzML")
             {
+                mzML_Reader(ref address);
+                mzXML_Reader(ref address);
                 mgf_reader(ref address);
             }
 

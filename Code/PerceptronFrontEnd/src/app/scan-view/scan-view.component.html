@@ -8,6 +8,220 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
   </div>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header style="background-color:rgba(0,0,0,.1); color:Black;">
+      <mat-panel-title style="font-size:large;  color:Black;">
+        User Search Parameters
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <!-- Row 1 -->
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Search Title: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="SearchTitle"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <!-- Include Uniprot Link -->
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Protein Database: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;"  id="ProteinDB"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Mass Mode: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="MassMode"></label>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <!-- Row 2 -->
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Protein Mass Tolerance: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label  style="font-size:15px;" id="protTol"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Tune Mass: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="Tuner"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Peptide Tolerance: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="peptol"></label>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <!-- Row 3 -->
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Fragmentation Type: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="FragType"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Special Ions: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="SI"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">PST Filter: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="PST"></label>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+     <!-- Row 4 -->
+     <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">PST Length: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="PSTLen"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Blind PTM: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="BPTMs"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Terminal Modifications: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="TermMods"></label>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="8" rowHeight="60px">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Intact Protein Mass %: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="Slider1"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">PST %: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="Slider2"></label>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-weight:bold;">Spectral Comparison %: </label>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div style="padding-left:5px; width:100%">
+          <label style="font-size:15px;" id="Slider3"></label>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+
+  </mat-expansion-panel>
+
+
+
+
   <div>
     <label style="color:blue;">Note that proteins have canonical sequences (<a href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
   </div>

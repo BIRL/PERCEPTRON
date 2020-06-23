@@ -61,10 +61,9 @@ namespace PerceptronLocalService.Engine
             double olddiff = 1, newdiff = 0;
             
             
-            //Add here SliderValue(BELOW)//
-            parameters.SliderValue = 50;  //#FutureWork3b(CPU)
-            double SliderValue;
-            SliderValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 - Slider value will be changed according to Intact Protein Mass
+            parameters.SliderValue = 50;  //#FutureWork3b(CPU)  //When SliderValue will be added into FrontEnd then, there will be no need of this. For now its just a dummy value.
+            double SlidingWindowValue;  //Value for sliding the window  
+            SlidingWindowValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 - Slider value will be changed according to Intact Protein Mass
 
             int summationMassandaverageintensityindex = summationMassandaverageintensity.Count - 1;
             while (windowposition < summationMassandaverageintensity[summationMassandaverageintensityindex].Mass)
@@ -102,7 +101,7 @@ namespace PerceptronLocalService.Engine
                         oldindex = newindex;
                     }
                 }
-                windowposition = windowposition + SliderValue;
+                windowposition = windowposition + SlidingWindowValue;
                 
             }
 

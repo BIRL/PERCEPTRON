@@ -300,7 +300,7 @@ export class ProteinSearchComponent implements OnInit {
     this.CysteineChemicalModification ='None';
     this.MethionineChemicalModification ='None';
     this.selectedFrag = 'HCD';
-    this.selectIons() //();// = ['bo']
+    this.SpecialIonz = this.Special1; //();// = ['bo']
     //this.SpecialIonz = this.Special1
 
 

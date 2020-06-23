@@ -18,23 +18,28 @@ namespace PerceptronLocalService.Engine
                 //if (mwProt[iterationOnProteinList].Header == "P62805")/////Q9BTM9
                 //{
 
-
+                    var PstTagsExists = new List<string>();
 
                     double score = 0;
                     for (int iteration = 0; iteration <= pstList.Count - 1; iteration++)
                     {
+
                         int TagOccurrences = Regex.Matches(mwProt[iterationOnProteinList].Sequence, pstList[iteration].PstTags).Count;
-                        
-                        
+
+
                         score += (pstList[iteration].PstErrorScore + pstList[iteration].PstFrequency) * TagOccurrences;
-                        //score += (pstList[iteration].PstErrorScore + pstList[iteration].PstTagLength) * TagOccurrences; // its healthy
-                        
+                        //score += (pstList[iteration].PstErrorScore + pstList[iteration].PstTagLength) * TagOccurrences;
 
-
-                        //if (TagOccurrences != 0 && pstList[iteration].PstTags == "RHR")
-                        //    COUNTME += 1;
-
+                        if (TagOccurrences != 0)
+                        {
+                            PstTagsExists.Add(pstList[iteration].PstTags);
+                            //int ab = mwProt[iterationOnProteinList].Sequence.IndexOf("GGA");
+                        }
                     }
+
+                    mwProt[iterationOnProteinList].PstTagsWithComma = string.Join(",", PstTagsExists); //Joining Pst Tags with comma in a One string
+
+
                     score = score / mwProt[iterationOnProteinList].Sequence.Length;
                     if (score > 1)
                         score = 1;

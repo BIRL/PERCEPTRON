@@ -29,6 +29,10 @@ export class DetailedResultsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(users);
   }
 
+  // goToPage(pageName:string):void{
+  //   this.router.navigate([`${pageName}`])
+  // };
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

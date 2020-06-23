@@ -181,25 +181,25 @@ namespace PerceptronLocalService.Engine
                                 {
                                     if (insilico.InsilicoMassLeftAo.Count > 0)
                                     {
-                                        Type = "Ao";
+                                        Type = "A'";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAo[indexLeftSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftBo.Count > 0)
                                     {
-                                        Type = "Bo";
+                                        Type = "B'";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBo[indexLeftSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftAstar.Count > 0)
                                     {
-                                        Type = "Astar";
+                                        Type = "A*";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftAstar[indexLeftSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                     if (insilico.InsilicoMassLeftBstar.Count > 0)
                                     {
-                                        Type = "Bstar";
+                                        Type = "B*";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassLeftBstar[indexLeftSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
@@ -222,25 +222,25 @@ namespace PerceptronLocalService.Engine
                                 {
                                     if (insilico.InsilicoMassRightYo.Count > 0)
                                     {
-                                        Type = "Yo";
+                                        Type = "Y'";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYo[indexRightSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightZo.Count > 0)
                                     {
-                                        Type = "Zo";
+                                        Type = "Z'";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZo[indexRightSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightZoo.Count > 0)
                                     {
-                                        Type = "Zoo";
+                                        Type = "Z''";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightZoo[indexRightSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                     if (insilico.InsilicoMassRightYstar.Count > 0)
                                     {
-                                        Type = "Ystar";
+                                        Type = "Y*";
                                         difference = peakData2DList[indexPeakList].Mass - insilico.InsilicoMassRightYstar[indexRightSide];
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }

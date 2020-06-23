@@ -30,7 +30,10 @@ namespace PerceptronLocalService.DTO
         public List<int> RightPeakIndex;
         public List<string> LeftType;
         public List<string> RightType;
+
+
         public double Evalue;
+        public string PstTagsWithComma;
 
         public ProteinDto()
         {
@@ -52,6 +55,9 @@ namespace PerceptronLocalService.DTO
             TruncatedSequence = "";
             TruncatedMolecaularWeight = 0;
             TerminalModification = "None";
+
+            PstTagsWithComma = "";
+
         }
 
         public ProteinDto(ProteinDto protein)
@@ -71,6 +77,8 @@ namespace PerceptronLocalService.DTO
             TruncationIndex = protein.TruncationIndex;
             TerminalModification = protein.TerminalModification;
             Truncation = protein.Truncation;
+            TruncatedSequence = protein.TruncatedSequence;
+            TruncatedMolecaularWeight = protein.TruncatedMolecaularWeight;
             InsilicoScore = protein.InsilicoScore;
             MatchCounter = protein.MatchCounter;
 
@@ -80,6 +88,8 @@ namespace PerceptronLocalService.DTO
             RightPeakIndex = protein.RightPeakIndex;
             LeftType = protein.LeftType;
             RightType = protein.RightType;
+
+            PstTagsWithComma = protein.PstTagsWithComma;
 
         }
 

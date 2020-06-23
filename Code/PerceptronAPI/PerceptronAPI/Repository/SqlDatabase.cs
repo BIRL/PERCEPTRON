@@ -11,6 +11,7 @@ namespace PerceptronAPI.Repository
 {
     public class SqlDatabase : IDataAccessLayer
     {
+
         //Store Query Parameters
         public void StoreSearchParameters(SearchParametersDto param)
         {
@@ -355,6 +356,83 @@ namespace PerceptronAPI.Repository
             }
             return detiledResults;
         }
+
+        public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid)
+        {
+            var DetailedProteinHitViewResults = new DetailedProteinHitView();
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                    qid = dataReader["QueryId"].ToString();
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                //var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
+                var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+                //NO NEED 
+                //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
+                //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
+                
+                /*  WILL USE IT LATER  */
+                var ptmVarmod = db.PtmVariableModifications.Where(x => x.QueryId == qid).ToList();
+                var ptmFixedmod = db.PtmFixedModifications.Where(x => x.QueryId == qid).ToList();
+                var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
+                
+                /*  WILL USE IT LATER  */
+                
+                DetailedProteinHitViewResults.Results.Results = searchResult.First();
+
+                //NO NEED 
+                //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
+                //var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
+
+
+                
+
+
+
+
+                //if (searchParameters.Count != 0)
+                //    DetailedProteinHitViewResults.Paramters.SearchParameters = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
+
+                //DetailedProteinHitViewResults.Paramters.FixedMods = ptmFixedmod;
+                //DetailedProteinHitViewResults.Paramters.VarMods = ptmVarmod;
+
+                //if (searchQuery.Count != 0)
+                //    DetailedProteinHitViewResults.Paramters.SearchQuerry = searchQuery.First();
+
+
+                //DetailedProteinHitViewResults.Results.PtmSites = ptmSite;
+                //if (searchResult.Count != 0)
+                //    DetailedProteinHitViewResults.Results.Results = searchResult.First();
+
+
+                //if (execTime.Count != 0)
+                //    DetailedProteinHitViewResults.ExecutionTime = execTime.First();
+
+
+
+            }
+            return DetailedProteinHitViewResults;
+        }
+
         private SearchParameter GetSearchParametersDtoModel(SearchParameter searchParameters)
         {
             var searchParameter = new SearchParameter

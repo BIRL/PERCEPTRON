@@ -21,6 +21,7 @@ import { SignupComponent } from './signup/signup.component';
 import { EmailComponent } from './email/email.component';
 import { SummaryResultsComponent } from './summary-results/summary-results.component';
 import { DetailedResultsComponent } from './detailed-results/detailed-results.component';
+import { ResultsVisualizationComponent } from './results-visualization/results-visualization.component';
 import { ScanViewComponent } from './scan-view/scan-view.component';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
 // import { PatterngeneratorComponent } from './patterngenerator/patterngenerator.component';
@@ -64,6 +65,7 @@ export const router: Routes = [
     { path: 'summaryresults/:querryId/:fileID', component: SummaryResultsComponent},
     { path: 'detailedresults/:resultId/:rank', component: DetailedResultsComponent},
     // { path: 'patterngenerator', component: PatterngeneratorComponent, canActivate: [AuthGuard]},
+    { path: 'results-visualization', component: ResultsVisualizationComponent},
     { path: 'scans/:querryId', component: ScanViewComponent},
     { path: 'sc/:querryId', component: SpectralcountComponent},
     { path: 'xic/:querryId', component: XicComponent},

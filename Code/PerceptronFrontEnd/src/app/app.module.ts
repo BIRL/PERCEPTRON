@@ -52,6 +52,7 @@ import { ContactComponent } from './contact/contact.component';
 import { SettingsComponent } from './settings/settings.component';
 import { UpdatePasswordComponent } from './update-password/update-password.component';
 import { UpdateUsernameComponent } from './update-username/update-username.component';
+import { ResultsVisualizationComponent } from './results-visualization/results-visualization.component';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { UpdateUsernameComponent } from './update-username/update-username.compo
     SettingsComponent,
     UpdatePasswordComponent,
     UpdateUsernameComponent,
+    ResultsVisualizationComponent,
   ],
   imports: [
     MatIconModule,

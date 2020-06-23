@@ -43,6 +43,44 @@ export class ScanViewComponent implements OnInit {
     const users: UserData[] = [];
     for (let i = 1; i <= data.length; i++) { users.push(createNewUser(i, data[i - 1])); }
     this.dataSource = new MatTableDataSource(users);
+
+
+    let title = <HTMLLabelElement>document.getElementById("SearchTitle");
+    title.innerHTML = data.Paramters.SearchParameters.Title;
+   
+    let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
+    pdb.innerHTML = data.Paramters.SearchParameters.ProtDb;
+
+
+    let protTol = <HTMLLabelElement>document.getElementById("protTol");
+    protTol.innerHTML = data.Paramters.SearchParameters.MwTolerance;
+
+    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");            
+    autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
+
+    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");            
+    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;  
+
+    let fragt = <HTMLLabelElement>document.getElementById("FragType");            
+    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType; 
+
+    let SpecI = <HTMLLabelElement>document.getElementById("SI");            
+    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons; 
+
+    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");            
+    DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
+
+    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");            
+    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength ;
+
+    let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
+    let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
+    let SpecCompWeight = <HTMLLabelElement>document.getElementById("Slider3");
+
+    IPMSWeight.innerHTML = data.Results.Results.MwScore;
+    PSTWeight.innerHTML = data.Results.Results.PstScore;
+    SpecCompWeight.innerHTML = data.Results.Results.InsilicoScore;
+  
   }
 
 
