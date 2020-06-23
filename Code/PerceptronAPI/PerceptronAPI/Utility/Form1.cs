@@ -132,7 +132,7 @@ namespace PerceptronAPI.Utility
                     continue;
                 }
 
-                if (i == )
+                //if (i == )
 
                 /* Peptide Sequence Tag */
                 //
