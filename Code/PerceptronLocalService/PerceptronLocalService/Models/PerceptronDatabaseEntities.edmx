@@ -156,6 +156,7 @@
           <Property Name="InsilicoMassRightZo" Type="nvarchar(max)" />
           <Property Name="InsilicoMassRightZoo" Type="nvarchar(max)" />
           <Property Name="TerminalModification" Type="nvarchar(max)" />
+          <Property Name="PeakListData" Type="nvarchar(max)" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
@@ -325,6 +326,7 @@
           <Property Name="InsilicoMassRightZo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="InsilicoMassRightZoo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TerminalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PeakListData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
@@ -500,6 +502,7 @@
                 <ScalarProperty Name="InsilicoMassRightZo" ColumnName="InsilicoMassRightZo" />
                 <ScalarProperty Name="InsilicoMassRightZoo" ColumnName="InsilicoMassRightZoo" />
                 <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
+                <ScalarProperty Name="PeakListData" ColumnName="PeakListData" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

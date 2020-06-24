@@ -39,7 +39,7 @@ namespace PerceptronLocalService.Repository
                 {
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
-                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId);
+                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, res.peakData);
                     db.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
@@ -182,7 +182,7 @@ namespace PerceptronLocalService.Repository
             return headerTag;
         }
 
-        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId)
+        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId, List<double> peakData)
         {
             var searchResult = new SearchResult
             {
@@ -222,7 +222,9 @@ namespace PerceptronLocalService.Repository
                 InsilicoMassRightYo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightYo),
                 InsilicoMassRightYstar = string.Join(",", protein.InsilicoDetails.InsilicoMassRightYstar),
                 InsilicoMassRightZo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZo),
-                InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo)
+                InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo),
+
+                PeakListData = string.Join(",", peakData)
 
             };
             return searchResult;

@@ -384,7 +384,7 @@ namespace PerceptronAPI.Repository
             }
             using (var db = new PerceptronDatabaseEntities())
             {
-                //var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
+                var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 //NO NEED 
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
@@ -398,6 +398,7 @@ namespace PerceptronAPI.Repository
                 /*  WILL USE IT LATER  */
                 
                 DetailedProteinHitViewResults.Results.Results = searchResult.First();
+                //DetailedProteinHitViewResults.searchParameters = searchParameters;
 
                 //NO NEED 
                 //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
