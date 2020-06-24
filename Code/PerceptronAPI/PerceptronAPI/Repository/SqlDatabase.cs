@@ -398,7 +398,7 @@ namespace PerceptronAPI.Repository
                 /*  WILL USE IT LATER  */
                 
                 DetailedProteinHitViewResults.Results.Results = searchResult.First();
-                //DetailedProteinHitViewResults.searchParameters = searchParameters;
+                DetailedProteinHitViewResults.searchParameters = searchParameters.First();
 
                 //NO NEED 
                 //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();

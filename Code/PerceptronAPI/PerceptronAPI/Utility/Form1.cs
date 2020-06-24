@@ -23,7 +23,6 @@ namespace PerceptronAPI.Utility
         private List<int> PstIndexFind(string Sequence, List<string> ListPSTTags)
         {
             List<int> PstIndex = new List<int>();
-            int a;
 
             if (ListPSTTags.Count != 0)
             {
@@ -42,10 +41,20 @@ namespace PerceptronAPI.Utility
             return PstIndex;
         }
 
+        private void nextLineStart(ref int xPoint, ref int PictureBoxWidth, ref int yPoint, ref int yNextLinedist)
+        {
+            if (xPoint >= this.pictureBox1.Width - 100)
+            {
+                xPoint = 1;
+                yPoint = yPoint + yNextLinedist;
+            }
+        }
+
         public void writeOnImage(DetailedProteinHitView RawData) /// CHANGE MY NAME
         {
             /* Data Preparation*/
             var ResultsData = RawData.Results.Results;
+            var searchParameters = RawData.searchParameters;
 
             var peakData = ResultsData.PeakListData.Split(',').Select(double.Parse).ToList();
             var ListPSTTags = ResultsData.PSTTags.Split(',').ToList();
@@ -61,6 +70,7 @@ namespace PerceptronAPI.Utility
             var RightPeakIndex = new List<int>();
             var RightType = new List<string>();
             int RightMathces = 0;
+            var InsilicoMassRight = new List<double>();
 
             if (ResultsData.LeftMatchedIndex != "")
             {
@@ -77,9 +87,11 @@ namespace PerceptronAPI.Utility
                 RightPeakIndex = ResultsData.RightPeakIndex.Split(',').Select(int.Parse).ToList();
                 RightType = ResultsData.RightType.Split(',').ToList();
                 RightMathces = RightMatchedIndex.Count;
+                InsilicoMassRight = ResultsData.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
             }
 
             int Matches = LeftMatches + RightMathces;
+            int TruncationCount = 0;
             
 
 
@@ -87,9 +99,11 @@ namespace PerceptronAPI.Utility
             var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
             var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
             var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
-
+            var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
             var fontTruncation = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
             var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
+
+            int PictureBoxWidth = this.pictureBox1.Width;
 
             var graphics = Graphics.FromImage(image);
             graphics.Clear(BackColor);
@@ -105,8 +119,8 @@ namespace PerceptronAPI.Utility
             int yHeaderLinedist = 20;
             int yNextLinedist = 80;
             int yPointReset;
-            int xLeftTruncationdist = 30;
-            int yLeftTruncationdist = 5;
+            int xTruncationdist = 30;
+            int yTruncationdist = 5;
             //int xMassesdist = 15;
             int yPeakMassdist = 23;
             int yMatchedMassdist = 35;
@@ -138,41 +152,32 @@ namespace PerceptronAPI.Utility
 
             if (ResultsData.TerminalModification == "NME" || ResultsData.TerminalModification == "NME_Acetylation")
             {
-                var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
+                
                 graphics.DrawString("M", fontStrikethrough, Brushes.Red, new PointF(xPoint, yPoint));
                 xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
 
             }
+            /* Left Truncation */
+            if (searchParameters.Truncation == 1)
+            {
+                if (ResultsData.TruncationSite == "Left")
+                {
+                    for (int indexL = 0; indexL < ResultsData.TruncationIndex; indexL++)
+                    {
+                        graphics.DrawString(ResultsData.OriginalSequence[indexL].ToString(), fontStrikethrough, Brushes.Red, new PointF(xPoint, yPoint));
+                        xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
+                        nextLineStart(ref xPoint, ref PictureBoxWidth, ref yPoint, ref yNextLinedist);
+                        TruncationCount++;
+                    }
+                }
+            }
 
-            
+
 
             for (int i = 0; i < ProteinSequence.Length; i++)
             {
-                if (xPoint >= this.pictureBox1.Width - 100)
-                {
-                    xPoint = 1;
-                    yPoint = yPoint + yNextLinedist;
-                }
-
-
-
                 
-                if (LeftMatchedIndex.Count != 0){
-                    if (LeftMatchedIndex.Contains(i))
-                    {
-                        int index = LeftMatchedIndex.IndexOf(i);
-                        double PeakMass = Math.Round(peakData[LeftPeakIndex[index]], 4);
-
-                        
-                        
-                        graphics.DrawString(LeftTruncation, fontTruncation, Brushes.Black, new PointF(xPoint + xLeftTruncationdist, yPoint - yLeftTruncationdist));
-                        graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint + xLeftTruncationdist, yPoint + yPeakMassdist));
-                        graphics.DrawString(Math.Round(InsilicoMassLeft[i], 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint + xLeftTruncationdist, yPoint + yMatchedMassdist));
-
-                    }
-
-                }
-            
+                nextLineStart(ref xPoint, ref PictureBoxWidth, ref yPoint, ref yNextLinedist);
 
 
                 /* Peptide Sequence Tag */
@@ -187,6 +192,41 @@ namespace PerceptronAPI.Utility
                     graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Blue, new PointF(xPoint, yPoint));
                 }
 
+                if (LeftMatchedIndex.Count != 0)
+                {
+                    if (LeftMatchedIndex.Contains(i))
+                    {
+                        int indexL = LeftMatchedIndex.IndexOf(i);
+                        double PeakMass = Math.Round(peakData[LeftPeakIndex[indexL]], 4);
+
+
+
+                        graphics.DrawString(LeftTruncation, fontTruncation, Brushes.Black, new PointF(xPoint + xTruncationdist, yPoint - yTruncationdist));
+                        graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint + xTruncationdist, yPoint + yPeakMassdist));
+                        graphics.DrawString(Math.Round(InsilicoMassLeft[i], 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint + xTruncationdist, yPoint + yMatchedMassdist));
+
+                    }
+
+                }
+                /////////  DONE DO FOR SYNTAX TESTIN
+
+
+                //if (RightMatchedIndex.Count != 0)
+                //{
+                //    if (RightMatchedIndex.Contains(i))
+                //    {
+                //        int indexR = RightMatchedIndex.IndexOf(i);
+                //        double PeakMass = Math.Round(peakData[RightPeakIndex[indexR]], 4);
+
+
+
+                //        graphics.DrawString(RightTruncation, fontTruncation, Brushes.Black, new PointF(xPoint - xTruncationdist, yPoint - yTruncationdist));
+                //        graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint + xTruncationdist, yPoint + yPeakMassdist));
+                //        graphics.DrawString(Math.Round(InsilicoMassRight[i], 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint + xTruncationdist, yPoint + yMatchedMassdist));
+
+                //    }
+
+                //}
                 /**/
 
 
@@ -195,6 +235,25 @@ namespace PerceptronAPI.Utility
                 xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
 
             }
+
+
+            ///////////  DONE DO FOR SYNTAX TESTIN
+            ///* Right Truncation */
+
+            //if (searchParameters.Truncation == 1)
+            //{
+            //    if (ResultsData.TruncationSite == "Right")
+            //    {
+            //        for (int indexR = 0; indexR < ResultsData.TruncationIndex; indexR++)
+            //        {
+            //            graphics.DrawString(ResultsData.OriginalSequence[indexR].ToString(), fontStrikethrough, Brushes.Red, new PointF(xPoint, yPoint));
+            //            xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
+            //            nextLineStart(ref xPoint, ref PictureBoxWidth, ref yPoint, ref yNextLinedist);
+            //            TruncationCount++;
+            //        }
+            //    }
+            //}
+
 
             var Original = image;
             this.pictureBox1.Image = image;

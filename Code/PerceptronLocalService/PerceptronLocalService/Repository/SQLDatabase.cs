@@ -201,6 +201,8 @@ namespace PerceptronLocalService.Repository
                 TerminalModification = protein.TerminalModification,
                 PSTTags = protein.PstTagsWithComma,
 
+                TruncationSite = protein.Truncation,
+                TruncationIndex = protein.TruncationIndex,
 
 
                 //For Results Visualizations

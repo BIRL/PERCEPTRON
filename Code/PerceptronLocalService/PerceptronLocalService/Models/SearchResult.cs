@@ -45,5 +45,7 @@ namespace PerceptronLocalService.Models
         public string InsilicoMassRightZoo { get; set; }
         public string TerminalModification { get; set; }
         public string PeakListData { get; set; }
+        public string TruncationSite { get; set; }
+        public Nullable<int> TruncationIndex { get; set; }
     }
 }

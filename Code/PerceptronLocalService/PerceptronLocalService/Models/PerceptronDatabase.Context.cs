@@ -35,5 +35,6 @@ namespace PerceptronLocalService.Models
         public virtual DbSet<SearchParameter> SearchParameters { get; set; }
         public virtual DbSet<SearchQuery> SearchQueries { get; set; }
         public virtual DbSet<SearchResult> SearchResults { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }
