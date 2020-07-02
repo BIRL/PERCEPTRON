@@ -29,6 +29,7 @@ namespace PerceptronLocalService.DTO
         public string[] FileType;
         public string[] PeakListFileName;
         public string[] PeakListUniqueFileNames;
+        public string[] FileUniqueIdArray;
 
         public int Autotune;
         public string HandleIons;

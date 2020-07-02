@@ -12,7 +12,7 @@ using PerceptronLocalService.DTO;
 
 namespace PerceptronLocalService.Repository
 {
-    
+
 
     public class MySqlDatabase : IDataAccessLayer
     {
@@ -79,7 +79,8 @@ namespace PerceptronLocalService.Repository
         }
 
 
-       public string GetEmailFromUserId(string id)
+
+        public string GetEmailFromUserId(string id)
         {
             var query = "select Email from user where UserId='" + id + "';";
             string returnString;
@@ -130,6 +131,12 @@ namespace PerceptronLocalService.Repository
                 cmd2.ExecuteNonQuery();
                 _connection.Close();
             }
+        }
+
+        //Store Peak List Data
+        public void StorePeakList(string FileUniqueId, List<double> peakDataMasses, List<double> peakDataIntensities)
+        {
+
         }
 
         //Store results
@@ -220,7 +227,7 @@ namespace PerceptronLocalService.Repository
             return resultString;
         }
 
-       //Gets Server Status
+        //Gets Server Status
         public List<SearchQueryDto> ServerStatus()
         {
             var result = new List<SearchQueryDto>();
@@ -293,7 +300,7 @@ namespace PerceptronLocalService.Repository
 
                 qp.SliderValue = Convert.ToDouble(reader.GetValue(28));
                 qp.CysteineChemicalModification = reader.GetValue(29).ToString();
-                qp.MethionineChemicalModification = reader.GetValue(30).ToString(); 
+                qp.MethionineChemicalModification = reader.GetValue(30).ToString();
 
             }
 
@@ -308,7 +315,7 @@ namespace PerceptronLocalService.Repository
         public void GetFiles(SearchParametersDto qp)
         {
             var files = new List<string>();
-            var type = new List<string>(); 
+            var type = new List<string>();
             var query = "SELECT * FROM proteomics.data_file where QueryId = '" + qp.Queryid + "';";
             if (!OpenConnection()) return;
             var cmd = new MySqlCommand(query, _connection);
@@ -352,7 +359,7 @@ namespace PerceptronLocalService.Repository
             return succcess;
         }
 
-     
+
         private static string Decompress(string compressedText)
         {
             var gzBuffer = Convert.FromBase64String(compressedText);

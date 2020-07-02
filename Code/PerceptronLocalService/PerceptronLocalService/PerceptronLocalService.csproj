@@ -146,6 +146,9 @@
     <Compile Include="Models\ExecutionTime.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PeakListData.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PerceptronDatabase.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

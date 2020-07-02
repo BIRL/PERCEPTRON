@@ -46,5 +46,6 @@ namespace PerceptronLocalService.Models
         public string CysteineChemicalModification { get; set; }
         public string MethionineChemicalModification { get; set; }
         public string EmailId { get; set; }
+        public int TruncationIndex { get; set; }
     }
 }

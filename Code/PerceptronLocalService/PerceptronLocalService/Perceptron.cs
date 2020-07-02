@@ -350,6 +350,8 @@ namespace PerceptronLocalService
                     //StoreSearchResults(parameters, candidateProteins, executionTimes, fileNumber);  // ITS HEALTHY...!!!
                     StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
 
+                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+
 
                 }
                 catch (Exception r)
@@ -505,7 +507,8 @@ namespace PerceptronLocalService
         {
             if (parameters.DenovoAllow == 1)
             {
-                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
+                // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
+                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins); 
             }
 
 
@@ -651,6 +654,20 @@ namespace PerceptronLocalService
 
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
             _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], fileNumber);
+        }
+
+        private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList)
+        {
+            var peakDataMasses = new List<double>();
+            var peakDataIntensities = new List<double>();
+
+            for (int i = 0; i < peakData2DList.Count; i++)
+            {
+                peakDataMasses.Add(peakData2DList[i].Mass);  // Enhancement MAKE a separate new table
+                peakDataIntensities.Add(peakData2DList[i].Intensity);  // Enhancement MAKE a separate new table
+            }
+
+            _dataLayer.StorePeakList(FileUniqueId, peakDataMasses, peakDataIntensities);
         }
 
 

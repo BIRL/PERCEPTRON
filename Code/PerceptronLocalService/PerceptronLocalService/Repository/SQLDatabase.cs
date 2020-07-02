@@ -26,6 +26,11 @@ namespace PerceptronLocalService.Repository
         //    return email;
         //}
 
+        public void StorePeakList(string FileUniqueId, List<double> peakDataMasses, List<double> peakDataIntensities)
+        {
+
+        }
+
         public string StoreResults(SearchResultsDto res, string fileName, int fileId)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
@@ -39,7 +44,7 @@ namespace PerceptronLocalService.Repository
                 {
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
-                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, res.peakData);
+                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId);
                     db.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
@@ -104,8 +109,9 @@ namespace PerceptronLocalService.Repository
                 var fileType = files.Select(b => b.FileType).ToArray();
                 var fileName = files.Select(b => b.FileName).ToArray();
                 var fileUniqueName = files.Select(b => b.UniqueFileName).ToArray();
+                var FileUniqueIdArray = files.Select(b => b.FileUniqueId).ToArray();
 
-                searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName, fileUniqueName) : new SearchParametersDto();
+                searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName, fileUniqueName, FileUniqueIdArray) : new SearchParametersDto();
             }
             return searchParametersDto;
         }
@@ -182,7 +188,7 @@ namespace PerceptronLocalService.Repository
             return headerTag;
         }
 
-        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId, List<double> peakData)
+        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId)
         {
             var searchResult = new SearchResult
             {
@@ -226,7 +232,6 @@ namespace PerceptronLocalService.Repository
                 InsilicoMassRightZo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZo),
                 InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo),
 
-                PeakListData = string.Join(",", peakData)
 
             };
             return searchResult;
@@ -264,7 +269,7 @@ namespace PerceptronLocalService.Repository
         }
 
         private SearchParametersDto GetSearchParametersDtoModel(SearchParameter searchParameters, List<int> ptmVariable,
-          List<int> ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName)
+          List<int> ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName, string[] FileUniqueIdArray)
         {
             var searchParametersDto = new SearchParametersDto
             {
@@ -294,6 +299,7 @@ namespace PerceptronLocalService.Repository
                 FileType = fileType,
                 PeakListFileName = fileName,
                 PeakListUniqueFileNames = fileUniqueName,
+                FileUniqueIdArray = FileUniqueIdArray,
                 NeutralLoss = searchParameters.NeutralLoss,  //Added 12Sep2019
                 PSTTolerance = searchParameters.PSTTolerance,
 

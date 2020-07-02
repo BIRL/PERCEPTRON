@@ -20,6 +20,16 @@
           <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PeakListData">
+          <Key>
+            <PropertyRef Name="FileUniqueId" />
+          </Key>
+          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PeakListMasses" Type="nvarchar(max)" />
+          <Property Name="PeakListIntensities" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
             <PropertyRef Name="ModId" />
@@ -74,6 +84,7 @@
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="FileType" Type="nvarchar(max)" />
           <Property Name="UniqueFileName" Type="nvarchar(max)" />
+          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameters">
           <Key>
@@ -111,6 +122,7 @@
           <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="EmailId" Type="nvarchar(max)" />
+          <Property Name="TruncationIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
@@ -156,19 +168,9 @@
           <Property Name="InsilicoMassRightZo" Type="nvarchar(max)" />
           <Property Name="InsilicoMassRightZoo" Type="nvarchar(max)" />
           <Property Name="TerminalModification" Type="nvarchar(max)" />
-          <Property Name="PeakListData" Type="nvarchar(max)" />
           <Property Name="TruncationSite" Type="nvarchar(max)" />
-          <Property Name="TruncationIndex" Type="int" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
+          <Property Name="TruncationIndex" Type="int" Nullable="false" />
+          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
@@ -181,7 +183,13 @@
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResults" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PeakListData" EntityType="Self.PeakListData" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PeakListData].[FileUniqueId] AS [FileUniqueId], 
+    [PeakListData].[PeakListMasses] AS [PeakListMasses], 
+    [PeakListData].[PeakListIntensities] AS [PeakListIntensities]
+    FROM [dbo].[PeakListData] AS [PeakListData]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -257,6 +265,7 @@
           <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UniqueFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameter">
           <Key>
@@ -294,6 +303,7 @@
           <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
@@ -339,19 +349,17 @@
           <Property Name="InsilicoMassRightZo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="InsilicoMassRightZoo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TerminalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PeakListData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TruncationSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TruncationIndex" Type="Int32" />
+          <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagram">
+        <EntityType Name="PeakListData">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="FileUniqueId" />
           </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
@@ -364,7 +372,7 @@
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResult" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -444,6 +452,7 @@
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="FileType" ColumnName="FileType" />
                 <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -482,6 +491,7 @@
                 <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
                 <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
                 <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -528,20 +538,18 @@
                 <ScalarProperty Name="InsilicoMassRightZo" ColumnName="InsilicoMassRightZo" />
                 <ScalarProperty Name="InsilicoMassRightZoo" ColumnName="InsilicoMassRightZoo" />
                 <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
-                <ScalarProperty Name="PeakListData" ColumnName="PeakListData" />
                 <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="PerceptronDatabaseModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+          <EntitySetMapping Name="PeakListDatas">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
+              <MappingFragment StoreEntitySet="PeakListData">
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+                <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
+                <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
