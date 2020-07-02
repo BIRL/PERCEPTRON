@@ -19,5 +19,6 @@ namespace PerceptronAPI.Models
         public string FileName { get; set; }
         public string FileType { get; set; }
         public string UniqueFileName { get; set; }
+        public string FileUniqueId { get; set; }
     }
 }
