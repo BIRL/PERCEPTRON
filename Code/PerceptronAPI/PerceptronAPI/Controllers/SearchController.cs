@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
 using System.IO;
-using PerceptronAPI.Utility;
+using PerceptronAPI.ResultVisualizations;
 using System.Windows.Forms;
 
 namespace PerceptronAPI.Controllers
@@ -102,7 +102,8 @@ namespace PerceptronAPI.Controllers
                         FileName = file.LocalFileName,
                         UniqueFileName = FileNameWithUniqueID,
                         FileType = System.IO.Path.GetExtension(file.LocalFileName),
-                        QueryId = queryId
+                        QueryId = queryId,
+                        FileUniqueId = FileUniqueId
                     };
                     parametersDto.SearchFiles.Add(x);
                 }
@@ -166,12 +167,14 @@ namespace PerceptronAPI.Controllers
 
 
 
-            var form = new Form1();
 
-            form.writeOnImage(temp2);
 
-            //Form1.ActiveForm.Activate();
-            ////System.Windows.Forms f = new Form();
+            ///
+
+            //var ImageForm = new DetailedProteinView();
+            //ImageForm.writeOnImage(temp2);
+
+            
             return temp;
         }
 
@@ -181,6 +184,10 @@ namespace PerceptronAPI.Controllers
         {
             Debug.WriteLine(input);
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
+
+            //DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+            //var ImageForm = new DetailedProteinView();
+            //ImageForm.writeOnImage(temp2);
             return temp;
         }
 
