@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace PerceptronAPI.Utility
+namespace PerceptronAPI.ResultVisualizations
 {
-    partial class Form1
+    partial class DetailedProteinView
     {
         /// <summary>
         /// Required designer variable.
@@ -43,14 +43,14 @@ namespace PerceptronAPI.Utility
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // Form1
+            // DetailedProteinView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1200, 64535);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "DetailedProteinView";
+            this.Text = "DetailedProteinView";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

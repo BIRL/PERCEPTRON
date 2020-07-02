@@ -10,12 +10,12 @@ using System.Windows.Forms;
 using PerceptronAPI.Controllers;
 using PerceptronAPI.Models;
 
-namespace PerceptronAPI.Utility
+namespace PerceptronAPI.ResultVisualizations
 {
-    public partial class Form1 : Form    /// CHANGE MY NAME
+    public partial class DetailedProteinView : Form    /// CHANGE MY NAME
     {
 
-        public Form1()   /// CHANGE MY NAME
+        public DetailedProteinView()   /// CHANGE MY NAME
         {
             InitializeComponent();
         }
@@ -243,7 +243,9 @@ namespace PerceptronAPI.Utility
                 Rectangle rectangle = new Rectangle(0, 0, this.pictureBox1.Width, yPoint + 100);
 
                 image = Original.Clone(rectangle, Original.PixelFormat);  // Resizing Image: Copying Image and removing white (empty) space
-                image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\Ima.jpg");
+
+                string NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId +".jpg";
+                image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\ResultVisualizations\" + NameofFile);
                 //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");
             }
             catch (Exception e)
@@ -306,6 +308,7 @@ namespace PerceptronAPI.Utility
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) { }
+
     }
 }
 
