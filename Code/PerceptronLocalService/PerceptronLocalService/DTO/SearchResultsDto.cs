@@ -7,14 +7,12 @@ namespace PerceptronLocalService.DTO
         public string QueryId;
         public List<ProteinDto> FinalProt;
         public ExecutionTimeDto Times;
-        public List<double> peakData;
 
-        public SearchResultsDto(string qId, List<ProteinDto> prt, List<double> cpeakData, ExecutionTimeDto t)
+        public SearchResultsDto(string qId, List<ProteinDto> prt, ExecutionTimeDto t)
         {
             QueryId = qId;
             FinalProt = prt;
             Times = t;
-            peakData = cpeakData;
         }
         public SearchResultsDto()
         {
