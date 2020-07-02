@@ -374,18 +374,27 @@ namespace PerceptronLocalService.Engine
 
                     var LeftIons = protein.InsilicoDetails.InsilicoMassLeft;
                     var RightIons = protein.InsilicoDetails.InsilicoMassRight;
+                    var PstTagsExists = new List<string>();
 
                     for (int iteration = 0; iteration < PstTags.Count; iteration++)
                     {
+                        
                         tag = PstTags[iteration].PstTags;
-                        if (protein.Sequence.Contains(tag))
+                        if (protein.Sequence.Contains(tag))// && protein.Header == "A6H8Y1")
                         {
                             LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1);   // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
                             RightIons = RightIons.GetRange(0, RightIons.Count - 1); // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
 
-                            CandidateProteinsListFinal.Add(protein);
-                            break;
+                            PstTagsExists.Add(PstTags[iteration].PstTags);
+
+                            
+                            
                         }
+                    }
+                    if (PstTagsExists.Count != 0)
+                    {
+                        protein.PstTagsWithComma = string.Join(",", PstTagsExists); //Joining Pst Tags with comma in a One string
+                        CandidateProteinsListFinal.Add(protein);
                     }
                 }
             }
