@@ -359,6 +359,7 @@ namespace PerceptronAPI.Repository
 
         public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid)
         {
+            string FileId = "";
             var DetailedProteinHitViewResults = new DetailedProteinHitView();
             using (new PerceptronDatabaseEntities())
             {
@@ -368,7 +369,7 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        "SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+                        "SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -376,7 +377,12 @@ namespace PerceptronAPI.Repository
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
+                {
                     qid = dataReader["QueryId"].ToString();
+                    FileId = dataReader["FileUniqueId"].ToString();
+                }
+                    
+
 
                 dataReader.Close();
                 cmd.Dispose();
@@ -386,6 +392,7 @@ namespace PerceptronAPI.Repository
             {
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+                var peakListData = db.PeakListDatas.Where(x => x.FileUniqueId == FileId).ToList();
                 //NO NEED 
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
@@ -399,6 +406,7 @@ namespace PerceptronAPI.Repository
                 
                 DetailedProteinHitViewResults.Results.Results = searchResult.First();
                 DetailedProteinHitViewResults.searchParameters = searchParameters.First();
+                DetailedProteinHitViewResults.PeakListData = peakListData.First();
 
                 //NO NEED 
                 //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();

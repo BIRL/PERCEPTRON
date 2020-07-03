@@ -25,8 +25,9 @@ namespace PerceptronAPI.ResultVisualizations
             /* Data Preparation*/
             var ResultsData = RawData.Results.Results;
             var searchParameters = RawData.searchParameters;
+            var PeakListData = RawData.PeakListData;
 
-            var peakData = ResultsData.PeakListData.Split(',').Select(double.Parse).ToList();
+            var PeakListMasses = PeakListData.PeakListMasses.Split(',').Select(double.Parse).ToList();
             var ListPSTTags = ResultsData.PSTTags.Split(',').ToList();
             var PstIndex = PstIndexFind(ResultsData.Sequence, ListPSTTags);
 
@@ -172,7 +173,7 @@ namespace PerceptronAPI.ResultVisualizations
                     if (LeftMatchedIndex.Contains(i))
                     {
                         int indexL = LeftMatchedIndex.IndexOf(i);
-                        double PeakMass = Math.Round(peakData[LeftPeakIndex[indexL]], 4);
+                        double PeakMass = Math.Round(PeakListMasses[LeftPeakIndex[indexL]], 4);
 
 
 
@@ -193,7 +194,7 @@ namespace PerceptronAPI.ResultVisualizations
                         if (RightTruncationIndexPosition == i)
                         {
 
-                            double PeakMass = Math.Round(peakData[RightPeakIndex[index]], 4);
+                            double PeakMass = Math.Round(PeakListMasses[RightPeakIndex[index]], 4);
                             double RightMatchedMass = Math.Round(InsilicoMassRight[RightMatchedIndex[index]], 4);
 
 
