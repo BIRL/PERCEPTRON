@@ -26,12 +26,23 @@ namespace PerceptronLocalService.Repository
         //    return email;
         //}
 
-        public void StorePeakList(string FileUniqueId, List<double> peakDataMasses, List<double> peakDataIntensities)
+        public void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString)
         {
+            var peakList = new PeakListData
+            {
+                FileUniqueId = FileUniqueId,
+                PeakListMasses = peakDataMassesString,
+                PeakListIntensities = peakDataIntensitiesString
+            };
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                db.PeakListDatas.Add(peakList);
+                db.SaveChanges();
+            }
 
         }
 
-        public string StoreResults(SearchResultsDto res, string fileName, int fileId)
+        public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
             using (var db = new PerceptronDatabaseEntities())
@@ -44,7 +55,7 @@ namespace PerceptronLocalService.Repository
                 {
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
-                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId);
+                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, FileUniqueId);
                     db.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
@@ -188,7 +199,7 @@ namespace PerceptronLocalService.Repository
             return headerTag;
         }
 
-        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId)
+        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId, string FileUniqueId)
         {
             var searchResult = new SearchResult
             {
@@ -231,6 +242,8 @@ namespace PerceptronLocalService.Repository
                 InsilicoMassRightYstar = string.Join(",", protein.InsilicoDetails.InsilicoMassRightYstar),
                 InsilicoMassRightZo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZo),
                 InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo),
+
+                FileUniqueId = FileUniqueId
 
 
             };
