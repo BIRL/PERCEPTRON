@@ -11,9 +11,9 @@ namespace PerceptronLocalService.Interfaces
 
 
 
-        void StorePeakList(string FileUniqueId, List<double> peakDataMasses, List<double> peakDataIntensities);
+        void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString);
         //string GetCreationTime(string qid);   // HOLD FOR KNOW..
-        string StoreResults(SearchResultsDto res, string fileName, int fileId);
+        string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId);
         List<SearchQueryDto> ServerStatus();
         SearchParametersDto GetParameters(string qid);
         //void GetFiles(SearchParametersDto qp);
