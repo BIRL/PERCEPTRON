@@ -29,7 +29,7 @@
           <mat-grid-tile></mat-grid-tile>
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <span matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) " matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
+            <span matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mzml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) " matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
               <label style='display:inline;  font-weight:500;'>Upload Mass-Spectrometry Data File(s): </label>
               <label style="display:inline;">&nbsp;</label>
               <div style='display:inline;' class="button-row">
@@ -39,7 +39,7 @@
                 <label style="display:inline;">&nbsp;</label>
                 <label style="color:black;" style='display:inline;'><i>{{email.files.length}} Files Selected</i></label>
                 <input hidden #email type="file" #imgFileInput (ngModel)="email" name="FileName" id="FileName" (change)="upload(Uploaded_File)"
-                  accept=".txt, .mgf, .mzXML" multiple ngModel/>
+                  accept=".txt, .mgf, .mzXML, .mzML" multiple ngModel/>
               </div>
             </span>
           </mat-grid-tile>
