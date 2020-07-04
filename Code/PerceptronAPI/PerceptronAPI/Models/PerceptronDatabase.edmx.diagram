@@ -4,17 +4,18 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7f14dd894f874dccb66d650831015676" Name="Diagram1">
+      <Diagram DiagramId="e69e307a191f417c8016077f91710642" Name="Diagram1">
         <EntityTypeShape EntityType="PerceptronDatabaseModel.ExecutionTime" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmFixedModification" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmVariableModification" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultInsilicoMatchLeft" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultInsilicoMatchRight" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultPtmSite" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchFile" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchParameter" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchQuery" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchResult" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.PeakListData" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmFixedModification" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmVariableModification" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultInsilicoMatchLeft" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultInsilicoMatchRight" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.ResultPtmSite" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchFile" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchParameter" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchQuery" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchResult" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

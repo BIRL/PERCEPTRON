@@ -26,6 +26,7 @@ namespace PerceptronAPI.Models
         }
     
         public virtual DbSet<ExecutionTime> ExecutionTimes { get; set; }
+        public virtual DbSet<PeakListData> PeakListDatas { get; set; }
         public virtual DbSet<PtmFixedModification> PtmFixedModifications { get; set; }
         public virtual DbSet<PtmVariableModification> PtmVariableModifications { get; set; }
         public virtual DbSet<ResultInsilicoMatchLeft> ResultInsilicoMatchLefts { get; set; }

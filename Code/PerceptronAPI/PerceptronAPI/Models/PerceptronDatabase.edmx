@@ -20,6 +20,14 @@
           <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="PeakListData">
+          <Key>
+            <PropertyRef Name="FileUniqueId" />
+          </Key>
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PeakListMasses" Type="nvarchar(max)" />
+          <Property Name="PeakListIntensities" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
             <PropertyRef Name="ModId" />
@@ -74,6 +82,7 @@
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="FileType" Type="nvarchar(max)" />
           <Property Name="UniqueFileName" Type="nvarchar(max)" />
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameters">
           <Key>
@@ -111,6 +120,7 @@
           <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="EmailId" Type="nvarchar(max)" />
+          <Property Name="TruncationIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
@@ -156,10 +166,13 @@
           <Property Name="InsilicoMassRightZo" Type="nvarchar(max)" />
           <Property Name="InsilicoMassRightZoo" Type="nvarchar(max)" />
           <Property Name="TerminalModification" Type="nvarchar(max)" />
-          <Property Name="PeakListData" Type="nvarchar(max)" />
+          <Property Name="TruncationSite" Type="nvarchar(max)" />
+          <Property Name="TruncationIndex" Type="int" Nullable="false" />
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />
@@ -189,6 +202,14 @@
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PeakListData">
+          <Key>
+            <PropertyRef Name="FileUniqueId" />
+          </Key>
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
@@ -244,6 +265,7 @@
           <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UniqueFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameter">
           <Key>
@@ -281,6 +303,7 @@
           <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
@@ -326,10 +349,13 @@
           <Property Name="InsilicoMassRightZo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="InsilicoMassRightZoo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TerminalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PeakListData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TruncationSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
+          <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModification" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModification" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />
@@ -358,6 +384,15 @@
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PeakListDatas">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
+              <MappingFragment StoreEntitySet="PeakListData">
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+                <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
+                <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -418,6 +453,7 @@
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="FileType" ColumnName="FileType" />
                 <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -456,6 +492,7 @@
                 <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
                 <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
                 <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -502,7 +539,9 @@
                 <ScalarProperty Name="InsilicoMassRightZo" ColumnName="InsilicoMassRightZo" />
                 <ScalarProperty Name="InsilicoMassRightZoo" ColumnName="InsilicoMassRightZoo" />
                 <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
-                <ScalarProperty Name="PeakListData" ColumnName="PeakListData" />
+                <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
+                <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -20,13 +20,11 @@
           <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PeakListData">
           <Key>
             <PropertyRef Name="FileUniqueId" />
           </Key>
-          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="PeakListMasses" Type="nvarchar(max)" />
           <Property Name="PeakListIntensities" Type="nvarchar(max)" />
         </EntityType>
@@ -84,7 +82,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="FileType" Type="nvarchar(max)" />
           <Property Name="UniqueFileName" Type="nvarchar(max)" />
-          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameters">
           <Key>
@@ -170,10 +168,11 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <Property Name="TerminalModification" Type="nvarchar(max)" />
           <Property Name="TruncationSite" Type="nvarchar(max)" />
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
-          <Property Name="FileUniqueId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />
@@ -183,13 +182,6 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResults" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PeakListData" EntityType="Self.PeakListData" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [PeakListData].[FileUniqueId] AS [FileUniqueId], 
-    [PeakListData].[PeakListMasses] AS [PeakListMasses], 
-    [PeakListData].[PeakListIntensities] AS [PeakListIntensities]
-    FROM [dbo].[PeakListData] AS [PeakListData]</DefiningQuery>
-          </EntitySet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -210,6 +202,14 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PeakListData">
+          <Key>
+            <PropertyRef Name="FileUniqueId" />
+          </Key>
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
@@ -265,7 +265,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UniqueFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchParameter">
           <Key>
@@ -351,18 +351,11 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <Property Name="TerminalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TruncationSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
-          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PeakListData">
-          <Key>
-            <PropertyRef Name="FileUniqueId" />
-          </Key>
-          <Property Name="FileUniqueId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
+          <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModification" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModification" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />
@@ -372,7 +365,6 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResult" />
-          <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -392,6 +384,15 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PeakListDatas">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
+              <MappingFragment StoreEntitySet="PeakListData">
+                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+                <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
+                <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -541,15 +542,6 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.PeakListData' does not have
                 <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PeakListDatas">
-            <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
-              <MappingFragment StoreEntitySet="PeakListData">
-                <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
-                <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
-                <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

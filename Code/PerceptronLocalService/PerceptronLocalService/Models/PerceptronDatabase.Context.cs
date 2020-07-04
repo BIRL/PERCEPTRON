@@ -26,6 +26,7 @@ namespace PerceptronLocalService.Models
         }
     
         public virtual DbSet<ExecutionTime> ExecutionTimes { get; set; }
+        public virtual DbSet<PeakListData> PeakListDatas { get; set; }
         public virtual DbSet<PtmFixedModification> PtmFixedModifications { get; set; }
         public virtual DbSet<PtmVariableModification> PtmVariableModifications { get; set; }
         public virtual DbSet<ResultInsilicoMatchLeft> ResultInsilicoMatchLefts { get; set; }
@@ -35,6 +36,5 @@ namespace PerceptronLocalService.Models
         public virtual DbSet<SearchParameter> SearchParameters { get; set; }
         public virtual DbSet<SearchQuery> SearchQueries { get; set; }
         public virtual DbSet<SearchResult> SearchResults { get; set; }
-        public virtual DbSet<PeakListData> PeakListDatas { get; set; }
     }
 }
