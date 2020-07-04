@@ -17,6 +17,7 @@ using System.Net.Mail;
 using System.IO;
 using PerceptronAPI.ResultVisualizations;
 using System.Windows.Forms;
+using GraphForm;
 
 namespace PerceptronAPI.Controllers
 {
@@ -165,14 +166,15 @@ namespace PerceptronAPI.Controllers
 
             DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
 
+            var MassSpectra = new FormForGraph();
+            MassSpectra.fillChart(temp2);
 
-
-
-
-            ///
-
+            
+            
             //var ImageForm = new DetailedProteinView();
             //ImageForm.writeOnImage(temp2);
+
+
 
             
             return temp;
@@ -185,9 +187,7 @@ namespace PerceptronAPI.Controllers
             Debug.WriteLine(input);
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
-            //DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
-            //var ImageForm = new DetailedProteinView();
-            //ImageForm.writeOnImage(temp2);
+           
             return temp;
         }
 
