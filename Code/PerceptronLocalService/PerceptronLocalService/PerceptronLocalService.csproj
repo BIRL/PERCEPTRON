@@ -134,7 +134,9 @@
     <Compile Include="DTO\SearchQueryDto.cs" />
     <Compile Include="DTO\SearchResultsDto.cs" />
     <Compile Include="DTO\SerializedProteinDataDto.cs" />
-    <Compile Include="Engine\Evalue.cs" />
+    <Compile Include="Engine\Evalue.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Engine\PSTCpuGpuCombineMethod.cs" />
     <Compile Include="Engine\PSTFilterGPU.cs" />
     <Compile Include="Engine\PSTGeneratorGPU.cs" />
@@ -263,6 +265,244 @@
     </None>
     <None Include="packages.config" />
     <None Include="PerceptronLocalService_TemporaryKey.pfx" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\HMDB2StructMapping.tsv" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\HMDBMappingFile.tsv" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModel.scale" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModel.svm" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModelNoised2.scale" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModelNoised2.svm" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModelNoised5.scale" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModelNoised5.svm" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\MissedCleavage.model" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\NegativeAdducts.tsv" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\OMSSA_modification_mapping" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\PositiveAdducts.tsv" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\PSI-MOD.obo" />
+    <None Include="Tools\OpenMS\share\CHEMISTRY\XLMOD.obo" />
+    <None Include="Tools\OpenMS\share\cmake\OpenMSConfig.cmake" />
+    <None Include="Tools\OpenMS\share\cmake\OpenMSConfigVersion.cmake" />
+    <None Include="Tools\OpenMS\share\cmake\OpenMSTargets-release.cmake" />
+    <None Include="Tools\OpenMS\share\cmake\OpenMSTargets.cmake" />
+    <None Include="Tools\OpenMS\share\CV\brenda.obo" />
+    <None Include="Tools\OpenMS\share\CV\goslim_goa.obo" />
+    <None Include="Tools\OpenMS\share\CV\psi-ms.obo" />
+    <None Include="Tools\OpenMS\share\CV\psi-mzdata.obo" />
+    <None Include="Tools\OpenMS\share\CV\qc-cv.obo" />
+    <None Include="Tools\OpenMS\share\CV\quality.obo" />
+    <None Include="Tools\OpenMS\share\CV\unimod.obo" />
+    <None Include="Tools\OpenMS\share\CV\unit.obo" />
+    <None Include="Tools\OpenMS\share\DESKTOP\TOPPAS.desktop" />
+    <None Include="Tools\OpenMS\share\DESKTOP\TOPPView.desktop" />
+    <None Include="Tools\OpenMS\share\IDPool\README" />
+    <None Include="Tools\OpenMS\share\PIP\codebooks.data" />
+    <None Include="Tools\OpenMS\share\PIP\linearMapping.data" />
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ConsensusXML_1_7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\CTD_0_3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\CvMapping.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FeatureXML_1_9.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\FuGElightv1.0.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\general_types_1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\IdXML_1_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzData_1_05.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzIdentML1.0.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzIdentML1.1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzML_1_00.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzML_1_10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzML_idx_1_00.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzML_idx_1_10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzQCML_0_0_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzQuantML_1_0_0-rc2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzXML_2_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzXML_3.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzXML_3.1_mod.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\mzXML_idx_3.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\Param_1_6_2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\pepXML_v114.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\protXML_v6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\qcML_0.0.7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\separation_technique_1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\ToolDescriptor_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\TrafoXML_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\TrafoXML_1_1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\TraML0.9.3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\TraML1.0.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCHEMAS\xQuest_1_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\OpenMS\share\SCRIPTS\InternalCalibration_Models.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\InternalCalibration_Residuals.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\mzTab2tsv_PEP.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\mzTab2tsv_PRT.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\mzTab2tsv_PSM.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\plot_trafo.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_acc.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_idmap.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_inj.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_rt_acc.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_setid.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\ProduceQCFigures_tic.R" />
+    <None Include="Tools\OpenMS\share\SCRIPTS\Rscript_generic_example.R" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Hardkloer.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\LINUX\mail.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\LINUX\TPP_ProteinProphet.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\MascotPercolator.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\msconvert.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\MSGFtoPercolator.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Percolator.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\QCExporter.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\RawDirConvert.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_generic.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_mzTab2tsv_PEP.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_mzTab2tsv_PRT.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_mzTab2tsv_PSM.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_acc.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_idmap.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_rt_acc.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_setid.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_tic.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\Rscript_qcfigures_trapfill.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\TEMPLATE.ttd_" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\TPP_RefreshParser.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\WINDOWS\TPP_ProteinProphet.ttd" />
+    <None Include="Tools\OpenMS\share\TOOLS\EXTERNAL\XTandemToPercolator.ttd" />
     <None Include="Tools\place_these_executables_in_same_folder_as_Cudafy.NET.dll_" />
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +524,33 @@
     <Content Include="Tools\cudafycl.exe" />
     <Content Include="Tools\CudafyViewer.exe" />
     <Content Include="Tools\MsDeconvConsole.jar" />
+    <Content Include="Tools\OpenMS\FileConverter.exe" />
+    <Content Include="Tools\OpenMS\OpenMS.dll" />
+    <Content Include="Tools\OpenMS\OpenSwathAlgo.dll" />
+    <Content Include="Tools\OpenMS\Qt5Core.dll" />
+    <Content Include="Tools\OpenMS\Qt5Network.dll" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\Elements.xml" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\Enzymes.xml" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\Enzymes_RNA.xml" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\Residues.xml" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\unimod.xml" />
+    <Content Include="Tools\OpenMS\share\CHEMISTRY\XTandem_default_input.xml" />
+    <Content Include="Tools\OpenMS\share\DESKTOP\readme.txt" />
+    <Content Include="Tools\OpenMS\share\DESKTOP\TOPPAS.appdata.xml" />
+    <Content Include="Tools\OpenMS\share\DESKTOP\TOPPView.appdata.xml" />
+    <Content Include="Tools\OpenMS\share\IDPool\IDPool.txt" />
+    <Content Include="Tools\OpenMS\share\MAPPING\ms-mapping.xml" />
+    <Content Include="Tools\OpenMS\share\MAPPING\mzdata-mapping.xml" />
+    <Content Include="Tools\OpenMS\share\MAPPING\mzIdentML-mapping.xml" />
+    <Content Include="Tools\OpenMS\share\MAPPING\TraML-mapping.xml" />
+    <Content Include="Tools\OpenMS\share\OpenMS_TOPPAS.ico" />
+    <Content Include="Tools\OpenMS\share\OpenMS_TOPPView.ico" />
+    <Content Include="Tools\OpenMS\share\TOOLS\EXTERNAL\ReadMe.txt" />
+    <Content Include="Tools\OpenMS\share\XSL\APML_to_CSV.xsl" />
+    <Content Include="Tools\OpenMS\share\XSL\ConsensusXML.xsl" />
+    <Content Include="Tools\OpenMS\share\XSL\IdXML.xsl" />
+    <Content Include="Tools\OpenMS\share\XSL\index.html" />
+    <Content Include="Tools\OpenMS\share\XSL\QcML_report_sheet.xsl" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
