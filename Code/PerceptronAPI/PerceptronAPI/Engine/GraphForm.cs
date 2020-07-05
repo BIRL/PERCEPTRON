@@ -38,14 +38,30 @@ namespace GraphForm
             var InsilicoSpectra = InsilicoSpectraPrep(Results, InsilicoDetails, RawData.searchParameters.InsilicoFragType, PeakListMasses, PeakListIntensities);
 
 
-            //AddXY value in chart1 in series named as Salary  
-            MassSpectraVisualizationGraph.Series["Experimental_mz"].Points.AddXY("Test", "10000");
 
-            //chart title  
-            MassSpectraVisualizationGraph.Titles.Add("Mass Spectrum Visualization");
+            //var abc = InsilicoSpectra.ListExperimental_mz;
+            //Chart chart = new Chart();
+            //chart.DataSource = InsilicoSpectra.ListExperimental_mz;
 
-            MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\ResultVisualizations\mychart.png", ChartImageFormat.Png);
-            CloseWindowGraphForm();
+            //for (int i = 0; i < InsilicoSpectra.ListExperimental_mz.Count; i++)
+            //{
+            //    MassSpectraVisualizationGraph.Series[0].Points.AddXY(InsilicoSpectra.ListExperimental_mz[i], 1);
+            //    MassSpectraVisualizationGraph.Series[1].Points.AddXY(InsilicoSpectra.ListTheoretical_mz[i], 1);
+
+            //}
+            //MassSpectraVisualizationGraph.Series[0].ChartType = SeriesChartType.Point;
+            //MassSpectraVisualizationGraph.Series[1].ChartType = SeriesChartType.Line;
+            //for (int i = 0; i < PeakListMasses.Count; i++)
+            //{
+            //    MassSpectraVisualizationGraph.Series[2].Points.AddXY(PeakListMasses[i], 1);
+            //}
+            ////MassSpectraVisualizationGraph.Series[2].ChartType = SeriesChartType.Point;
+
+            ////chart title  
+            //MassSpectraVisualizationGraph.Titles.Add("Mass Spectrum Visualization");
+
+            //MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\mychart.png", ChartImageFormat.Png);
+            //CloseWindowGraphForm();
 
         }
 
@@ -121,11 +137,11 @@ namespace GraphForm
                 var RightMatchedIndex = Results.RightMatchedIndex.Split(',').Select(int.Parse).ToList();
                 var RightPeakIndex = Results.RightPeakIndex.Split(',').Select(int.Parse).ToList();
                 var RightType = Results.RightType.Split(',').ToList();
-                
+
                 for (int index = RightMatchedIndex.Count - 1; index > -1; index--)  //int index = 0; index < RightMatchedIndex.Count; index++
                 {
 
-                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] -1); // -1 is for Zero Indexing
+                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] - 1); // -1 is for Zero Indexing
 
                     ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails, Results, ref tempTheoretical_mz);
                     ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
@@ -182,11 +198,13 @@ namespace GraphForm
         {
             if (Type == "Right")
             {
-                if (FragmentationType == "ECD" || FragmentationType == "ETD"){
+                if (FragmentationType == "ECD" || FragmentationType == "ETD")
+                {
                     ListFragIon.Add("Z");
                     tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
-                }   
-                else if (FragmentationType == "EDD" || FragmentationType == "NETD"){
+                }
+                else if (FragmentationType == "EDD" || FragmentationType == "NETD")
+                {
                     ListFragIon.Add("X");
                     tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
                 }
@@ -198,8 +216,8 @@ namespace GraphForm
             }
             else
             {
-                //name = [name; Match.RightType{RightIndex,1}];
-                ListFragIon.Add(Type); //Concept not clear ..................Concept not clear ..................Concept not clear ..................
+
+                ListFragIon.Add(Type);
 
                 if (Type == "Y'")
                 {
@@ -219,14 +237,6 @@ namespace GraphForm
                 }
             }
         }
-
-
-        
-
-        
-
-        
-
 
         private void CloseWindowGraphForm()
         {

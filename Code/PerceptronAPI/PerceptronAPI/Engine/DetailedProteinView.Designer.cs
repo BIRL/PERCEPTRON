@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace PerceptronAPI.ResultVisualizations
+namespace PerceptronAPI.Engine
 {
     partial class DetailedProteinView
     {

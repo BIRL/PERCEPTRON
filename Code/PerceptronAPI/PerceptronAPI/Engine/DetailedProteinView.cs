@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using PerceptronAPI.Controllers;
 using PerceptronAPI.Models;
 
-namespace PerceptronAPI.ResultVisualizations
+namespace PerceptronAPI.Engine
 {
     public partial class DetailedProteinView : Form    /// CHANGE MY NAME
     {
@@ -246,7 +246,7 @@ namespace PerceptronAPI.ResultVisualizations
                 image = Original.Clone(rectangle, Original.PixelFormat);  // Resizing Image: Copying Image and removing white (empty) space
 
                 string NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId +".jpg";
-                image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\ResultVisualizations\" + NameofFile);
+                image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\" + NameofFile);
                 //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");
             }
             catch (Exception e)
