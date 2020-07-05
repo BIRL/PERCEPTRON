@@ -44,14 +44,17 @@ namespace GraphForm
             //chart title  
             MassSpectraVisualizationGraph.Titles.Add("Mass Spectrum Visualization");
 
-            MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\mychart.png", ChartImageFormat.Png);
+            MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\ResultVisualizations\mychart.png", ChartImageFormat.Png);
             CloseWindowGraphForm();
 
         }
 
-        private InsilicoMassSiteFragIon InsilicoMassDataPrep(SearchResult Results)
+        private InsilicoMassIons InsilicoMassDataPrep(SearchResult Results)
         {
-            var InsilicoDetail = new InsilicoMassSiteFragIon();
+            var InsilicoDetail = new InsilicoMassIons();
+            InsilicoDetail.InsilicoMassLeftIons = Results.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();
+            InsilicoDetail.InsilicoMassRightIons = Results.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
+
             if (Results.InsilicoMassLeftAo != "")
                 InsilicoDetail.InsilicoMassLeftAo = Results.InsilicoMassLeftAo.Split(',').Select(double.Parse).ToList();
 
@@ -79,7 +82,7 @@ namespace GraphForm
             return InsilicoDetail;
         }
 
-        private AssembleInsilicoSpectra InsilicoSpectraPrep(SearchResult Results, InsilicoMassSiteFragIon InsilicoDetails, string FragmentationType, List<double> PeakListMasses, List<double> PeakListIntensities)
+        private AssembleInsilicoSpectra InsilicoSpectraPrep(SearchResult Results, InsilicoMassIons InsilicoDetails, string FragmentationType, List<double> PeakListMasses, List<double> PeakListIntensities)
         {
             var ListIndices = new List<int>();
             var ListFragIon = new List<string>();
@@ -87,7 +90,7 @@ namespace GraphForm
             var ListTheoretical_mz = new List<double>();
             var ListAbsError = new List<double>();
 
-            double tempTheoretical_mz;
+            double tempTheoretical_mz = 0.0;
             double tempExperimental_mz;
             double tempError;
 
@@ -103,7 +106,7 @@ namespace GraphForm
                 {
                     ListIndices.Add(LeftMatchedIndex[index]);
 
-                    tempTheoretical_mz = ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails, Results);
+                    ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails, Results, ref tempTheoretical_mz);
                     ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
 
                     tempExperimental_mz = PeakListMasses[LeftPeakIndex[index]];
@@ -118,13 +121,13 @@ namespace GraphForm
                 var RightMatchedIndex = Results.RightMatchedIndex.Split(',').Select(int.Parse).ToList();
                 var RightPeakIndex = Results.RightPeakIndex.Split(',').Select(int.Parse).ToList();
                 var RightType = Results.RightType.Split(',').ToList();
-                string Site = "Right";
-                for (int index = 0; index < RightMatchedIndex.Count; index++)  //(int index = RightMatchedIndex.Count; index > RightMatchedIndex.Count; index--)
+                
+                for (int index = RightMatchedIndex.Count - 1; index > -1; index--)  //int index = 0; index < RightMatchedIndex.Count; index++
                 {
 
-                    ListIndices.Add(RightMatchedIndex[index]);
+                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] -1); // -1 is for Zero Indexing
 
-                    tempTheoretical_mz = ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails, Results);
+                    ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails, Results, ref tempTheoretical_mz);
                     ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
 
                     tempExperimental_mz = PeakListMasses[RightPeakIndex[index]];
@@ -141,7 +144,7 @@ namespace GraphForm
 
         }
 
-        private double ExtractInsilicoLeftMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassSiteFragIon InsilicoDetails, SearchResult Results)
+        private void ExtractInsilicoLeftMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, SearchResult Results, ref double tempTheoretical_mz)
         {
             if (Type == "Left")
             {
@@ -158,34 +161,40 @@ namespace GraphForm
 
                 if (Type == "A'")
                 {
-                    return InsilicoDetails.InsilicoMassLeftAo[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAo[MatchedIndex];
                 }
                 else if (Type == "B'")
                 {
-                    return InsilicoDetails.InsilicoMassLeftBo[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBo[MatchedIndex];
                 }
                 else if (Type == "A*")
                 {
-                    return InsilicoDetails.InsilicoMassLeftAstar[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAstar[MatchedIndex];
                 }
                 else if (Type == "B*")
                 {
-                    return InsilicoDetails.InsilicoMassLeftBstar[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBstar[MatchedIndex];
                 }
 
             }
-            return 0.0; // It will never ever called
         }
-        private double ExtractInsilicoRightMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassSiteFragIon InsilicoDetails, SearchResult Results)
+        private void ExtractInsilicoRightMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, SearchResult Results, ref double tempTheoretical_mz)
         {
             if (Type == "Right")
             {
-                if (FragmentationType == "ECD" || FragmentationType == "ETD")
+                if (FragmentationType == "ECD" || FragmentationType == "ETD"){
                     ListFragIon.Add("Z");
-                else if (FragmentationType == "EDD" || FragmentationType == "NETD")
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+                }   
+                else if (FragmentationType == "EDD" || FragmentationType == "NETD"){
                     ListFragIon.Add("X");
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+                }
                 else
+                {
                     ListFragIon.Add("Y");
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+                }
             }
             else
             {
@@ -194,22 +203,21 @@ namespace GraphForm
 
                 if (Type == "Y'")
                 {
-                    return InsilicoDetails.InsilicoMassRightYo[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYo[MatchedIndex];
                 }
                 else if (Type == "Z'")
                 {
-                    return InsilicoDetails.InsilicoMassRightZo[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZo[MatchedIndex];
                 }
                 else if (Type == "Z''")
                 {
-                    return InsilicoDetails.InsilicoMassRightZoo[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZoo[MatchedIndex];
                 }
                 else if (Type == "Y*")
                 {
-                    return InsilicoDetails.InsilicoMassRightYstar[MatchedIndex];
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYstar[MatchedIndex];
                 }
             }
-            return 0.0; // It will never ever called
         }
 
 
