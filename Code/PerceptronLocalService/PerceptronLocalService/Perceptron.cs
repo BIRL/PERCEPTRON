@@ -255,7 +255,7 @@ namespace PerceptronLocalService
                     //Logging.DumpMwTunerResult(massSpectrometryData);
 
 
-                    //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)    PST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PSTPST PST PST PST
+                    //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
                     var PstTags = new List<PstTagList>();
                     PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
 
@@ -264,6 +264,8 @@ namespace PerceptronLocalService
                     //Logging.DumpModifiedProteins(candidateProteins);
 
                     List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
+
+                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
 
                     //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                     var candidateProteins = new List<ProteinDto>();
@@ -347,11 +349,7 @@ namespace PerceptronLocalService
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
 
-                    //StoreSearchResults(parameters, candidateProteins, executionTimes, fileNumber);  // ITS HEALTHY...!!!
                     StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
-
-                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
-
 
                 }
                 catch (Exception r)
@@ -653,7 +651,7 @@ namespace PerceptronLocalService
                 candidateProteins = candidateProteins.Take(parameters.NumberOfOutputs).ToList<ProteinDto>();
 
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
-            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], fileNumber);
+            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber);
         }
 
         private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList)
@@ -667,7 +665,10 @@ namespace PerceptronLocalService
                 peakDataIntensities.Add(peakData2DList[i].Intensity);  // Enhancement MAKE a separate new table
             }
 
-            _dataLayer.StorePeakList(FileUniqueId, peakDataMasses, peakDataIntensities);
+            string peakDataMassesString = string.Join(",", peakDataMasses);
+            string peakDataIntensitiesString = string.Join(",", peakDataIntensities);
+
+            _dataLayer.StorePeakList(FileUniqueId, peakDataMassesString, peakDataIntensitiesString);
         }
 
 
