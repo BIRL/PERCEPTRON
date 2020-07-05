@@ -5,8 +5,10 @@ using System.Web;
 
 namespace PerceptronAPI.Models
 {
-    public class InsilicoMassSiteFragIon
+    public class InsilicoMassIons
     {
+        public List<double> InsilicoMassLeftIons;
+        public List<double> InsilicoMassRightIons;
         public List<double> InsilicoMassLeftAo;
         public List<double> InsilicoMassLeftBo;
         public List<double> InsilicoMassLeftAstar;
@@ -16,8 +18,10 @@ namespace PerceptronAPI.Models
         public List<double> InsilicoMassRightZo;
         public List<double> InsilicoMassRightZoo;
 
-        public InsilicoMassSiteFragIon()
+        public InsilicoMassIons()
         {
+            InsilicoMassLeftIons = new List<double>();
+            InsilicoMassRightIons = new List <double>();
             InsilicoMassLeftAo = new List<double>();
             InsilicoMassLeftBo = new List<double>();
             InsilicoMassLeftAstar = new List<double>();
@@ -28,8 +32,10 @@ namespace PerceptronAPI.Models
             InsilicoMassRightZoo = new List<double>();
         }
 
-        public InsilicoMassSiteFragIon(InsilicoMassSiteFragIon insilico)
+        public InsilicoMassIons(InsilicoMassIons insilico)
         {
+            InsilicoMassLeftIons = insilico.InsilicoMassLeftIons;
+            InsilicoMassRightIons = insilico.InsilicoMassRightIons;
             InsilicoMassLeftAo = insilico.InsilicoMassLeftAo;
             InsilicoMassLeftBo = insilico.InsilicoMassLeftBo;
             InsilicoMassLeftAstar = insilico.InsilicoMassLeftAstar;
