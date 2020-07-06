@@ -28,6 +28,7 @@ namespace PerceptronAPI.Repository
             }
         }
 
+        
         public void StoreSearchFiles(SearchParametersDto param)
         {
             using (var db = new PerceptronDatabaseEntities())
@@ -119,6 +120,11 @@ namespace PerceptronAPI.Repository
                 };
                 sqlConnection1.Open();
                 var t = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
+                //var ListFileUniqueId = new List<string>();
+                //for (int index = 0; index < t.Count; index++)
+                //{
+                //    ListFileUniqueId.Add(t[index].FileUniqueId);
+                //}
                 int j = 0;
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -137,7 +143,8 @@ namespace PerceptronAPI.Repository
                         MolW = (double)dataReader["Mw"],
                         Truncation = "No",
                         ProteinId = dataReader["Header"].ToString(),
-                        Score = (double)dataReader["Score"]
+                        Score = (double)dataReader["Score"],
+                        FileUniqueId = t[j].FileUniqueId
                     };
                     ++j;
                     scanResults.Add(temp);

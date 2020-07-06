@@ -20,7 +20,7 @@ namespace PerceptronAPI.Engine
             InitializeComponent();
         }
 
-        public void writeOnImage(DetailedProteinHitView RawData) /// CHANGE MY NAME
+        public string writeOnImage(DetailedProteinHitView RawData) /// CHANGE MY NAME
         {
             /* Data Preparation*/
             var ResultsData = RawData.Results.Results;
@@ -67,12 +67,21 @@ namespace PerceptronAPI.Engine
 
 
             /* Image */
-            var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-            var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
-            var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
-            var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
-            var fontTruncation = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
-            var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
+            //try
+            //{
+                var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+                var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
+                var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
+                var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
+                var fontTruncation = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
+                var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
+                string NameofFile = "";
+            //}
+            //catch (Exception e)
+            //{
+            //    int wewr = 1;
+            //}
+            
 
             int PictureBoxWidth = this.pictureBox1.Width;
 
@@ -245,7 +254,7 @@ namespace PerceptronAPI.Engine
 
                 image = Original.Clone(rectangle, Original.PixelFormat);  // Resizing Image: Copying Image and removing white (empty) space
 
-                string NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId +".jpg";
+                NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId +".jpg";
                 image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\" + NameofFile);
                 //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");
             }
@@ -257,7 +266,7 @@ namespace PerceptronAPI.Engine
             
             
             CloseFormWindow();
-
+            return NameofFile;
         }
         private List<int> PstIndexFind(string Sequence, List<string> ListPSTTags)
         {

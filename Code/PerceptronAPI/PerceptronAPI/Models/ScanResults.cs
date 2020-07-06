@@ -1,4 +1,5 @@
-﻿namespace PerceptronAPI.Models
+﻿using System.Collections.Generic;
+namespace PerceptronAPI.Models
 {
     public class ScanResults
     {
@@ -10,5 +11,6 @@
         public string Truncation { get; set; }
         public int Frags { get; set; }
         public int Mods { get; set; }
+        public string FileUniqueId { get; set; }
     }
 }

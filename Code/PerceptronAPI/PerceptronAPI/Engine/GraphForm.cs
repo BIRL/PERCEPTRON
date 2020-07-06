@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using PerceptronAPI.Models;
+using Newtonsoft.Json;
 
 
 namespace GraphForm
@@ -26,7 +27,7 @@ namespace GraphForm
 
         //}
 
-        public void fillChart(DetailedProteinHitView RawData)
+        public string fillChart(DetailedProteinHitView RawData)
         {
             /* Preparation of Data */
             List<double> PeakListMasses = RawData.PeakListData.PeakListMasses.Split(',').Select(double.Parse).ToList();
@@ -37,6 +38,10 @@ namespace GraphForm
 
             var InsilicoSpectra = InsilicoSpectraPrep(Results, InsilicoDetails, RawData.searchParameters.InsilicoFragType, PeakListMasses, PeakListIntensities);
 
+
+            //For the Time Being Converting into Json
+            var json = JsonConvert.SerializeObject(InsilicoSpectra);
+            return json;
 
 
             //var abc = InsilicoSpectra.ListExperimental_mz;
