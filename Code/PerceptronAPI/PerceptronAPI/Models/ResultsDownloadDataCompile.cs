@@ -14,6 +14,10 @@ namespace PerceptronAPI.Models
         public string MassSpectrumImageFilePath;
         public string JsonExpThrTable;
 
+        public string JsonExpThrTableFilePath;
+        public string CompleteDetailedResultsFilePath;
+
+
 
         public ResultsDownloadDataCompile(string cQueryId, string cResultId, string cMassSpectrumImageFilePath, string cJsonExpThrTable)
         {
@@ -21,6 +25,18 @@ namespace PerceptronAPI.Models
             ResultId = cResultId;
             MassSpectrumImageFilePath = cMassSpectrumImageFilePath;
             JsonExpThrTable = cJsonExpThrTable;
+        }
+
+        public ResultsDownloadDataCompile(ResultsDownloadDataCompile Data, string cJsonExpThrTableFilePath, string cCompleteDetailedResultsFilePath)
+        {
+            QueryId = Data.QueryId;
+            ResultId = Data.ResultId;
+            MassSpectrumImageFilePath = Data.MassSpectrumImageFilePath;
+            JsonExpThrTable = Data.JsonExpThrTable;
+
+            JsonExpThrTableFilePath = cJsonExpThrTableFilePath;
+            CompleteDetailedResultsFilePath = cCompleteDetailedResultsFilePath;
+
         }
 
     }

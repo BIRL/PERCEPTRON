@@ -135,10 +135,21 @@ namespace PerceptronAPI.Controllers
         {
             Debug.WriteLine(input);
             var temp = _dataLayer.Scan_Results(input);
+            
+            
+            //Preparing Here Results Download Data //
+            try  
+            {
+                // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
+                var download = new ResultsDownload();
+                var CompiledResults = download.Download(input);
 
-            // Preparing Here Results Download Data //
-
-
+                //download.WritingCompleteDetailedResults(input, CompiledResults);
+                
+                //_dataLayer.StoringCompiledResults(CompiledResults);
+            }
+            finally { }
+            
 
 
             return temp;
@@ -170,15 +181,15 @@ namespace PerceptronAPI.Controllers
             /// ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD
             /// 
 
-            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+            //DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
 
-            var MassSpectra = new FormForGraph();
-            MassSpectra.fillChart(temp2);
-
+            //var MassSpectra = new FormForGraph();
+            //MassSpectra.fillChart(temp2);
+            
             
             
             //var ImageForm = new DetailedProteinView();
-            //ImageForm.writeOnImage(temp2);
+            //var NameofFile = ImageForm.writeOnImage(temp2);
 
 
 

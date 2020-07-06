@@ -12,5 +12,7 @@ namespace PerceptronAPI
         DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid);
         List<UserHistory> GetUserHistory(string Uid);
         stat stat();
+        void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults);
+        SearchParameter GetSearchParmeters(string qid);
     }
 }

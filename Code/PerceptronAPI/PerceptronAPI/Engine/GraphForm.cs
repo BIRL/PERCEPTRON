@@ -27,7 +27,7 @@ namespace GraphForm
 
         //}
 
-        public string fillChart(DetailedProteinHitView RawData)
+        public AssembleInsilicoSpectra fillChart(DetailedProteinHitView RawData)
         {
             /* Preparation of Data */
             List<double> PeakListMasses = RawData.PeakListData.PeakListMasses.Split(',').Select(double.Parse).ToList();
@@ -40,8 +40,8 @@ namespace GraphForm
 
 
             //For the Time Being Converting into Json
-            var json = JsonConvert.SerializeObject(InsilicoSpectra);
-            return json;
+            //var json = JsonConvert.SerializeObject(InsilicoSpectra);
+            //return json;
 
 
             //var abc = InsilicoSpectra.ListExperimental_mz;
@@ -66,7 +66,8 @@ namespace GraphForm
             //MassSpectraVisualizationGraph.Titles.Add("Mass Spectrum Visualization");
 
             //MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\mychart.png", ChartImageFormat.Png);
-            //CloseWindowGraphForm();
+            CloseWindowGraphForm();
+            return InsilicoSpectra;
 
         }
 

@@ -377,6 +377,7 @@ namespace PerceptronAPI.Repository
                 {
                     CommandText =
                         "SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+                        
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -387,6 +388,7 @@ namespace PerceptronAPI.Repository
                 {
                     qid = dataReader["QueryId"].ToString();
                     FileId = dataReader["FileUniqueId"].ToString();
+                    
                 }
                     
 
@@ -400,6 +402,7 @@ namespace PerceptronAPI.Repository
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 var peakListData = db.PeakListDatas.Where(x => x.FileUniqueId == FileId).ToList();
+               // var FileInfo = db.SearchFiles.Where(x => x.FileUniqueId == FileName).ToList();
                 //NO NEED 
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
@@ -485,11 +488,51 @@ namespace PerceptronAPI.Repository
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
                 EmailId = searchParameters.EmailId,
+                Truncation = searchParameters.Truncation
 
             };
             return searchParameter;
         }
 
+        public void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults)
+        {
+
+        }
+        public SearchParameter GetSearchParmeters(string qid)
+        {
+            var SearchParameter = new SearchParameter();
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT QueryId \nFROM SearchResults \nWHERE QueryId = '" + qid + "'",
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                    qid = dataReader["QueryId"].ToString();
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
+
+                if (searchParameters.Count != 0)
+                    SearchParameter = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
+
+            }
+            return SearchParameter;
+        }
         //private SearchParameter GetresultInsilicoLeftDtoModel(List<ResultInsilicoMatchLeft> resultInsilicoLeft)
         //{
         //    var searchParameter = new ResultInsilicoMatchLeft
