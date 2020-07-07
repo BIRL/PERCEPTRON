@@ -9078,7 +9078,7 @@ namespace PerceptronLocalService.Engine
             return array;
         }
 
-        // Function (Ubiquitination_K): Returns an object array with all the required parameters stored
+        // Function (Ubiquitination_K): Returns an object array with all the required parameters stored   ////NOT IN SPECTRUM
         private List<PostTranslationModificationsSiteDto> Ubiquitination_K(string proteinSequence, double ptmTolerance)
         {
             //Sequence of protein
