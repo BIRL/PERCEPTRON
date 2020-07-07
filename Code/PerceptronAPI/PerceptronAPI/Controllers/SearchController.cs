@@ -142,7 +142,7 @@ namespace PerceptronAPI.Controllers
             {
                 // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
                 var download = new ResultsDownload();
-                var CompiledResults = download.Download(input);
+                var CompiledResults = download.MainCompileStoreWrite(input);
 
                 //download.WritingCompleteDetailedResults(input, CompiledResults);
                 
@@ -189,7 +189,8 @@ namespace PerceptronAPI.Controllers
             
             
             //var ImageForm = new DetailedProteinView();
-            //var NameofFile = ImageForm.writeOnImage(temp2);
+            //bool downloadresults = false;
+            //var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
 
 
 
