@@ -23,28 +23,6 @@ namespace PerceptronAPI.Engine
             _dataLayer = new SqlDatabase();
         }
 
-        public StreamWriter GenerateFile(string QueryId, ref string FileWithPath)
-        {
-            string NameofFile = QueryId + ".txt";
-
-            
-
-            var filepath = Directory.GetCurrentDirectory();
-            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
-            var DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\ResultsDownload\\Results File Text\\"));  // Navigated to the path where Files should be created
-
-            FileWithPath = DirectoryPath + "CompleteResults_" + NameofFile;
-
-
-
-            if (File.Exists(NameofFile))
-                File.Delete(NameofFile); //Deleted Pre-existing file
-
-
-            var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
-            var sw = new StreamWriter(fout);
-            return sw;
-        }
 
         public ResultsDownloadFileNames MainCompileStoreWrite(string QueryId)
         {
@@ -91,17 +69,37 @@ namespace PerceptronAPI.Engine
                     }
                     catch(Exception e)
                     {
-                        // Drop msg here for User If any problem Happend  // Enhancements
+                        // Drop msg here for User If any problem Happend while Compiling Results File/Image // Enhancements
                     }
                 }
-                //WritingCompleteDetailedResults(QueryId, tempSummaryResults,  MegaData);
             }
-
             //MegaData = new List<ResultsDownloadDataCompile>();
 
             var ResultsDownloadFileNames = new ResultsDownloadFileNames(QueryId, FileWithPath, ListNameOfImageFiles);
             return ResultsDownloadFileNames;
         }
+
+        public StreamWriter GenerateFile(string QueryId, ref string FileWithPath)
+        {
+            string NameofFile = QueryId + ".txt";
+
+            var filepath = Directory.GetCurrentDirectory();
+            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
+            var DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\ResultsDownload\\Results File Text\\"));  // Navigated to the path where Files should be created
+
+            FileWithPath = DirectoryPath + "CompleteResults_" + NameofFile;
+
+
+
+            if (File.Exists(NameofFile))
+                File.Delete(NameofFile); //Deleted Pre-existing file
+
+
+            var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+            var sw = new StreamWriter(fout);
+            return sw;
+        }
+
         public StreamWriter WritingCompleteDetailedResults(StreamWriter sw, string FileName, int ResultsNo, DetailedResults DetailResults, DetailedProteinHitView DetailedProteinHitView, AssembleInsilicoSpectra InsilicoSpectra)
         {
             
