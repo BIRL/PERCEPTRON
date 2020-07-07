@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PerceptronAPI.Controllers;
 using PerceptronAPI.Models;
+using System.IO;
 
 namespace PerceptronAPI.Engine
 {
@@ -20,7 +21,7 @@ namespace PerceptronAPI.Engine
             InitializeComponent();
         }
 
-        public string writeOnImage(DetailedProteinHitView RawData) /// CHANGE MY NAME
+        public string writeOnImage(DetailedProteinHitView RawData, bool downloadresults) /// CHANGE MY NAME
         {
             /* Data Preparation*/
             var ResultsData = RawData.Results.Results;
@@ -247,8 +248,17 @@ namespace PerceptronAPI.Engine
 
                     var imageSave = Original.Clone(rectangle, Original.PixelFormat);  // Resizing Image: Copying Image and removing white (empty) space
 
+                    var filepath = Directory.GetCurrentDirectory();
+                    var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
+                    var DirectoryPath = "";
+
+                    if (downloadresults == false)//downloadresults = false; // Setting flag for Images will be stored at "App_Data" Folder
+                        DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\"));  // Navigated to the path where Files should be created
+                    else //downloadresults = true; // Setting flag for Images will be stored at "\ResultsDownload\Results File Images" permanent(ResultsDownload) folders
+                        DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\ResultsDownload\\Results File Images\\"));  // Navigated to the path where Files should be created
+                    
                     NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId + ".jpg";
-                    imageSave.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\" + NameofFile);
+                    imageSave.Save(DirectoryPath + NameofFile);
                     //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");
                     imageSave.Dispose(); // Releases all resources used
                 }

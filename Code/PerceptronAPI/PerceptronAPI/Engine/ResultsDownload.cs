@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.IO;
 
 
+
 namespace PerceptronAPI.Engine
 {
     public class ResultsDownload
@@ -22,8 +23,39 @@ namespace PerceptronAPI.Engine
             _dataLayer = new SqlDatabase();
         }
 
-        public List<ResultsDownloadDataCompile> Download(string QueryId)
+        public StreamWriter GenerateFile(string QueryId, ref string FileWithPath)
         {
+            string NameofFile = QueryId + ".txt";
+
+            
+
+            var filepath = Directory.GetCurrentDirectory();
+            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
+            var DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\ResultsDownload\\Results File Text\\"));  // Navigated to the path where Files should be created
+
+            FileWithPath = DirectoryPath + "CompleteResults_" + NameofFile;
+
+
+
+            if (File.Exists(NameofFile))
+                File.Delete(NameofFile); //Deleted Pre-existing file
+
+
+            var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+            var sw = new StreamWriter(fout);
+            return sw;
+        }
+
+        public ResultsDownloadFileNames MainCompileStoreWrite(string QueryId)
+        {
+            bool downloadresults = true; // Setting flag for differentiating temp(App_Data) and permanent(ResultsDownload) folders
+            var searchParameters = _dataLayer.GetSearchParmeters(QueryId);  // Getting Search Parameteres from Database
+            string FileWithPath = "";
+            var sw = GenerateFile(QueryId, ref FileWithPath); //Generating new text file 
+            sw = WriteParametersInTXTFile(sw, searchParameters); //Writting Parameters
+
+            
+            var ListNameOfImageFiles = new List <string>();
             var tempScanResults = _dataLayer.Scan_Results(QueryId); //Scanning Results   // Can get FileUniqueId from here
             
             var MegaData = new List<ResultsDownloadDataCompile>();
@@ -42,14 +74,15 @@ namespace PerceptronAPI.Engine
                         var tempDetailedProteinHitView = _dataLayer.DetailedProteinHitView_Results(QueryId, tempSummaryResults[NoOfResultIds].ResultId);
 
                         var ImageForm = new DetailedProteinView();
-                        var NameofFile = ImageForm.writeOnImage(tempDetailedProteinHitView);
-
+                        var NameofFile = ImageForm.writeOnImage(tempDetailedProteinHitView, downloadresults); //downloadresults = true; // Setting flag for differentiating temp(App_Data) and permanent(ResultsDownload) folders
+                        ListNameOfImageFiles.Add(NameofFile);
+                        
                         var MassSpectra = new FormForGraph();
                         var InsilicoSpectra = MassSpectra.fillChart(tempDetailedProteinHitView);
                         //var abc = JsonConvert.DeserializeObject<AssembleInsilicoSpectra>(JsonString);
 
 
-                        WritingCompleteDetailedResults(QueryId, tempDetailResults, tempDetailedProteinHitView, InsilicoSpectra);
+                        sw = WritingCompleteDetailedResults(sw, tempDetailedProteinHitView.FileInfo.FileName, NoOfResultIds, tempDetailResults, tempDetailedProteinHitView, InsilicoSpectra);
 
                         //var Data = new ResultsDownloadDataCompile(QueryId, tempSummaryResults[NoOfResultIds].ResultId, NameofFile, JsonString);
                         //MegaData.Add(Data);
@@ -64,131 +97,41 @@ namespace PerceptronAPI.Engine
                 //WritingCompleteDetailedResults(QueryId, tempSummaryResults,  MegaData);
             }
 
-            MegaData = new List<ResultsDownloadDataCompile>();
-            return MegaData;
+            //MegaData = new List<ResultsDownloadDataCompile>();
+
+            var ResultsDownloadFileNames = new ResultsDownloadFileNames(QueryId, FileWithPath, ListNameOfImageFiles);
+            return ResultsDownloadFileNames;
         }
-        public void WritingCompleteDetailedResults(string QueryId, DetailedResults DetailResults, DetailedProteinHitView DetailedProteinHitView, AssembleInsilicoSpectra InsilicoSpectra)
+        public StreamWriter WritingCompleteDetailedResults(StreamWriter sw, string FileName, int ResultsNo, DetailedResults DetailResults, DetailedProteinHitView DetailedProteinHitView, AssembleInsilicoSpectra InsilicoSpectra)
         {
-            var searchParameters = _dataLayer.GetSearchParmeters(QueryId);
+            
 
             //List<char> Data = DataPrepForWritingTxtFile(SearchParmeters, CompiledResults);
 
             var Results = DetailedProteinHitView.Results.Results;
-            // For Loop
-            //string NameofFile = QueryId + "_Rid_" + CompiledResults[0].ResultId + ".txt";
 
-            string NameofFile = QueryId + "_Rid_" + DetailedProteinHitView.Results.Results.ResultId + ".txt";
-            string FileWithPath = @"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\Results\CompleteResults_"+ NameofFile ;
-
-            if (File.Exists(NameofFile))
-                    File.Delete(NameofFile); //Deleted Pre-existing file
-
-
-            var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
-            //File.CreateText(FileWithPath); //Create
-
-            string Enabled = "Enabled";
-            string Disabled = "Disabled";
-
-            var sw = new StreamWriter(fout);
-
-            /* SEARCH PARAMETERS */
-            sw.WriteLine("User Defined Search Parameters");
             sw.WriteLine("\n");
-            sw.WriteLine("Title = " + searchParameters.Title);
-
-            //File Names  /// HERE 
-            if (searchParameters.EmailId != "")
-                sw.WriteLine("Email Id = " + searchParameters.EmailId);
-            else
-                sw.WriteLine("Email Id = User not Provided");
-
-            sw.WriteLine("GuiMass = " + searchParameters.GuiMass);  // DEL IT NOT NEEDED
-            sw.WriteLine("Protein Database = " + searchParameters.ProtDb);
-            sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
-
-            //BUG Mass Mode Not Present
-
-            string FilterDb;
-            if (searchParameters.FilterDb == 1)
-                FilterDb = Enabled;
-            else
-                FilterDb = Disabled;
-
-            sw.WriteLine("Filter Database = " + FilterDb);
-
-            sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
-
-            string Autotune;
-            if (searchParameters.Autotune == 1)
-                Autotune = Enabled;
-            else
-                Autotune = Disabled;
-
-            sw.WriteLine("Mass Tuner = " + Autotune);
-            //sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
-            sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
-
-
-            sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
-            sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
-            sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
-
-            string DenovoAllow;
-            if (searchParameters.DenovoAllow == 1)
-                DenovoAllow = Enabled;
-            else
-                DenovoAllow = Disabled;
-            sw.WriteLine("Peptide Sequence Tag (PST) = " + DenovoAllow);
-            sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
-            sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
-
-            sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
-            sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
-            sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
-
-
-            string Truncation;
-            if (searchParameters.Truncation == 1)
-                Truncation = Enabled;
-            else
-                Truncation = Disabled;
-            sw.WriteLine("Truncation = " + Truncation);
-
-            sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
-
-            string PtmAllow;
-            if (searchParameters.PtmAllow == 1)
-                PtmAllow = Enabled;
-            else
-                PtmAllow = Disabled;
-            sw.WriteLine("Post Translational Modification (PTM) = " + PtmAllow);
-
-            sw.WriteLine("Post Translational Modification Tolerance = " + searchParameters.PtmTolerance);
-            sw.WriteLine("Cysteine Chemical Modification = " + searchParameters.CysteineChemicalModification);
-            sw.WriteLine("Methionine Chemical Modification = " + searchParameters.MethionineChemicalModification);
-
-            
-            sw.WriteLine("Molecular Scoring Weight = " + searchParameters.MwSweight);
-            sw.WriteLine("PST Scoring Weight = " + searchParameters.PstSweight);
-            sw.WriteLine("Insilico Scoring Weight = " + searchParameters.InsilicoSweight);
-
+            sw.WriteLine("\n");
+            sw.WriteLine("Input File Name = " + DetailedProteinHitView.FileInfo.FileName);
             /* PEAK LIST FILE DATA */
             sw.WriteLine("\n");
             sw.WriteLine("\n");
             sw.WriteLine("Peak List File Data");
             sw.WriteLine("\n");
-            sw.WriteLine("Peak List File Masses = ");
-            sw.WriteLine("Peak List File Intensities = ");
+            sw.WriteLine("Peak List File Masses = " + DetailedProteinHitView.PeakListData.PeakListMasses);
+            sw.WriteLine("Peak List File Intensities = " + DetailedProteinHitView.PeakListData.PeakListIntensities);
 
 
             string Nill = "Nill";
             /* RESULTS */
             sw.WriteLine("\n");
             sw.WriteLine("\n");
-            sw.WriteLine("Results ");
+            sw.WriteLine("Results");
             sw.WriteLine("\n");
-
+            sw.WriteLine("Result Number = " + ResultsNo);
+            sw.WriteLine("Result Id = " + Results.ResultId);  //Showing Result Id to the User
+            sw.WriteLine("\n");
+            sw.WriteLine("Protein ID = " + Results.Header);
             sw.WriteLine("Original Sequence = " + Results.OriginalSequence);
             sw.WriteLine("Sequence = " + Results.Sequence);
             sw.WriteLine("Peptide Sequence Score = " + Results.PstScore);
@@ -288,44 +231,100 @@ namespace PerceptronAPI.Engine
             sw.WriteLine("Theoretical Mz(s) = " + string.Join(",", InsilicoSpectra.ListTheoretical_mz));
             sw.WriteLine("Absolute Error = " + string.Join(",", InsilicoSpectra.ListAbsError));
 
-
-
-
-
-
-
-            //sw.WriteLine("Testing...");
-            sw.Close();
-            fout.Close();
-
-
-            int adashfksdf = 1;
-
-            //using (StreamWriter writer = new StreamWriter(fout, UF))
-            //{
-            //    writer.Write("fsdsfsfsf");
-            //    writer.WriteLine("asasaasaafasdfsdfsdfdjklf");
-                
-
-                
-
-            //}
-            
-
+            sw.Flush();
+            return sw;
         }
 
-        public List<char> DataPrepForWritingTxtFile(SearchParameter SearchParameters, List<ResultsDownloadDataCompile> CompiledResults)
+        public StreamWriter WriteParametersInTXTFile(StreamWriter sw, SearchParameter searchParameters)
         {
-            
-            var aqw = SearchParameters.ToString();
-            var chara = Convert.ToChar(SearchParameters);
+            string Enabled = "Enabled";
+            string Disabled = "Disabled";
+
+            /* SEARCH PARAMETERS */
+            sw.WriteLine("User Defined Search Parameters");
+            sw.WriteLine("\n");
+            sw.WriteLine("Query Id = " + searchParameters.QueryId);  //Showing Query Id to the User
+            sw.WriteLine("\n");
+            sw.WriteLine("Title = " + searchParameters.Title);
+
+            //File Names  /// HERE 
+            if (searchParameters.EmailId != "")
+                sw.WriteLine("Email Id = " + searchParameters.EmailId);
+            else
+                sw.WriteLine("Email Id = User not Provided");
+
+            sw.WriteLine("GuiMass = " + searchParameters.GuiMass);  // DEL IT NOT NEEDED
+            sw.WriteLine("Protein Database = " + searchParameters.ProtDb);
+            sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
+
+            //BUG Mass Mode Not Present
+
+            string FilterDb;
+            if (searchParameters.FilterDb == 1)
+                FilterDb = Enabled;
+            else
+                FilterDb = Disabled;
+
+            sw.WriteLine("Filter Database = " + FilterDb);
+
+            sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
+
+            string Autotune;
+            if (searchParameters.Autotune == 1)
+                Autotune = Enabled;
+            else
+                Autotune = Disabled;
+
+            sw.WriteLine("Mass Tuner = " + Autotune);
+            //sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
+            sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
 
 
+            sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
+            sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
+            sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
+
+            string DenovoAllow;
+            if (searchParameters.DenovoAllow == 1)
+                DenovoAllow = Enabled;
+            else
+                DenovoAllow = Disabled;
+            sw.WriteLine("Peptide Sequence Tag (PST) = " + DenovoAllow);
+            sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
+            sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
+
+            sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
+            sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
+            sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
 
 
+            string Truncation;
+            if (searchParameters.Truncation == 1)
+                Truncation = Enabled;
+            else
+                Truncation = Disabled;
+            sw.WriteLine("Truncation = " + Truncation);
 
-            var aass = new List<char>();
-            return aass;
+            sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
+
+            string PtmAllow;
+            if (searchParameters.PtmAllow == 1)
+                PtmAllow = Enabled;
+            else
+                PtmAllow = Disabled;
+            sw.WriteLine("Post Translational Modification (PTM) = " + PtmAllow);
+
+            sw.WriteLine("Post Translational Modification Tolerance = " + searchParameters.PtmTolerance);
+            sw.WriteLine("Cysteine Chemical Modification = " + searchParameters.CysteineChemicalModification);
+            sw.WriteLine("Methionine Chemical Modification = " + searchParameters.MethionineChemicalModification);
+
+
+            sw.WriteLine("Molecular Scoring Weight = " + searchParameters.MwSweight);
+            sw.WriteLine("PST Scoring Weight = " + searchParameters.PstSweight);
+            sw.WriteLine("Insilico Scoring Weight = " + searchParameters.InsilicoSweight);
+
+            sw.Flush();
+            return sw;
         }
     }
 }

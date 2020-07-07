@@ -218,7 +218,7 @@ namespace PerceptronLocalService.Engine
         private void mzXML_Reader(ref string addressmzXML)
         {
             var filepath = Directory.GetCurrentDirectory();
-            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));   // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
+            var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));  //CHANGE IT WHEN REQUIRED!!! // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
             var MsDeconvConsolePath = Path.GetFullPath(Path.Combine(navigatepath, ".\\PerceptronLocalService\\Tools\\MsDeconvConsole.jar"));  // Navigated to the path where MsDeconvConsole.jar is exists
 
             try
