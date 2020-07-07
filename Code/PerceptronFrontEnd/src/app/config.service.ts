@@ -112,6 +112,15 @@ export class ConfigService {
             });
     }
 
+    GetResultsDownload(qid) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        return this._http.post(this.baseApiUrl + '/api/search/Results_Download', '=' + qid, { headers: headers })
+            .map(res => {
+                return res.json()
+            }); 
+    }
+
     GetScReslts(qid) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');

@@ -21,7 +21,7 @@ using GraphForm;
 
 namespace PerceptronAPI.Controllers
 {
-   public class SearchController : ApiController
+    public class SearchController : ApiController
     {
 
         readonly IDataAccessLayer _dataLayer;
@@ -40,7 +40,7 @@ namespace PerceptronAPI.Controllers
         public async Task<HttpResponseMessage> File_upload()
         {
             var queryId = Guid.NewGuid().ToString();
-            
+
             var a = HttpContext.Current.Response.Cookies.Count;
 
             //var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);  // Updated
@@ -82,7 +82,7 @@ namespace PerceptronAPI.Controllers
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
                 //parametersDto.SearchParameters.FilterDb = 1;
-                
+
 
                 parametersDto.SearchParameters.QueryId = queryId;
                 parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
@@ -129,31 +129,35 @@ namespace PerceptronAPI.Controllers
             return Path.Combine(FileDirectory, String.Concat(fName, suffix, fExt));
         }
 
+
+        [HttpPost]
+        [Route("api/search/Results_Download")]
+        public void Results_Download([FromBody] string input)
+        {
+            /*NEW FUNCTION WILL BE MADE FOR RESULTS DOWNLOAD*/
+            /*ITS ALL HEALTHY*/
+            //Preparing Here Results Download Data //
+            try
+            {
+                // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
+                var download = new ResultsDownload();
+                var CompiledResults = download.MainCompileStoreWrite(input);
+
+                //download.WritingCompleteDetailedResults(input, CompiledResults);
+
+                //_dataLayer.StoringCompiledResults(CompiledResults);
+            }
+            finally { }
+        }
+
+
+
         [HttpPost]
         [Route("api/search/Post_scan_results")]
         public List<ScanResults> Post_scan_results([FromBody] string input)
         {
             Debug.WriteLine(input);
             var temp = _dataLayer.Scan_Results(input);
-            
-            
-            
-            ///*NEW FUNCTION WILL BE MADE FOR RESULTS DOWNLOAD*/  /*ITS ALL HEALTHY*/
-            ////Preparing Here Results Download Data //
-            //try  
-            //{
-            //    // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
-            //    var download = new ResultsDownload();
-            //    var CompiledResults = download.MainCompileStoreWrite(input);
-
-            //    //download.WritingCompleteDetailedResults(input, CompiledResults);
-                
-            //    //_dataLayer.StoringCompiledResults(CompiledResults);
-            //}
-            //finally { }
-            
-
-
             return temp;
         }
 
@@ -187,27 +191,27 @@ namespace PerceptronAPI.Controllers
 
             //var MassSpectra = new FormForGraph();
             //MassSpectra.fillChart(temp2);
-            
-            
-            
+
+
+
             //var ImageForm = new DetailedProteinView();
             //bool downloadresults = false;
             //var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
 
 
 
-            
+
             return temp;
         }
 
         [HttpPost]
         [Route("api/search/Post_detailed_results/Post_DetailedProteinHitView_results")]
-        public DetailedProteinHitView Post_DetailedProteinHitView_results ([FromBody] string input)
+        public DetailedProteinHitView Post_DetailedProteinHitView_results([FromBody] string input)
         {
             Debug.WriteLine(input);
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
-           
+
             return temp;
         }
 

@@ -37,6 +37,7 @@ export class ScanViewComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this._httpService.GetScanReslts(this.querryId).subscribe(data => this.what(data));
+    this._httpService.GetResultsDownload(this.querryId).subscribe(data => this.what(data));
   }
 
   what(data: any) {
