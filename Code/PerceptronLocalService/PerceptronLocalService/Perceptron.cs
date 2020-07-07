@@ -277,7 +277,7 @@ namespace PerceptronLocalService
                     int TruncatedCandidateProteinList = 1;
                     if (parameters.Truncation == 1 && parameters.FilterDb == 1)
                     {
-                        
+
                         CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, TruncatedCandidateProteinList);
                     }
                     else if (parameters.Truncation == 1 && parameters.FilterDb == 0)
@@ -304,7 +304,7 @@ namespace PerceptronLocalService
                         break;
 
                     }
-                    
+
 
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
@@ -321,7 +321,7 @@ namespace PerceptronLocalService
                     FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
                     FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
 
-                    
+
                     //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
                     FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
 
@@ -359,7 +359,7 @@ namespace PerceptronLocalService
                         EmailMsg = -1;
                         Sending_Email(parameters, EmailMsg);
                     }
-                    
+
                     string k = r.Message;
                     System.Diagnostics.Debug.WriteLine(r.Message);
                 }
@@ -438,7 +438,7 @@ namespace PerceptronLocalService
 
 
                 _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinListTrucnatedwithInsilicoScores);
-              
+
 
 
 
@@ -506,7 +506,7 @@ namespace PerceptronLocalService
             if (parameters.DenovoAllow == 1)
             {
                 // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
-                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins); 
+                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
             }
 
 
@@ -531,7 +531,7 @@ namespace PerceptronLocalService
                     for (int iter = 0; iter < candidateProteins.Count; iter++)
                     {
                         candidateProteins[iter].PstScore = candidateProteins[iter].PstScore / MaxPstScore;
-                    }  
+                    }
                 }
             }
 
@@ -544,9 +544,9 @@ namespace PerceptronLocalService
 
 
             for (int i = 0; i < candidateProteins.Count; i++)
-			{
+            {
                 candidateProteins[i].set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);
-			}
+            }
 
             //foreach (var protein in candidateProteins)
             //{
@@ -566,7 +566,7 @@ namespace PerceptronLocalService
             //        lol = candidateProteins[i].Header;
             //    }
             //}
-            
+
             candidateProteins1 = candidateProteins.OrderByDescending(x => x.Score).ToList();
             return candidateProteins1;
         }
