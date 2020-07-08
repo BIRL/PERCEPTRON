@@ -91,7 +91,7 @@ import { ResultsVisualizationComponent } from './results-visualization/results-v
     SettingsComponent,
     UpdatePasswordComponent,
     UpdateUsernameComponent,
-    ResultsVisualizationComponent,
+    ResultsVisualizationComponent
   ],
   imports: [
     MatIconModule,

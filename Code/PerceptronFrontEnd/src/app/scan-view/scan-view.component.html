@@ -8,13 +8,24 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
   </div>
+  
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+      
+      <label style="padding-right:15px;"></label>
+      <button mat-raised-button matTooltip="Click to Download Results"  type="submit" style="background-color: #201a93; color:aliceblue"
+      class="ui button" (click)=ResultsDownload()>Results Download</button>
+      
+      <div style="height:50px;font-size:1px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-  <mat-expansion-panel>
-    <mat-expansion-panel-header style="background-color:rgba(0,0,0,.1); color:Black;">
-      <mat-panel-title style="font-size:large;  color:Black;">
-        User Search Parameters
-      </mat-panel-title>
-    </mat-expansion-panel-header>
+
+      <mat-expansion-panel>
+          <!-- <mat-expansion-panel-header style="background-color:rgba(0,0,0,.1); color:Black;">
+              <mat-panel-title style="font-size:large;  color:Black;">
+                User Search Parameters
+              </mat-panel-title> -->
+            <!-- </mat-expansion-panel-header> --> -->
+
+
 
     <!-- Row 1 -->
     <mat-grid-list cols="8" rowHeight="60px">
@@ -225,8 +236,9 @@
   <div>
     <label style="color:blue;">Note that proteins have canonical sequences (<a href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
   </div>
-  
+
   <div class="example-container mat-elevation-z8">
+
 
     <mat-table [dataSource]="dataSource" matSort>
 
@@ -288,7 +300,7 @@
           File ID </mat-header-cell>
         <mat-cell [style.display]="'none'" *matCellDef="let row"> {{row.fileId}} </mat-cell>
       </ng-container>
-      
+
       <!-- <ng-container matColumnDef="fileId">
           <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;">
             File ID </mat-header-cell>
@@ -303,6 +315,8 @@
     <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
   <br/>
+
+
   <label style="color:red;">* Click on the table row for corresponding candidate proteins list. </label>
 
 

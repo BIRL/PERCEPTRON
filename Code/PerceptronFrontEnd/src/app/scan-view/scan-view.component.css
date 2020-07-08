@@ -14,11 +14,24 @@
     font-size: 14px;
     width: 100%;
   }
+
   .my{
     font-size: 40px;
   }
+
   .mat-table {
     overflow: auto;
     max-height: 600px;
   }
+
+  button {
+    background: #201a93;
+    color: white;
+    height: 10;
+    width: auto;
+    position: absolute;
+    right: 35px;
+  }
+
+
   
