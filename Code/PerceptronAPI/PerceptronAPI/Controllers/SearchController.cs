@@ -132,22 +132,25 @@ namespace PerceptronAPI.Controllers
 
         [HttpPost]
         [Route("api/search/Results_Download")]
-        public void Results_Download([FromBody] string input)
+        public FileStream Results_Download([FromBody] string input)
         {
+
+            var file = @"C:\inetpub\wwwroot\PerceptronAPI\App_Data\ResultsDownload\Results File Text\CompleteResults_2d1cf88f-48ce-46ce-b850-47ce88fd5712.txt";
+            return new FileStream(file, FileMode.Open, FileAccess.Read);
             /*NEW FUNCTION WILL BE MADE FOR RESULTS DOWNLOAD*/
             /*ITS ALL HEALTHY*/
             //Preparing Here Results Download Data //
-            try
-            {
-                // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
-                var download = new ResultsDownload();
-                var CompiledResults = download.MainCompileStoreWrite(input);
+            //try
+            //{
+            //    // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
+            //    var download = new ResultsDownload();
+            //    var CompiledResults = download.MainCompileStoreWrite(input);
 
-                //download.WritingCompleteDetailedResults(input, CompiledResults);
+            //    //download.WritingCompleteDetailedResults(input, CompiledResults);
 
-                //_dataLayer.StoringCompiledResults(CompiledResults);
-            }
-            finally { }
+            //    //_dataLayer.StoringCompiledResults(CompiledResults);
+            //}
+            //finally { }
         }
 
 
