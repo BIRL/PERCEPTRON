@@ -144,15 +144,16 @@
                 <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" matTooltip="Set the tolerance value for use in filtering protein database using intact protein mass"
                   matTooltipPosition="before" placeholder="Intact Mass Tolerance" [(ngModel)]="Mass_Tolerance" name="MwTolerance"
                   ngModel>
-              </mat-form-field>
-            </div>
+                  <span matSuffix>Da</span>
+              </mat-form-field></div>
+            <!-- </div>
           <mat-form-field style="padding:0px;  width:20%">
             <mat-select matTooltip="Choose Units" [(ngModel)]="Mass_Tolerance_Unit" name="MwTolUnit" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
         </mat-grid-tile>
 
 
@@ -429,12 +430,14 @@
         <mat-grid-tile colspan="1" rowspan="1" style="padding-left:15px; ">
           <div>
             <!-- <br> -->
-            <button mat-icon-button type="button" [disabled]="ptmallow" style="float:right;" (click)=" add_mod();">
+            <button mat-icon-button type="button" style="float:right;" (click)=" add_mod();">
+                <!-- [disabled]="ptmallow" -->
               <mat-icon>chevron_right</mat-icon>
             </button>
             <!-- <br> -->
 
-            <button mat-icon-button type="button" [disabled]="ptmallow" style="float:right;" (click)="remove_mod();">
+            <button mat-icon-button type="button" style="float:right;" (click)="remove_mod();">
+                <!-- [disabled]="ptmallow" -->
               <mat-icon>chevron_left</mat-icon>
             </button>
           </div>
@@ -471,12 +474,12 @@
           <div>
             <!-- <br> -->
             <!-- <br> -->
-            <button mat-icon-button type="button" [disabled]="ptmallow" style="float:right;" (click)="fix_add_mod();">
+            <button mat-icon-button type="button" style="float:right;" (click)="fix_add_mod();">
               <mat-icon>chevron_right</mat-icon>
             </button>
             <!-- <br> -->
 
-            <button mat-icon-button type="button" [disabled]="ptmallow" style="float:right;" (click)="fix_remove_mod();">
+            <button mat-icon-button type="button"  style="float:right;" (click)="fix_remove_mod();">
               <mat-icon>chevron_left</mat-icon>
             </button>
           </div>

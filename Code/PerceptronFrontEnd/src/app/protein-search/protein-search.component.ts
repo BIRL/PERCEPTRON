@@ -96,6 +96,8 @@ export class ProteinSearchComponent implements OnInit {
   TerminalModification: any = ''; //[];
   HopThreshhold: any;
   PSTTolerance: any;
+  VariableModifications: any = '';
+  FixedModifications : any = '';
 
   InstrumentAccuracy: any;
   InstrumentAccuracy1: any;
@@ -192,6 +194,7 @@ export class ProteinSearchComponent implements OnInit {
   units = [
     { value: 'Da', viewValue: 'Da' },
     { value: 'ppm', viewValue: 'ppm' },
+    { value: 'mmu', viewValue: 'mmu' },
     //{ value: '%', viewValue: '%' },
 
   ];
@@ -302,6 +305,8 @@ export class ProteinSearchComponent implements OnInit {
     this.selectedFrag = 'HCD';
     this.SpecialIonz = this.Special1; //();// = ['bo']
     //this.SpecialIonz = this.Special1
+    this.VariableModifications = "";
+    this.FixedModifications = "";
 
 
 
@@ -323,10 +328,10 @@ export class ProteinSearchComponent implements OnInit {
 
   disableMods() {
 
-    var Voptionx = <HTMLSelectElement>document.getElementById("List_of_Modifications");
-    var Foption = <HTMLSelectElement>document.getElementById("Fixed_Modification");
-    var Voption = <HTMLSelectElement>document.getElementById("Variable_Modifications");
-
+    var Voptionx = (<HTMLSelectElement>document.getElementById("List_of_Modifications"));
+    var Foption = (<HTMLSelectElement>document.getElementById("Fixed_Modification"));
+    var Voption = (<HTMLSelectElement>document.getElementById("Variable_Modifications"));
+   
 
     if (Foption == null) {
 
@@ -355,7 +360,8 @@ export class ProteinSearchComponent implements OnInit {
     var optionx = <HTMLSelectElement>document.getElementById("List_of_Modifications");
     var selectedOpts = optionx.selectedOptions;
     if (selectedOpts.length == 0) {
-      alert("Nothing to move - Add.");
+      alert("First, please select type of modification from List of Modifications.");
+      //alert("Nothing to move - Add.");   //Just for now 20200710
     }
 
     var Voptionx = <HTMLSelectElement>document.getElementById("Fixed_Modification");
@@ -369,6 +375,7 @@ export class ProteinSearchComponent implements OnInit {
     var optionx = <HTMLSelectElement>document.getElementById("Fixed_Modification");
     var selectedOpts = optionx.selectedOptions;
     if (selectedOpts.length == 0) {
+      alert("If it is not already empty then, please select type of modification you want to remove from Fixed Modications.");
       // alert("Nothing to move - Add.");
     }
     var Voptionx = <HTMLSelectElement>document.getElementById("List_of_Modifications");
@@ -382,7 +389,8 @@ export class ProteinSearchComponent implements OnInit {
     var optionx = <HTMLSelectElement>document.getElementById("List_of_Modifications");
     var selectedOpts = optionx.selectedOptions;
     if (selectedOpts.length == 0) {
-      alert("Nothing to move - Add.");
+      alert("First, please select type of modification from List of Modifications.");
+      //alert("Nothing to move - Add.");
     }
 
     var Voptionx = <HTMLSelectElement>document.getElementById("Variable_Modifications");
@@ -396,6 +404,7 @@ export class ProteinSearchComponent implements OnInit {
     var optionx = <HTMLSelectElement>document.getElementById("Variable_Modifications");
     var selectedOpts = optionx.selectedOptions;
     if (selectedOpts.length == 0) {
+      alert("If it is not already empty then, please select type of modification you want to remove from Variable Modications.");
       // alert("Nothing to move - Add.");
     }
     var Voptionx = <HTMLSelectElement>document.getElementById("List_of_Modifications");
@@ -405,9 +414,41 @@ export class ProteinSearchComponent implements OnInit {
     }
   }
 
+  VariableModification(): string  //For Form Data (Json) to API
+  {
+    var VarModArray : string[] = [];
+    var VariableModOption = (<HTMLSelectElement>document.getElementById("Variable_Modifications"));
+
+    for (let i =0; i < VariableModOption.length; i++){
+      VarModArray.push(VariableModOption[i].innerHTML);
+    }
+    return VarModArray.toString();
+  }
+
+  
+  FixedModification(): string  //For Form Data (Json) to API
+  {
+    var FixedModArray : string[] = [];
+    var FixedModOption = (<HTMLSelectElement>document.getElementById("Fixed_Modification"));
+
+    for (let i =0; i < FixedModOption.length; i++){
+      FixedModArray.push(FixedModOption[i].innerHTML);
+    }
+    return FixedModArray.toString();
+  }
+
 
   onSubmit(form: any): void {
     var user = firebase.auth().currentUser;
+
+
+    if (<HTMLSelectElement>document.getElementById("Variable_Modifications") != null){
+      form.VariableModifications = this.VariableModification();
+    }
+    if (<HTMLSelectElement>document.getElementById("Fixed_Modification") != null){
+      form.FixedModifications = this.FixedModification();
+    }
+  
 
     if (user.emailVerified == true) {
       form.EmailId = user.email;
@@ -497,21 +538,27 @@ export class ProteinSearchComponent implements OnInit {
     else {
       form.DenovoAllow = 0;
     }
-    if (form.ptmallow == true){
-      form.ptmallow = 1;
+
+    if(<HTMLSelectElement>document.getElementById("Variable_Modifications") != null || <HTMLSelectElement>document.getElementById("Fixed_Modifications") != null || form.ptmallow == true){
+
+      form.ptmallow == 1;
+
+      if(form.MethionineChemicalModification == ""){
+        form.MethionineChemicalModification = "None";
+      }
+      if(form.CysteineChemicalModification == ""){
+        form.CysteineChemicalModification = "None";
+      }
     }
     else{
       form.ptmallow = 0;
     }
-    if(form.MethionineChemicalModification == ""){
-      form.MethionineChemicalModification = "None";
-    }
-    if(form.CysteineChemicalModification == ""){
-      form.CysteineChemicalModification = "None";
-    }
 
-    if (form.HandleIons)
-      form  .HandleIons= form.HandleIons.toString()
+
+    if (form.HandleIons){
+      form.HandleIons= form.HandleIons.toString();
+    }
+    
 
     let fi = this.imgFileInput.nativeElement;
     let stats: any = 'false';
