@@ -95,21 +95,22 @@ namespace PerceptronLocalService.Engine
             }
         }
 
-        private void mgf_reader(ref string addressMgf)
+        private void mgf_reader(ref string addressFile)
         {
             const string charge = "CHARGE";
             const string pepmass = "PEPMASS";
             var i = 1; //Keeps count of the number of text files to be made
-            var fin = new FileStream(addressMgf, FileMode.Open);
+            var fin = new FileStream(addressFile, FileMode.Open);
             var sr = new StreamReader(fin); //converts bytes into strings//26-3-20
             var s = sr.ReadLine();
             var maxCount = 0; //Keeps count of the maximum peaklist file which has been read uptil 'i'
             var maxFilename = ""; //Stores the name of the file containting max peaklist
             var mass = new List<double>();//List for storing masses
             var intensities = new List<double>();//List for storing intensities
-            var splitAddress = addressMgf.Split('\\');
+            var splitAddress = addressFile.Split('\\');
             var newAddress = "";
 
+            int DELME;
 
             for (var k = 0; k < (splitAddress.Length) - 1; k++)//stores path //
             {
@@ -142,7 +143,7 @@ namespace PerceptronLocalService.Engine
                     if (s.Contains(pepmass)) //stores intact mass
                     {
                         pepMass = (s.Split('='))[1]; //splitting at = sign. stores whatever is after = sign//26-3-20
-                        pepMass = string.Format("{0:0.#}", Convert.ToDouble(pepMass));
+                        pepMass = string.Format("{0:0.######}", Convert.ToDouble(pepMass));  // Taking pepMass upto 6 digits after decimal  //20200711
                     }
 
                     if (!s.Contains("BEGIN IONS") && !s.Contains("=")) //stores masses and their intensities
@@ -212,10 +213,10 @@ namespace PerceptronLocalService.Engine
                 fout.Close();
 
             }
-            addressMgf = maxFilename; //redirects addressMgf to store the address of the file with max peaklist
+            addressFile = maxFilename; //redirects addressMgf to store the address of the file with max peaklist
         }
 
-        private void mzXML_Reader(ref string addressmzXML)
+        private void mzXML_Reader(ref string addressFile)
         {
             var filepath = Directory.GetCurrentDirectory();
             var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));  //CHANGE IT WHEN REQUIRED!!! // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
@@ -226,7 +227,7 @@ namespace PerceptronLocalService.Engine
 
                 System.Diagnostics.Process clientProcess = new Process();
                 clientProcess.StartInfo.FileName = "java";//@"C:\Program Files\Java\jre1.8.0_251\bin\java.exe";
-                clientProcess.StartInfo.Arguments = @"-jar " + MsDeconvConsolePath + " " + addressmzXML;// + @"D:\PERCEPTRON_CODE\files\DT4_161116.mzXML";
+                clientProcess.StartInfo.Arguments = @"-jar " + MsDeconvConsolePath + " " + addressFile;// + @"D:\PERCEPTRON_CODE\files\DT4_161116.mzXML";
                 clientProcess.Start();
                 clientProcess.WaitForExit();
                 int code = clientProcess.ExitCode;
@@ -240,14 +241,14 @@ namespace PerceptronLocalService.Engine
                 
             }
 
-            addressmzXML = Path.ChangeExtension(addressmzXML, ".mgf");  //addressmzXML = addressmzXML.Replace(".mzXML", "_msdeconv.mgf");
-
-            //return newFileName;
+            addressFile = Path.ChangeExtension(addressFile, ".mgf");  //Replacing extension into the filename from .mzXML to .mgf;
+            addressFile = Path.GetDirectoryName(addressFile) + "\\"+ Path.GetFileNameWithoutExtension(addressFile) + "_msdeconv" + Path.GetExtension(addressFile);  //For adding "_msdeconv" in filename. Because MsDeconConsole.jar create the output filename with "_msdeconv"
+             //return newFileName;
             //mgf_reader(ref address);
 
         }
 
-        private void mzML_Reader(ref string addressmzXML)
+        private void mzML_Reader(ref string addressFile)
         {
             var filepath = Directory.GetCurrentDirectory();
             var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\..\\"));   // JUST FOR SAFETY... WHEN VERSION RELEASED THEN, RECHECK IT...
@@ -255,8 +256,8 @@ namespace PerceptronLocalService.Engine
 
 
 
-            var newfilename = addressmzXML; //file name for mzXML
-            newfilename = Path.ChangeExtension(newfilename, ".mzXML");  //newfilename = newfilename.Replace(".mzML", ".mzXML");
+            var addressmzXMLFile = addressFile; //file name for mzXML
+            addressmzXMLFile = Path.ChangeExtension(addressmzXMLFile, ".mzXML");  //newfilename = newfilename.Replace(".mzML", ".mzXML");
 
             System.Environment.SetEnvironmentVariable("OPENMS_DATA_PATH", OpenMSPath + "\\share"); //setting environment variable
             
@@ -264,11 +265,13 @@ namespace PerceptronLocalService.Engine
 
             System.Diagnostics.Process mzmlToMzxml = new Process();
             mzmlToMzxml.StartInfo.FileName = OpenMSPath + "\\FileConverter.exe";
-            mzmlToMzxml.StartInfo.Arguments = " -in " + addressmzXML + " -out " + newfilename;
+            mzmlToMzxml.StartInfo.Arguments = " -in " + addressFile + " -out " + addressmzXMLFile;
 
             check = mzmlToMzxml.Start();
             mzmlToMzxml.WaitForExit();
             int code1 = mzmlToMzxml.ExitCode;
+
+            addressFile = addressmzXMLFile;
 
         }
 
