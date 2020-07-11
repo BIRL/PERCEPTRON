@@ -12,10 +12,12 @@ namespace PerceptronLocalService.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PtmFixedModification
+    public partial class ResultsDownloadable
     {
-        public int ModificationId { get; set; }
         public string QueryId { get; set; }
-        public string FixedModifications { get; set; }
+        public string ResultId { get; set; }
+        public string MassSpectrumImageFilePath { get; set; }
+        public string JsonExpThrTableFilePath { get; set; }
+        public string CompleteDetailedResultsFilePath { get; set; }
     }
 }

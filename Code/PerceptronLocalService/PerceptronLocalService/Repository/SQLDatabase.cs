@@ -106,13 +106,9 @@ namespace PerceptronLocalService.Repository
                             where b.QueryId == qid
                             select b;
 
-                var ptmFixed = (from b in db.PtmFixedModifications
-                             where b.QueryId == qid
-                             select b.ModificationCode).ToList();
+                var ptmFixed = db.PtmFixedModifications.First(x => x.QueryId == qid).FixedModifications;
 
-                var ptmVariable = (from b in db.PtmVariableModifications
-                                where b.QueryId == qid
-                                select b.ModificationCode).ToList();
+                var ptmVariable = db.PtmVariableModifications.First(x => x.QueryId == qid).VariableModifications; 
 
                 var files = (from b in db.SearchFiles
                                    where b.QueryId == qid
@@ -281,8 +277,8 @@ namespace PerceptronLocalService.Repository
             return searchQueryDto;
         }
 
-        private SearchParametersDto GetSearchParametersDtoModel(SearchParameter searchParameters, List<int> ptmVariable,
-          List<int> ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName, string[] FileUniqueIdArray)
+        private SearchParametersDto GetSearchParametersDtoModel(SearchParameter searchParameters, string ptmVariable,
+          string ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName, string[] FileUniqueIdArray)
         {
             var searchParametersDto = new SearchParametersDto
             {
@@ -307,8 +303,8 @@ namespace PerceptronLocalService.Repository
                 InsilicoSweight = searchParameters.InsilicoSweight,
                 NumberOfOutputs = searchParameters.NumberOfOutputs,
                 PtmAllow = searchParameters.PtmAllow,
-                PtmCodeVar = ptmVariable,
-                PtmCodeFix = ptmFixed,
+                VariableModifications = ptmVariable.Split(',').ToList(),
+                FixedModifications = ptmFixed.Split(',').ToList(),
                 FileType = fileType,
                 PeakListFileName = fileName,
                 PeakListUniqueFileNames = fileUniqueName,

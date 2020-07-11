@@ -24,8 +24,10 @@ namespace PerceptronLocalService.DTO
         public double GuiMass;
         //public string PeptideTolUnit;
 
-        public List<int> PtmCodeVar;
-        public List<int> PtmCodeFix;
+        public List<int> PtmCodeVar;  //to be deleted after whole integration
+        public List<int> PtmCodeFix;  ////to be deleted after whole integration
+        public List<string> VariableModifications;
+        public List<string> FixedModifications;
         public string[] FileType;
         public string[] PeakListFileName;
         public string[] PeakListUniqueFileNames;

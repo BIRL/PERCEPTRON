@@ -14,8 +14,8 @@ namespace PerceptronLocalService.Models
     
     public partial class PtmVariableModification
     {
-        public int ModId { get; set; }
+        public int ModificationId { get; set; }
         public string QueryId { get; set; }
-        public int ModificationCode { get; set; }
+        public string VariableModifications { get; set; }
     }
 }
