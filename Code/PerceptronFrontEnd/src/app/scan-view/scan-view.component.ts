@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ConfigService } from '../config.service';
+import * as fileSaver from 'file-saver';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { ConfigService } from '../config.service';
   providers: [ConfigService]
 })
 export class ScanViewComponent implements OnInit {
-  displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'truncation', 'frags', 'mods','mix', 'fileId'];
+  displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'truncation', 'frags', 'mods', 'mix', 'fileId'];
   dataSource: MatTableDataSource<UserData>;
   querryId: any;
 
@@ -37,10 +38,22 @@ export class ScanViewComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this._httpService.GetScanReslts(this.querryId).subscribe(data => this.what(data));
+    this._httpService.downloadFile(this.querryId).subscribe(data => this.what(data));
   }
 
-  ResultsDownload(){
-    this._httpService.GetResultsDownload(this.querryId).subscribe(data => this.what(data));
+  //Resutls Download Working...
+  download() {
+    var abd = this.downloadFile(this.querryId).subscribe(response => {
+			let blob:any = new Blob([response.blob()], { type: 'text; charset=utf-8' });
+			const url= window.URL.createObjectURL(blob);
+			window.open(url);
+			window.location.href = response.url;
+			fileSaver.saveAs(blob, 'Results.txt');
+    })
+    // , error => console.log('Error downloading the file'),
+    //              () => console.info('File downloaded successfully');
+  }
+  downloadFile(querryId: any): any {
   }
 
   what(data: any) {
@@ -51,7 +64,7 @@ export class ScanViewComponent implements OnInit {
 
     let title = <HTMLLabelElement>document.getElementById("SearchTitle");
     title.innerHTML = data.Paramters.SearchParameters.Title;
-   
+
     let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
     pdb.innerHTML = data.Paramters.SearchParameters.ProtDb;
 
@@ -59,23 +72,23 @@ export class ScanViewComponent implements OnInit {
     let protTol = <HTMLLabelElement>document.getElementById("protTol");
     protTol.innerHTML = data.Paramters.SearchParameters.MwTolerance;
 
-    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");            
+    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");
     autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
 
-    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");            
-    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;  
+    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");
+    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;
 
-    let fragt = <HTMLLabelElement>document.getElementById("FragType");            
-    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType; 
+    let fragt = <HTMLLabelElement>document.getElementById("FragType");
+    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType;
 
-    let SpecI = <HTMLLabelElement>document.getElementById("SI");            
-    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons; 
+    let SpecI = <HTMLLabelElement>document.getElementById("SI");
+    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons;
 
-    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");            
+    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");
     DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
 
-    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");            
-    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength ;
+    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");
+    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength;
 
     let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
     let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
@@ -84,7 +97,7 @@ export class ScanViewComponent implements OnInit {
     IPMSWeight.innerHTML = data.Results.Results.MwScore;
     PSTWeight.innerHTML = data.Results.Results.PstScore;
     SpecCompWeight.innerHTML = data.Results.Results.InsilicoScore;
-  
+
   }
 
 
@@ -105,7 +118,7 @@ function createNewUser(id: number, data: any): UserData {
     truncation: data.Truncation,
     frags: data.Frags,
     mods: data.Mods,
-    mix:data.Time,
+    mix: data.Time,
     fileId: data.FileId
   };
 }
@@ -120,5 +133,5 @@ export interface UserData {
   frags: string;
   mods: string;
   fileId: string;
-  mix:string;
+  mix: string;
 }
