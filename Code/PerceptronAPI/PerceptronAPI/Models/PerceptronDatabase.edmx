@@ -30,19 +30,19 @@
         </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
-            <PropertyRef Name="ModId" />
+            <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="ModId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QueryId" Type="nvarchar(max)" />
-          <Property Name="ModificationCode" Type="int" Nullable="false" />
+          <Property Name="ModificationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" />
+          <Property Name="FixedModifications" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PtmVariableModifications">
           <Key>
-            <PropertyRef Name="ModId" />
+            <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="ModId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QueryId" Type="nvarchar(max)" />
-          <Property Name="ModificationCode" Type="int" Nullable="false" />
+          <Property Name="ModificationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" />
+          <Property Name="VariableModifications" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="ResultInsilicoMatchLefts">
           <Key>
@@ -72,6 +72,16 @@
           <Property Name="ModName" Type="nvarchar(max)" />
           <Property Name="AminoAcid" Type="nvarchar(max)" />
           <Property Name="Site" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="ResultsDownloadable">
+          <Key>
+            <PropertyRef Name="ResultId" />
+          </Key>
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MassSpectrumImageFilePath" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="JsonExpThrTableFilePath" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CompleteDetailedResultsFilePath" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchFiles">
           <Key>
@@ -178,6 +188,7 @@
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultInsilicoMatchRights" EntityType="Self.ResultInsilicoMatchRights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultPtmSites" EntityType="Self.ResultPtmSites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResultsDownloadable" EntityType="Self.ResultsDownloadable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchFiles" EntityType="Self.SearchFiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
@@ -213,19 +224,19 @@
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
-            <PropertyRef Name="ModId" />
+            <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="ModId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModificationCode" Type="Int32" Nullable="false" />
+          <Property Name="ModificationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FixedModifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PtmVariableModification">
           <Key>
-            <PropertyRef Name="ModId" />
+            <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="ModId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModificationCode" Type="Int32" Nullable="false" />
+          <Property Name="ModificationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="VariableModifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ResultInsilicoMatchLeft">
           <Key>
@@ -255,6 +266,16 @@
           <Property Name="ModName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AminoAcid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ResultsDownloadable">
+          <Key>
+            <PropertyRef Name="ResultId" />
+          </Key>
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MassSpectrumImageFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JsonExpThrTableFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompleteDetailedResultsFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchFile">
           <Key>
@@ -361,6 +382,7 @@
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />
           <EntitySet Name="ResultInsilicoMatchRights" EntityType="Self.ResultInsilicoMatchRight" />
           <EntitySet Name="ResultPtmSites" EntityType="Self.ResultPtmSite" />
+          <EntitySet Name="ResultsDownloadables" EntityType="Self.ResultsDownloadable" />
           <EntitySet Name="SearchFiles" EntityType="Self.SearchFile" />
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
@@ -399,18 +421,18 @@
           <EntitySetMapping Name="PtmFixedModifications">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmFixedModification">
               <MappingFragment StoreEntitySet="PtmFixedModifications">
-                <ScalarProperty Name="ModId" ColumnName="ModId" />
+                <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
-                <ScalarProperty Name="ModificationCode" ColumnName="ModificationCode" />
+                <ScalarProperty Name="FixedModifications" ColumnName="FixedModifications" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PtmVariableModifications">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmVariableModification">
               <MappingFragment StoreEntitySet="PtmVariableModifications">
-                <ScalarProperty Name="ModId" ColumnName="ModId" />
+                <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
-                <ScalarProperty Name="ModificationCode" ColumnName="ModificationCode" />
+                <ScalarProperty Name="VariableModifications" ColumnName="VariableModifications" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -442,6 +464,17 @@
                 <ScalarProperty Name="ModName" ColumnName="ModName" />
                 <ScalarProperty Name="AminoAcid" ColumnName="AminoAcid" />
                 <ScalarProperty Name="Site" ColumnName="Site" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResultsDownloadables">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultsDownloadable">
+              <MappingFragment StoreEntitySet="ResultsDownloadable">
+                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+                <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+                <ScalarProperty Name="MassSpectrumImageFilePath" ColumnName="MassSpectrumImageFilePath" />
+                <ScalarProperty Name="JsonExpThrTableFilePath" ColumnName="JsonExpThrTableFilePath" />
+                <ScalarProperty Name="CompleteDetailedResultsFilePath" ColumnName="CompleteDetailedResultsFilePath" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

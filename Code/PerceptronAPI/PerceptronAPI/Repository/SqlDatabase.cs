@@ -20,8 +20,8 @@ namespace PerceptronAPI.Repository
                 db.SearchQueries.Add(param.SearchQuerry);
                 db.SearchParameters.Add(param.SearchParameters);
                 db.SearchFiles.AddRange(param.SearchFiles);
-                //db.PtmFixedModifications.AddRange(param.FixedMods);
-                //db.PtmVariableModifications.AddRange(param.VarMods);
+                db.PtmFixedModifications.Add(param.FixedMods);
+                db.PtmVariableModifications.Add(param.VarMods);
 
                 db.SaveChanges();
 
@@ -86,10 +86,10 @@ namespace PerceptronAPI.Repository
                     Paramters = new SearchParametersDto
                     {
                         SearchParameters = db.SearchParameters.First(x => x.QueryId == qid),
-                        FixedMods = db.PtmFixedModifications.Where(x => x.QueryId == qid).ToList(),
+                        FixedMods = db.PtmFixedModifications.First(x => x.QueryId == qid),
                         SearchFiles = db.SearchFiles.Where(x => x.QueryId == qid).ToList(),
                         SearchQuerry = db.SearchQueries.First(x => x.QueryId == qid),
-                        VarMods = db.PtmVariableModifications.Where(x => x.QueryId == qid).ToList()
+                        VarMods = db.PtmVariableModifications.First(x => x.QueryId == qid)
                     },
                     ExecutionTime = db.ExecutionTimes.First(x => x.QueryId == qid),
                     Results =
@@ -330,8 +330,8 @@ namespace PerceptronAPI.Repository
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
-                var ptmVarmod = db.PtmVariableModifications.Where(x => x.QueryId == qid).ToList();
-                var ptmFixedmod = db.PtmFixedModifications.Where(x => x.QueryId == qid).ToList();
+                var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
+                var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
                 var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
                 var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();

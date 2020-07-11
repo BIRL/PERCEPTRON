@@ -130,6 +130,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Engine\ResultsDownload.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -141,7 +142,7 @@
     <Compile Include="Models\ExecutionTime.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\InsilicoMassSiteFragIon.cs" />
+    <Compile Include="Models\InsilicoMassIons.cs" />
     <Compile Include="Models\InsilicoObj.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\PeakListData.cs">
@@ -180,6 +181,11 @@
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Results.cs" />
+    <Compile Include="Models\ResultsDownloadable.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultsDownloadDataCompile.cs" />
+    <Compile Include="Models\ResultsDownloadFileNames.cs" />
     <Compile Include="Models\ResultsDto.cs" />
     <Compile Include="Models\ResultViewDto.cs" />
     <Compile Include="Models\ScanResults.cs" />
@@ -208,17 +214,17 @@
     <Compile Include="Repository\SqlDatabase.cs" />
     <Compile Include="Repository\MySqlDatabase.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
-    <Compile Include="ResultVisualizations\GraphForm.cs">
+    <Compile Include="Engine\GraphForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ResultVisualizations\GraphForm.Designer.cs" />
+    <Compile Include="Engine\GraphForm.Designer.cs" />
     <Compile Include="ServiceLayer\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceLayer\Search.cs" />
-    <Compile Include="ResultVisualizations\DetailedProteinView.cs">
+    <Compile Include="Engine\DetailedProteinView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ResultVisualizations\DetailedProteinView.Designer.cs" />
+    <Compile Include="Engine\DetailedProteinView.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -250,8 +256,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ResultVisualizations\DetailedProteinView.resx" />
-    <EmbeddedResource Include="ResultVisualizations\GraphForm.resx" />
+    <EmbeddedResource Include="Engine\DetailedProteinView.resx" />
+    <EmbeddedResource Include="Engine\GraphForm.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

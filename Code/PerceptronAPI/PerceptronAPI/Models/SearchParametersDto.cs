@@ -10,16 +10,16 @@ namespace PerceptronAPI.Models
         public SearchQuery SearchQuerry;
         public SearchParameter SearchParameters;
         public List<SearchFile> SearchFiles;
-        public List<PtmFixedModification> FixedMods;
-        public List<PtmVariableModification> VarMods;
+        public PtmFixedModification FixedMods;
+        public PtmVariableModification VarMods;
 
         public SearchParametersDto()
         {
             SearchQuerry=new SearchQuery();
             SearchParameters = new SearchParameter();
             SearchFiles = new List<SearchFile>();
-            FixedMods= new List<PtmFixedModification>();
-            VarMods=new List<PtmVariableModification>();
+            FixedMods= new PtmFixedModification();
+            VarMods=new PtmVariableModification();
 
         }
 

@@ -32,6 +32,7 @@ namespace PerceptronAPI.Models
         public virtual DbSet<ResultInsilicoMatchLeft> ResultInsilicoMatchLefts { get; set; }
         public virtual DbSet<ResultInsilicoMatchRight> ResultInsilicoMatchRights { get; set; }
         public virtual DbSet<ResultPtmSite> ResultPtmSites { get; set; }
+        public virtual DbSet<ResultsDownloadable> ResultsDownloadables { get; set; }
         public virtual DbSet<SearchFile> SearchFiles { get; set; }
         public virtual DbSet<SearchParameter> SearchParameters { get; set; }
         public virtual DbSet<SearchQuery> SearchQueries { get; set; }
