@@ -54,8 +54,8 @@ namespace PerceptronAPI.Controllers
             {
                 SearchFiles = new List<SearchFile>(),
                 SearchQuerry = new SearchQuery(),
-                FixedMods = new List<PtmFixedModification>(),
-                VarMods = new List<PtmVariableModification>()
+                FixedMods = new PtmFixedModification(),
+                VarMods = new PtmVariableModification()
             };
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
@@ -77,11 +77,27 @@ namespace PerceptronAPI.Controllers
                 {
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
                     parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
+                    parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
+                    parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
                 }
 
                 //parametersDto.SearchParameters.DenovoAllow = 1;
                 //parametersDto.SearchParameters.PtmAllow = 1;
                 //parametersDto.SearchParameters.FilterDb = 1;
+
+                if (parametersDto.FixedMods != null)
+                {
+                    parametersDto.FixedMods.QueryId = queryId;
+                    parametersDto.FixedMods.ModificationId = 1;
+                }
+
+                if (parametersDto.VarMods != null)
+                {
+                    parametersDto.VarMods.QueryId = queryId;
+                    parametersDto.VarMods.ModificationId = 1;
+                }
+                
+                
 
 
                 parametersDto.SearchParameters.QueryId = queryId;
