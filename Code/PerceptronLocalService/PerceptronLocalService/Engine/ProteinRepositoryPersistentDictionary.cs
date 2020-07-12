@@ -22,7 +22,7 @@ using PerceptronLocalService.Utility;
 
 namespace PerceptronLocalService.Engine
 {
-    class ProteinRepositoryPersistentDictionary : IProteinRepository
+    class ProteinRepositoryPersistentDictionary
     {
         private CPersistentDictionary Uniprot = new CPersistentDictionary(@"D:\UploadedData\DIC\DICUniprot.txt");              /*!< Uniprot.txt stores the Uniprot i.e. all annotated proteins along with their fragments and MW. */
         private CPersistentDictionary Ubiquitin = new CPersistentDictionary(@"D:\UploadedData\DIC\DIC\Ubiquitin.txt");          /*!< Ubiquitin.txt stores the test ubiquitin database. It contains 8 proteins. */
@@ -1323,7 +1323,7 @@ namespace PerceptronLocalService.Engine
          * \param FilterDb an integer variable which tells us about user decision regarding filteration of DB on protein MW
          * \return the List of shortlisted proteins
          */
-        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList". 20200112
+        public List<ProteinDto> ExtractProteinsOLD(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList". 20200112
         {
             var tol = parameters.MwTolerance;
             var database = parameters.ProtDb;

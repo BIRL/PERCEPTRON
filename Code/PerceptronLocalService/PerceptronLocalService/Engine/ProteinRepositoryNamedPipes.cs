@@ -11,9 +11,9 @@ using PerceptronLocalService.Interfaces;
 
 namespace PerceptronLocalService.Engine
 {
-    class ProteinRepositoryNamedPipes : IProteinRepository
+    class ProteinRepositoryNamedPipes
     {
-        public List<ProteinDto> ExtractProteins(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList".
+        public List<ProteinDto> ExtractProteinsOLD(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateProteinList) // Added "int CandidateList".
         {
             var fPam = new MolecularWeightServiceParametersDto()
             {
