@@ -292,8 +292,7 @@ namespace PerceptronLocalService
 
                     //Logging.DumpCandidateProteins(candidateProteins);
 
-                    //////UpdatedParse_database //////****** Need to be Come HERE...//////UpdatedParse_database //////****** Need to be Come HERE...
-
+                    //////UpdatedParse_database.m
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins);
                     if (candidateProteins.Count == 0 && parameters.EmailId != "") // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
@@ -302,6 +301,17 @@ namespace PerceptronLocalService
                         break;
 
                     }
+
+                    candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+
+                    if (parameters.PtmAllow == 1)
+                    {
+                        var BlindPTM = new BlindPtmCpu();
+                        var BlindPTMExtractionInfo = BlindPTM.BlindPTMExtraction(massSpectrometryData, parameters);
+                        var CandidateProtListModified = BlindPTM.BlindPTMGeneral(candidateProteins, massSpectrometryData, 1, BlindPTMExtractionInfo, parameters, "BlindPTM");
+
+                    }
+                    
 
 
 
@@ -510,6 +520,16 @@ namespace PerceptronLocalService
             {
                 candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
             }
+            /* WithoutPTM_ParseDatabase.m */
+
+            /* Updated_ParseDatabase.m */
+
+            if (parameters.CysteineChemicalModification != null && parameters.MethionineChemicalModification != null && parameters.FixedModifications.Count > 0 && parameters.VariableModifications.Count > 0)
+            {
+                // HERE IT WILL BE PTMs_Generator_Insilico_Generator
+            }
+
+
 
 
 
@@ -577,7 +597,7 @@ namespace PerceptronLocalService
             //if (parameters.InsilicoSweight != 0)
             {
                 var CandidateProteins = new List<ProteinDto>();
-                CandidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+                
                 //ITS HEALTHY!!! 20200203
                 _insilicoFilter.ComputeInsilicoScore(CandidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinswithInsilicoScores);
             }

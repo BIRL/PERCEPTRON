@@ -90,9 +90,15 @@ namespace PerceptronLocalService.Engine
 
         }
 
-        public void BlindPTMGeneral(List<ProteinDto> CandidateProtList, MsPeaksDto peakData, double UserHopThreshold, double sizeHopInfo, List<string> HopInfoName, List<char> HopInfoAA, List<double> HopInfoEnd, List<double> HopInfoStart, SearchParametersDto parameters, string TypeOfFunction)
+        public List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, MsPeaksDto peakData, double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction)
         //A general function for BlindPTM, BlindPTM_Truncation_Left and BlindPTM_Truncation_Right
         {
+            int sizeHopInfo = BlindPTMExtractionInfo.sizeHopInfo;
+            List<string> HopInfoName = BlindPTMExtractionInfo.HopInfoName;
+            List<char> HopInfoAA = BlindPTMExtractionInfo.HopInfoAA;
+            List<double> HopInfoEnd = BlindPTMExtractionInfo.HopInfoEnd;
+            List<double> HopInfoStart = BlindPTMExtractionInfo.HopInfoStart;
+
             //Variable initialization
             var PeptideTolerance = parameters.PeptideTolerance;
             var PeptideToleranceUnit = parameters.PeptideToleranceUnit;
@@ -266,6 +272,7 @@ namespace PerceptronLocalService.Engine
                     }
                 }
             }
+            return CandidateProtListModified;
         }
 
 
