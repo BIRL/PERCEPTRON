@@ -22,60 +22,75 @@ namespace PerceptronLocalService.Engine
         }
 
 
-        
-
-        public double GetPTMMassShift(SearchParametersDto parameters, string Sequence)
+        public double GetChemicalModMass(SearchParametersDto parameters, string Sequence)
         {
-            double MolecularWeightShift = 0.0;
+            double ChemicalModMass = 0.0;
             PTMModificationsInfoDto PTMModificationsInfo = new PTMModificationsInfoDto();
-            if (parameters.CysteineChemicalModification != "") // No need waisa
+            var ListOfModInfo = PTMModificationsInfo.ListPTMModificationsInfo;
+
+            if (parameters.CysteineChemicalModification != "None")
             {
                 int NoofOccurrence = Regex.Matches(Sequence, "C").Count;
                 if (NoofOccurrence > 0)
                 {
                     var ModificationTableClass = new ModificationMWShift();
                     double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(parameters.CysteineChemicalModification);
-                    PTMModificationsInfo.FixedModificationInfo.Add( new FixedModificationInfoDto(NoofOccurrence, "C", MolecularWeight));
+
+                    ListOfModInfo.Add(new PTMModificationsInfoDto(NoofOccurrence, "C", MolecularWeight));
 
                 }
             }
-            if (parameters.MethionineChemicalModification != "") // No need waisa
+            if (parameters.MethionineChemicalModification != "None")
             {
                 int NoofOccurrence = Regex.Matches(Sequence, "M").Count;
                 if (NoofOccurrence > 0)
                 {
                     var ModificationTableClass = new ModificationMWShift();
                     double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(parameters.MethionineChemicalModification);
-                    PTMModificationsInfo.VariableModificationInfo.Add( new VariableModificationInfoDto(NoofOccurrence, "M", MolecularWeight));
+                    ListOfModInfo.Add(new PTMModificationsInfoDto(NoofOccurrence, "M", MolecularWeight));
 
                 }
             }
 
-            for (int i = 0; i < parameters.FixedModifications.Count; i++)
+            for (int i = 0; i < ListOfModInfo.Count; i++)
             {
-                var FixModSite = parameters.FixedModifications[i];
-                var SiteIndex = FixModSite.IndexOf("_");
-                string Site = FixModSite.Substring(SiteIndex+1); //Extracting Site from FixedModifications
+                ChemicalModMass = ChemicalModMass + (ListOfModInfo[i].Occurrences * ListOfModInfo[i].MolecularWeight);
+
+            }
+            return Math.Round(ChemicalModMass, 4);
+
+        }
+
+        public double GetPTMModMassShift(List<string> TypeOfModication, string Sequence)
+        {
+            double MolecularWeightShift = 0.0;
+            PTMModificationsInfoDto PTMModificationsInfo = new PTMModificationsInfoDto();
+            var ListOfModInfo = PTMModificationsInfo.ListPTMModificationsInfo;
+
+
+            for (int i = 0; i < TypeOfModication.Count; i++)
+            {
+                var ModSite = TypeOfModication[i];
+                var SiteIndex = ModSite.IndexOf("_");
+                string Site = ModSite.Substring(SiteIndex + 1); //Extracting Site from FixedModifications
                 int NoofOccurrence = Regex.Matches(Sequence, Site).Count;
 
                 if (NoofOccurrence > 0)
                 {
                     var ModificationTableClass = new ModificationMWShift();
-                    string ModificationName = FixModSite.Substring(0, FixModSite.Length - 2);
+                    string ModificationName = ModSite.Substring(0, ModSite.Length - 2);
                     double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(ModificationName);
 
-                    PTMModificationsInfo.FixedModificationInfo.Add (new FixedModificationInfoDto(NoofOccurrence, Site, MolecularWeight));
+                    ListOfModInfo.Add(new PTMModificationsInfoDto(NoofOccurrence, Site, MolecularWeight));
 
                 }
             }
 
-            for (int i = 0; i < PTMModificationsInfo.FixedModificationInfo.Count; i++)
+            for (int i = 0; i < ListOfModInfo.Count; i++)
             {
-                MolecularWeightShift = MolecularWeightShift + PTMModificationsInfo.FixedModificationInfo[i].MolecularWeight;
+                MolecularWeightShift = MolecularWeightShift + (ListOfModInfo[i].Occurrences * ListOfModInfo[i].MolecularWeight);
 
             }
-
-
 
             return Math.Round(MolecularWeightShift, 4);
         }
@@ -130,7 +145,9 @@ namespace PerceptronLocalService.Engine
                     {
                         if (parameters.FixedModifications != null)
                         {
-                            double FixedWeight = GetPTMMassShift(parameters, protein.Sequence);
+                            double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
+                            double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
+                            double TotalFixedWeight = ChemicalModMass + FixedWeight;
                         }
                     }
                     if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
