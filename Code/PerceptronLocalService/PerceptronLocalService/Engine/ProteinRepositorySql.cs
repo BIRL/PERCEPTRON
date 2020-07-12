@@ -95,9 +95,14 @@ namespace PerceptronLocalService.Engine
             return Math.Round(MolecularWeightShift, 4);
         }
 
-        public List<ProteinDto> ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateList) // Added "int CandidateList". 20200112
+        //public CandidateProteinListsDto GetProtein(SearchParametersDto parameters, List<PstTagList> PstTags, ProteinDto Protein)
+        //{
+
+        //}
+
+        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags) // Added "int CandidateList". 20200112
         {
-            var query = GetQuery(IntactMass, parameters, CandidateList);
+            var query = GetQuery(parameters.ProtDb);
 
             var connectionString = GetConnectionString(parameters.ProtDb);
             List<SerializedProteinDataDto> prot;
@@ -108,6 +113,11 @@ namespace PerceptronLocalService.Engine
             }
 
             var proteins = new List<ProteinDto>();
+
+            CandidateProteinListsDto CandidateProteinListsInfo = new CandidateProteinListsDto();
+            var CandidateList = CandidateProteinListsInfo.CandidateProteinList;
+            var CandidateListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+
 
             foreach (var proteinInfo in prot)
             {
@@ -139,54 +149,71 @@ namespace PerceptronLocalService.Engine
                 //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
                 //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
 
+                //var GetProtein( parameters, PstTags, Protein)
+
                 if (parameters.FilterDb == 1)
                 {
-                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)
+                    double TotalFixedWeight = 0.0; double VariableWeight = 0.0;
+
+                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
                     {
                         if (parameters.FixedModifications != null)
                         {
                             double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
                             double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
-                            double TotalFixedWeight = ChemicalModMass + FixedWeight;
+                            TotalFixedWeight = ChemicalModMass + FixedWeight;
+                        }
+                        if (parameters.VariableModifications != null)
+                        {
+                            VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
                         }
                     }
-                    if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
+                    if (parameters.Truncation == 0)
                     {
-                        proteins.Add(protein);
-                    }
-                    else if (CandidateList == 1)  // Candidate Protein List with Truncation     // parameters.Truncation == 1 && 
-                    {
-                        if (parameters.DenovoAllow == 1)
+                        if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
                         {
-                            for (int indexPstTags = 0; indexPstTags < PstTags.Count; indexPstTags++)
-                            {
-                                if (proteinInfo.Seq.Contains(PstTags[indexPstTags].PstTags))
-                                {
-                                    proteins.Add(protein);
-                                    break;  //Any Tag is Reported....??? Good!  BREAK THE LOOP AND KEEP THE PROTEIN
-                                }
-                            }
+                            CandidateList.Add(protein);
                         }
                         else
                         {
-                            proteins.Add(protein);
+                            if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
+                            {
+                                CandidateList.Add(protein);
+                            }
+                            else if(protein.Mw - IntactMass > parameters.MwTolerance)
+                            {
+                                if (parameters.DenovoAllow == 1)
+                                {
+                                    for (int i = 0; i < PstTags.Count; i++)
+                                    {
+                                        string Tag = PstTags[i].PstTags;
+                                        if (protein.Sequence.Contains(Tag))
+                                        {
+                                            CandidateListTruncated.Add(protein);
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    CandidateListTruncated.Add(protein);
+                                }
+                            }
                         }
-                        
+
                     }
                 }
-                else if (parameters.FilterDb == 0 && CandidateList == 0)
+                else
                 {
-                    proteins.Add(protein);
+                    CandidateList.Add(protein);
+                    CandidateListTruncated.Add(protein);
                 }
-                else if (parameters.FilterDb == 0 && CandidateList == 1)
-                {
-                    proteins.Add(protein);
-                }
-                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
-                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
+
+
+                
 
             }
-            return proteins;
+            return CandidateProteinListsInfo;
         }
 
         //private FilteringDatabase()
@@ -194,38 +221,13 @@ namespace PerceptronLocalService.Engine
         //private List<ProteinDto
 
 
-        private string GetQuery(double IntactMass, SearchParametersDto parameters, int CandidateList) // Added "int CandidateList". 20200112
+        private string GetQuery(string DatabaseName) // Added "int CandidateList". 20200112
         {
-            string DatabaseName = parameters.ProtDb;
-
-            if (parameters.ProtDb == "Bacteria") // Was Needed: When FE also showing Bacteria but same ConnectionStrings {So, Doesn't Matter}
-            {
-                parameters.ProtDb = "Ecoli";
-                DatabaseName = parameters.ProtDb;
-            }
 
             string subquery1 = "Select * From  [";
             string subquery2 = "].[dbo].[ProteinInfoes]";
+            string query = subquery1 + DatabaseName + subquery2;  //Query to select all proteins in specified Database
 
-
-            string query = subquery1 + DatabaseName + subquery2;   //"Select * From  [ProteinDB].[dbo].[ProteinInfoes]";  // If FilterDb == 0 then, we will take Whole Protein Database. So, query will be enough for this purpose
-            
-            
-            if (parameters.FilterDb == 1)
-            {
-                if (CandidateList == 0) //For Simple Candidate Protein List >>>> CandidateList == 0
-                {
-                    query += " Where MW >= " + (IntactMass - parameters.MwTolerance) + " AND MW <= " + (IntactMass + parameters.MwTolerance);    // SAME AS abs(DBProtein_MW + MWeight - Protein_ExperimentalMW)<= MWTolerance + TolExt
-                }
-                else if (CandidateList == 1)  //For Truncated Candidate Protein List >>>> CandidateList == 1      // parameters.Truncation == 1 && 
-                {
-                    query += " Where MW -" + IntactMass + ">" + parameters.MwTolerance;  //MW is Protein Mass  // (DBProtein_MW - Protein_ExperimentalMW) > MWTolerance
-                }
-            }
-            else
-            {
-                return query;
-            }
             return query;
         }
 
@@ -253,3 +255,56 @@ namespace PerceptronLocalService.Engine
         }
     }
 }
+
+
+
+//// CLEANED FOR DISCARD
+//                if (parameters.FilterDb == 1)
+//                {
+//                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
+//                    {
+//                        if (parameters.FixedModifications != null)
+//                        {
+//                            double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
+//                            double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
+//                            double TotalFixedWeight = ChemicalModMass + FixedWeight;
+//                        }
+//                        if (parameters.VariableModifications != null)
+//                        {
+//                            double VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
+//                        }
+//                    }
+//                    if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
+//                    {
+//                        proteins.Add(protein);
+//                    }
+//                    else if (CandidateList == 1)  // Candidate Protein List with Truncation     // parameters.Truncation == 1 && 
+//                    {
+//                        if (parameters.DenovoAllow == 1)
+//                        {
+//                            for (int indexPstTags = 0; indexPstTags < PstTags.Count; indexPstTags++)
+//                            {
+//                                if (proteinInfo.Seq.Contains(PstTags[indexPstTags].PstTags))
+//                                {
+//                                    proteins.Add(protein);
+//                                    break;  //Any Tag is Reported....??? Good!  BREAK THE LOOP AND KEEP THE PROTEIN
+//                                }
+//                            }
+//                        }
+//                        else
+//                        {
+//                            proteins.Add(protein);
+//                        }
+                        
+//                    }
+//                }
+//                else if (parameters.FilterDb == 0 && CandidateList == 0)
+//                {
+//                    proteins.Add(protein);
+//                }
+//                else if (parameters.FilterDb == 0 && CandidateList == 1)
+//                {
+//                    proteins.Add(protein);
+//                }
+//                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
+//                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 

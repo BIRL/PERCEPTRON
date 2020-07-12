@@ -265,27 +265,25 @@ namespace PerceptronLocalService
 
                     List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
 
-                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+                    //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
+                    //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
+                    
+                    //StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+
+                    //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
 
                     //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                     var candidateProteins = new List<ProteinDto>();
                     var CandidateProteinListTruncated = new List<ProteinDto>();
+                    
+                    
                     //Fetching Candidate Proteins From User Selected DataBase
-                    int SimpleCandidateProteinList = 0; // For selecting Simple Candidate Protein List
-                    candidateProteins = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, SimpleCandidateProteinList);
 
-                    int TruncatedCandidateProteinList = 1;
-                    if (parameters.Truncation == 1 && parameters.FilterDb == 1)
-                    {
-
-                        CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, TruncatedCandidateProteinList);
-                    }
-                    else if (parameters.Truncation == 1 && parameters.FilterDb == 0)
-                    {
-                        //CandidateProteinListTruncated = candidateProteins;  //ITS HEALTHY!!! BUT DISCARDED....!!!!
-                        CandidateProteinListTruncated = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, TruncatedCandidateProteinList);
-
-                    }
+                    ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
+                    var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes);
+                    candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
+                    CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+                    
 
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                     ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
@@ -482,38 +480,39 @@ namespace PerceptronLocalService
         }
         //GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, 
 
-        private List<ProteinDto> GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, ExecutionTimeDto executionTimes, int CandidateList) // Added "int CandidateList". 20200112
+        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, ExecutionTimeDto executionTimes) // Added "int CandidateList". 20200112
         {
 
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var listOfProteins = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags, CandidateList);// Added "int CandidateList". 20200112
+            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags);// Added "int CandidateList". 20200112
 
             moduleTimer.Stop();
 
-            if (CandidateList == 0)
-            {
-                //TimeSpan time = TimeSpan.Parse(executionTimes.InsilicoTime);
-                //var totaltime = moduleTimer + time;
-                executionTimes.MwFilterTime = moduleTimer.Elapsed.ToString();
-            }
 
-            return listOfProteins;
+            //TimeSpan time = TimeSpan.Parse(executionTimes.InsilicoTime);
+            //var totaltime = moduleTimer + time;
+            //executionTimes.MwFilterTime = moduleTimer.Elapsed.ToString();
+
+            return CandidateProteinListsInfo;
         }
 
         private List<ProteinDto> UpdateGetCandidateProtein(SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> candidateProteins)
         {
+            /* WithoutPTM_ParseDatabase.m */
             if (parameters.DenovoAllow == 1)
             {
                 // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
                 _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
             }
 
-
             if (parameters.TerminalModification != "")
             {
                 candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
             }
+
+
+
             return candidateProteins;
         }
 
