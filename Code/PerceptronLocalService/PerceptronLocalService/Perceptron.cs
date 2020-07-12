@@ -480,12 +480,12 @@ namespace PerceptronLocalService
         }
         //GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, 
 
-        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, ExecutionTimeDto executionTimes) // Added "int CandidateList". 20200112
+        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, ExecutionTimeDto executionTimes)
         {
 
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags);// Added "int CandidateList". 20200112
+            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags);
 
             moduleTimer.Stop();
 
