@@ -16,9 +16,146 @@ namespace PerceptronLocalService.Engine
 {
     class ProteinRepositorySql : IProteinRepository
     {
-        public void Dummy()
+
+        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags) // Added "int CandidateList". 20200112
+        {
+            var query = GetQuery(parameters.ProtDb);
+
+            var connectionString = GetConnectionString(parameters.ProtDb);
+            List<SerializedProteinDataDto> prot;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                prot = connection.Query<SerializedProteinDataDto>(query).ToList();
+
+            }
+
+            var proteins = new List<ProteinDto>();
+
+            CandidateProteinListsDto CandidateProteinListsInfo = new CandidateProteinListsDto();
+            var CandidateList = CandidateProteinListsInfo.CandidateProteinList;
+            var CandidateListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+
+
+            foreach (var proteinInfo in prot)
+            {
+                //if (proteinInfo.ID == "P04439")  // Was for Testing
+                //{
+                //    int wait;
+                //}
+                var insilico = new InsilicoObjectDto()
+                {
+                    InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
+                    InsilicoMassRight = proteinInfo.InsilicoR.Split(',').Select(double.Parse).ToList() // InsilicoR
+                };
+
+                //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water)
+                //insilico.InsilicoMassLeft.RemoveAt(insilico.InsilicoMassLeft.Count - 1); // JUST IN CASE::: as this will be the MW of protein - water
+                //insilico.InsilicoMassRight.RemoveAt(insilico.InsilicoMassRight.Count - 1);
+
+                var protein = new ProteinDto()
+                {
+                    Header = proteinInfo.ID,
+                    InsilicoDetails = insilico,
+                    Mw = proteinInfo.MW,
+                    Sequence = proteinInfo.Seq,
+                    OriginalSequence = proteinInfo.Seq
+
+                };
+
+                if (parameters.FilterDb == 1)
+                {
+                    double TotalFixedWeight = 0.0;
+                    double VariableWeight = 0.0;
+
+                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
+                    {
+                        if (parameters.FixedModifications != null)
+                        {
+                            double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
+                            double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
+                            TotalFixedWeight = ChemicalModMass + FixedWeight;
+                        }
+                        if (parameters.VariableModifications != null)
+                        {
+                            VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
+                        }
+                    }
+                    if (parameters.Truncation == 0)
+                    {
+                        if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
+                        {
+                            CandidateList.Add(protein);
+                        }
+                        else
+                        {
+                            if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
+                            {
+                                CandidateList.Add(protein);
+                            }
+                            else if(protein.Mw - IntactMass > parameters.MwTolerance)
+                            {
+                                if (parameters.DenovoAllow == 1)
+                                {
+                                    for (int i = 0; i < PstTags.Count; i++)
+                                    {
+                                        string Tag = PstTags[i].PstTags;
+                                        if (protein.Sequence.Contains(Tag))
+                                        {
+                                            CandidateListTruncated.Add(protein);
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    CandidateListTruncated.Add(protein);
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    CandidateList.Add(protein);
+                    CandidateListTruncated.Add(protein);
+                }
+
+
+                
+
+            }
+            return CandidateProteinListsInfo;
+        }
+
+
+        private string GetQuery(string DatabaseName)
         {
 
+            string subquery1 = "Select * From  [";
+            string subquery2 = "].[dbo].[ProteinInfoes]";
+            string query = subquery1 + DatabaseName + subquery2;  //Query to select all proteins in specified Database
+
+            return query;
+        }
+
+
+
+        private string GetConnectionString(string db)
+        {
+            switch (db)
+            {
+                case "Ecoli":
+                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
+                case "Bacteria":
+                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
+                case "TrEMBL":
+                    return ConfigurationManager.ConnectionStrings["TrEMBLConnectionStringName"].ConnectionString;
+                case "Human":
+                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
+                default:  // Default is also Human
+                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
+            }
         }
 
 
@@ -95,216 +232,5 @@ namespace PerceptronLocalService.Engine
             return Math.Round(MolecularWeightShift, 4);
         }
 
-        //public CandidateProteinListsDto GetProtein(SearchParametersDto parameters, List<PstTagList> PstTags, ProteinDto Protein)
-        //{
-
-        //}
-
-        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags) // Added "int CandidateList". 20200112
-        {
-            var query = GetQuery(parameters.ProtDb);
-
-            var connectionString = GetConnectionString(parameters.ProtDb);
-            List<SerializedProteinDataDto> prot;
-            using (var connection = new SqlConnection(connectionString))
-            {
-                prot = connection.Query<SerializedProteinDataDto>(query).ToList();
-
-            }
-
-            var proteins = new List<ProteinDto>();
-
-            CandidateProteinListsDto CandidateProteinListsInfo = new CandidateProteinListsDto();
-            var CandidateList = CandidateProteinListsInfo.CandidateProteinList;
-            var CandidateListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
-
-
-            foreach (var proteinInfo in prot)
-            {
-                //if (proteinInfo.ID == "P04439")  // Was for Testing
-                //{
-                //    int wait;
-                //}
-                var insilico = new InsilicoObjectDto()
-                {
-                    InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
-                    InsilicoMassRight = proteinInfo.InsilicoR.Split(',').Select(double.Parse).ToList() // InsilicoR
-                };
-
-                //#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water)
-                //insilico.InsilicoMassLeft.RemoveAt(insilico.InsilicoMassLeft.Count - 1); // JUST IN CASE::: as this will be the MW of protein - water
-                //insilico.InsilicoMassRight.RemoveAt(insilico.InsilicoMassRight.Count - 1);
-
-                var protein = new ProteinDto()
-                {
-                    Header = proteinInfo.ID,
-                    InsilicoDetails = insilico,
-                    Mw = proteinInfo.MW,
-                    Sequence = proteinInfo.Seq,
-                    OriginalSequence = proteinInfo.Seq
-
-                };
-
-
-                //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
-                //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
-
-                //var GetProtein( parameters, PstTags, Protein)
-
-                if (parameters.FilterDb == 1)
-                {
-                    double TotalFixedWeight = 0.0; double VariableWeight = 0.0;
-
-                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
-                    {
-                        if (parameters.FixedModifications != null)
-                        {
-                            double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
-                            double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
-                            TotalFixedWeight = ChemicalModMass + FixedWeight;
-                        }
-                        if (parameters.VariableModifications != null)
-                        {
-                            VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
-                        }
-                    }
-                    if (parameters.Truncation == 0)
-                    {
-                        if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
-                        {
-                            CandidateList.Add(protein);
-                        }
-                        else
-                        {
-                            if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
-                            {
-                                CandidateList.Add(protein);
-                            }
-                            else if(protein.Mw - IntactMass > parameters.MwTolerance)
-                            {
-                                if (parameters.DenovoAllow == 1)
-                                {
-                                    for (int i = 0; i < PstTags.Count; i++)
-                                    {
-                                        string Tag = PstTags[i].PstTags;
-                                        if (protein.Sequence.Contains(Tag))
-                                        {
-                                            CandidateListTruncated.Add(protein);
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    CandidateListTruncated.Add(protein);
-                                }
-                            }
-                        }
-
-                    }
-                }
-                else
-                {
-                    CandidateList.Add(protein);
-                    CandidateListTruncated.Add(protein);
-                }
-
-
-                
-
-            }
-            return CandidateProteinListsInfo;
-        }
-
-        //private FilteringDatabase()
-
-        //private List<ProteinDto
-
-
-        private string GetQuery(string DatabaseName) // Added "int CandidateList". 20200112
-        {
-
-            string subquery1 = "Select * From  [";
-            string subquery2 = "].[dbo].[ProteinInfoes]";
-            string query = subquery1 + DatabaseName + subquery2;  //Query to select all proteins in specified Database
-
-            return query;
-        }
-
-
-
-        private string GetConnectionString(string db)
-        {
-            switch (db)
-            {
-                case "Ecoli":
-                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                //break;
-                case "Bacteria":
-                    return ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                //break;
-                case "TrEMBL":// FARHAN's TESTING
-                    return ConfigurationManager.ConnectionStrings["TrEMBLConnectionStringName"].ConnectionString;
-                //break;
-                case "Human":
-                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
-                //break;
-                default:  // Default is also Human
-                    return ConfigurationManager.ConnectionStrings["ProteinConnectionStringName"].ConnectionString;
-            }
-        }
     }
 }
-
-
-
-//// CLEANED FOR DISCARD
-//                if (parameters.FilterDb == 1)
-//                {
-//                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
-//                    {
-//                        if (parameters.FixedModifications != null)
-//                        {
-//                            double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
-//                            double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
-//                            double TotalFixedWeight = ChemicalModMass + FixedWeight;
-//                        }
-//                        if (parameters.VariableModifications != null)
-//                        {
-//                            double VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
-//                        }
-//                    }
-//                    if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
-//                    {
-//                        proteins.Add(protein);
-//                    }
-//                    else if (CandidateList == 1)  // Candidate Protein List with Truncation     // parameters.Truncation == 1 && 
-//                    {
-//                        if (parameters.DenovoAllow == 1)
-//                        {
-//                            for (int indexPstTags = 0; indexPstTags < PstTags.Count; indexPstTags++)
-//                            {
-//                                if (proteinInfo.Seq.Contains(PstTags[indexPstTags].PstTags))
-//                                {
-//                                    proteins.Add(protein);
-//                                    break;  //Any Tag is Reported....??? Good!  BREAK THE LOOP AND KEEP THE PROTEIN
-//                                }
-//                            }
-//                        }
-//                        else
-//                        {
-//                            proteins.Add(protein);
-//                        }
-                        
-//                    }
-//                }
-//                else if (parameters.FilterDb == 0 && CandidateList == 0)
-//                {
-//                    proteins.Add(protein);
-//                }
-//                else if (parameters.FilterDb == 0 && CandidateList == 1)
-//                {
-//                    proteins.Add(protein);
-//                }
-//                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
-//                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
