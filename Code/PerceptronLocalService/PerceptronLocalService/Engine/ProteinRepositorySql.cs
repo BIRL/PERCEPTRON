@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Mono.CSharp;
+using System.Text.RegularExpressions;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Interfaces;
+using PerceptronLocalService.Utility;
 
 namespace PerceptronLocalService.Engine
 {
@@ -17,6 +19,65 @@ namespace PerceptronLocalService.Engine
         public void Dummy()
         {
 
+        }
+
+
+        
+
+        public double GetPTMMassShift(SearchParametersDto parameters, string Sequence)
+        {
+            double MolecularWeightShift = 0.0;
+            PTMModificationsInfoDto PTMModificationsInfo = new PTMModificationsInfoDto();
+            if (parameters.CysteineChemicalModification != "") // No need waisa
+            {
+                int NoofOccurrence = Regex.Matches(Sequence, "C").Count;
+                if (NoofOccurrence > 0)
+                {
+                    var ModificationTableClass = new ModificationMWShift();
+                    double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(parameters.CysteineChemicalModification);
+                    PTMModificationsInfo.FixedModificationInfo.Add( new FixedModificationInfoDto(NoofOccurrence, "C", MolecularWeight));
+
+                }
+            }
+            if (parameters.MethionineChemicalModification != "") // No need waisa
+            {
+                int NoofOccurrence = Regex.Matches(Sequence, "M").Count;
+                if (NoofOccurrence > 0)
+                {
+                    var ModificationTableClass = new ModificationMWShift();
+                    double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(parameters.MethionineChemicalModification);
+                    PTMModificationsInfo.VariableModificationInfo.Add( new VariableModificationInfoDto(NoofOccurrence, "M", MolecularWeight));
+
+                }
+            }
+
+            for (int i = 0; i < parameters.FixedModifications.Count; i++)
+            {
+                var FixModSite = parameters.FixedModifications[i];
+                var SiteIndex = FixModSite.IndexOf("_");
+                string Site = FixModSite.Substring(SiteIndex+1); //Extracting Site from FixedModifications
+                int NoofOccurrence = Regex.Matches(Sequence, Site).Count;
+
+                if (NoofOccurrence > 0)
+                {
+                    var ModificationTableClass = new ModificationMWShift();
+                    string ModificationName = FixModSite.Substring(0, FixModSite.Length - 2);
+                    double MolecularWeight = ModificationTableClass.ModificationMWShiftTable(ModificationName);
+
+                    PTMModificationsInfo.FixedModificationInfo.Add (new FixedModificationInfoDto(NoofOccurrence, Site, MolecularWeight));
+
+                }
+            }
+
+            for (int i = 0; i < PTMModificationsInfo.FixedModificationInfo.Count; i++)
+            {
+                MolecularWeightShift = MolecularWeightShift + PTMModificationsInfo.FixedModificationInfo[i].MolecularWeight;
+
+            }
+
+
+
+            return Math.Round(MolecularWeightShift, 4);
         }
 
         public List<ProteinDto> ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, int CandidateList) // Added "int CandidateList". 20200112
@@ -59,8 +120,19 @@ namespace PerceptronLocalService.Engine
 
                 };
 
+
+                //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
+                //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW //CLEAN CODE REQUIRED BELOW 
+
                 if (parameters.FilterDb == 1)
                 {
+                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)
+                    {
+                        if (parameters.FixedModifications != null)
+                        {
+                            double FixedWeight = GetPTMMassShift(parameters, protein.Sequence);
+                        }
+                    }
                     if (CandidateList == 0)  // Simple Candidate Protein List According to given tolerance with no Truncation
                     {
                         proteins.Add(protein);
@@ -93,6 +165,8 @@ namespace PerceptronLocalService.Engine
                 {
                     proteins.Add(protein);
                 }
+                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
+                //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE //CLEAN CODE REQUIRED ABOVE 
 
             }
             return proteins;

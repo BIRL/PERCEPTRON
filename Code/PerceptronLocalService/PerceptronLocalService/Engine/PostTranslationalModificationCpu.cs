@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
+using PerceptronLocalService.Utility;
 
 namespace PerceptronLocalService.Engine
 {
@@ -9869,8 +9870,11 @@ namespace PerceptronLocalService.Engine
 
         private List<PostTranslationModificationsSiteDto> Cys_PAM(string proteinSequence, double ptmTolerance)
         {
-            double modWeight = 174.04631;
-            var modName = "Propionamidation";
+            string modName = "Propionamidation";
+
+            var ModificationTableClass = new ModificationMWShift();
+            double modWeight = ModificationTableClass.ModificationMWShiftTable(modName);
+            
             var site = 'C';
 
             SetsiteDetect(site);
@@ -9937,8 +9941,11 @@ namespace PerceptronLocalService.Engine
 
         private List<PostTranslationModificationsSiteDto> MSO(string proteinSequence, double ptmTolerance)
         {
-            double modWeight = 147.0354;
-            var modName = "Sulfoxide";
+            string modName = "Sulfoxide";
+
+            var ModificationTableClass = new ModificationMWShift();
+            double modWeight = ModificationTableClass.ModificationMWShiftTable(modName);
+
             var site = 'M';
 
             SetsiteDetect(site);
@@ -10846,8 +10853,16 @@ namespace PerceptronLocalService.Engine
         }
         public double ModTable(string Mod) //Gives the weight of different types of modifications
         {
+
+            //SHIFTed this with name (ModificationMWShift) TO THE UTILITY FOR COMBINE USE
+            // DELETE FROM HERE AFTER STABLILITY.
+            // NO MORE EDITTING HERE
+
+            //#Enhancement Switch Cases will be more better here
             double ModWeight = 0;
-            if (Mod == "Pyruvate-S")
+            if(Mod == "Propionamidation")
+                ModWeight = 174.04631;
+            else if (Mod == "Pyruvate-S")
                 ModWeight = -17.0265;
             else if (Mod == "Pyruvate-C")
                 ModWeight = 70.0055;
