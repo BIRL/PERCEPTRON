@@ -67,7 +67,7 @@ namespace PerceptronLocalService.Engine
                     double TotalFixedWeight = 0.0;
                     double VariableWeight = 0.0;
 
-                    if (parameters.FixedModifications != null && parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
+                    if (parameters.FixedModifications != null && parameters.VariableModifications != null)
                     {
                         if (parameters.FixedModifications != null)
                         {
