@@ -67,7 +67,7 @@ namespace PerceptronLocalService.Engine
                     double TotalFixedWeight = 0.0;
                     double VariableWeight = 0.0;
 
-                    if (parameters.FixedModifications != null || parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
+                    if (parameters.FixedModifications != null && parameters.VariableModifications != null)  /// WHY && IN SPECTRUM #BUG???
                     {
                         if (parameters.FixedModifications != null)
                         {
@@ -86,33 +86,33 @@ namespace PerceptronLocalService.Engine
                         {
                             CandidateList.Add(protein);
                         }
-                        else
+                    }
+
+                    else
+                    {
+                        if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
                         {
-                            if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
+                            CandidateList.Add(protein);
+                        }
+                        else if (protein.Mw - IntactMass > parameters.MwTolerance)
+                        {
+                            if (parameters.DenovoAllow == 1)
                             {
-                                CandidateList.Add(protein);
-                            }
-                            else if(protein.Mw - IntactMass > parameters.MwTolerance)
-                            {
-                                if (parameters.DenovoAllow == 1)
+                                for (int i = 0; i < PstTags.Count; i++)
                                 {
-                                    for (int i = 0; i < PstTags.Count; i++)
+                                    string Tag = PstTags[i].PstTags;
+                                    if (protein.Sequence.Contains(Tag))
                                     {
-                                        string Tag = PstTags[i].PstTags;
-                                        if (protein.Sequence.Contains(Tag))
-                                        {
-                                            CandidateListTruncated.Add(protein);
-                                            break;
-                                        }
+                                        CandidateListTruncated.Add(protein);
+                                        break;
                                     }
                                 }
-                                else
-                                {
-                                    CandidateListTruncated.Add(protein);
-                                }
+                            }
+                            else
+                            {
+                                CandidateListTruncated.Add(protein);
                             }
                         }
-
                     }
                 }
                 else
@@ -120,10 +120,6 @@ namespace PerceptronLocalService.Engine
                     CandidateList.Add(protein);
                     CandidateListTruncated.Add(protein);
                 }
-
-
-                
-
             }
             return CandidateProteinListsInfo;
         }
