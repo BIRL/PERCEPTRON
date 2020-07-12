@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * 
+ *      #CFTTB
+ *
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PerceptronLocalService.Interfaces;
@@ -16,7 +23,7 @@ namespace PerceptronLocalService.Engine
         {
             _insilicoFilter = new InsilicoFilterCpu();
         }
-        /// No need for this!!!     A.G.
+        /// No need for this!!!
         //private int _aaSize;
 
         //private void SetAaSize(int size)
@@ -233,7 +240,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(7);    A.G.
+            // SetAaSize(7);    DoubA
 
             var modWeight = 42.0106;
             var modName = "Acetylation";
@@ -247,7 +254,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Alanine
             var totalAla = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -265,21 +272,21 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length)) //Remove
-                if (proteinSequence[i] == 'A')  // A.G.
+                if (proteinSequence[i] == 'A')  // DoubA
                 {
                     totalAla = totalAla + 1;
-                    // stores the amino acids found // A.G.
+                    // stores the amino acids found // DoubA
                     var sub_sequence = new List<char>();
 
                     //variables to store sub - sequence
                     char plus1, plus2, plus3, plus4, plus5, plus6;
-                    sub_sequence.Add(proteinSequence[i]);     // A.G.
+                    sub_sequence.Add(proteinSequence[i]);     // DoubA
 
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1) //Redundant // A.G.
+                    if (proteinSequence.Length > i + 1) //Redundant // DoubA
                     {
                         plus1 = (proteinSequence[i + 1]);
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'R':
@@ -329,10 +336,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2) // A.G.
+                    if (proteinSequence.Length > i + 2) // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'Y':
@@ -384,10 +391,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3) // A.G.
+                    if (proteinSequence.Length > i + 3) // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'C':
@@ -432,10 +439,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4) // A.G.
+                    if (proteinSequence.Length > i + 4) // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'H':
@@ -482,10 +489,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5) // A.G.
+                    if (proteinSequence.Length > i + 5) // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -535,10 +542,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6) // A.G.
+                    if (proteinSequence.Length > i + 6) // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  //A.G.
+                        sub_sequence.Add(plus6);  //DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'M':
@@ -589,7 +596,7 @@ namespace PerceptronLocalService.Engine
 
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   A.G.
+                        //l = proteinSequence[i + 1];   DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -597,7 +604,7 @@ namespace PerceptronLocalService.Engine
                         //g = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(proteinSequence[i]);   A.G.
+                        //aa.Add(proteinSequence[i]);   DoubA
                         //aa.Add(l);
                         //aa.Add(k);
                         //aa.Add(j);
@@ -616,9 +623,9 @@ namespace PerceptronLocalService.Engine
                 // for the TotalAla if condition coming up ahead
                 index = i;
             }
-
+            
             // it displays total number of Alanine found in sequence
-            //if (index == proteinSequence.Length) A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length) DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Alanine found: " + totalAla);
             //}
@@ -634,7 +641,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(13);  A.G.
+            // SetAaSize(13);  DoubA
 
             var modWeight = 42.0106;
             var modName = "Acetylation";
@@ -648,7 +655,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Lysine
             var totalLys = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -667,59 +674,59 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length))
-                if (proteinSequence[i] == 'K')  // A.G.
+                if (proteinSequence[i] == 'K')  // DoubA
                 {
                     totalLys = totalLys + 1;
-                    // stores the amino acids found // A.G.
+                    // stores the amino acids found // DoubA
                     var sub_sequence = new List<char>();
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // A.G. if (i - 6 > 0)
+                    if (i - 6 >= 0) // DoubA if (i - 6 > 0)
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'C':
                             case 'W':
-                                score = 0.01; // A.G.
+                                score = 0.01; // DoubA
                                 break;
                             case 'M':
                             case 'H':
-                                score = 0.02; // A.G.
+                                score = 0.02; // DoubA
                                 break;
                             case 'Y':
-                                score = 0.03; // A.G.
+                                score = 0.03; // DoubA
                                 break;
                             case 'N':
                             case 'I':
                             case 'F':
                             case 'Q':
-                                score = 0.04; // A.G.
+                                score = 0.04; // DoubA
                                 break;
                             case 'D':
                             case 'T':
                             case 'P':
                             case 'V':
-                                score = 0.05; // A.G.
+                                score = 0.05; // DoubA
                                 break;
                             case 'G':
-                                score = 0.06; // A.G.
+                                score = 0.06; // DoubA
                                 break;
                             case 'R':
                             case 'S':
                             case 'E':
-                                score = 0.07; // A.G.
+                                score = 0.07; // DoubA
                                 break;
                             case 'A':
                             case 'L':
-                                score = 0.09; // A.G.
+                                score = 0.09; // DoubA
                                 break;
                             case 'K':
-                                score = 0.11; // A.G.
+                                score = 0.11; // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -728,10 +735,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // A.G.
+                    if (i - 5 >= 0) // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'C':
@@ -781,10 +788,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // A.G.
+                    if (i - 4 >= 0) // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'C':
@@ -834,10 +841,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // A.G.
+                    if (i - 3 >= 0) // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'C':
@@ -883,10 +890,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // A.G.
+                    if (i - 2 >= 0) // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'C':
@@ -936,10 +943,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0) // A.G.
+                    if (i - 1 >= 0) // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'C':
@@ -988,51 +995,51 @@ namespace PerceptronLocalService.Engine
                         }
                     }
 
-                    sub_sequence.Add(proteinSequence[i]);  // A.G.
+                    sub_sequence.Add(proteinSequence[i]);  // DoubA
 
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = (proteinSequence[i + 1]);
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'W':
-                                score = score * 0.01;  // A.G.
+                                score = score * 0.01;  // DoubA
                                 break;
                             case 'M':
-                                score = score * 0.02;  // A.G.
+                                score = score * 0.02;  // DoubA
                                 break;
                             case 'Q':
-                                score = score * 0.03;  // A.G.
+                                score = score * 0.03;  // DoubA
                                 break;
                             case 'N':
                             case 'H':
                             case 'I':
                             case 'T':
-                                score = score * 0.04;  // A.G.
+                                score = score * 0.04;  // DoubA
                                 break;
                             case 'V':
                             case 'S':
                             case 'F':
                             case 'R':
-                                score = score * 0.05;  // A.G.
+                                score = score * 0.05;  // DoubA
                                 break;
                             case 'G':
                             case 'D':
                             case 'P':
-                                score = score * 0.06;  // A.G.
+                                score = score * 0.06;  // DoubA
                                 break;
                             case 'K':
-                                score = score * 0.07;  // A.G.
+                                score = score * 0.07;  // DoubA
                                 break;
                             case 'A':
                             case 'E':
                             case 'Y':
-                                score = score * 0.08;  // A.G.
+                                score = score * 0.08;  // DoubA
                                 break;
                             case 'L':
-                                score = score * 0.09;  // A.G.
+                                score = score * 0.09;  // DoubA
                                 break;
                             case 'C':
                                 score = 0;
@@ -1044,10 +1051,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'W':
@@ -1100,7 +1107,7 @@ namespace PerceptronLocalService.Engine
                     if (proteinSequence.Length > i + 3)
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'C':
@@ -1151,7 +1158,7 @@ namespace PerceptronLocalService.Engine
                     if (proteinSequence.Length > i + 4)
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'C':
@@ -1202,7 +1209,7 @@ namespace PerceptronLocalService.Engine
                     if (proteinSequence.Length > i + 5)
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -1255,7 +1262,7 @@ namespace PerceptronLocalService.Engine
                     if (proteinSequence.Length > i + 6)
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'C':
@@ -1309,7 +1316,7 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // A.G.
+                    if (score >= ptmTolerance)  // DoubA
                     {
                         //l = proteinSequence[i + 1];
                         //k = proteinSequence[i + 2];
@@ -1353,7 +1360,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Lysine found in sequence
-            //if (index == proteinSequence.Length)  // A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  // DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Lysine found: " + totalLys);
             //}
@@ -1369,7 +1376,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(7);    // A.G.
+            // SetAaSize(7);    // DoubA
 
             var modWeight = 42.0106;
             var modName = "Acetylation";
@@ -1383,7 +1390,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Methionine
             var totalMet = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -1402,21 +1409,21 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length))
-                if (proteinSequence[i] == 'M')  // A.G.
+                if (proteinSequence[i] == 'M')  // DoubA
                 {
                     totalMet = totalMet + 1;
                     // stores the amino acids found   
-                    var sub_sequence = new List<char>();  //A.G.
+                    var sub_sequence = new List<char>();  //DoubA
 
                     //variables to store sub - sequence
                     char plus1, plus2, plus3, plus4, plus5, plus6;
-                    sub_sequence.Add(proteinSequence[i]); // A.G.
+                    sub_sequence.Add(proteinSequence[i]); // DoubA
 
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -1462,10 +1469,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -1517,10 +1524,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -1570,10 +1577,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
-                        plus4 = proteinSequence[i + 4]; // A.G.
-                        sub_sequence.Add(plus4);  // A.G.
+                        plus4 = proteinSequence[i + 4]; // DoubA
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -1623,10 +1630,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -1676,10 +1683,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -1732,7 +1739,7 @@ namespace PerceptronLocalService.Engine
 
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   // A.G.
+                        //l = proteinSequence[i + 1];   // DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -1740,7 +1747,7 @@ namespace PerceptronLocalService.Engine
                         //g = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(proteinSequence[i]);   // A.G.
+                        //aa.Add(proteinSequence[i]);   // DoubA
                         //aa.Add(l);
                         //aa.Add(k);
                         //aa.Add(j);
@@ -1762,7 +1769,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Methionine found in sequence
-            //if (index == proteinSequence.Length)  // A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  // DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Methionine found: " + totalMet);
             //}
@@ -1778,7 +1785,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(7);    // A.G.
+            // SetAaSize(7);    // DoubA
 
             var modWeight = 42.0106;
             var modName = "Acetylation";
@@ -1792,7 +1799,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Serine
             var totalSer = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -1810,21 +1817,21 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length))
-                if (proteinSequence[i] == 'S')  // A.G.
+                if (proteinSequence[i] == 'S')  // DoubA
                 {
                     totalSer = totalSer + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char plus1, plus2, plus3, plus4, plus5, plus6;
-                    sub_sequence.Add(proteinSequence[i]); // A.G.
+                    sub_sequence.Add(proteinSequence[i]); // DoubA
 
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
-                        plus1 = proteinSequence[i + 1]; // A.G.
-                        sub_sequence.Add(plus1);  // A.G.
+                        plus1 = proteinSequence[i + 1]; // DoubA
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -1870,10 +1877,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
-                        plus2 = proteinSequence[i + 2]; // A.G.
-                        sub_sequence.Add(plus2);  // A.G.
+                        plus2 = proteinSequence[i + 2]; // DoubA
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -1925,10 +1932,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
-                        plus3 = proteinSequence[i + 3]; // A.G.
-                        sub_sequence.Add(plus3);  // A.G.
+                        plus3 = proteinSequence[i + 3]; // DoubA
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -1978,10 +1985,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
-                        plus4 = proteinSequence[i + 4]; // A.G.
-                        sub_sequence.Add(plus4);  // A.G.
+                        plus4 = proteinSequence[i + 4]; // DoubA
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -2031,10 +2038,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
-                        plus5 = proteinSequence[i + 5]; // A.G.
-                        sub_sequence.Add(plus5);  // A.G.
+                        plus5 = proteinSequence[i + 5]; // DoubA
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -2082,10 +2089,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
-                        plus6 = proteinSequence[i + 6]; // A.G.
-                        sub_sequence.Add(plus6);  // A.G.
+                        plus6 = proteinSequence[i + 6]; // DoubA
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'M':
@@ -2136,7 +2143,7 @@ namespace PerceptronLocalService.Engine
 
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   // A.G.
+                        //l = proteinSequence[i + 1];   // DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -2144,7 +2151,7 @@ namespace PerceptronLocalService.Engine
                         //g = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(proteinSequence[i]);   // A.G.
+                        //aa.Add(proteinSequence[i]);   // DoubA
                         //aa.Add(l);
                         //aa.Add(k);
                         //aa.Add(j);
@@ -2165,7 +2172,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Serine found in sequence
-            //if (index == proteinSequence.Length)  // A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  // DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Serine found: " + totalSer);
             //}
@@ -2181,7 +2188,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(7);    // A.G.
+            // SetAaSize(7);    // DoubA
 
             var modWeight = -0.984016;
             var modName = "Amidation";
@@ -2195,7 +2202,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Phenylalanine
             var totalPhe = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -2214,61 +2221,61 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length))
-                if (proteinSequence[i] == 'F')  // A.G.
+                if (proteinSequence[i] == 'F')  // DoubA
                 {
                     totalPhe = totalPhe + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  // A.G.
+                    if (i - 6 >= 0)  // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'C':
                             case 'L':
                             case 'T':
                             case 'W':
-                                score = 0.01;  // A.G.
+                                score = 0.01;  // DoubA
                                 break;
                             case 'I':
                             case 'M':
                             case 'V':
-                                score = 0.02;  // A.G.
+                                score = 0.02;  // DoubA
                                 break;
                             case 'H':
-                                score = 0.03;  // A.G.
+                                score = 0.03;  // DoubA
                                 break;
                             case 'A':
                             case 'N':
                             case 'E':
                             case 'P':
-                                score = 0.06;  // A.G.
+                                score = 0.06;  // DoubA
                                 break;
                             case 'Q':
                             case 'S':
-                                score = 0.07;  // A.G.
+                                score = 0.07;  // DoubA
                                 break;
                             case 'K':
-                                score = 0.08;  // A.G.
+                                score = 0.08;  // DoubA
                                 break;
                             case 'G':
-                                score = 0.09;  // A.G.
+                                score = 0.09;  // DoubA
                                 break;
                             case 'Y':
-                                score = 0.1;  // A.G.
+                                score = 0.1;  // DoubA
                                 break;
                             case 'R':
                             case 'D':
-                                score = 0.11;  // A.G.
+                                score = 0.11;  // DoubA
                                 break;
                             case 'F':
-                                score = 0;  // A.G.
+                                score = 0;  // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -2277,10 +2284,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'I':
@@ -2332,10 +2339,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'Q':
@@ -2383,10 +2390,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'M':
@@ -2434,10 +2441,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -2483,10 +2490,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -2496,19 +2503,19 @@ namespace PerceptronLocalService.Engine
                             case 'S':
                             case 'T':
                             case 'V':
-                                score = score * 0.01;  // A.G.
+                                score = score * 0.01;  // DoubA
                                 break;
                             case 'G':
-                                score = score * 0.02;  // A.G.
+                                score = score * 0.02;  // DoubA
                                 break;
                             case 'H':
-                                score = score * 0.03;  // A.G.
+                                score = score * 0.03;  // DoubA
                                 break;
                             case 'D':
-                                score = score * 0.15;  // A.G.
+                                score = score * 0.15;  // DoubA
                                 break;
                             case 'R':
-                                score = score * 0.72;  // A.G.
+                                score = score * 0.72;  // DoubA
                                 break;
                             case 'N':
                             case 'C':
@@ -2519,7 +2526,7 @@ namespace PerceptronLocalService.Engine
                             case 'P':
                             case 'W':
                             case 'Y':
-                                score = score * 0;  // A.G.
+                                score = score * 0;  // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -2536,7 +2543,7 @@ namespace PerceptronLocalService.Engine
                     //    (i - 2 >= 0) && (i - 1 >= 0))
                     if (score >= ptmTolerance)
                     {
-                        //f = proteinSequence[i - 1];   A.G.
+                        //f = proteinSequence[i - 1];   DoubA
                         //e = proteinSequence[i - 2];
                         //d = proteinSequence[i - 3];
                         //c = proteinSequence[i - 4];
@@ -2544,7 +2551,7 @@ namespace PerceptronLocalService.Engine
                         //a = proteinSequence[i - 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(a);    A.G.
+                        //aa.Add(a);    DoubA
                         //aa.Add(b);
                         //aa.Add(c);
                         //aa.Add(d);
@@ -2566,7 +2573,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Serine found in sequence
-            //if (index == proteinSequence.Length)  A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Phenylalanine found: " + totalPhe);
             //}
@@ -2596,7 +2603,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Proline
             var totalPro = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -2619,7 +2626,7 @@ namespace PerceptronLocalService.Engine
                 {
                     totalPro = totalPro + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
@@ -2628,7 +2635,7 @@ namespace PerceptronLocalService.Engine
                     if (i - 6 >= 0)
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'N':
@@ -2636,34 +2643,34 @@ namespace PerceptronLocalService.Engine
                             case 'I':
                             case 'M':
                             case 'Y':
-                                score = 0.02;  // A.G.
+                                score = 0.02;  // DoubA
                                 break;
                             case 'D':
                             case 'G':
                             case 'L':
                             case 'V':
-                                score = 0.03;  // A.G.
+                                score = 0.03;  // DoubA
                                 break;
                             case 'T':
-                                score = 0.04;  // A.G.
+                                score = 0.04;  // DoubA
                                 break;
                             case 'S':
-                                score = 0.05;  // A.G.
+                                score = 0.05;  // DoubA
                                 break;
                             case 'Q':
-                                score = 0.06;  // A.G.
+                                score = 0.06;  // DoubA
                                 break;
                             case 'R':
-                                score = 0.08;  // A.G.
+                                score = 0.08;  // DoubA
                                 break;
                             case 'K':
-                                score = 0.12;  // A.G.
+                                score = 0.12;  // DoubA
                                 break;
                             case 'A':
-                                score = 0.13;  // A.G.
+                                score = 0.13;  // DoubA
                                 break;
                             case 'P':
-                                score = 0.3;  // A.G.
+                                score = 0.3;  // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -2672,10 +2679,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'R':
@@ -2712,10 +2719,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'C':
@@ -2762,10 +2769,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'Y':
@@ -2809,10 +2816,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'R':
@@ -2849,10 +2856,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'N':
@@ -2897,13 +2904,13 @@ namespace PerceptronLocalService.Engine
                         }
                     }
 
-                    sub_sequence.Add(proteinSequence[i]); // A.G.
+                    sub_sequence.Add(proteinSequence[i]); // DoubA
 
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'R':
@@ -2936,10 +2943,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'N':
@@ -2985,10 +2992,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'E':
@@ -3040,10 +3047,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'R':
@@ -3081,10 +3088,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'H':
@@ -3130,10 +3137,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'H':
@@ -3184,7 +3191,7 @@ namespace PerceptronLocalService.Engine
                     //    (i - 2 >= 0) && (i - 1 >= 0))
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   A.G.
+                        //l = proteinSequence[i + 1];   DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -3198,7 +3205,7 @@ namespace PerceptronLocalService.Engine
                         //a = proteinSequence[i - 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(a);    A.G.
+                        //aa.Add(a);    DoubA
                         //aa.Add(b);
                         //aa.Add(c);
                         //aa.Add(d);
@@ -3226,7 +3233,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Proline found in sequence
-            //if (index == proteinSequence.Length)  A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Proline found: " + totalPro);
             //}
@@ -3242,7 +3249,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            //SetAaSize(13); A.G.
+            //SetAaSize(13); DoubA
 
             var modWeight = 14.0156;
             var modName = "Methylation";
@@ -3256,7 +3263,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Lysine
             var totalLys = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -3279,16 +3286,16 @@ namespace PerceptronLocalService.Engine
                 {
                     totalLys = totalLys + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  // A.G.
+                    if (i - 6 >= 0)  // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -3334,10 +3341,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -3381,10 +3388,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -3430,10 +3437,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -3481,10 +3488,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -3528,10 +3535,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -3576,13 +3583,13 @@ namespace PerceptronLocalService.Engine
                         }
                     }
 
-                    sub_sequence.Add(proteinSequence[i]);   //A.G.
+                    sub_sequence.Add(proteinSequence[i]);   //DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -3628,10 +3635,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -3677,10 +3684,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -3728,10 +3735,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -3777,10 +3784,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -3828,10 +3835,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -3877,9 +3884,9 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // A.G.
+                    if (score >= ptmTolerance)  // DoubA
                     {
-                        //b = proteinSequence[i - 6];  // A.G.
+                        //b = proteinSequence[i - 6];  // DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -3893,7 +3900,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);  // A.G.
+                        //aa.Add(b);  // DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -3921,7 +3928,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Lysine found in sequence
-            //if (index == proteinSequence.Length)  A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Lysine found: " + totalLys);
             //}
@@ -3937,7 +3944,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(14);   A.G.
+            // SetAaSize(14);   DoubA
 
             var modWeight = 14.0156;
             var modName = "Methylation";
@@ -3951,7 +3958,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of argenine
             var totalArg = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -3974,16 +3981,16 @@ namespace PerceptronLocalService.Engine
                 {
                     totalArg = totalArg + 1;
                     //stores the amino acids found   
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  // A.G.
+                    if (i - 6 >= 0)  // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -4033,10 +4040,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -4084,10 +4091,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -4139,10 +4146,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -4192,10 +4199,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -4245,10 +4252,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -4296,13 +4303,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);  // A.G.
+                    sub_sequence.Add(proteinSequence[i]);  // DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -4350,10 +4357,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -4401,10 +4408,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -4454,10 +4461,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -4507,10 +4514,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -4560,10 +4567,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -4619,7 +4626,7 @@ namespace PerceptronLocalService.Engine
                     //    (i - 2 >= 0) && (i - 1 >= 0))
                     if (score >= ptmTolerance)
                     {
-                        //b = proteinSequence[i - 6];   A.G.
+                        //b = proteinSequence[i - 6];   DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -4633,7 +4640,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);    A.G.
+                        //aa.Add(b);    DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -4662,7 +4669,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Argenine found in sequence
-            //if (index == proteinSequence.Length)  // A.G. does not exist inspectrum
+            //if (index == proteinSequence.Length)  // DoubA does not exist inspectrum
             //{
             //    Console.WriteLine("Total Argenine found: " + totalArg);
             //}
@@ -4692,7 +4699,7 @@ namespace PerceptronLocalService.Engine
             // Variable to store total number of Asparagine
             var totalAsn = 0;
 
-            //// stores the amino acids found   A.G.
+            //// stores the amino acids found   DoubA
             //var aa = new List<char>();
 
             // list "array" creation
@@ -4715,16 +4722,16 @@ namespace PerceptronLocalService.Engine
                 {
                     totalAsn = totalAsn + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  // A.G.
+                    if (i - 6 >= 0)  // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -4766,10 +4773,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -4813,10 +4820,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -4862,10 +4869,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -4909,10 +4916,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -4956,10 +4963,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -5005,13 +5012,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);  // A.G.
+                    sub_sequence.Add(proteinSequence[i]);  // DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -5061,10 +5068,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'S':
@@ -5080,10 +5087,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -5133,10 +5140,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -5182,10 +5189,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -5231,10 +5238,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -5284,9 +5291,9 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  //A.G.
+                    if (score >= ptmTolerance)  //DoubA
                     {
-                        //b = proteinSequence[i - 6];   A.G.
+                        //b = proteinSequence[i - 6];   DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -5300,7 +5307,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);    A.G.
+                        //aa.Add(b);    DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -5329,7 +5336,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Asparagine found in sequence
-            //if (index == proteinSequence.Length)  A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  does not exist in spectrum
             //{
             //    Console.WriteLine("Total Asparagine found: " + totalAsn);
             //}
@@ -5345,7 +5352,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            // SetAaSize(13);   A.G.
+            // SetAaSize(13);   DoubA
 
             var modWeight = 203.079;
             var modName = "O-Linked Glycosylation";
@@ -5360,7 +5367,7 @@ namespace PerceptronLocalService.Engine
             var totalThr = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -5388,10 +5395,10 @@ namespace PerceptronLocalService.Engine
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // A.G.
+                    if (i - 6 >= 0) // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6); // A.G.
+                        sub_sequence.Add(minus6); // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'N':
@@ -5443,10 +5450,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // A.G.
+                    if (i - 5 >= 0) // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5); // A.G.
+                        sub_sequence.Add(minus5); // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'M':
@@ -5498,10 +5505,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // A.G.
+                    if (i - 4 >= 0) // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4); // A.G.
+                        sub_sequence.Add(minus4); // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'H':
@@ -5551,10 +5558,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // A.G.
+                    if (i - 3 >= 0) // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3); // A.G.
+                        sub_sequence.Add(minus3); // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'E':
@@ -5607,10 +5614,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // A.G.
+                    if (i - 2 >= 0) // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2); // A.G.
+                        sub_sequence.Add(minus2); // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'D':
@@ -5662,10 +5669,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0) // A.G.
+                    if (i - 1 >= 0) // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1); // A.G.
+                        sub_sequence.Add(minus1); // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'D':
@@ -5715,13 +5722,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]); // A.G.
-
+                    sub_sequence.Add(proteinSequence[i]); // DoubA
+                    
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1) // A.G.
+                    if (proteinSequence.Length > i + 1) // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1); // A.G.
+                        sub_sequence.Add(plus1); // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'Y':
@@ -5773,10 +5780,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2) // A.G.
+                    if (proteinSequence.Length > i + 2) // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2); // A.G.
+                        sub_sequence.Add(plus2); // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'N':
@@ -5826,10 +5833,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3) // A.G.
+                    if (proteinSequence.Length > i + 3) // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3); // A.G.
+                        sub_sequence.Add(plus3); // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'C':
@@ -5883,10 +5890,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4) // A.G.
+                    if (proteinSequence.Length > i + 4) // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4); // A.G.
+                        sub_sequence.Add(plus4); // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'Q':
@@ -5936,10 +5943,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5) // A.G.
+                    if (proteinSequence.Length > i + 5) // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5); // A.G.
+                        sub_sequence.Add(plus5); // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -5985,10 +5992,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6) // A.G.
+                    if (proteinSequence.Length > i + 6) // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6); // A.G.
+                        sub_sequence.Add(plus6); // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'N':
@@ -6048,7 +6055,7 @@ namespace PerceptronLocalService.Engine
                     //    (i - 2 >= 0) && (i - 1 >= 0))
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   // A.G.
+                        //l = proteinSequence[i + 1];   // DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -6090,7 +6097,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Threonine found in sequence
-            //if (index == proteinSequence.Length)  // A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  // DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Threonine found: " + totalThr);
             //}
@@ -6121,7 +6128,7 @@ namespace PerceptronLocalService.Engine
             var totalSer = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -6143,21 +6150,21 @@ namespace PerceptronLocalService.Engine
                 {
                     totalSer = totalSer + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // A.G.
+                    if (i - 6 >= 0) // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);    // A.G.
+                        sub_sequence.Add(minus6);    // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'M':
                             case 'Y':
-                                score = 0.01; // A.G.
+                                score = 0.01; // DoubA
                                 break;
                             case 'D':
                             case 'C':
@@ -6166,32 +6173,32 @@ namespace PerceptronLocalService.Engine
                             case 'K':
                             case 'F':
                             case 'W':
-                                score = 0.02; // A.G.
+                                score = 0.02; // DoubA
                                 break;
                             case 'R':
                             case 'N':
                             case 'I':
-                                score = 0.03; // A.G.
+                                score = 0.03; // DoubA
                                 break;
                             case 'E':
                             case 'V':
-                                score = 0.04; // A.G.
+                                score = 0.04; // DoubA
                                 break;
                             case 'G':
                             case 'L':
-                                score = 0.05; // A.G.
+                                score = 0.05; // DoubA
                                 break;
                             case 'A':
-                                score = 0.07; // A.G.
+                                score = 0.07; // DoubA
                                 break;
                             case 'P':
-                                score = 0.18; // A.G.
+                                score = 0.18; // DoubA
                                 break;
                             case 'S':
-                                score = 0.21; // A.G.
+                                score = 0.21; // DoubA
                                 break;
                             case 'T':
-                                score = 0.14; // A.G.
+                                score = 0.14; // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -6200,10 +6207,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // A.G.
+                    if (i - 5 >= 0) // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);    // A.G.
+                        sub_sequence.Add(minus5);    // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'N':
@@ -6257,10 +6264,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // A.G.
+                    if (i - 4 >= 0) // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);   // A.G.
+                        sub_sequence.Add(minus4);   // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'C':
@@ -6310,10 +6317,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // A.G.
+                    if (i - 3 >= 0) // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);    // A.G.
+                        sub_sequence.Add(minus3);    // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'N':
@@ -6361,10 +6368,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // A.G.
+                    if (i - 2 >= 0) // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);    // A.G.
+                        sub_sequence.Add(minus2);    // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'C':
@@ -6412,10 +6419,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 > -0) // A.G.
+                    if (i - 1 > -0) // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);    // A.G.
+                        sub_sequence.Add(minus1);    // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'R':
@@ -6465,58 +6472,58 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);    // A.G.
-
+                    sub_sequence.Add(proteinSequence[i]);    // DoubA
+                    
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1) // A.G.
+                    if (proteinSequence.Length > i + 1) // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);    // A.G.
+                        sub_sequence.Add(plus1);    // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'C':
                             case 'H':
                             case 'Y':
-                                score = score * 0.01; // A.G.
+                                score = score * 0.01; // DoubA
                                 break;
                             case 'D':
                             case 'I':
                             case 'K':
-                                score = score * 0.02; // A.G.
+                                score = score * 0.02; // DoubA
                                 break;
                             case 'Q':
                             case 'V':
-                                score = score * 0.03; // A.G.
+                                score = score * 0.03; // DoubA
                                 break;
                             case 'R':
-                                score = score * 0.04; // A.G.
+                                score = score * 0.04; // DoubA
                                 break;
                             case 'G':
-                                score = score * 0.06; // A.G.
+                                score = score * 0.06; // DoubA
                                 break;
                             case 'L':
-                                score = score * 0.07; // A.G.
+                                score = score * 0.07; // DoubA
                                 break;
                             case 'S':
-                                score = score * 0.09; // A.G.
+                                score = score * 0.09; // DoubA
                                 break;
                             case 'P':
-                                score = score * 0.1; // A.G.
+                                score = score * 0.1; // DoubA
                                 break;
                             case 'E':
-                                score = score * 0.16; // A.G.
+                                score = score * 0.16; // DoubA
                                 break;
                             case 'A':
-                                score = score * 0.14; // A.G.
+                                score = score * 0.14; // DoubA
                                 break;
                             case 'T':
-                                score = score * 0.2; // A.G.
+                                score = score * 0.2; // DoubA
                                 break;
                             case 'N':
                             case 'M':
                             case 'F':
                             case 'W':
-                                score = score * 0; // A.G.
+                                score = score * 0; // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -6525,10 +6532,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2) // A.G.
+                    if (proteinSequence.Length > i + 2) // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);    // A.G.
+                        sub_sequence.Add(plus2);    // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'D':
@@ -6578,10 +6585,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3) // A.G.
+                    if (proteinSequence.Length > i + 3) // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);    // A.G.
+                        sub_sequence.Add(plus3);    // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'R':
@@ -6633,10 +6640,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4) // A.G.
+                    if (proteinSequence.Length > i + 4) // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);    // A.G.
+                        sub_sequence.Add(plus4);    // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'R':
@@ -6684,10 +6691,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5) // A.G.
+                    if (proteinSequence.Length > i + 5) // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);    // A.G.
+                        sub_sequence.Add(plus5);    // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -6739,10 +6746,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6) // A.G.
+                    if (proteinSequence.Length > i + 6) // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);    // A.G.
+                        sub_sequence.Add(plus6);    // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'D':
@@ -6797,10 +6804,10 @@ namespace PerceptronLocalService.Engine
                     score = Normalize(score, 11);
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
-                    //    (i - 2 >= 0) && (i - 1 >= 0)) A.G.
+                    //    (i - 2 >= 0) && (i - 1 >= 0)) DoubA
                     if (score >= ptmTolerance)
                     {
-                        //l = proteinSequence[i + 1];   A.G.
+                        //l = proteinSequence[i + 1];   DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -6814,7 +6821,7 @@ namespace PerceptronLocalService.Engine
                         //a = proteinSequence[i - 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(a);    A.G.
+                        //aa.Add(a);    DoubA
                         //aa.Add(b);
                         //aa.Add(c);
                         //aa.Add(d);
@@ -6842,7 +6849,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Serine found in sequence
-            //if (index == proteinSequence.Length)  A.G. does not exist in spectrum
+            //if (index == proteinSequence.Length)  DoubA does not exist in spectrum
             //{
             //    Console.WriteLine("Total Serine found: " + totalSer);
             //}
@@ -6858,7 +6865,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            //SetAaSize(13);    A.G.
+            //SetAaSize(13);    DoubA
 
             var modWeight = 79.9663;
             var modName = "Phosphorylation";
@@ -6873,7 +6880,7 @@ namespace PerceptronLocalService.Engine
             var totalSer = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -6895,16 +6902,16 @@ namespace PerceptronLocalService.Engine
                 {
                     totalSer = totalSer + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  // A.G.
+                    if (i - 6 >= 0)  // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);  // A.G.
+                        sub_sequence.Add(minus6);  // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -6954,10 +6961,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  // A.G.
+                    if (i - 5 >= 0)  // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);  // A.G.
+                        sub_sequence.Add(minus5);  // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -7009,10 +7016,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  // A.G.
+                    if (i - 4 >= 0)  // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);  // A.G.
+                        sub_sequence.Add(minus4);  // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -7062,10 +7069,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  // A.G.
+                    if (i - 3 >= 0)  // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);  // A.G.
+                        sub_sequence.Add(minus3);  // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -7115,10 +7122,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  // A.G.
+                    if (i - 2 >= 0)  // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);  // A.G.
+                        sub_sequence.Add(minus2);  // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -7168,10 +7175,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  // A.G.
+                    if (i - 1 >= 0)  // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);  // A.G.
+                        sub_sequence.Add(minus1);  // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -7221,13 +7228,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]); // A.G.
+                    sub_sequence.Add(proteinSequence[i]); // DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1)  // A.G.
+                    if (proteinSequence.Length > i + 1)  // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);  // A.G.
+                        sub_sequence.Add(plus1);  // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -7275,10 +7282,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2)  // A.G.
+                    if (proteinSequence.Length > i + 2)  // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);  // A.G.
+                        sub_sequence.Add(plus2);  // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -7330,10 +7337,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3)  // A.G.
+                    if (proteinSequence.Length > i + 3)  // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);  // A.G.
+                        sub_sequence.Add(plus3);  // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -7385,10 +7392,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4)  // A.G.
+                    if (proteinSequence.Length > i + 4)  // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);  // A.G.
+                        sub_sequence.Add(plus4);  // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -7440,10 +7447,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5)  // A.G.
+                    if (proteinSequence.Length > i + 5)  // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);  // A.G.
+                        sub_sequence.Add(plus5);  // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -7491,10 +7498,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6)  // A.G.
+                    if (proteinSequence.Length > i + 6)  // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);  // A.G.
+                        sub_sequence.Add(plus6);  // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -7548,9 +7555,9 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // A.G.
+                    if (score >= ptmTolerance)  // DoubA
                     {
-                        //b = proteinSequence[i - 6];   A.G.
+                        //b = proteinSequence[i - 6];   DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -7564,7 +7571,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);    A.G.
+                        //aa.Add(b);    DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -7592,7 +7599,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Serine found in sequence
-            //if (index == proteinSequence.Length)  A.G.
+            //if (index == proteinSequence.Length)  DoubA
             //{
             //    Console.WriteLine("Total Serine found: " + totalSer);
             //}
@@ -7608,7 +7615,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            //SetAaSize(13);    A.G.
+            //SetAaSize(13);    DoubA
 
             var modWeight = 79.9663;
             var modName = "Phosphorylation";
@@ -7623,7 +7630,7 @@ namespace PerceptronLocalService.Engine
             var totalThr = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -7645,16 +7652,16 @@ namespace PerceptronLocalService.Engine
                 {
                     totalThr = totalThr + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // A.G.
+                    if (i - 6 >= 0) // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);   // A.G.
+                        sub_sequence.Add(minus6);   // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -7700,10 +7707,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // A.G.
+                    if (i - 5 >= 0) // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);   // A.G.
+                        sub_sequence.Add(minus5);   // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -7753,10 +7760,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // A.G.
+                    if (i - 4 >= 0) // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);   // A.G.
+                        sub_sequence.Add(minus4);   // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -7806,10 +7813,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // A.G.
+                    if (i - 3 >= 0) // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);   // A.G.
+                        sub_sequence.Add(minus3);   // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -7863,10 +7870,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // A.G.
+                    if (i - 2 >= 0) // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);   // A.G.
+                        sub_sequence.Add(minus2);   // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -7916,10 +7923,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0) // A.G.
+                    if (i - 1 >= 0) // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);   // A.G.
+                        sub_sequence.Add(minus1);   // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -7969,13 +7976,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);   // A.G.
+                    sub_sequence.Add(proteinSequence[i]);   // DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1) // A.G.
+                    if (proteinSequence.Length > i + 1) // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);   // A.G.
+                        sub_sequence.Add(plus1);   // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -8023,10 +8030,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2) // A.G.
+                    if (proteinSequence.Length > i + 2) // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);   // A.G.
+                        sub_sequence.Add(plus2);   // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -8076,10 +8083,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3) // A.G.
+                    if (proteinSequence.Length > i + 3) // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);   // A.G.
+                        sub_sequence.Add(plus3);   // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -8133,10 +8140,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4) // A.G.
+                    if (proteinSequence.Length > i + 4) // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);   // A.G.
+                        sub_sequence.Add(plus4);   // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -8188,10 +8195,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5) // A.G.
+                    if (proteinSequence.Length > i + 5) // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);   // A.G.
+                        sub_sequence.Add(plus5);   // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -8243,10 +8250,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6) // A.G.
+                    if (proteinSequence.Length > i + 6) // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);   // A.G.
+                        sub_sequence.Add(plus6);   // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -8302,9 +8309,9 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // A.G.
+                    if (score >= ptmTolerance)  // DoubA
                     {
-                        //b = proteinSequence[i - 6];   A.G.
+                        //b = proteinSequence[i - 6];   DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -8318,7 +8325,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);    A.G.
+                        //aa.Add(b);    DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -8346,7 +8353,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Thrmine found in sequence
-            //if (index == proteinSequence.Length)  A.G.
+            //if (index == proteinSequence.Length)  DoubA
             //{
             //    Console.WriteLine("Total Thrmine found: " + totalThr);
             //}
@@ -8362,7 +8369,7 @@ namespace PerceptronLocalService.Engine
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            //SetAaSize(13);    A.G.
+            //SetAaSize(13);    DoubA
 
             var modWeight = 79.9663;
             var modName = "Phosphorylation";
@@ -8377,7 +8384,7 @@ namespace PerceptronLocalService.Engine
             var totalTyr = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -8395,20 +8402,20 @@ namespace PerceptronLocalService.Engine
                 //    (i + 2 < proteinSequence.Length) && (i + 3 < proteinSequence.Length) &&
                 //    (i + 4 < proteinSequence.Length) && (i + 5 < proteinSequence.Length) &&
                 //    (i + 6 < proteinSequence.Length))
-                if (proteinSequence[i] == 'Y')  //A.G.
+                if (proteinSequence[i] == 'Y')  //DoubA
                 {
                     totalTyr = totalTyr + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  // A.G.
+                    var sub_sequence = new List<char>();  // DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // A.G.
+                    if (i - 6 >= 0) // DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);   // A.G.
+                        sub_sequence.Add(minus6);   // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'A':
@@ -8456,10 +8463,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // A.G.
+                    if (i - 5 >= 0) // DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);   // A.G.
+                        sub_sequence.Add(minus5);   // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'A':
@@ -8507,10 +8514,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // A.G.
+                    if (i - 4 >= 0) // DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);   // A.G.
+                        sub_sequence.Add(minus4);   // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'A':
@@ -8558,10 +8565,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // A.G.
+                    if (i - 3 >= 0) // DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);   // A.G.
+                        sub_sequence.Add(minus3);   // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'A':
@@ -8607,10 +8614,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // A.G.
+                    if (i - 2 >= 0) // DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);   // A.G.
+                        sub_sequence.Add(minus2);   // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'A':
@@ -8660,10 +8667,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0) // A.G.
+                    if (i - 1 >= 0) // DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);   // A.G.
+                        sub_sequence.Add(minus1);   // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'A':
@@ -8711,13 +8718,13 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);   // A.G.
+                    sub_sequence.Add(proteinSequence[i]);   // DoubA
 
                     //% it will score amino acid at position i + 1
-                    if (proteinSequence.Length > i + 1) // A.G.
+                    if (proteinSequence.Length > i + 1) // DoubA
                     {
                         plus1 = proteinSequence[i + 1];
-                        sub_sequence.Add(plus1);   // A.G.
+                        sub_sequence.Add(plus1);   // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'A':
@@ -8767,10 +8774,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 2
-                    if (proteinSequence.Length > i + 2) // A.G.
+                    if (proteinSequence.Length > i + 2) // DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);   // A.G.
+                        sub_sequence.Add(plus2);   // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'A':
@@ -8818,10 +8825,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 3
-                    if (proteinSequence.Length > i + 3) // A.G.
+                    if (proteinSequence.Length > i + 3) // DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);   // A.G.
+                        sub_sequence.Add(plus3);   // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'A':
@@ -8869,10 +8876,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 4
-                    if (proteinSequence.Length > i + 4) // A.G.
+                    if (proteinSequence.Length > i + 4) // DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);   // A.G.
+                        sub_sequence.Add(plus4);   // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'A':
@@ -8920,10 +8927,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 5
-                    if (proteinSequence.Length > i + 5) // A.G.
+                    if (proteinSequence.Length > i + 5) // DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);   // A.G.
+                        sub_sequence.Add(plus5);   // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'A':
@@ -8971,10 +8978,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i + 6
-                    if (proteinSequence.Length > i + 6) // A.G.
+                    if (proteinSequence.Length > i + 6) // DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);   // A.G.
+                        sub_sequence.Add(plus6);   // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'A':
@@ -9026,7 +9033,7 @@ namespace PerceptronLocalService.Engine
                     //    (i - 2 >= 0) && (i - 1 >= 0))
                     if (score >= ptmTolerance)
                     {
-                        //b = proteinSequence[i - 6];   A.G.
+                        //b = proteinSequence[i - 6];   DoubA
                         //c = proteinSequence[i - 5];
                         //d = proteinSequence[i - 4];
                         //e = proteinSequence[i - 3];
@@ -9040,7 +9047,7 @@ namespace PerceptronLocalService.Engine
                         //n = proteinSequence[i + 6];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(b);    A.G.
+                        //aa.Add(b);    DoubA
                         //aa.Add(c);
                         //aa.Add(d);
                         //aa.Add(e);
@@ -9068,7 +9075,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Tyrosine found in sequence
-            //if (index == proteinSequence.Length)  A.G.
+            //if (index == proteinSequence.Length)  DoubA
             //{
             //    Console.WriteLine("Total Tyrosine found: " + totalTyr);
             //}
@@ -9078,13 +9085,13 @@ namespace PerceptronLocalService.Engine
             return array;
         }
 
-        // Function (Ubiquitination_K): Returns an object array with all the required parameters stored   ////NOT IN SPECTRUM
+        // Function (Ubiquitination_K): Returns an object array with all the required parameters stored
         private List<PostTranslationModificationsSiteDto> Ubiquitination_K(string proteinSequence, double ptmTolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
-            //SetAaSize(13);    A.G.
+            //SetAaSize(13);    DoubA
 
             double modWeight = 8561;
             var modName = "protein_sequenceation";
@@ -9099,7 +9106,7 @@ namespace PerceptronLocalService.Engine
             var totalLys = 0;
 
             //// stores the amino acids found
-            //var aa = new List<char>();    A.G.
+            //var aa = new List<char>();    DoubA
 
             // list "array" creation
             var array = new List<PostTranslationModificationsSiteDto>();
@@ -9121,55 +9128,55 @@ namespace PerceptronLocalService.Engine
                 {
                     totalLys = totalLys + 1;
                     // stores the amino acids found
-                    var sub_sequence = new List<char>();  //A.G.
+                    var sub_sequence = new List<char>();  //DoubA
 
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
                     //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0)  //A.G.
+                    if (i - 6 >= 0)  //DoubA
                     {
                         minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6);   // A.G.
+                        sub_sequence.Add(minus6);   // DoubA
                         switch (proteinSequence[i - 6])
                         {
                             case 'C':
                             case 'W':
-                                score = 0.01;   // A.G.
+                                score = 0.01;   // DoubA
                                 break;
                             case 'M':
                             case 'H':
-                                score = 0.02;   // A.G.
+                                score = 0.02;   // DoubA
                                 break;
                             case 'Y':
                             case 'F':
-                                score = 0.03;   // A.G.
+                                score = 0.03;   // DoubA
                                 break;
                             case 'N':
                             case 'P':
-                                score = 0.04;   // A.G.
+                                score = 0.04;   // DoubA
                                 break;
                             case 'Q':
                             case 'I':
                             case 'T':
-                                score = 0.05;   // A.G.
+                                score = 0.05;   // DoubA
                                 break;
                             case 'R':
                             case 'D':
                             case 'G':
-                                score = 0.06;   // A.G.
+                                score = 0.06;   // DoubA
                                 break;
                             case 'K':
                             case 'S':
                             case 'V':
-                                score = 0.07;   // A.G.
+                                score = 0.07;   // DoubA
                                 break;
                             case 'A':
                             case 'E':
-                                score = 0.08;   // A.G.
+                                score = 0.08;   // DoubA
                                 break;
                             case 'L':
-                                score = 0.1;   // A.G.
+                                score = 0.1;   // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -9178,10 +9185,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0)  //A.G.
+                    if (i - 5 >= 0)  //DoubA
                     {
                         minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5);   // A.G.
+                        sub_sequence.Add(minus5);   // DoubA
                         switch (proteinSequence[i - 5])
                         {
                             case 'C':
@@ -9227,12 +9234,12 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-
+                    
                     //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0)  //A.G.
+                    if (i - 4 >= 0)  //DoubA
                     {
                         minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4);   // A.G.
+                        sub_sequence.Add(minus4);   // DoubA
                         switch (proteinSequence[i - 4])
                         {
                             case 'C':
@@ -9280,10 +9287,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0)  //A.G.
+                    if (i - 3 >= 0)  //DoubA
                     {
                         minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3);   // A.G.
+                        sub_sequence.Add(minus3);   // DoubA
                         switch (proteinSequence[i - 3])
                         {
                             case 'C':
@@ -9331,10 +9338,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0)  //A.G.
+                    if (i - 2 >= 0)  //DoubA
                     {
                         minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2);   // A.G.
+                        sub_sequence.Add(minus2);   // DoubA
                         switch (proteinSequence[i - 2])
                         {
                             case 'C':
@@ -9382,10 +9389,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0)  //A.G.
+                    if (i - 1 >= 0)  //DoubA
                     {
                         minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1);   // A.G.
+                        sub_sequence.Add(minus1);   // DoubA
                         switch (proteinSequence[i - 1])
                         {
                             case 'C':
@@ -9433,33 +9440,33 @@ namespace PerceptronLocalService.Engine
                                 break;
                         }
                     }
-                    sub_sequence.Add(proteinSequence[i]);   // A.G.
-
+                    sub_sequence.Add(proteinSequence[i]);   // DoubA
+                    
                     //It saves the score for i + 1 position
-                    if (proteinSequence.Length > i + 1)  //A.G.
+                    if (proteinSequence.Length > i + 1)  //DoubA
                     {
                         plus1 = (proteinSequence[i + 1]);
-                        sub_sequence.Add(plus1);   // A.G.
+                        sub_sequence.Add(plus1);   // DoubA
                         switch (proteinSequence[i + 1])
                         {
                             case 'C':
                             case 'W':
-                                score = score * 0.01;   // A.G.
+                                score = score * 0.01;   // DoubA
                                 break;
                             case 'H':
                             case 'M':
-                                score = score * 0.02;   // A.G.
+                                score = score * 0.02;   // DoubA
                                 break;
                             case 'K':
                             case 'F':
                             case 'Y':
-                                score = score * 0.04;   // A.G.
+                                score = score * 0.04;   // DoubA
                                 break;
                             case 'R':
                             case 'N':
                             case 'I':
                             case 'P':
-                                score = score * 0.05;   // A.G.
+                                score = score * 0.05;   // DoubA
                                 break;
                             case 'D':
                             case 'G':
@@ -9467,14 +9474,14 @@ namespace PerceptronLocalService.Engine
                             case 'S':
                             case 'T':
                             case 'V':
-                                score = score * 0.06;   // A.G.
+                                score = score * 0.06;   // DoubA
                                 break;
                             case 'A':
-                                score = score * 0.08;   // A.G.
+                                score = score * 0.08;   // DoubA
                                 break;
                             case 'E':
                             case 'L':
-                                score = score * 0.1;   // A.G.
+                                score = score * 0.1;   // DoubA
                                 break;
                             default:
                                 score = 0;
@@ -9483,10 +9490,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 2 position
-                    if (proteinSequence.Length > i + 2)  //A.G.
+                    if (proteinSequence.Length > i + 2)  //DoubA
                     {
                         plus2 = proteinSequence[i + 2];
-                        sub_sequence.Add(plus2);   // A.G.
+                        sub_sequence.Add(plus2);   // DoubA
                         switch (proteinSequence[i + 2])
                         {
                             case 'W':
@@ -9532,10 +9539,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 3 position
-                    if (proteinSequence.Length > i + 3)  //A.G.
+                    if (proteinSequence.Length > i + 3)  //DoubA
                     {
                         plus3 = proteinSequence[i + 3];
-                        sub_sequence.Add(plus3);   // A.G.
+                        sub_sequence.Add(plus3);   // DoubA
                         switch (proteinSequence[i + 3])
                         {
                             case 'C':
@@ -9583,10 +9590,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 4 position
-                    if (proteinSequence.Length > i + 4)  //A.G.
+                    if (proteinSequence.Length > i + 4)  //DoubA
                     {
                         plus4 = proteinSequence[i + 4];
-                        sub_sequence.Add(plus4);   // A.G.
+                        sub_sequence.Add(plus4);   // DoubA
                         switch (proteinSequence[i + 4])
                         {
                             case 'C':
@@ -9634,10 +9641,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 5 position
-                    if (proteinSequence.Length > i + 5)  //A.G.
+                    if (proteinSequence.Length > i + 5)  //DoubA
                     {
                         plus5 = proteinSequence[i + 5];
-                        sub_sequence.Add(plus5);   // A.G.
+                        sub_sequence.Add(plus5);   // DoubA
                         switch (proteinSequence[i + 5])
                         {
                             case 'C':
@@ -9683,10 +9690,10 @@ namespace PerceptronLocalService.Engine
                     }
 
                     //% It saves the score for i + 6 position
-                    if (proteinSequence.Length > i + 6)  //A.G.
+                    if (proteinSequence.Length > i + 6)  //DoubA
                     {
                         plus6 = proteinSequence[i + 6];
-                        sub_sequence.Add(plus6);   // A.G.
+                        sub_sequence.Add(plus6);   // DoubA
                         switch (proteinSequence[i + 6])
                         {
                             case 'C':
@@ -9738,9 +9745,9 @@ namespace PerceptronLocalService.Engine
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // A.G.
+                    if (score >= ptmTolerance)  // DoubA
                     {
-                        //l = proteinSequence[i + 1];   A.G.
+                        //l = proteinSequence[i + 1];   DoubA
                         //k = proteinSequence[i + 2];
                         //j = proteinSequence[i + 3];
                         //m = proteinSequence[i + 4];
@@ -9754,7 +9761,7 @@ namespace PerceptronLocalService.Engine
                         //f = proteinSequence[i - 1];
 
                         //% it stores the protein sub-sequence
-                        //aa.Add(a);    A.G.
+                        //aa.Add(a);    DoubA
                         //aa.Add(b);
                         //aa.Add(c);
                         //aa.Add(d);
@@ -9782,7 +9789,7 @@ namespace PerceptronLocalService.Engine
             }
 
             // it displays total number of Lysine found in sequence
-            //if (index == proteinSequence.Length)  A.G.
+            //if (index == proteinSequence.Length)  DoubA
             //{
             //    Console.WriteLine("Total Lysine found: " + totalLys);
             //}
@@ -10590,7 +10597,7 @@ namespace PerceptronLocalService.Engine
         }
 
         ///////////////////////////////////////// 
-        //A.G.//
+                     //DoubA//
         public void BlindPTMExtraction(MsPeaksDto peakData, SearchParametersDto parameters)
         {
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
@@ -10602,7 +10609,7 @@ namespace PerceptronLocalService.Engine
             }
             //Sorting the peakDatalist with respect to the Mass in ascending order
             var ExperimentalSpectrum = peakDatalist.OrderBy(n => n.Mass).ToList();
-            var MolW = peakData.Mass[peakData.Mass.Count - 1];    // Molar weight that is the last row of the peak list
+            var MolW = peakData.Mass[peakData.Mass.Count-1];    // Molar weight that is the last row of the peak list
             var UserHopThreshold = 1;
 
             // peaks has first index as 0, followed by all the peaklist except MolW, followed by MolW - all the peaks from peaklist and then at the last index, there is MolW
@@ -10621,7 +10628,7 @@ namespace PerceptronLocalService.Engine
 
             // InfoTable data
             double[] InfoModMass = { 70.0055, 99.0321, 111.0321, 113.0477, 113.0477, 117.0248, 129.0426, 129.0426, 131.9994, 139.0634, 142.0742, 142.1106, 143.0583, 144.0899, 147.0354, 156.1263, 159.0354, 160.0848, 163.0303, 166.9983, 170.1056, 170.1167, 173.0147, 173.0324, 173.0511, 181.0140, 184.1324, 194.9932, 198.1117, 208.0484, 217.0252, 243.0296, 290.1114, 304.1271, 341.2392, 408.0772, 431.1649 };
-            char[] InfoModAminoAcids = { 'S', 'G', 'Q', 'A', 'P', 'C', 'S', 'P', 'C', 'P', 'G', 'K', 'T', 'K', 'M', 'K', 'M', 'K', 'M', 'S', 'K', 'R', 'C', 'E', 'M', 'T', 'R', 'D', 'R', 'Y', 'H', 'Y', 'S', 'T', 'C', 'C', 'N' };
+            char[] InfoModAminoAcids = { 'S','G','Q','A','P','C','S','P','C','P','G','K','T','K','M','K','M','K','M','S','K','R','C','E','M','T','R','D','R','Y','H','Y','S','T','C','C','N' };
             string[] InfoModName = { "Pyruvate-S", "Acetylation", "Pyrrolidone-Aarboxylic-Acid", "Acetylation", "Hydroxylation", "Methylation", "Acetylation", "DiHydroxylation", "S-Nitrosylation", "Acetylation", "Methylation", "Methylation", "Acetylation", "Hydroxylation", "Sulfoxide", "DiMethylation", "Formylation", "DiHydroxylation", "Sulfone", "Phosphorylation", "Acetylation", "Methylation", "Pyruvate-C", "Gamma-Carboxyglutamic-Acid", "Acetylation", "Phosphorylation", "DiMethylation", "Phosphorylation", "Acetylation", "Nitration", "Phosphorylation", "Phosphorylation", "O-linked-Glycosylation", "O-linked-Glycosylation", "Palmitoylation", "Glutathionylation", "N-linked-Glycosylation" };
 
             // Initialization
@@ -10634,7 +10641,7 @@ namespace PerceptronLocalService.Engine
             // Extraction of Modified and Unmodified tags
             for (int ExpI = 1; ExpI <= peaks.Count - 2; ExpI++)
             {
-                for (int ExpJ = ExpI + 1; ExpJ <= peaks.Count - 1; ExpJ++)
+                for (int ExpJ = ExpI+1; ExpJ <= peaks.Count - 1; ExpJ++)
                 {
                     double PeakDiff = peaks[ExpI] - peaks[ExpJ];
                     for (int AAIndex = 0; AAIndex <= InfoModMass.Length - 1; AAIndex++)
@@ -10646,7 +10653,7 @@ namespace PerceptronLocalService.Engine
                             LadderIndex = LadderIndex + 1;
                             HopInfoName.Add(InfoModName[AAIndex]);
                             HopInfoAA.Add(InfoModAminoAcids[AAIndex]);
-                            HopInfoStart.Add(peaks[ExpI]);
+                            HopInfoStart.Add(peaks[ExpI]); 
                             HopInfoEnd.Add(peaks[ExpJ]);
                         }
                         else if (Error < -UserHopThreshold)
@@ -10660,6 +10667,288 @@ namespace PerceptronLocalService.Engine
             // Function for BlindPTM should be called here
         }
 
+        public void BlindPTMGeneral(List<ProteinDto> CandidateProtList, MsPeaksDto peakData, double UserHopThreshold, double sizeHopInfo, List<string> HopInfoName, List<char> HopInfoAA, List<double> HopInfoEnd, List<double> HopInfoStart, SearchParametersDto parameters, string TypeOfFunction)
+        //A general function for BlindPTM, BlindPTM_Truncation_Left and BlindPTM_Truncation_Right
+        {
+            //Variable initialization
+            var PeptideTolerance = parameters.PeptideTolerance;
+            var PeptideToleranceUnit = parameters.PeptideToleranceUnit;
+            List<ProteinDto> CandidateProtListModified = new List<ProteinDto>();
+            var proteinIndex = 0;
+
+            //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
+            var peakDatalist = new List<peakData2Dlist>();
+            for (int row = 0; row < peakData.Mass.Count; row++)
+            {
+                var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
+                peakDatalist.Add(dataforpeakDatalist);
+            }
+            //Sorting the peakDatalist with respect to the Mass in ascending order
+            var ExperimentalSpectrum = peakDatalist.OrderBy(n => n.Mass).ToList();
+            var MolW = peakData.Mass[peakData.Mass.Count - 1];    // Molar weight that is the last row of the peak list
+            double tolConv = 0;
+
+            // if size of peakData is 1, then tolConv is equal to that one mass value, else it is the second-last mass value from the sorted peakData list
+            if (peakData.Mass.Count == 1)
+            {
+                tolConv = peakData.Mass[peakData.Mass.Count - 1]; 
+            }
+            else
+            {
+                tolConv = peakData.Mass[peakData.Mass.Count - 2];
+            }
+            List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>();   
+            if (sizeHopInfo > 0)
+            {
+                for (int row = 0; row < CandidateProtList.Count; row++)
+                {
+                    var protein = CandidateProtList.ElementAt(row); //Protein at index row is being processed
+                    var sequence = protein.Sequence;
+                    //If the function is BlindPTM_Truncation_Left, the protein sequence is flipped, otherwise the original sequence is processed
+                    if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                    {
+                        char[] array = sequence.ToCharArray();
+                        Array.Reverse(array);
+                        sequence = new String(array);
+                    }
+                    //Variable initialization
+                    var HopI = 0;
+                    var ThrI = 0;
+                    var loop = 1;
+                    var Ladder_Index = -1;
+                    
+                    while(loop == 1)
+                    {
+                        var Start = HopInfoStart[HopI];
+                        if (Ladder_Index != -1 && ShortlistedHops.ElementAt(Ladder_Index).End > Start) //Ladder_Index should be accessible i.e. it should be from 0  or greater and to check if the size of ShortlistedHop is non-zero, we check that end should be greater than start
+                        {
+                            HopI = HopI + 1;
+                            if (HopI >= sizeHopInfo - 1) //if Hop index exceeds the size of Hop, break the loop
+                                break;
+                            else
+                                continue;
+                        }
+                        var diff = 0.0;
+                        if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                        {
+                            diff = Start - protein.InsilicoDetails.InsilicoMassRight[ThrI];
+                        }                    
+                        else
+                        {
+                            diff = Start - protein.InsilicoDetails.InsilicoMassLeft[ThrI];
+                        }                            
+                        if (diff <= UserHopThreshold && diff >= -UserHopThreshold)
+                        {
+                            string AA = HopInfoAA[HopI].ToString();
+                            if (AA[0] == sequence[ThrI+1])
+                            {
+                                var Mod = HopInfoName[HopI];
+                                var ModWeight = ModTable(Mod); //Function ModTable is defined below BlindPTMGeneral
+                                var End = HopInfoEnd[HopI];
+                                if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                                    diff = Math.Abs(End - (protein.InsilicoDetails.InsilicoMassRight[ThrI + 1] + ModWeight));
+                                else
+                                    diff = Math.Abs(End - (protein.InsilicoDetails.InsilicoMassLeft[ThrI + 1] + ModWeight));
+                                if (PeptideToleranceUnit == "ppm")
+                                    diff = (diff/tolConv)*1000000;
+                                else if (PeptideToleranceUnit == "%")
+                                    diff = (diff/tolConv)*100;
+                                if (diff < PeptideTolerance)
+                                {
+                                    //InsilicoMassLeft and InsilicoMassRight are being updated by the addition of the mass of modification
+                                    if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                                    {
+                                        for (int i = ThrI + 1; i < protein.InsilicoDetails.InsilicoMassRight.Count; i++)
+                                            protein.InsilicoDetails.InsilicoMassRight[i] = protein.InsilicoDetails.InsilicoMassRight[i] + ModWeight;
+
+                                        for (int i = protein.Sequence.Length - ThrI - 2; i < protein.InsilicoDetails.InsilicoMassLeft.Count; i++)
+                                            protein.InsilicoDetails.InsilicoMassLeft[i] = protein.InsilicoDetails.InsilicoMassLeft[i] + ModWeight;
+                                    }
+                                    else
+                                    {
+                                        for (int i = ThrI + 1; i < protein.InsilicoDetails.InsilicoMassLeft.Count; i++)
+                                            protein.InsilicoDetails.InsilicoMassLeft[i] = protein.InsilicoDetails.InsilicoMassLeft[i] + ModWeight;
+
+                                        for (int i = protein.Sequence.Length - ThrI - 2; i < protein.InsilicoDetails.InsilicoMassRight.Count; i++)
+                                            protein.InsilicoDetails.InsilicoMassRight[i] = protein.InsilicoDetails.InsilicoMassRight[i] + ModWeight;
+                                    }
+
+                                    protein.Mw = protein.Mw + ModWeight;
+                                    Ladder_Index = Ladder_Index + 1;
+                                    
+                                    //Protein components are being updated 
+                                    ShortlistedHops.ElementAt(Ladder_Index).ModName = Mod;
+                                    ShortlistedHops.ElementAt(Ladder_Index).AminoAcidName = (AA);
+                                    ShortlistedHops.ElementAt(Ladder_Index).Start = Start;
+                                    ShortlistedHops.ElementAt(Ladder_Index).End = End;
+                                    ShortlistedHops.ElementAt(Ladder_Index).ThrI = ThrI;
+                                }                         
+                            }
+                        }
+                        else if (diff > UserHopThreshold)
+                        {
+                            ThrI = ThrI + 1;
+                            if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                            {
+                                if (ThrI >= protein.InsilicoDetails.InsilicoMassRight.Count - 1) //If index exceeds the length of insilico right list, break the loop
+                                    break;
+                                else
+                                    continue;
+                            }
+                            else
+                            {
+                                if (ThrI >= protein.InsilicoDetails.InsilicoMassLeft.Count - 1)
+                                    break;
+                                else
+                                    continue;
+                            }   
+                        }
+                        else if (diff < -UserHopThreshold)
+                        {
+                            HopI = HopI + 1;
+                            if (HopI >= sizeHopInfo - 1) //if Hop index exceeds the size of Hop, break the loop
+                                break;
+                            else
+                                continue;
+                        }
+                        HopI = HopI + 1;
+                        if (HopI >= sizeHopInfo - 1)
+                            break;
+                    }
+
+                    for (int HopIndex = 0; HopIndex < ShortlistedHops.Count;  HopIndex++)
+                    {
+                        // Updating the protein
+                        protein.PtmParticulars[HopIndex].ModName = ShortlistedHops.ElementAt(HopIndex).ModName;
+                        protein.PtmParticulars[HopIndex].Site = Convert.ToChar(ShortlistedHops.ElementAt(HopIndex).AminoAcidName);
+                        if (TypeOfFunction == "BlindPTM_Truncation_Left")
+                            protein.PtmParticulars[HopIndex].Index = sequence.Length - ShortlistedHops.ElementAt(HopIndex).ThrI;
+                        else
+                            protein.PtmParticulars[HopIndex].Index = ShortlistedHops.ElementAt(HopIndex).ThrI + 1;
+                    }
+                    // Protein molar weight scoring
+                    if (TypeOfFunction == "BlindPTM")
+                    {
+                        var error = Math.Abs(MolW - protein.Mw);
+                        if (error == 0)
+                            protein.MwScore = 1;
+                        else
+                            protein.MwScore = Math.Pow((1 / 2), error);
+                    }
+                    // All the updated proteins are being stored in a new list CandidateProtListModified
+                    if (ShortlistedHops.Count > 0)
+                    {
+                        proteinIndex = proteinIndex + 1;
+                        CandidateProtListModified[proteinIndex] = protein;
+                    }
+                }
+            }
+        }
+        public double ModTable(string Mod) //Gives the weight of different types of modifications
+        {
+            double ModWeight = 0;
+            if (Mod == "Pyruvate-S")
+                ModWeight = -17.0265;
+            else if (Mod == "Pyruvate-C")
+                ModWeight = 70.0055;
+            else if (Mod == "Amidation")
+                ModWeight = -0.984016;
+            else if (Mod == "Citrullination")
+                ModWeight =  0.984016;
+            else if (Mod == "Methylation")
+                ModWeight = 14.0156;
+            else if (Mod == "Hydroxylation")
+                ModWeight = 15.9949;
+            else if (Mod == "Sulfoxide")
+                ModWeight = 15.9949;
+            else if (Mod == "Formylation")
+                ModWeight = 27.9949;
+            else if (Mod == "DiMethylation")
+                ModWeight = 28.0313;
+            else if (Mod == "S-Nitrosylation")
+                ModWeight = 28.9902;
+            else if (Mod == "Sulfone")
+                ModWeight = 31.9898;
+            else if (Mod == "DiHydroxylation")
+                ModWeight = 31.9898;
+            else if (Mod == "TriMethylation")
+                ModWeight = 42.047;
+            else if (Mod == "Acetylation")
+                ModWeight = 42.0106;
+            else if (Mod == "Gamma-Carboxyglutamic-Acid")
+                ModWeight = 43.9898;
+            else if (Mod == "Nitration")
+                ModWeight = 44.9851;
+            else if (Mod == "Phosphorylation")
+                ModWeight = 79.9663;
+            else if (Mod == "Pyrrolidone-Aarboxylic-Acid")
+                ModWeight = -17.0265;
+            else if (Mod == "O-linked-Glycosylation")
+                ModWeight = 203.0794;
+            else if (Mod == "Palmitoylation")
+                ModWeight = 238.23;
+            else if (Mod == "Glutathionylation")
+                ModWeight = 305.068;
+            else if (Mod == "N-linked-Glycosylation")
+                ModWeight = 317.122;
+            return ModWeight;
+        }
+
+        public void BlindPTMLocalization(List<ProteinDto> Matches, MsPeaksDto peakData, SearchParametersDto parameters, double MolW)
+        {
+            for (int index=0; index<=Matches.Count; index++)
+            {
+                // Ptm parameters initialization
+                var protein = Matches.ElementAt(index);
+                protein.PtmParticulars[index].ModStartSite = -1;
+                protein.PtmParticulars[index].ModEndSite = -1;
+                protein.PtmParticulars[index].ModWeight = -1;
+                var MassDiff = MolW - protein.Mw;
+
+                if (parameters.PtmAllow == 1)
+                {
+                    if (MassDiff > 13 && MassDiff < 951.3660) //Arbitrary number less then weight of methyl group && 3*N-linked-Glycosylation
+                    {
+                        var left = 0;
+                        var right = 0;
+                        if (protein.LeftMatchedIndex.Count > 0)
+                        {
+                            left = protein.LeftMatchedIndex[protein.LeftMatchedIndex.Count - 1] + 1; //The last LeftMatchedIndex + 1 gives the start site of modification
+                        }
+                        else
+                        {
+                            left = 1;
+                        }
+                        if (protein.RightMatchedIndex.Count > 0)
+                        {
+                            right = protein.InsilicoDetails.InsilicoMassLeft.Count - protein.RightMatchedIndex[protein.RightMatchedIndex.Count-1] + 1; //Num of LeftIons - last LeftMatchedIndex + 1 gives the end site of modification
+                        }
+                        else
+                        {
+                            right = protein.InsilicoDetails.InsilicoMassLeft.Count; //Num of LeftIons (i.e. the index right next to where LeftIons end) gives the end site of modification
+                        }
+                        if (left < right && left > 1 && right < protein.LeftMatchedIndex.Count)
+                        {
+                            // Ptm parameters are beig updated
+                            protein.PtmParticulars[index].ModStartSite = left;
+                            protein.PtmParticulars[index].ModEndSite = right;
+                            protein.PtmParticulars[index].ModWeight = MassDiff;
+                            protein.Mw = protein.Mw + MassDiff;
+                        }
+                    }
+                }
+                // Scoring
+                var error = Math.Abs(MassDiff);
+                if (error == 0)
+                {
+                    protein.MwScore = 1;
+                }
+                else
+                {
+                    protein.MwScore = Math.Pow((1 / 2), error);
+                }
+            }
+        }
 
     }
 
