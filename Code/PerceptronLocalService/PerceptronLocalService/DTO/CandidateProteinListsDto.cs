@@ -10,11 +10,5 @@ namespace PerceptronLocalService.DTO
     {
         public List<ProteinDto> CandidateProteinList = new List<ProteinDto>();
         public List<ProteinDto> CandidateProteinListTruncated = new List<ProteinDto>();
-
-        public CandidateProteinListsDto()
-        {
-            CandidateProteinList = new List<ProteinDto>();
-            CandidateProteinListTruncated = new List<ProteinDto>();
-        }
     }
 }
