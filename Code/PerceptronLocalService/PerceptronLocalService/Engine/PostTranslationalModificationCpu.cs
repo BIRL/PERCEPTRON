@@ -10666,62 +10666,6 @@ namespace PerceptronLocalService.Engine
             return ModWeight;
         }
 
-        public void BlindPTMLocalization(List<ProteinDto> Matches, MsPeaksDto peakData, SearchParametersDto parameters, double MolW)
-        {
-            for (int index=0; index<=Matches.Count; index++)
-            {
-                // Ptm parameters initialization
-                var protein = Matches.ElementAt(index);
-                protein.PtmParticulars[index].ModStartSite = -1;
-                protein.PtmParticulars[index].ModEndSite = -1;
-                protein.PtmParticulars[index].ModWeight = -1;
-                var MassDiff = MolW - protein.Mw;
-
-                if (parameters.PtmAllow == 1)
-                {
-                    if (MassDiff > 13 && MassDiff < 951.3660) //Arbitrary number less then weight of methyl group && 3*N-linked-Glycosylation
-                    {
-                        var left = 0;
-                        var right = 0;
-                        if (protein.LeftMatchedIndex.Count > 0)
-                        {
-                            left = protein.LeftMatchedIndex[protein.LeftMatchedIndex.Count - 1] + 1; //The last LeftMatchedIndex + 1 gives the start site of modification
-                        }
-                        else
-                        {
-                            left = 1;
-                        }
-                        if (protein.RightMatchedIndex.Count > 0)
-                        {
-                            right = protein.InsilicoDetails.InsilicoMassLeft.Count - protein.RightMatchedIndex[protein.RightMatchedIndex.Count-1] + 1; //Num of LeftIons - last LeftMatchedIndex + 1 gives the end site of modification
-                        }
-                        else
-                        {
-                            right = protein.InsilicoDetails.InsilicoMassLeft.Count; //Num of LeftIons (i.e. the index right next to where LeftIons end) gives the end site of modification
-                        }
-                        if (left < right && left > 1 && right < protein.LeftMatchedIndex.Count)
-                        {
-                            // Ptm parameters are beig updated
-                            protein.PtmParticulars[index].ModStartSite = left;
-                            protein.PtmParticulars[index].ModEndSite = right;
-                            protein.PtmParticulars[index].ModWeight = MassDiff;
-                            protein.Mw = protein.Mw + MassDiff;
-                        }
-                    }
-                }
-                // Scoring
-                var error = Math.Abs(MassDiff);
-                if (error == 0)
-                {
-                    protein.MwScore = 1;
-                }
-                else
-                {
-                    protein.MwScore = Math.Pow((1 / 2), error);
-                }
-            }
-        }
-
     }
 
 

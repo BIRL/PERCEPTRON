@@ -304,20 +304,23 @@ namespace PerceptronLocalService
 
                     candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
 
+                    var CandidateProtListModified = new List<ProteinDto>();
+                    var BlindPTM = new BlindPtmCpu();
                     if (parameters.PtmAllow == 1)
                     {
-                        var BlindPTM = new BlindPtmCpu();
                         var BlindPTMExtractionInfo = BlindPTM.BlindPTMExtraction(massSpectrometryData, parameters);
-                        var CandidateProtListModified = BlindPTM.BlindPTMGeneral(candidateProteins, massSpectrometryData, 1, BlindPTMExtractionInfo, parameters, "BlindPTM");
-
+                        CandidateProtListModified = BlindPTM.BlindPTMGeneral(candidateProteins, massSpectrometryData, 1, BlindPTMExtractionInfo, parameters, "BlindPTM");
                     }
-                    
 
-
+                    candidateProteins.AddRange(CandidateProtListModified);
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
                     var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
                     ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes, CandidateProteinswithInsilicoScores);
+
+                    // Localizing Unknown mass shift
+                    CandidateProteinswithInsilicoScores = BlindPTM.BlindPTMLocalization(CandidateProteinswithInsilicoScores, massSpectrometryData, parameters);
+
 
                     //Logging.DumpInsilicoScores(candidateProteins);
 
