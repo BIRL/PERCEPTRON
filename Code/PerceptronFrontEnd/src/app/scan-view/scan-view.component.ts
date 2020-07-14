@@ -38,23 +38,23 @@ export class ScanViewComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this._httpService.GetScanReslts(this.querryId).subscribe(data => this.what(data));
-    this._httpService.downloadFile(this.querryId).subscribe(data => this.what(data));
+    //this._httpService.downloadFile(this.querryId).subscribe(data => this.what(data));
   }
 
   //Resutls Download Working...
-  download() {
-    var abd = this.downloadFile(this.querryId).subscribe(response => {
-			let blob:any = new Blob([response.blob()], { type: 'text; charset=utf-8' });
-			const url= window.URL.createObjectURL(blob);
-			window.open(url);
-			window.location.href = response.url;
-			fileSaver.saveAs(blob, 'Results.txt');
-    })
-    // , error => console.log('Error downloading the file'),
-    //              () => console.info('File downloaded successfully');
-  }
-  downloadFile(querryId: any): any {
-  }
+  // download() {
+  //   var abd = this.downloadFile(this.querryId).subscribe(response => {
+	// 		let blob:any = new Blob([response.blob()], { type: 'text; charset=utf-8' });
+	// 		const url= window.URL.createObjectURL(blob);
+	// 		window.open(url);
+	// 		window.location.href = response.url;
+	// 		fileSaver.saveAs(blob, 'Results.txt');
+  //   })
+  //   // , error => console.log('Error downloading the file'),
+  //   //              () => console.info('File downloaded successfully');
+  // }
+  // downloadFile(querryId: any): any {
+  // }
 
   what(data: any) {
     const users: UserData[] = [];
