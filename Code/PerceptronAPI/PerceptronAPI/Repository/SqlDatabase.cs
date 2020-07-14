@@ -330,8 +330,8 @@ namespace PerceptronAPI.Repository
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
-                var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
-                var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
+                //var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
+                //var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
                 var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
                 var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
@@ -342,8 +342,8 @@ namespace PerceptronAPI.Repository
                 if (searchParameters.Count != 0)
                     detiledResults.Paramters.SearchParameters = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
 
-                detiledResults.Paramters.FixedMods = ptmFixedmod;
-                detiledResults.Paramters.VarMods = ptmVarmod;
+                //detiledResults.Paramters.FixedMods = ptmFixedmod;
+                //detiledResults.Paramters.VarMods = ptmVarmod;
 
                 if (searchQuery.Count != 0)
                     detiledResults.Paramters.SearchQuerry = searchQuery.First();

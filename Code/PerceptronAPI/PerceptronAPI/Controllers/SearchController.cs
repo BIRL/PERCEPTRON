@@ -96,8 +96,8 @@ namespace PerceptronAPI.Controllers
                     parametersDto.VarMods.QueryId = queryId;
                     parametersDto.VarMods.ModificationId = 1;
                 }
-                
-                
+
+
 
 
                 parametersDto.SearchParameters.QueryId = queryId;
@@ -203,35 +203,34 @@ namespace PerceptronAPI.Controllers
             //var resultid = values[1];
             var temp = _dataLayer.Detailed_Results("1", input);
 
-            /// ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD
-            /// 
-
-            //DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
-
-            //var MassSpectra = new FormForGraph();
-            //MassSpectra.fillChart(temp2);
-
-
-
-            //var ImageForm = new DetailedProteinView();
-            //bool downloadresults = false;
-            //var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
-
-
-
-
             return temp;
         }
 
         [HttpPost]
         [Route("api/search/Post_detailed_results/Post_DetailedProteinHitView_results")]
-        public DetailedProteinHitView Post_DetailedProteinHitView_results([FromBody] string input)
+        public ResultsVisualizeData Post_DetailedProteinHitView_results([FromBody] string input)
         {
             Debug.WriteLine(input);
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
-            return temp;
+            //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD
+
+            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+
+            var MassSpectra = new FormForGraph();
+            var InsilicoSpectra = MassSpectra.fillChart(temp2);
+
+
+
+            var ImageForm = new DetailedProteinView();
+            bool downloadresults = false;
+            var NameOfFileWithPath = ImageForm.writeOnImage(temp2, downloadresults);
+
+            var Data = new ResultsVisualizeData(input, NameOfFileWithPath, InsilicoSpectra);
+
+
+            return Data;
         }
 
 

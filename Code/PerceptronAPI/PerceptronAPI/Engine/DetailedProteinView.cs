@@ -66,7 +66,7 @@ namespace PerceptronAPI.Engine
             int TruncationCount = 0;
             
 
-            string NameofFile = "";
+            string NameOfFileWithPath = "";
             /* Image */
             using (var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height))
             {
@@ -257,8 +257,9 @@ namespace PerceptronAPI.Engine
                     else //downloadresults = true; // Setting flag for Images will be stored at "\ResultsDownload\Results File Images" permanent(ResultsDownload) folders
                         DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\ResultsDownload\\Results File Images\\"));  // Navigated to the path where Files should be created
                     
-                    NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId + ".jpg";
-                    imageSave.Save(DirectoryPath + NameofFile);
+                    string NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId + ".jpg";
+                    NameOfFileWithPath = DirectoryPath + NameofFile;
+                    imageSave.Save(NameOfFileWithPath);
                     //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");
                     imageSave.Dispose(); // Releases all resources used
                 }
@@ -281,7 +282,7 @@ namespace PerceptronAPI.Engine
                 graphics.Dispose();
                 
             }
-            return NameofFile;
+            return NameOfFileWithPath;
         }
         private List<int> PstIndexFind(string Sequence, List<string> ListPSTTags)
         {
