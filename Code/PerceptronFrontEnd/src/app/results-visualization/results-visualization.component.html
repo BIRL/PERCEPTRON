@@ -1,13 +1,87 @@
 <div style="width:90%; min-width: 600px; margin:0 auto;">
-    <mat-card>
-        <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Results Visualization</h4>
-    </mat-card>
-    <div style="height:10px;font-size:1px;">&nbsp;</div>
+  <mat-card>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Results
+      Visualization</h4>
+  </mat-card>
 
-<mat-card>
-  
-</mat-card>
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+  <mat-card>
+    <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
+    <div>
+      <!-- <img src="assets/Results File Images/DetailedProteinView_Qid_2d1cf88f-48ce-46ce-b850-47ce88fd5712_Rid_b8e852b3-5984-4621-9529-0b83397e1183.jpg"
+                width="800" height="500"> -->
+    </div>
+  </mat-card>
+
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+  <mat-card>
+    <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
+    <div>
+      <!-- <img src="C:\inetpub\wwwroot\PerceptronAPI\App_Data\ResultsDownload\Results File Images\DetailedProteinView_Qid_2d1cf88f-48ce-46ce-b850-47ce88fd5712_Rid_2d2bf41d-c11b-4a67-bd16-5fc66c8decb3.jpg"
+                width="1000" height="500"> -->
+    </div>
+  </mat-card>
+
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+  <mat-card style="height: 100%">
+    <h6 style="text-align:center; font-weight:bold">Matched Fragments</h6>
+    <!-- <label style="text-align:center; font-size: 25px; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">PERCEPTRON - Browser Compatibility</label> -->
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Serial Column -->
+      <ng-container matColumnDef="rank">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Serial No.
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.rank
+        }}" style=" font-size:15px;" *matCellDef="let row"> {{row.rank}} </mat-cell>
+      </ng-container>
+
+      <!-- FragmentID Column -->
+      <ng-container matColumnDef="FragmentID">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment ID
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.FragmentID
+        }}" style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentID}} </mat-cell>
+      </ng-container>
+
+      <!-- FragmentIon Column -->
+      <ng-container matColumnDef="FragmentIon">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment Ion
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.FragmentIon
+        }}" style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentIon}} </mat-cell>
+      </ng-container>
+
+      <!-- ExperimentalMZ Column -->
+      <ng-container matColumnDef="ExperimentalMZ">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Experimental MZ
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.ExperimentalMZ
+                      }}" style=" font-size:15px;" *matCellDef="let row"> {{row.ExperimentalMZ}} </mat-cell>
+      </ng-container>
+
+      <!-- TheoreticalMZ Column -->
+      <ng-container matColumnDef="TheoreticalMZ">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Theoretical MZ
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.TheoreticalMZ
+        }}" style=" font-size:15px;" *matCellDef="let row"> {{row.TheoreticalMZ}} </mat-cell>
+      </ng-container>
+
+      <!-- MassDifference Column -->
+      <ng-container matColumnDef="MassDifference">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Mass Difference
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.MassDifference
+        }}" style=" font-size:15px;" *matCellDef="let row"> {{row.MassDifference}} </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    </mat-table>
+  </mat-card>
 
 </div>
 
-
+<router-outlet></router-outlet>
