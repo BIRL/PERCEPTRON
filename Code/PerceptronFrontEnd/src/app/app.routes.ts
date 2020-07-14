@@ -64,8 +64,10 @@ export const router: Routes = [
     { path: 'suggest', component: SuggestionsComponent, canActivate: [AuthGuard]},
     { path: 'summaryresults/:querryId/:fileID', component: SummaryResultsComponent},
     { path: 'detailedresults/:resultId/:rank', component: DetailedResultsComponent},
+    //    children: [{path: 'results-visualization', component: ResultsVisualizationComponent}]},
+
     // { path: 'patterngenerator', component: PatterngeneratorComponent, canActivate: [AuthGuard]},
-    { path: 'results-visualization', component: ResultsVisualizationComponent},
+    { path: 'resultsvisualization/:resultId/:rank', component: ResultsVisualizationComponent},
     { path: 'scans/:querryId', component: ScanViewComponent},
     { path: 'sc/:querryId', component: SpectralcountComponent},
     { path: 'xic/:querryId', component: XicComponent},
