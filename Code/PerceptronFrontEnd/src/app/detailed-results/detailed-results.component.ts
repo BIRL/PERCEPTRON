@@ -23,7 +23,7 @@ export class DetailedResultsComponent implements OnInit {
 
 
 
-  constructor(private route: ActivatedRoute, private _httpService: ConfigService) {
+  constructor(private route: ActivatedRoute, private router: Router, private _httpService: ConfigService) {
     // Create 100 users
     const users: UserData[] = [];
     this.dataSource = new MatTableDataSource(users);
@@ -164,8 +164,20 @@ export class DetailedResultsComponent implements OnInit {
     
   }
 
+
+  // ResultsView(pageName:string):void{
+  //   this.router.navigate([`${pageName}`])
+  // }
+
+  
+  getResultsView() {
+    let x = this.router;
+    x.navigate(["resultsvisualization", this.resultId, this.rank]);   //, ResultId
+  }
+
 }
  
+
 
 
 /** Builds and returns a new User. */

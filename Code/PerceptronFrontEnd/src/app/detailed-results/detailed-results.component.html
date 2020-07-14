@@ -440,7 +440,12 @@
   </mat-card>
   <br/>
 
-  <div class="example-button-row">
+  <!-- <div class="example-button-row">
+    <button class=""></button>
       <a  routerLink = "/results-visualization"> Results Visualization </a>
-  </div>
+  </div> -->
+
+      <button mat-raised-button matTooltip="Click to Visualize Your Results " class="button-sumbit" matTooltipPosition="after" (click)="getResultsView()" style="background-color: #201a93; color:aliceblue"
+        class="ui button">Results Visualization</button>
+  
 </div>
