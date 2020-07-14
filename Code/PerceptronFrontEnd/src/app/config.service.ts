@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Http } from '@angular/http';
+import { Http, ResponseContentType } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Headers } from '@angular/http';
 
@@ -9,6 +9,8 @@ import { HttpModule } from '@angular/http';
 import { database } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
+import {HttpResponse} from '@angular/common/http';
+
 
 @Injectable()
 export class ConfigService {
@@ -112,14 +114,30 @@ export class ConfigService {
             });
     }
 
-    GetResultsDownload(qid) {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + '/api/search/Results_Download', '=' + qid, { headers: headers })
-            .map(res => {
-                return res.json()
-            }); 
-    }
+    // GetResultsDownload(qid): Observable<any> {
+    //     let headers = new Headers();
+    //     headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    //     return this._http.post(this.baseApiUrl + '/api/search/Results_Download', '=' + qid, { headers: headers })
+    //         .map(res => {
+    //             var blob = new Blob([res.blob()], {type: ".txt"} )
+    //             return blob;//res.json()
+    //         }); }
+//Resutls Download Working...
+            downloadFile(qid): Observable<any>{		
+                var abc = this._http.get(this.baseApiUrl + '/api/search/Results_Download=' + qid, { responseType: ResponseContentType.Blob });
+
+                return abc;
+
+           }
+
+
+//             { responseType: ResponseContentType.Blob })
+//   .map(
+//     (res) => {
+//           var blob = new Blob([res.blob()], {type: fileExtension} )
+//           return blob;            
+//     });
+    
 
     GetScReslts(qid) {
         let headers = new Headers();
@@ -199,6 +217,17 @@ export class ConfigService {
                 return res.json()
             });
     }
+
+    GetDetailedProteinHitViewResults(resId) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        return this._http.post(this.baseApiUrl + 'api/search/Post_detailed_results/Post_DetailedProteinHitView_results', '=' + resId, { headers: headers })
+            .map(res => {
+                return res.json()
+            });
+    }
+
+
 }
 
 export interface SearchItem {
