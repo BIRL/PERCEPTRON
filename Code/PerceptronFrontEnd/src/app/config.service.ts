@@ -122,13 +122,13 @@ export class ConfigService {
     //             var blob = new Blob([res.blob()], {type: ".txt"} )
     //             return blob;//res.json()
     //         }); }
-//Resutls Download Working...
-            downloadFile(qid): Observable<any>{		
-                var abc = this._http.get(this.baseApiUrl + '/api/search/Results_Download=' + qid, { responseType: ResponseContentType.Blob });
+// //Resutls Download Working...
+//             downloadFile(qid): Observable<any>{		
+//                 var abc = this._http.get(this.baseApiUrl + '/api/search/Results_Download=' + qid, { responseType: ResponseContentType.Blob });
 
-                return abc;
+//                 return abc;
 
-           }
+//            }
 
 
 //             { responseType: ResponseContentType.Blob })
