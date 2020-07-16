@@ -38,34 +38,6 @@ namespace GraphForm
 
             var InsilicoSpectra = InsilicoSpectraPrep(Results, InsilicoDetails, RawData.searchParameters.InsilicoFragType, PeakListMasses, PeakListIntensities);
 
-
-            //For the Time Being Converting into Json
-            //var json = JsonConvert.SerializeObject(InsilicoSpectra);
-            //return json;
-
-
-            //var abc = InsilicoSpectra.ListExperimental_mz;
-            //Chart chart = new Chart();
-            //chart.DataSource = InsilicoSpectra.ListExperimental_mz;
-
-            //for (int i = 0; i < InsilicoSpectra.ListExperimental_mz.Count; i++)
-            //{
-            //    MassSpectraVisualizationGraph.Series[0].Points.AddXY(InsilicoSpectra.ListExperimental_mz[i], 1);
-            //    MassSpectraVisualizationGraph.Series[1].Points.AddXY(InsilicoSpectra.ListTheoretical_mz[i], 1);
-
-            //}
-            //MassSpectraVisualizationGraph.Series[0].ChartType = SeriesChartType.Point;
-            //MassSpectraVisualizationGraph.Series[1].ChartType = SeriesChartType.Line;
-            //for (int i = 0; i < PeakListMasses.Count; i++)
-            //{
-            //    MassSpectraVisualizationGraph.Series[2].Points.AddXY(PeakListMasses[i], 1);
-            //}
-            ////MassSpectraVisualizationGraph.Series[2].ChartType = SeriesChartType.Point;
-
-            ////chart title  
-            //MassSpectraVisualizationGraph.Titles.Add("Mass Spectrum Visualization");
-
-            //MassSpectraVisualizationGraph.SaveImage(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Engine\mychart.png", ChartImageFormat.Png);
             CloseWindowGraphForm();
             return InsilicoSpectra;
 
