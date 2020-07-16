@@ -214,7 +214,7 @@ namespace PerceptronAPI.Controllers
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
-            //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD
+            //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
 
             DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
 
@@ -223,14 +223,42 @@ namespace PerceptronAPI.Controllers
 
 
 
-            var ImageForm = new DetailedProteinView();
-            bool downloadresults = false;
-            var NameOfFileWithPath = ImageForm.writeOnImage(temp2, downloadresults);
-
-            var Data = new ResultsVisualizeData(input, NameOfFileWithPath, InsilicoSpectra);
+            //var ImageForm = new DetailedProteinView();
+            //bool downloadresults = false;
+            //var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
+            string NameofFile = "DetailedProteinView_Qid_" + temp2.Results.Results.QueryId + "_Rid_" + temp2.Results.Results.ResultId + ".jpg";
+            var Data = new ResultsVisualizeData(input, NameofFile, InsilicoSpectra);
 
 
             return Data;
+        }
+
+        [HttpPost]
+        [Route("api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit")]
+        public string Create_Detailed_Protein_View_Hit([FromBody] string input)
+        {
+            Debug.WriteLine(input);
+            var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
+
+
+            //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
+
+            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+
+            //var MassSpectra = new FormForGraph();
+            //var InsilicoSpectra = MassSpectra.fillChart(temp2);
+
+
+
+            var ImageForm = new DetailedProteinView();
+            bool downloadresults = false;
+            var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
+
+            return "Success";
+            //var Data = new ResultsVisualizeData(input, NameofFile);
+
+
+            //return Data;
         }
 
 
@@ -308,7 +336,7 @@ namespace PerceptronAPI.Controllers
                 //}  //I'M COMMENTED
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "*****");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "BIRL123!@#Percep"); //LUMSProT@comBio
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
