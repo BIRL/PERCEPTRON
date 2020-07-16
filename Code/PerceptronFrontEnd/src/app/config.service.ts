@@ -226,6 +226,14 @@ export class ConfigService {
                 return res.json()
             });
     }
+    CreateDetailedProteinViewHit(resId) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        return this._http.post(this.baseApiUrl + 'api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit', '=' + resId, { headers: headers })
+            .map(res => {
+                return res.json()
+            });
+    }
 
 
 }
