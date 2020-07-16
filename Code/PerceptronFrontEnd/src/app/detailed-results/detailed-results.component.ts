@@ -164,17 +164,11 @@ export class DetailedResultsComponent implements OnInit {
     
   }
 
-
-  // ResultsView(pageName:string):void{
-  //   this.router.navigate([`${pageName}`])
-  // }
-
-  
   getResultsView() {
+    this._httpService.CreateDetailedProteinViewHit(this.resultId).subscribe(data => this.what(data));
     let x = this.router;
     x.navigate(["resultsvisualization", this.resultId, this.rank]);   //, ResultId
   }
-
 }
  
 
