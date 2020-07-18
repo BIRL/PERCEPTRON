@@ -533,6 +533,41 @@ namespace PerceptronAPI.Repository
             }
             return SearchParameter;
         }
+
+
+        public Test GetImagePathMassSpectrum(string qid)
+        {
+            var InfoPath = new Test();
+            string Path = "";
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT Path \nFROM Test \nWHERE QueryId = '" + qid + "'",
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                    Path = dataReader["Path"].ToString();
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            InfoPath.Path = Path;
+            InfoPath.QueryId = qid;
+            return InfoPath;
+
+        }
+
+
         //private SearchParameter GetresultInsilicoLeftDtoModel(List<ResultInsilicoMatchLeft> resultInsilicoLeft)
         //{
         //    var searchParameter = new ResultInsilicoMatchLeft

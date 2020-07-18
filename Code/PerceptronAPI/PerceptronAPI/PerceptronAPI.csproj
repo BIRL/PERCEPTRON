@@ -109,6 +109,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Models\PerceptronDatabase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -130,6 +131,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Engine\ResultsDownload.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -145,6 +147,8 @@
     <Compile Include="Models\InsilicoMassIons.cs" />
     <Compile Include="Models\InsilicoObj.cs" />
     <Compile Include="Models\Job.cs" />
+    <Compile Include="Models\MassSpectrumImagedetail.cs" />
+    <Compile Include="Models\MassVisualizationImageFileCreated.cs" />
     <Compile Include="Models\PeakListData.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -187,6 +191,7 @@
     <Compile Include="Models\ResultsDownloadDataCompile.cs" />
     <Compile Include="Models\ResultsDownloadFileNames.cs" />
     <Compile Include="Models\ResultsDto.cs" />
+    <Compile Include="Models\ResultsVisualizeData.cs" />
     <Compile Include="Models\ResultViewDto.cs" />
     <Compile Include="Models\ScanResults.cs" />
     <Compile Include="Models\SearchFile.cs">
@@ -208,7 +213,9 @@
     <Compile Include="Models\stat.cs" />
     <Compile Include="Models\SummaryResults.cs" />
     <Compile Include="Models\TermMod.cs" />
-    <Compile Include="Models\test.cs" />
+    <Compile Include="Models\Test.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\UserHistory.cs" />
     <Compile Include="Repository\SqlDatabase.cs" />
@@ -240,6 +247,9 @@
     </Content>
     <None Include="Properties\PublishProfiles\farhan.pubxml" />
     <None Include="Properties\PublishProfiles\PERCEPTRON.pubxml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\View\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -250,6 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
