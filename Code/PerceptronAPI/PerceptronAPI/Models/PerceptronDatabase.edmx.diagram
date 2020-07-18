@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="741cd6d0a86d4b1c8a301e22de217a80" Name="Diagram1">
+      <Diagram DiagramId="4f0b6c9588a649afa762522687478222" Name="Diagram1">
         <EntityTypeShape EntityType="PerceptronDatabaseModel.ExecutionTime" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.PeakListData" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmFixedModification" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
@@ -17,6 +17,7 @@
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchParameter" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchQuery" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchResult" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.Test" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

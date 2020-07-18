@@ -180,6 +180,15 @@
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
           <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Path" Type="nvarchar(max)" />
+        </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
@@ -193,6 +202,12 @@
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResults" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Test" EntityType="Self.Test" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Test].[QueryId] AS [QueryId], 
+    [Test].[Path] AS [Path]
+    FROM [dbo].[Test] AS [Test]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -374,6 +389,13 @@
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
           <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
           <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
@@ -387,6 +409,7 @@
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResult" />
+          <EntitySet Name="Tests" EntityType="Self.Test" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -575,6 +598,14 @@
                 <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tests">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.Test">
+              <MappingFragment StoreEntitySet="Test">
+                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
