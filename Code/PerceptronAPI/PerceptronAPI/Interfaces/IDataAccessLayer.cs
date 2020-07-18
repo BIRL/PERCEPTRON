@@ -14,5 +14,6 @@ namespace PerceptronAPI
         stat stat();
         void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults);
         SearchParameter GetSearchParmeters(string qid);
+        //MassSpectrumImagedetail GetImagePathMassSpectrum(string qid);
     }
 }
