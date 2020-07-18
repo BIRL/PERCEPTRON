@@ -1,0 +1,14 @@
+﻿@model PerceptronAPI.Models.Test
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div class="display-label">
+    @Html.DisplayNameFor(model => model.Path)
+</div>
+<div class="display-field">
+    <img src="@Url.Content(@Model.Path)" alt="Empty"/>
+</div>
