@@ -25,6 +25,14 @@ namespace PerceptronLocalService.DTO
             Site = '\0';
         }
 
+        public PostTranslationModificationsSiteDto(int cIndex, string cModName, char cSite)  //Please confirm Constructor
+        {
+            Index = cIndex;
+            ModName = cModName;
+            Site = cSite;
+        }
+
+
         //Another Constructor
         public PostTranslationModificationsSiteDto(int index, double score, double modWeight, string modName, char site, List<char> aminoAcid)
         {
