@@ -25,15 +25,15 @@ namespace PerceptronLocalService.Utility
                 ModWeight = -17.0265;
             else if (Mod == "Pyruvate-C")
                 ModWeight = 70.0055;
-            else if (Mod == "Amidation")
+            else if (Mod == "Amidation")  //Site = 'F'
                 ModWeight = -0.984016;
             else if (Mod == "Citrullination")
                 ModWeight = 0.984016;
-            else if (Mod == "Methylation")
+            else if (Mod == "Methylation")  //Site = 'R' || 'K'
                 ModWeight = 14.0156;
-            else if (Mod == "Hydroxylation")
+            else if (Mod == "Hydroxylation")  //Site = 'P'
                 ModWeight = 15.9949;
-            else if (Mod == "Sulfoxide" || Mod == "MSO")
+            else if (Mod == "Sulfoxide" || Mod == "MSO")  //Site = 'M'
                 ModWeight = 147.0354;
             else if (Mod == "Formylation")
                 ModWeight = 27.9949;
@@ -42,22 +42,22 @@ namespace PerceptronLocalService.Utility
             else if (Mod == "S-Nitrosylation")
                 ModWeight = 28.9902;
             else if (Mod == "Sulfone")
-                ModWeight = 31.9898;
+                ModWeight = 31.9898;    // 32.00
             else if (Mod == "DiHydroxylation")
                 ModWeight = 31.9898;
             else if (Mod == "TriMethylation")
                 ModWeight = 42.047;
-            else if (Mod == "Acetylation")
+            else if (Mod == "Acetylation")  //Site = 'S' || 'M' || 'K'  || 'A'
                 ModWeight = 42.0106;
             else if (Mod == "Gamma-Carboxyglutamic-Acid")
                 ModWeight = 43.9898;
             else if (Mod == "Nitration")
                 ModWeight = 44.9851;
-            else if (Mod == "Phosphorylation")
+            else if (Mod == "Phosphorylation")  //Site = 'Y'
                 ModWeight = 79.9663;
             else if (Mod == "Pyrrolidone-Aarboxylic-Acid")
                 ModWeight = -17.0265;
-            else if (Mod == "O-linked-Glycosylation")
+            else if (Mod == "O-linked-Glycosylation")  //Site = 'S'
                 ModWeight = 203.0794;
             else if (Mod == "Palmitoylation")
                 ModWeight = 238.23;
@@ -65,6 +65,17 @@ namespace PerceptronLocalService.Utility
                 ModWeight = 305.068;
             else if (Mod == "N-linked-Glycosylation")
                 ModWeight = 317.122;
+
+            //New Added
+            else if (Mod == "Carboxymethylation")  //Site = 'C'
+                ModWeight = 161.01466;
+
+            else if (Mod == "Carboxyamidomethylation")  //Site = 'C'
+                ModWeight = 160.03065;
+            else if (Mod == "Pyridylethylation")  //Site = 'C'
+                ModWeight = 208.067039;
+
+
             else
                 ModWeight = 0.0;
             return ModWeight;
