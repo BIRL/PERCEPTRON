@@ -10774,7 +10774,7 @@ namespace PerceptronLocalService.Engine
                             if (sequence.Length < 5)
                                 continue;
 
-                            protein.TruncationIndex = truncationIndex - 2;  // "-1" is Added for Zero Indexing of C#   #ASK
+                            protein.TruncationIndex = truncationIndex - 2;  // "-1" is Added for Zero Indexing of C#
                             protein.Mw = protein.InsilicoDetails.InsilicoMassRight[protein.Sequence.Length - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
                             CandidateProtListOutput.Add(protein);
                         }
