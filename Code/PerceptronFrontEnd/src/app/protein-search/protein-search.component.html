@@ -8,6 +8,12 @@
     <div style="height:10px;font-size:1px;">&nbsp;</div>
     <!-- <br> -->
 
+    <div>
+      <p style="font-size:12px; font-style: italic; color:red;">
+        Required Fields *
+      </p>
+      
+    </div>
     <mat-card>
       <mat-card-header>
         <h4 style="padding-left:0px; font-weight:bold; font-family: roboto, arial, sans-serif;">Basic Parameters</h4>
@@ -21,25 +27,50 @@
         <mat-grid-list cols="8" rowHeight="100px">
           <mat-grid-tile colspan="2" rowspan="1" rowHeight="50px">
             <mat-form-field style="padding-left:15px; width:100%">
-              <input matInput matTooltip="Enter project title here to label your protein identification query" matTooltipClass="mat-tooltip" [(ngModel)]="Title" (keypress)="keyPress1($event)"
-                matTooltipPosition="before" placeholder="Protein Search Title" name="Title" ngModel>
+                <input matInput matTooltip="Enter project title here to label your protein identification query" matTooltipClass="mat-tooltip" (keypress)="keyPress1($event)"
+                matTooltipPosition="before" placeholder="Protein Search Title" class="asterisk" required #title='ngModel' name='Title' [(ngModel)]='Title' ngModel>
+                <mat-error style="font-style: italic;" *ngIf="title?.invalid && (title.dirty || title.touched)">
+                  <div *ngIf="title.errors.required">
+                    Title is required.
+                  </div>
+                </mat-error>
             </mat-form-field>
           </mat-grid-tile>
 
           <mat-grid-tile></mat-grid-tile>
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <span matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mzml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) " matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-              <label style='display:inline;  font-weight:500;'>Upload Mass-Spectrometry Data File(s): </label>
+            <span matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) " matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
+              <label class="required" style='display:inline;  font-weight:500;'>Upload Mass-Spec Data </label>
+              <br/>
+              <label style='display:inline;  font-weight:500; '>Select File(s): </label>
+                <style>
+                  .required:after {
+                    content:"*";
+                    margin: auto;
+                    padding: 5px;
+                    color: rgb(43, 39, 39);
+                  }
+                </style>
               <label style="display:inline;">&nbsp;</label>
               <div style='display:inline;' class="button-row">
-                <button mat-button type='button' style='display:inline; background-color:#212121 ' mat-mini-fab (click)="imgFileInput.click()">
-                  <mat-icon>attachment</mat-icon>
+                <button mat-button class='buttonclass' type='button' style='display:inline; background-color:#212121 ' mat-mini-fab (click)="imgFileInput.click()">
+                  <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                 </button>
+                <style>.buttonclass {width: 35px; height: 35px;}
+                .iconclass {font-size: 22px; margin-top: -4px;}
+                </style>
+                <br/>
                 <label style="display:inline;">&nbsp;</label>
-                <label style="color:black;" style='display:inline;'><i>{{email.files.length}} Files Selected</i></label>
-                <input hidden #email type="file" #imgFileInput (ngModel)="email" name="FileName" id="FileName" (change)="upload(Uploaded_File)"
-                  accept=".txt, .mgf, .mzXML, .mzML" multiple ngModel/>
+                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
+                <ng-template #onefile>
+                  <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
+                </ng-template>
+                <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
+                  accept=".txt, .mgf, .mzXML" multiple ngModel/>
+                <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length==0">
+                  Please select atleast one data file.
+                </mat-error>
               </div>
             </span>
           </mat-grid-tile>
@@ -50,31 +81,35 @@
             <mat-form-field style="padding-left:15px; width:100%">
               <input matInput matTooltip="Enter an email address to receive search results" matTooltipPosition="before" placeholder="Enter your E-mail Address"
                 pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" [disabled]="diableEmail"
-                name="EmailId" ngModel>  
+                name="UserId" ngModel>
             </mat-form-field>
-                          <!-- [required]="!diableEmail"  -->
           </mat-grid-tile>
         </mat-grid-list>
 
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
         <mat-grid-list cols="8" style="padding:0px;" rowHeight="55px">
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Enter the value of precursor protein/peptide used in MS1" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
               <input matInput (keypress)="keyPress($event)" [(ngModel)]="GuiMass" placeholder="Intact Protein Mass" name="GuiMass" ngModel>
               <span matSuffix>Da</span>
             </mat-form-field>
           </mat-grid-tile>
 
-          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile> -->
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select protein database from which you want to search protein(s)" matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="selectedValue1" name="ProtDb">
+              <mat-select placeholder="Select Database" [(ngModel)]="selectedValue1" #ProtDb='ngModel' required name="ProtDb">
                 <mat-option *ngFor="let problem of problems" [value]="problem.value">
                   {{problem.viewValue}}
                 </mat-option>
               </mat-select>
+              <mat-error style="font-style: italic;" *ngIf="ProtDb?.invalid && (ProtDb.dirty || ProtDb.touched)">
+                <div *ngIf="ProtDb.errors.required">
+                  Please select protein database.
+                </div>
+              </mat-error>
             </mat-form-field>
           </mat-grid-tile>
 
@@ -109,10 +144,20 @@
       <mat-grid-list cols="8" rowHeight="70px">
         <mat-grid-tile colspan="2" rowspan="1" style="width:100%; ">
           <mat-radio-group  matTooltipPosition="below" style="padding:0px; padding-left:15px; width:100%;"
-            [(ngModel)]="MassMode" name="MassMode" ngModel>
-            <label matTooltip="Select the mass mode. MS1 data with z = 0 (neutral) or +1" style="font-weight:500; padding-left:0px; text-align:left; float:left;">Mass Mode: &nbsp;&nbsp;&nbsp;</label>
-            <mat-radio-button style="float: left;" matTooltip="Molecular ion in MS1 data with charge state +1 (i.e. z = 1)" value="1">MH+</mat-radio-button>
-            <mat-radio-button style="float: left;" matTooltip="MS data with neutral molecular ion peak" value="2">M(Neutral)</mat-radio-button>
+            [(ngModel)]="MassMode" required name="MassMode" ngModel>
+            <label class='req' matTooltip="Select the mass mode. MS1 data with z = 0 (neutral) or +1" required style="font-weight:500; padding-left:0px; text-align:left; float:left;">
+              Mass Mode: &nbsp;&nbsp;&nbsp;
+              <style>
+                .req:after {
+                  content:"*";
+                  margin-left:-12px;
+                  margin-right:15px;
+                  color:red;
+                }
+              </style>
+            </label>
+            <mat-radio-button style="float: left;" matTooltip="Molecular ion in MS1 data with charge state +1 (i.e. z = 1)" required value="1">MH+</mat-radio-button>
+            <mat-radio-button style="float: left;" matTooltip="MS data with neutral molecular ion peak" required value="2">M(Neutral)</mat-radio-button>
           </mat-radio-group>
         </mat-grid-tile>
 
@@ -124,83 +169,173 @@
 
         <mat-grid-tile></mat-grid-tile>
 
-        <mat-grid-tile colspan="2" rowspan="1">
-            <mat-checkbox matTooltip="Check the option for tuning protein mass by using MS2 data" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Autotune" name="Autotune" ngModel>Tune Intact Protein Mass</mat-checkbox>
-          </mat-grid-tile>
-        <!-- <mat-grid-tile colspan="2" rowspan="1">
-          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
-        </mat-grid-tile> -->
-
-      </mat-grid-list>
-
-      <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-
-      <mat-grid-list cols="8" rowHeight="65px">
-
-        <mat-grid-tile colspan="2" rowspan="1">
-            <div style="width: 95%">
-              <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
-                <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" matTooltip="Set the tolerance value for use in filtering protein database using intact protein mass"
-                  matTooltipPosition="before" placeholder="Intact Mass Tolerance" [(ngModel)]="Mass_Tolerance" name="MwTolerance"
-                  ngModel>
-                  <span matSuffix>Da</span>
-              </mat-form-field></div>
-            <!-- </div>
-          <mat-form-field style="padding:0px;  width:20%">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Mass_Tolerance_Unit" name="MwTolUnit" ngModel>
-              <mat-option *ngFor="let unit of units" [value]="unit.value">
-                {{ unit.viewValue }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-        </mat-grid-tile>
-
-
-        <mat-grid-tile></mat-grid-tile>
-
         <!-- <mat-grid-tile colspan="2" rowspan="1">
           <mat-checkbox matTooltip="Check the option for tuning protein mass by using MS2 data" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Autotune" name="Autotune" ngModel>Tune Intact Protein Mass</mat-checkbox>
         </mat-grid-tile> -->
 
-        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
-              <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
-                id="selectedFrag" name="InsilicoFragType" (change)="selectIons()">
-                <mat-option *ngFor="let fragment of fragments" [value]="fragment.value">
-                  {{ fragment.viewValue }}
+        <!-- <mat-grid-tile colspan="2" rowspan="1">
+          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Trunc" name="Trunc" ngModel>Handle Truncated Proteoforms</mat-checkbox>
+        </mat-grid-tile> -->
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+            <div style="width: 100%">
+              <mat-form-field style="padding:0px; padding-left:15px; width:100%">
+                <input matInput matTooltip="Set the tolerance value for peptide search during de novo sequencing and spectral comparison" (keypress)="keyPress($event)"
+                  matTooltipPosition="before" placeholder="Peptide Tolerance" [(ngModel)]="Peptide_Tolerance" #PeptideTolerance='ngModel' required name="PeptideTolerance" ngModel>
+                  <mat-error style="font-style: italic;" *ngIf="PeptideTolerance?.invalid && (PeptideTolerance.dirty || PeptideTolerance.touched)">
+                    <div *ngIf="PeptideTolerance.errors.required">
+                      Peptide Tolerance is required.
+                    </div>
+                  </mat-error>
+              </mat-form-field>
+            </div>
+            <mat-form-field style="padding:0px; width:20%">
+                <mat-select matTooltip="Choose Units" [(ngModel)]="PeptideToleranceUnit" name="PeptideToleranceUnit" ngModel>
+                  <mat-option *ngFor="let unit of units" [value]="unit.value">
+                    {{ unit.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile> -->
+            <mat-grid-tile colspan="2" rowspan="1">
+              <div style="width: 92%">
+                <mat-form-field style="padding:0px; width:100%; padding-left:8px;">
+                  <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" matTooltip="Set the tolerance value for use in filtering protein database using intact protein mass"
+                    matTooltipPosition="before" placeholder="Intact Mass Tolerance" [(ngModel)]="Mass_Tolerance" #MwTolerance='ngModel' required name="MwTolerance"
+                    ngModel>
+                    <mat-error style="font-style: italic;" *ngIf="MwTolerance?.invalid && (MwTolerance.dirty || MwTolerance.touched)">
+                      <div *ngIf="MwTolerance.errors.required">
+                        Intact Mass Tolerance is required.
+                      </div>
+                    </mat-error>
+                    <span matSuffix>Da</span>
+                </mat-form-field>
+              </div>
+            <!-- <mat-form-field style="padding:0px;  width:20%">
+              <mat-select matTooltip="Choose Units" [(ngModel)]="Mass_Tolerance_Unit" name="Mass_Tolerance_Unit" ngModel>
+                <mat-option *ngFor="let unit of units" [value]="unit.value">
+                  {{ unit.viewValue }}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
           </mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+        
+      </mat-grid-list>
 
-        <mat-grid-tile></mat-grid-tile>
+      <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+
+      <mat-grid-list cols="8" rowHeight="65px">
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-          <mat-form-field matTooltip="Incorporate masses of neutral loss, if any" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
-            <input matInput (keypress)="keyPress($event)" [(ngModel)]="NeutralLoss" [disabled]="!Autotune" placeholder="Neutral Mass Loss"
-              name="NeutralLoss" ngModel>
-            <span matSuffix>Da</span>
+          <div style="width: 95%">
+            <mat-form-field style="padding:0px; padding-left:15px; width:100%">
+              <input matInput matTooltip="Set the tolerance value for peptide search during de novo sequencing and spectral comparison" (keypress)="keyPress($event)"
+                matTooltipPosition="before" placeholder="Peptide Tolerance" [(ngModel)]="Peptide_Tolerance" #PeptideTolerance='ngModel' required name="PeptideTolerance" ngModel>
+                <mat-error style="font-style: italic;" *ngIf="PeptideTolerance?.invalid && (PeptideTolerance.dirty || PeptideTolerance.touched)">
+                  <div *ngIf="PeptideTolerance.errors.required">
+                    Peptide Tolerance is required.
+                  </div>
+                </mat-error>
+            </mat-form-field>
+          </div>
+        <mat-form-field style="padding:0px; width:20%">
+          <mat-select matTooltip="Choose Units" [(ngModel)]="PeptideToleranceUnit" name="PeptideToleranceUnit" ngModel>
+            <mat-option *ngFor="let unit of units" [value]="unit.value">
+              {{ unit.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="2" rowspan="1">
+        <mat-checkbox matTooltip="Check the option for tuning protein mass by using MS2 data" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Autotune" name="Autotune" ngModel>Tune Intact Protein Mass</mat-checkbox>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+      
+      <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+        <mat-form-field matTooltip="Incorporate masses of neutral loss, if any" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
+          <input matInput (keypress)="keyPress($event)" #NeutralLoss="ngModel" [(ngModel)]="Neutral_Loss" [disabled]="!Autotune" required placeholder="Neutral Mass Loss"
+            name="NeutralLoss" ngModel>
+          <span matSuffix>Da</span>
+          <mat-error style="font-style: italic;" *ngIf="NeutralLoss?.invalid && (NeutralLoss.dirty || NeutralLoss.touched)">
+            <div *ngIf="NeutralLoss.errors.required">
+              Neutral loss is required.
+            </div>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
+            <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
+              id="selectedFrag" #InsilicoFragType="ngModel" required name="InsilicoFragType" (change)="selectIons()">
+              <mat-option *ngFor="let fragment of fragments" [value]="fragment.value">
+                {{ fragment.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error style="font-style: italic;"  *ngIf="InsilicoFragType?.invalid && (InsilicoFragType.dirty || InsilicoFragType.touched)">
+              <div *ngIf="InsilicoFragType.errors.required">
+                Fragmentation type is required.
+              </div>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
+        <mat-grid-tile></mat-grid-tile> -->
 
-
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field matTooltip="Incorporate masses of neutral loss, if any" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
+            <input matInput (keypress)="keyPress($event)" #NeutralLoss="ngModel" [(ngModel)]="Neutral_Loss" [disabled]="!Autotune" required placeholder="Neutral Mass Loss"
+              name="NeutralLoss" ngModel>
+            <span matSuffix>Da</span>
+            <mat-error style="font-style: italic;" *ngIf="NeutralLoss?.invalid && (NeutralLoss.dirty || NeutralLoss.touched)">
+              <div *ngIf="NeutralLoss.errors.required">
+                Neutral loss is required.
+              </div>
+            </mat-error>
+          </mat-form-field>
+        </mat-grid-tile> -->
 
       </mat-grid-list>
 
       <div style="height:10px;font-size:1px;">&nbsp;</div>
 
       <mat-grid-list cols="8" rowHeight="65px">
+
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field matTooltip="Incorporate slider value" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
+            <input matInput (keypress)="keyPress($event)" #SliderValue="ngModel" [(ngModel)]="Slider_Value" [disabled]="!Autotune" required placeholder="Slider Value"
+              name="SliderValue" ngModel>
+            <span matSuffix>Da</span>
+            <mat-error style="font-style: italic;" *ngIf="SliderValue?.invalid && (SliderValue.dirty || NeutralLoss.touched)">
+              <div *ngIf="SliderValue.errors.required">
+                Slider value is required.
+              </div>
+            </mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <div style="width: 95%">
               <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-                <input matInput matTooltip="Set the tolerance value for spectral comparison" (keypress)="keyPress($event)" [(ngModel)]="Peptide_Tolerance"
-                  matTooltipPosition="before" placeholder="Peptide Tolerance" name="PeptideTolerance" ngModel>
+                <input matInput matTooltip="Set the tolerance value for peptide search during de novo sequencing and spectral comparison" (keypress)="keyPress($event)"
+                  matTooltipPosition="before" placeholder="Peptide Tolerance" [(ngModel)]="Peptide_Tolerance" #PeptideTolerance='ngModel' required name="PeptideTolerance" ngModel>
+                  <mat-error style="font-style: italic;" *ngIf="PeptideTolerance?.invalid && (PeptideTolerance.dirty || PeptideTolerance.touched)">
+                    <div *ngIf="PeptideTolerance.errors.required">
+                      Peptide Tolerance is required.
+                    </div>
+                  </mat-error>
               </mat-form-field>
             </div>
           <mat-form-field style="padding:0px; width:20%">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Peptide_Tolerance_Unit" name="PeptideToleranceUnit" ngModel>
+            <mat-select matTooltip="Choose Units" [(ngModel)]="PeptideToleranceUnit" name="PeptideToleranceUnit" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
@@ -208,57 +343,62 @@
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile></mat-grid-tile>
-
-        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <mat-form-field style="padding-left:15px; width:100%;">
-              <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" placeholder="Select Corresponding Special Ions"
-                name="HandleIons" multiple>
-                <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
-                  {{ Special.viewValue }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </mat-grid-tile>
-
-          <mat-grid-tile></mat-grid-tile>
-
-          <!-- SLIDERVALUE -->
-          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-              <mat-form-field matTooltip="Set the tolerance value for mass tuner" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
-
-                <input matInput (keypress)="keyPress($event)" [(ngModel)]="SliderValue" [disabled]="!Autotune" placeholder="Intact Mass Tolerance"
-                  name="SliderValue" ngModel>
-                
-              </mat-form-field>
-            </mat-grid-tile> -->
-            
-            <!-- <span matSuffix>Da</span> -->
-
-        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-          <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
-            <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
-              id="selectedFrag" name="InsilicoFragType" (change)="selectIons()">
-              <mat-option *ngFor="let fragment of fragments" [value]="fragment.value">
-                {{ fragment.viewValue }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-grid-tile> -->
-
-        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile> -->
 
         <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding-left:15px; width:100%;">
-            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" placeholder="Select Corresponding Special Ions"
-              name="HandleIons" multiple>
+            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" 
+            placeholder="Select Special Ions" [disabled]="InsilicoFragType?.invalid" #HandleIons="ngModel" required name="HandleIons" multiple>
               <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
                 {{ Special.viewValue }}
               </mat-option>
             </mat-select>
+            <mat-error style="font-style: italic;" *ngIf="HandleIons?.invalid && (HandleIons.dirty || HandleIons.touched)">
+              <div *ngIf="HandleIons.errors.required">
+                Special ion selection is required.
+              </div>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile> -->
+      <!-- </mat-grid-list>
+
+      <div style="height:10px;font-size:1px;">&nbsp;</div>
+      <mat-grid-list cols="8" rowHeight="65px"> -->
+        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
+            <mat-select matTooltip="Select the fragmentation technique for use in MS2 data search" matTooltipPosition="before" [(ngModel)]="selectedFrag" placeholder="Select Fragmentation Type"
+              id="selectedFrag" #InsilicoFragType="ngModel" required name="InsilicoFragType" (change)="selectIons()">
+              <mat-option *ngFor="let fragment of fragments" [value]="fragment.value">
+                {{ fragment.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error style="font-style: italic;"  *ngIf="InsilicoFragType?.invalid && (InsilicoFragType.dirty || InsilicoFragType.touched)">
+              <div *ngIf="InsilicoFragType.errors.required">
+                Fragmentation type is required.
+              </div>
+            </mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile></mat-grid-tile>
+
+        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding-left:15px; width:100%;">
+            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" 
+            placeholder="Select Special Ions" [disabled]="InsilicoFragType?.invalid" #HandleIons="ngModel" required name="HandleIons" multiple>
+              <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
+                {{ Special.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error style="font-style: italic;" *ngIf="HandleIons?.invalid && (HandleIons.dirty || HandleIons.touched)">
+              <div *ngIf="HandleIons.errors.required">
+                Special ion selection is required.
+              </div>
+            </mat-error>
+          </mat-form-field>
+        </mat-grid-tile>
       </mat-grid-list>
+
     </mat-expansion-panel>
     <div style="height:10px;font-size:1px;">&nbsp;</div>
     <!-- <br> -->
@@ -273,15 +413,19 @@
       <mat-grid-list cols="8" style="padding:0px;" rowHeight="85px">
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-checkbox matTooltip="Check the option to filter proteins from the database using Peptide Sequence Tags (PSTs)" matTooltipPosition="before" style="padding:0px; width:100%; padding-left:15px;"
-            color="primary" [(ngModel)]="DenovoAllow" name="DenovoAllow" ngModel>Enable PST Filtering</mat-checkbox>
+            color="primary" [(ngModel)]="Denovo_Allow" #DenovoAllow="ngModel" name="DenovoAllow" ngModel>Enable PST Filtering</mat-checkbox>
         </mat-grid-tile>
-
+        <mat-error style="font-style: italic;" *ngIf="Denovo_Allow">
+          <div *ngIf="MinimumPstLength.pristine || MaximumPstLength.pristine || HopThreshhold.pristine || PSTTolerance.pristine">
+            * All the PST fields are required.
+          </div>
+        </mat-error>
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
             <mat-select matTooltip="Select the value from the drop down menu to filter out PSTs below this minimum length" matTooltipPosition="before" [(ngModel)]="MinimumPstLength" placeholder="Minimum Tag Length"
-              (change)="SetMaxTagLength()" [disabled]="!DenovoAllow" name="MinimumPstLength">
+              (change)="SetMaxTagLength()" [disabled]="!Denovo_Allow" required name="MinimumPstLength">
               <mat-option *ngFor="let Len of MinTagLength" [value]="Len.value">
                 {{ Len.viewValue }}
               </mat-option>
@@ -293,8 +437,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select the value from the drop down menu to filter out PSTs above the maximum length" matTooltipPosition="before" [(ngModel)]="MaximumPstLength" placeholder="Maximum Tag Length"
-              [disabled]="!DenovoAllow" name="MaximumPstLength">
+            <mat-select matTooltip="Select the value from the drop down menu to filter out PSTs above the maximum length" matTooltipPosition="before" [(ngModel)]="Maximum_PstLength" placeholder="Maximum Tag Length"
+              [disabled]="!Denovo_Allow" required #MaximumPstLength="ngModel" name="MaximumPstLength">
               <mat-option *ngFor="let Len of MaxTagLength" [value]="Len.value">
                 {{ Len.viewValue }}
               </mat-option>
@@ -304,18 +448,18 @@
 
       </mat-grid-list>
 
-      <mat-grid-list cols="8" style="padding:0px;" rowHeight="85px">
+      <mat-grid-list cols="8" style="padding:0px;" rowHeight="75px">
 
         <mat-grid-tile colspan="2" rowspan="1">
         <div style="width: 95%">
           <mat-form-field matTooltip="Set the tolerance for matching peak difference with standard amino acid masses" style="padding:0px; width:100%; padding-left:15px;">
-            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)"
-              matTooltipPosition="before" placeholder="Tolerance For Each Hop" [(ngModel)]="HopThreshhold" name="HopThreshhold"
-              [disabled]="!DenovoAllow" ngModel>
+            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" 
+              matTooltipPosition="before" placeholder="Tolerance For Each Hop" [(ngModel)]="Hop_Threshhold" required #HopThreshhold="ngModel" name="HopThreshhold"
+              [disabled]="!Denovo_Allow" ngModel>
           </mat-form-field>
         </div>
           <mat-form-field style="padding:0px;  width:20%">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Hop_Tolerance_Unit" name="Hop_Tolerance_Unit" [disabled]="!DenovoAllow" ngModel>
+            <mat-select matTooltip="Choose Units" [(ngModel)]="Hop_Tolerance_Unit" name="Hop_Tolerance_Unit" [disabled]="!Denovo_Allow" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
@@ -327,8 +471,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1">
           <mat-form-field matTooltip="Enter Error Margin For Whole Peptide Sequence Tag." style="padding:0px; width:100%; padding-left:15px;">
-            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" [disabled]="!DenovoAllow"
-              matTooltipPosition="before" placeholder="Set the overall mass error tolerance for the complete PST" [(ngModel)]="PSTTolerance" name="PSTTolerance"
+            <input matInput style="padding:0px; width:100%;" (keypress)="keyPress($event)" [disabled]="!Denovo_Allow" required
+              matTooltipPosition="before" placeholder="Overall tolerance for PST" [(ngModel)]="PST_Tolerance" #PSTTolerance="ngModel" name="PSTTolerance"
               ngModel>
           </mat-form-field>
         </mat-grid-tile>
@@ -341,7 +485,6 @@
 
     </mat-expansion-panel>
     <div style="height:10px;font-size:1px;">&nbsp;</div>
-    <!-- <br> -->
 
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
@@ -352,50 +495,55 @@
 
       <div style="height:30px; font-size:1px;">&nbsp;</div>
       <!-- <br> -->
-
       <mat-grid-list cols="8" rowHeight="70px">
-      <mat-grid-tile colspan="2" rowspan="1">
-          <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
-        </mat-grid-tile>
-      </mat-grid-list>
-
-      <mat-grid-list cols="8" rowHeight="75px">
-
+          <mat-grid-tile colspan="2" rowspan="1">
+              <mat-checkbox matTooltip="Check the option to enable search for truncated proteoforms" color="primary" style="width:100%; padding-left:15px;" [(ngModel)]="Truncation" name="Truncation" ngModel>Handle Truncated Proteoforms</mat-checkbox>
+            </mat-grid-tile>
+          </mat-grid-list>
+          <mat-grid-list cols="8" rowHeight="75px">
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
             <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification"
-              placeholder="Terminal Modification" name="TerminalModification" ngModel multiple>
+              placeholder="Terminal Modification" #Terminal_Modification="ngModel" required name="Terminal_Modification" ngModel multiple>
               <mat-option *ngFor="let TerminalMod of TerminalMods" [value]="TerminalMod.value">
                 {{ TerminalMod.viewValue }}
-
-                <!-- class = "form-control" aria-required="TerminalModification -->
               </mat-option>
             </mat-select>
+            <mat-error style="font-style: italic;" *ngIf="Terminal_Modification?.invalid && (Terminal_Modification.dirty || Terminal_Modification.touched)">
+              <div *ngIf="Terminal_Modification.errors.required">
+                Terminal modification is required.
+              </div>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-          <mat-checkbox matTooltip="Check the option to search for unknown modifications" matTooltipPosition="before" style="padding-left:15px; width:100%" color="primary"
-            id="ptmallow" [(ngModel)]="ptmallow" name="ptmallow" (click)="disableMods();" ngModel>Blind-PTM Search</mat-checkbox>
+          <mat-checkbox matTooltip="Check the option to search for unknown modifications" matTooltipPosition="before" style="padding-left:15px; padding-bottom:20px; width:100%" color="primary"
+            id="PtmAllow" [(ngModel)]="PtmAllow" name="PtmAllow" (click)="disableMods();" ngModel>Blind-PTM Search</mat-checkbox>
         </mat-grid-tile>
 
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-          <mat-form-field style="padding:0px; width:100%; padding-left:15px;">
-            <input matInput matTooltip="Set the tolerance for post-translational modification (PTM) mass shifts" (keypress)="keyPress($event)" [(ngModel)]="PTM_Tolerance" matTooltipPosition="before"
-              placeholder="PTM Tolerance" name="PtmTolerance" [disabled]="ptmallow" ngModel>
-
+          <mat-form-field style="padding:0px; width:100%; padding-left:15px">
+            <input matInput matTooltip="Set the tolerance for post-translational modification (PTM) mass shifts" (keypress)="keyPress($event)" [(ngModel)]="PtmTolerance" matTooltipPosition="before"
+              placeholder="PTM Tolerance" name="Ptm_Tolerance" #Ptm_Tolerance="ngModel" required ngModel>
+              <mat-error style="font-style: italic;" *ngIf="Ptm_Tolerance?.invalid && (Ptm_Tolerance.dirty || Ptm_Tolerance.touched)">
+                <div *ngIf="Ptm_Tolerance.errors.required">
+                  Tolerance selection is required.
+                </div>
+              </mat-error>
+              <span matSuffix>Units</span>
           </mat-form-field>
-          <mat-form-field style="padding:0px; width:20%; ">
-            <mat-select matTooltip="Choose Units" [(ngModel)]="Units_mass4" name="PtmTolerance_Unit" [disabled]="ptmallow" ngModel>
+          <!-- <mat-form-field style="padding:0px; width:20%; ">
+            <mat-select matTooltip="Choose Units" [(ngModel)]="Units_mass4" name="PtmTolerance_Unit" ngModel>
               <mat-option *ngFor="let unit of units" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
         </mat-grid-tile>
 
       </mat-grid-list>
@@ -406,7 +554,7 @@
         <mat-grid-tile colspan="2" rowspan="2">
           <div style="padding:0px; width:100%; Height:100%">
             <label matTooltipPosition="before" matTooltip="Choose the possible post-translational modification (PTM) for inclusion in search process" style="padding:0px; padding-left:15px; Height:100%; font-weight:500;"> List of Modifications:
-              <select name="List_of_Modifications" id="List_of_Modifications" [disabled]="ptmallow" size="8" style="padding:0px; Height:85%;"
+              <select name="List_of_Modifications" id="List_of_Modifications" [disabled]="PtmAllow" size="8" style="padding:0px; Height:85%;"
                 multiple ngModel>
                 <option value="1">Acetylation_A</option>
                 <option value="2">Acetylation_K</option>
@@ -430,14 +578,12 @@
         <mat-grid-tile colspan="1" rowspan="1" style="padding-left:15px; ">
           <div>
             <!-- <br> -->
-            <button mat-icon-button type="button" style="float:right;" (click)=" add_mod();">
-                <!-- [disabled]="ptmallow" -->
+            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)=" add_mod();">
               <mat-icon>chevron_right</mat-icon>
             </button>
             <!-- <br> -->
 
-            <button mat-icon-button type="button" style="float:right;" (click)="remove_mod();">
-                <!-- [disabled]="ptmallow" -->
+            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)="remove_mod();">
               <mat-icon>chevron_left</mat-icon>
             </button>
           </div>
@@ -448,7 +594,7 @@
           <div style="padding:0px; width:100%; Height:100%">
             <label matTooltipPosition="before" matTooltip="Specify the selected post-translational modifications (PTMs) as a variable PTM" style="padding-left:15px; Height:100%; font-weight:500;">Variable Modifications: &nbsp; &nbsp;
               <!-- <br> -->
-              <select name="Variable_Modifications" [disabled]="ptmallow" id="Variable_Modifications" size="2" style="padding:0px; width:100%; height:70%;"
+              <select name="Variable_Modifications" [disabled]="PtmAllow" id="Variable_Modifications" size="2" style="padding:0px; width:100%; height:70%;"
                 multiple ngModel>
               </select>
             </label>
@@ -460,7 +606,7 @@
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%;">
             <mat-select matTooltip="Select methionine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="MethionineChemicalModification"
-              placeholder="Methionine Chemical Modifications" name="MethionineChemicalModification">
+              placeholder="Methionine Chemical Modifications" name="Meth_Chem_Modifications">
               <mat-option *ngFor="let mod of Meth" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
@@ -474,12 +620,12 @@
           <div>
             <!-- <br> -->
             <!-- <br> -->
-            <button mat-icon-button type="button" style="float:right;" (click)="fix_add_mod();">
+            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)="fix_add_mod();">
               <mat-icon>chevron_right</mat-icon>
             </button>
             <!-- <br> -->
 
-            <button mat-icon-button type="button"  style="float:right;" (click)="fix_remove_mod();">
+            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)="fix_remove_mod();">
               <mat-icon>chevron_left</mat-icon>
             </button>
           </div>
@@ -490,7 +636,7 @@
             <!-- <br> -->
             <label matTooltipPosition="before" matTooltip="Specify the selected post-translational modifications (PTMs) as a fixed PTM" style="padding-left:0px; Height:100%; font-weight:500;">Fixed Modifications: &nbsp; &nbsp;
               <!-- <br> -->
-              <select name="Fixed_Modification" id="Fixed_Modification" [disabled]="ptmallow" size="4" style="padding:0px; width:100%; height:70%;"
+              <select name="Fixed_Modification" id="Fixed_Modification" [disabled]="PtmAllow" size="4" style="padding:0px; width:100%; height:70%;"
                 multiple ngModel>
               </select>
             </label>
@@ -502,7 +648,7 @@
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
             <mat-select matTooltip="Select cysteine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="CysteineChemicalModification"
-              placeholder="Cysteine Chemical Modifications" name="CysteineChemicalModification" ngModel>
+              placeholder="Cysteine Chemical Modifications" name="Cyst_Chem_Modifications" ngModel>
               <mat-option *ngFor="let mod of Cys" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
@@ -518,7 +664,7 @@
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
         <mat-panel-title style="font-size:large; font-weight:600;  color:Black;">
-          Set Scoring Components Weight
+          Set Scoring Components Weight *
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -526,7 +672,7 @@
         <mat-grid-tile colspan="2" rowspan="1">
           <div style="width: 95%">
             <mat-slider matTooltip="Factor for computing weighted score of intact protein mass" matTooltipPosition="before" [(ngModel)]="Slider1" style="padding:0px; width:95%"
-              aria-label="MWS" thumb-label="true" name="MwSweight" ngModel>
+              aria-label="MWS" thumb-label="true" #MwSweight="ngModel" name="MwSweight" ngModel>
             </mat-slider>
             <mat-hint align="start" style="padding-left: 2px;">
               <strong>Intact Protein Mass Score Weightage (%)</strong>
@@ -539,7 +685,7 @@
         <mat-grid-tile colspan="2" rowspan="1">
           <div style="width: 95%">
             <mat-slider matTooltip="Factor for computing weighted score of matching peptide sequence tags" matTooltipPosition="before" [(ngModel)]="Slider2" style="padding:0px; width:95%"
-              aria-label="PSTS" thumb-label="true" max="100" min="0" name="PstSweight" ngModel>
+              aria-label="PSTS" thumb-label="true" max="100" min="0" #PstSweight="ngModel" name="PstSweight" ngModel>
             </mat-slider>
             <mat-hint align="start" style="padding-left: 2px;">
               <strong>Peptide Sequence Tags Score Weightage (%)</strong>
@@ -552,7 +698,7 @@
         <mat-grid-tile colspan="2" rowspan="1">
           <div style="width: 95%">
             <mat-slider matTooltip="Factor for computing weighted score of matching spectral peaks" matTooltipPosition="before" [(ngModel)]="Slider3" style="padding:0px; width:95%"
-              aria-label="ISS" thumb-label="true" name="InsilicoSweight" ngModel>
+              aria-label="ISS" thumb-label="true" #InsilicoSweight="ngModel" name="InsilicoSweight" ngModel>
             </mat-slider>
             <mat-hint align="start" style="padding-left: 2px;">
               <strong>Spectral Comparisons Score Weightage (%)</strong>
@@ -560,6 +706,9 @@
           </div>
         </mat-grid-tile>
       </mat-grid-list>
+      <mat-error style="font-style: italic;" *ngIf="MwSweight.pristine && PstSweight.pristine && InsilicoSweight.pristine">
+        * Set weight for at least one of the components.
+      </mat-error>
     </mat-expansion-panel>
     <div style="height:10px;font-size:1px;">&nbsp;</div>
     <!-- <br> -->
