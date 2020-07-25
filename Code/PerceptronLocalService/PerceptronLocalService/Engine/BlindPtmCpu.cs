@@ -8,34 +8,40 @@ using System.Linq;
 
 namespace PerceptronLocalService.Engine
 {
-    public class BlindPtmCpu 
+    public class BlindPtmCpu : IBlindPTMModule
     {
         ModificationMWShift ModificationTableClass = new ModificationMWShift();
 
-        public BlindPTMDto BlindPTMExtraction(MsPeaksDto peakData, SearchParametersDto parameters)
+        public BlindPTMDto BlindPTMExtraction(List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters)
         {
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
-            var peakDatalist = new List<peakData2Dlist>();
-            for (int row = 0; row <= peakData.Mass.Count - 1; row++)
-            {
-                var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
-                peakDatalist.Add(dataforpeakDatalist);
-            }
+
+
+            //WE already have this....
+            //var peakDatalist = new List<peakData2Dlist>();
+            //for (int row = 0; row <= peakData.Mass.Count - 1; row++)    //*R  peakData.Mass.Count  *W  peakData2DList.Count
+            //{
+            //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
+            //    peakDatalist.Add(dataforpeakDatalist);
+            //}
+
+
+
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakDatalist.OrderBy(n => n.Mass).ToList();
-            var MolW = peakData.Mass[peakData.Mass.Count - 1];    // Molar weight that is the last row of the peak list
+            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();    ///*R  peakDatalist     *W   peakData2DList
+            var MolW = peakData2DList[peakData2DList.Count - 1].Mass;// Molar weight that is the last row of the peak list    //*R  peakData.Mass[peakData.Mass.Count - 1]   *W peakData2DList[peakData2DList.Count - 1].Mass
             var UserHopThreshold = 1;
 
             // peaks has first index as 0, followed by all the peaklist except MolW, followed by MolW - all the peaks from peaklist and then at the last index, there is MolW
             var peaks = new List<double>();
             peaks.Add(0);
-            for (int row = 0; row <= peakData.Mass.Count - 2; row++)
+            for (int row = 0; row <= peakData2DList.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
             {
-                peaks.Add(peakData.Mass[row]);
+                peaks.Add(peakData2DList[row].Mass);                          //  *R  peakData.Mass[row]    *W  peakData2DList[row].Mass
             }
-            for (int row = 0; row <= peakData.Mass.Count - 2; row++)
+            for (int row = 0; row <= peakData2DList.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
             {
-                peaks.Add(MolW - peakData.Mass[row]);
+                peaks.Add(MolW - peakData2DList[row].Mass);                          //  *R  peakData.Mass[row]    *W  peakData2DList[row].Mass
             }
             peaks.Add(MolW);
             peaks = peaks.OrderBy(n => n).ToList(); // Sorting of peaks
@@ -86,7 +92,7 @@ namespace PerceptronLocalService.Engine
             return BlindPTMExtractionInfo;
         }
 
-        public List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, MsPeaksDto peakData, double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction)
+        public List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, List<newMsPeaksDto> peakData2DList, double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction)
         //A general function for BlindPTM, BlindPTM_Truncation_Left and BlindPTM_Truncation_Right
         {
             //Variable initialization
@@ -100,26 +106,29 @@ namespace PerceptronLocalService.Engine
             List<ProteinDto> CandidateProtListModified = new List<ProteinDto>();
             var proteinIndex = 0;
 
+            /*We already have this...*/
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
-            var peakDatalist = new List<peakData2Dlist>();
-            for (int row = 0; row < peakData.Mass.Count; row++)
-            {
-                var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
-                peakDatalist.Add(dataforpeakDatalist);
-            }
+            //var peakDatalist = new List<peakData2Dlist>();
+            //for (int row = 0; row < peakData.Mass.Count; row++)
+            //{
+            //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
+            //    peakDatalist.Add(dataforpeakDatalist);
+            //}
+
+
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakDatalist.OrderBy(n => n.Mass).ToList();
-            var MolW = peakData.Mass[peakData.Mass.Count - 1];    // Molar weight that is the last row of the peak list
+            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();     ///*R peakDatalist   *W  peakData2DList
+            var MolW = peakData2DList[peakData2DList.Count - 1].Mass;    // Molar weight that is the last row of the peak list   /// *R peakData.Mass[peakData.Mass.Count - 1]  *W peakData2DList[peakData2DList.Count - 1].Mass
             double tolConv = 0;
 
             // if size of peakData is 1, then tolConv is equal to that one mass value, else it is the second-last mass value from the sorted peakData list
-            if (peakData.Mass.Count == 1)
+            if (peakData2DList.Count == 1)     //// *R peakData.Mass.Count  *W 
             {
-                tolConv = peakData.Mass[peakData.Mass.Count - 1];
+                tolConv = peakData2DList[peakData2DList.Count - 1].Mass; //*R peakData.Mass[peakData.Mass.Count - 1];
             }
             else
             {
-                tolConv = peakData.Mass[peakData.Mass.Count - 2];
+                tolConv = peakData2DList[peakData2DList.Count - 2].Mass;  //*R  peakData.Mass[peakData.Mass.Count - 2];  *W peakData2DList[peakData2DList.Count - 2].Mass
             }
             List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>();
             if (sizeHopInfo > 0)
@@ -270,7 +279,7 @@ namespace PerceptronLocalService.Engine
             return CandidateProtListModified;
         }
 
-        public List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, MsPeaksDto peakData, SearchParametersDto parameters)
+        public List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters)
         {
             for (int index = 0; index <= Matches.Count; index++)
             {
@@ -279,7 +288,7 @@ namespace PerceptronLocalService.Engine
                 protein.PtmParticulars[index].ModStartSite = -1;
                 protein.PtmParticulars[index].ModEndSite = -1;
                 protein.PtmParticulars[index].ModWeight = -1;
-                var MassDiff = peakData.Mass[0] - protein.Mw;  // peakData.Mass[0] = Intact Mass of Protein
+                var MassDiff = peakData2DList[0].Mass - protein.Mw;  // peakData2DList[0].Mass = Intact Mass of Protein      ///////*R  peakData.Mass[0] *W peakData2DList[0].Mass
 
                 if (parameters.PtmAllow == 1)
                 {
