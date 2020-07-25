@@ -10,6 +10,7 @@ namespace PerceptronLocalService.DTO
     {
         public double Mass;
         public double Intensity;
+        public double WholeProteinMolecularWeight;
 
         //public List<double> MassList;
         //public List<double> IntensityList;
@@ -18,6 +19,13 @@ namespace PerceptronLocalService.DTO
         {
             Mass = cMass;
             Intensity = cIntensity;
+        }
+
+        public newMsPeaksDto(double cMass, double cIntensity, double cWholeProteinMolecularWeight)
+        {
+            Mass = cMass;
+            Intensity = cIntensity;
+            WholeProteinMolecularWeight = cWholeProteinMolecularWeight;
         }
         //public newMsPeaksDto(newMsPeaksDto peakDataList)
         //{
