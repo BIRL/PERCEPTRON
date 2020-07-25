@@ -10,8 +10,9 @@ namespace PerceptronLocalService.Engine
     public class InsilicoFilterCpu : IInsilicoFilter
     {
 
-        public void ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit, List<ProteinDto> CandidateProteinswithInsilicoScores) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
+        public List<ProteinDto> ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
         {
+            var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
             //tol = 15;
             //var pepUnit = "ppm";
             //int delme; var delmeList = new List<ProteinDto>();
@@ -170,27 +171,15 @@ namespace PerceptronLocalService.Engine
                     //peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakData2DList[0].Mass);
                 }
             }
-            var Matches = new List<ProteinDto>();
-            var Match_Score_greater = new List<ProteinDto>();  // DEL ME
-
             for (int MatchIndex = 0; MatchIndex < proteinList.Count; MatchIndex++)
             {
                 if (proteinList[MatchIndex].MatchCounter > 0)
                 {
-                    //Matches.Add(proteinList[MatchIndex]);
                     CandidateProteinswithInsilicoScores.Add(proteinList[MatchIndex]);
                 }
             }
 
-            ///// FOR TESTINGS...!!!
-            for (int i = 0; i < proteinList.Count; i++)
-            {
-                if (proteinList[i].InsilicoScore > 0)
-                {
-                    Match_Score_greater.Add(proteinList[i]);
-                }
-            }
-
+            return CandidateProteinswithInsilicoScores;
         }
 
         private void SpectralComparison(double difference, newMsPeaksDto OnepeakData2DList, int indexPeakList, double peakDifferenceTolerance, ref int Consecutive, ref int Counter, ref int OldConsec, ref int OldConsec2, ref int ConsecutiveRegion, ref double Matches_Score, ref int MatchCounter, List<int> Matched_IndexList, List<int> Peak_IndexList, int indexSide, string Type, List<string> TypeList) // Matched_Index == LeftMatched_Index OR RightMatched_Index  /// Peak_IndexList ==  Peak List Index
