@@ -11,6 +11,8 @@ using PerceptronAPI.Controllers;
 using PerceptronAPI.Models;
 using System.IO;
 
+using System.Web;
+
 namespace PerceptronAPI.Engine
 {
     public partial class DetailedProteinView : Form    /// CHANGE MY NAME
@@ -64,9 +66,9 @@ namespace PerceptronAPI.Engine
 
             int Matches = LeftMatches + RightMathces;
             int TruncationCount = 0;
-            
 
-            string NameOfFileWithPath = "";
+
+            string NameofFileWithFullPath = "";
             string NameofFile = "";
             /* Image */
             using (var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height))
@@ -136,7 +138,7 @@ namespace PerceptronAPI.Engine
 
                 }
                 /* Left Truncation */
-                if (searchParameters.Truncation == 1)
+                if (searchParameters.Truncation == "True")
                 {
                     if (ResultsData.TruncationSite == "Left")
                     {
@@ -216,7 +218,7 @@ namespace PerceptronAPI.Engine
 
 
                 /* Right Truncation */
-                if (searchParameters.Truncation == 1)
+                if (searchParameters.Truncation == "True")
                 {
                     if (ResultsData.TruncationSite == "Right")
                     {
@@ -249,21 +251,28 @@ namespace PerceptronAPI.Engine
 
                     var imageSave = Original.Clone(rectangle, Original.PixelFormat);  // Resizing Image: Copying Image and removing white (empty) space
 
-                    var filepath = Directory.GetCurrentDirectory();
-                    var navigatepath = Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
+                    //var filepath = Directory.GetCurrentDirectory();
+                    var navigatepath = HttpContext.Current.Server.MapPath("~/App_Data");  //Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
                     var DirectoryPath = "";
 
+                    var abds = HttpContext.Current.Server.MapPath("~/App_Data/Results/TemporaryResults");
+
                     if (downloadresults == false)//downloadresults = false; // Setting flag for Images will be stored at "App_Data" Folder
-                        DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\assets\\ResultsFileImages\\"));  // Navigated to the path where Files should be created
+                        DirectoryPath = navigatepath + "\\Results\\TemporaryResults\\";  // Navigated to the path where Temporary Files should be created
                     else //downloadresults = true; // Setting flag for Images will be stored at "\ResultsDownload\Results File Images" permanent(ResultsDownload) folders
                         DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\assets\\ResultsDownload\\ResultsFileImages\\"));  // Navigated to the path where Files should be created
 
                     //NameOfFileWithPathDirectoryPath = @"D:\\01_PERCEPTRON\\gitHub\\PERCEPTRON\\Code\\PerceptronFrontEnd\\src\\assets\\ResultsFileImages\\";   //Overriding DirectoryPath...
-                    //D:\\01_PERCEPTRON\\gitHub\\PERCEPTRON\\Code\\PerceptronFrontEnd\\assets\\ResultsFileImages\\
+                    //D:\\01_PERCEPTRON\\gitHub\\PERCEPTRON\\Code\\PerceptronFrontEnd\\assets\\ResultsFileImages\\     //Overriding DirectoryPath..
                     NameofFile = "DetailedProteinView_Qid_" + ResultsData.QueryId + "_Rid_" + ResultsData.ResultId + ".jpg";
-                    DirectoryPath = @"D:\\01_PERCEPTRON\\gitHub\\PERCEPTRON\\Code\\PerceptronFrontEnd\\assets\\ResultsFileImages\\";
-                    NameOfFileWithPath = DirectoryPath + NameofFile;
-                    imageSave.Save(NameOfFileWithPath);
+                    //DirectoryPath = @"D:\\01_PERCEPTRON\\gitHub\\PERCEPTRON\\Code\\PerceptronFrontEnd\\assets\\ResultsFileImages\\";   //Overriding DirectoryPath..
+
+                    //DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\"));      //Overriding DirectoryPath..
+
+
+
+                    NameofFileWithFullPath = DirectoryPath + NameofFile;
+                    imageSave.Save(NameofFileWithFullPath);
 
                     //image.Save(@"D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\PerceptronAPI\PerceptronAPI\Utility\discarded.jpg");      \src\assets\ResultsFileImages
                     imageSave.Dispose(); // Releases all resources used
@@ -287,7 +296,7 @@ namespace PerceptronAPI.Engine
                 graphics.Dispose();
                 
             }
-            return NameofFile;
+            return NameofFileWithFullPath;
         }
         private List<int> PstIndexFind(string Sequence, List<string> ListPSTTags)
         {
