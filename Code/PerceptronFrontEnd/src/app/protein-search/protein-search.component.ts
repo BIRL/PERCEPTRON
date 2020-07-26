@@ -30,9 +30,9 @@ import { from } from 'rxjs/observable/from';
 
 export class ProteinSearchComponent implements OnInit {
   @ViewChild("imgFileInput") imgFileInput;
-  @ViewChild("ptmallow") ptmallow;
+  @ViewChild("PtmAllow") PtmAllow;
 
-  problems = [
+  ListOfDatabases = [
     // { value: 'Swissprot', viewValue: 'Swissprot' },
     // { value: 'TrEMBL', viewValue: 'TrEMBL' },
     { value: 'Human', viewValue: 'Human' },
@@ -52,7 +52,8 @@ export class ProteinSearchComponent implements OnInit {
 
   diableEmail: boolean;
   name: any;
-  NeutralLoss: any;
+  Neutral_Loss: any;
+  Slider_Value: any;
   Units_mass4:any;
   animal: string;
   state: string = '';
@@ -61,20 +62,19 @@ export class ProteinSearchComponent implements OnInit {
   
   postData: string;
   Mass_Tolerance_Unit: any;
-  Peptide_Tolerance_Unit: any;
   Hop_Tolerance_Unit: any;
-  PtmTolerance_Unit: any;
+  PtmToleranceUnit: any;
 
 
   EmailId: string ='';
   Title: any = '';
-  GuiMass: any = '';
   MassMode: any = '';
   Mass_Tolerance: any = '';
   Autotune: any = '';
   Peptide_Tolerance: any = '';
+  PeptideToleranceUnit : any = '';
   FilterDB: any = '';
-  PTM_Tolerance: any = '';
+  // PTM_Tolerance: any = '';
   Terminal_Modif: any = '';
   Slider1: any = '';
   Slider2: any = '';
@@ -84,18 +84,19 @@ export class ProteinSearchComponent implements OnInit {
   Special_Ions: any = '';
   MinimumPstLength: any = '';
   MaximumPstLength: any = '';
-  MethionineChemicalModification: any = '';
-  CysteineChemicalModification: any = '';
+  Methionine_ChemicalModification: any = '';
+  Cysteine_ChemicalModification: any = '';
   Truncation: any = '';  //Trunc
   Units_mass: any = '';
-  selectedValue1: any = '';
-  selectedValue2: any = ''; s
+  NameOfDatabase: any = '';
+  NoOfOutputResults: any = '';
   selectedFrag: any = '';
-  selectedIons: any = '';
-  DenovoAllow: any = '';
-  TerminalModification: any = ''; //[];
+  SelectedSpecialIons: any = '';
+  Denovo_Allow: any = '';
+  Terminal_Modification: any = ''; //[];
   HopThreshhold: any;
   PSTTolerance: any;
+  PtmTolerance : any;
   VariableModifications: any = '';
   FixedModifications : any = '';
 
@@ -104,8 +105,6 @@ export class ProteinSearchComponent implements OnInit {
 
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
-
-
 
 
   fragments = [
@@ -147,12 +146,6 @@ export class ProteinSearchComponent implements OnInit {
     { value: 'M_Acetylation', viewValue: 'N-Methionine Acetylation' }
   ];
 
-  
-  //let newTerminalModsvalue =  //this.TerminalMods.toString();
-  //newTerminalModsvalue1 = this.TerminalMods.toString;
-  
-  //console.log(newTerminalModsvalue);
-
   Cys = [
     { value: 'None', viewValue: 'None' },
     { value: 'Cys_CAM', viewValue: 'Carboxyamidomethyl Cysteine' },
@@ -167,7 +160,7 @@ export class ProteinSearchComponent implements OnInit {
     { value: 'MSONE', viewValue: 'Methionine Sulfone' }
   ];
 
-  res = [
+  ListOutputResults = [
     { value: '10', viewValue: '10' },
     { value: '20', viewValue: '20' },
     { value: '30', viewValue: '30' },
@@ -277,52 +270,59 @@ export class ProteinSearchComponent implements OnInit {
 
   LoadDefaults() { // Here is Load Default Parameters
     this.Title = "Default Run";
-    this.GuiMass = 10000;
-    this.selectedValue1 = 'Human';
-    this.selectedValue2 = '10';
-    this.MassMode = 2;   // For Selecting M(Neutral)
-    this.Mass_Tolerance = 500;
-    this.Autotune = 0;
-    this.Peptide_Tolerance = 15;
-    this.DenovoAllow = 1;
-    this.FilterDB = 1;
-    this.ptmallow = 0;
-    this.Slider1 = '0'; //
-    this.Slider2 = '0'; //
-    this.Slider3 = '100';
-    this.Truncation = 0;  //Trunc
-    this.MinimumPstLength = '3';
-    this.SetMaxTagLength()
-    this.MaximumPstLength = 6;
-    this.HopThreshhold = 0.1;
-    this.PSTTolerance = 0.45
-    this.TerminalModification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";
-    
     this.EmailId = '';
-    
-    this.CysteineChemicalModification ='None';
-    this.MethionineChemicalModification ='None';
+    this.NameOfDatabase = 'Human';
+    this.NoOfOutputResults = '50';
+    this.MassMode = 2;   // For Selecting M(Neutral)
+    this.FilterDB = true;
+    this.Mass_Tolerance = 500;
+    this.Peptide_Tolerance = 15;
+    this.PeptideToleranceUnit = 'ppm';
+    this.Autotune = false;
     this.selectedFrag = 'HCD';
-    this.SpecialIonz = this.Special1; //();// = ['bo']
-    //this.SpecialIonz = this.Special1
+    this.SpecialIonz = this.Special1;
+    this.SelectedSpecialIons = ['bo','bstar','yo','ystar'];
+
+    this.Denovo_Allow = false;
+    this.MinimumPstLength = '3';
+    this.SetMaxTagLength();
+    this.MaximumPstLength = 6;
+    this.HopThreshhold = 0.1;  //Tolerance for each hop
+    this.PSTTolerance = 0.45;  //Overall tolerance for PST
+
+    this.Truncation = false;
+    this.Terminal_Modification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";
+    this.PtmAllow = false;
+    this.PtmTolerance = 0.5;
+    this.PtmToleranceUnit = 'Da';
     this.VariableModifications = "";
     this.FixedModifications = "";
 
 
+    this.Slider1 = '0'; //Intact Protein Mass Slider
+    this.Slider2 = '0'; //PST Slider
+    this.Slider3 = '100'; //Insilico Slider
+
 
   }
 
+
   ngOnInit() {
     this.Mass_Tolerance_Unit = 'Da';
-    this.PtmTolerance_Unit = 'Da';
+    this.Neutral_Loss = 0.0;
+    this.Slider_Value = 0.0;
+
     this.Hop_Tolerance_Unit = 'Da';
-    this.Peptide_Tolerance_Unit = 'ppm';
+
+    this.PtmToleranceUnit = 'Da';
+    this.Methionine_ChemicalModification = "None";
+    this.Cysteine_ChemicalModification = "None";
     var user = firebase.auth().currentUser;
-    if (user.email != null) {
-      this.diableEmail = true;
+    if (user.emailVerified == false) {
+      this.diableEmail = false;
     }
     else {
-      this.diableEmail = false;
+      this.diableEmail = true;
     }
   }
 
@@ -441,10 +441,22 @@ export class ProteinSearchComponent implements OnInit {
   onSubmit(form: any): void {
     var user = firebase.auth().currentUser;
 
+    // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
+    form.HandleIons= form.HandleIons.toString();
+    form.TerminalModification = form.TerminalModification.toString();
 
+    if (form.MassMode == 1){
+      form.MassMode = "MH+";
+    }
+    else{
+      form.MassMode = "M(Neutral)";
+    }
+    
+    //Adding Variable Modifications into form
     if (<HTMLSelectElement>document.getElementById("Variable_Modifications") != null){
       form.VariableModifications = this.VariableModification();
     }
+    //Adding Fixed Modifications into form
     if (<HTMLSelectElement>document.getElementById("Fixed_Modification") != null){
       form.FixedModifications = this.FixedModification();
     }
@@ -455,28 +467,15 @@ export class ProteinSearchComponent implements OnInit {
       form.UserId = user.email;
     }
     else{
-      form.UserId = user.uid;
-
-      // if (form.UserId != ""){
-      //   form.EmailId = form.UserId;
-      //   form.UserId = user.uid;
-      // }
-      // else{
-      //   form.EmailId = "";
-      //   form.UserId = user.uid;
-      // }
-    }
-
-    if(form.Title == ""){
-      form.Title = "Default Run";
-      alert("Dear User! \nYou did not enter Job Title so, your job title would be 'Default Run'.");
-    }
-    if(form.NumberOfOutputs == ""){
-      form.NumberOfOutputs = '10';
-      alert("Dear User! \nNo, number of ouptut results were selected. So, we will select Top 10 resutls for you.");
-    }
-    if (form.TerminalModification == ""){
-      form.TerminalModification = ['None'];
+      // form.UserId = user.uid;
+      if (form.UserId != ""){
+        form.EmailId = form.UserId;
+        form.UserId = user.uid;
+      }
+      else{
+        form.EmailId = "";
+        form.UserId = user.uid;
+      }
     }
 
     if(form.MwSweight == ""){
@@ -485,80 +484,71 @@ export class ProteinSearchComponent implements OnInit {
     if (form.PstSweight == ""){
       form.PstSweight = 0; 
     }
-
-    if(form.GuiMass == ""){
-      form.GuiMass = 10000;
-    }
-
-    
     if (form.InsilicoSweight == ""){
       form.InsilicoSweight = 0;
+    }
+
+    if(form.MwSweight == "0" && form.PstSweight == "0" && form.InsilicoSweight == "0"){
+      alert("Dear User! You did not select any weightage from 'Set Scoring Components Weight'. \nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
+      form.InsilicoSweight = 100;
     }
     if(Number(form.MaximumPstLength) < Number(form.MinimumPstLength)){
       form.MaximumPstLength = 6;
       form.MinimumPstLength = 3;
-      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \n Maximum Tag Length should be greater than Minimum Tag Length. \n So, we are taking default values.")
+      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \nMaximum Tag Length should be greater than Minimum Tag Length. \n So, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.")
     }
 
-    if (form.PtmTolerance == ""){
-      form.PtmTolerance = 0;
-    }
-    if (form.DeconvAllow == true) {
-      form.DeconvAllow = 1;
-    }
-    else {
-    form.DeconvAllow = 0;
-    }
+    // if (form.DeconvAllow == true) {
+    //   form.DeconvAllow = 1;
+    // }
+    // else {
+    // form.DeconvAllow = 0;
+    // }
 
-    if (form.FilterDb == true) {
-      form.FilterDb = 1;
-    }
-    else {
-      form.FilterDb = 0;
-    }
+    // if (form.FilterDb == true) {
+    //   form.FilterDb = 1;
+    // }
+    // else {
+    //   form.FilterDb = 0;
+    // }
 
-    if (form.Truncation == true) {  // Trunc REPLACED WITH Truncation
-      form.Truncation = 1;
-    }
-    else {
-      form.Truncation = 0;
-    }
+    // if (form.Truncation == true) {  // Trunc REPLACED WITH Truncation
+    //   form.Truncation = 1;
+    // }
+    // else {
+    //   form.Truncation = 0;
+    // }
 
 
-    if (form.Autotune == true) {
-      form.Autotune = 1;
-    }
-    else {
-      form.Autotune = 0;
-    }
+    // if (form.Autotune == true) {
+    //   form.Autotune = 1;
+    // }
+    // else {
+    //   form.Autotune = 0;
+    // }
 
-    if (form.DenovoAllow == true) {
-      form.DenovoAllow = 1;
-    }
-    else {
-      form.DenovoAllow = 0;
-    }
+    // if (form.DenovoAllow == true) {
+    //   form.DenovoAllow = 1;
+    // }
+    // else {
+    //   form.DenovoAllow = 0;
+    // }
 
-    if(<HTMLSelectElement>document.getElementById("Variable_Modifications") != null || <HTMLSelectElement>document.getElementById("Fixed_Modifications") != null || form.ptmallow == true){
+    // if(<HTMLSelectElement>document.getElementById("Variable_Modifications") != null || <HTMLSelectElement>document.getElementById("Fixed_Modifications") != null || form.PtmAllow == true){
 
-      form.ptmallow == 1;
+    //   //form.PtmAllow = 1;
 
-      if(form.MethionineChemicalModification == ""){
-        form.MethionineChemicalModification = "None";
-      }
-      if(form.CysteineChemicalModification == ""){
-        form.CysteineChemicalModification = "None";
-      }
-    }
-    else{
-      form.ptmallow = 0;
-    }
-
-
-    if (form.HandleIons){
-      form.HandleIons= form.HandleIons.toString();
-    }
-    
+    //   if(form.Methionine_ChemicalModification == ""){
+    //     form.Methionine_ChemicalModification = "None";
+    //   }
+    //   if(form.Cysteine_ChemicalModification == ""){
+    //     form.Cysteine_ChemicalModification = "None";
+    //   }
+    // }
+    // else{
+    //   form.PtmAllow = 0;
+    // }
+  
 
     let fi = this.imgFileInput.nativeElement;
     let stats: any = 'false';
