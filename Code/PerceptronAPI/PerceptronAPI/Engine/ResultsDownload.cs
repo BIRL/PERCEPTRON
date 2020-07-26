@@ -251,14 +251,13 @@ namespace PerceptronAPI.Engine
             else
                 sw.WriteLine("Email Id = User not Provided");
 
-            sw.WriteLine("GuiMass = " + searchParameters.GuiMass);  // DEL IT NOT NEEDED
-            sw.WriteLine("Protein Database = " + searchParameters.ProtDb);
+            sw.WriteLine("Protein Database = " + searchParameters.ProteinDatabase);
             sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
 
             //BUG Mass Mode Not Present
 
             string FilterDb;
-            if (searchParameters.FilterDb == 1)
+            if (searchParameters.FilterDb == "True")
                 FilterDb = Enabled;
             else
                 FilterDb = Disabled;
@@ -267,37 +266,35 @@ namespace PerceptronAPI.Engine
 
             sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
 
-            string Autotune;
-            if (searchParameters.Autotune == 1)
-                Autotune = Enabled;
+            if (searchParameters.Autotune == "True"){
+                sw.WriteLine("Mass Tuner = Enabled");
+                sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
+                sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
+            }                
             else
-                Autotune = Disabled;
+                sw.WriteLine("Mass Tuner = Disabled");
 
-            sw.WriteLine("Mass Tuner = " + Autotune);
-            //sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
-            sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
+            
 
 
             sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
             sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
             sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
 
-            string DenovoAllow;
-            if (searchParameters.DenovoAllow == 1)
-                DenovoAllow = Enabled;
+            if (searchParameters.DenovoAllow == "True"){
+                sw.WriteLine("Peptide Sequence Tag (PST) = Enabled");
+                sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
+                sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
+
+                sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
+                sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
+                sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
+            }
             else
-                DenovoAllow = Disabled;
-            sw.WriteLine("Peptide Sequence Tag (PST) = " + DenovoAllow);
-            sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
-            sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
-
-            sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
-            sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
-            sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
-
+                sw.WriteLine("Peptide Sequence Tag (PST) = Disabled");
 
             string Truncation;
-            if (searchParameters.Truncation == 1)
+            if (searchParameters.Truncation == "True")
                 Truncation = Enabled;
             else
                 Truncation = Disabled;
@@ -306,7 +303,7 @@ namespace PerceptronAPI.Engine
             sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
 
             string PtmAllow;
-            if (searchParameters.PtmAllow == 1)
+            if (searchParameters.PtmAllow == "True")
                 PtmAllow = Enabled;
             else
                 PtmAllow = Disabled;
