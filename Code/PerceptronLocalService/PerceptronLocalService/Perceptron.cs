@@ -32,6 +32,7 @@ namespace PerceptronLocalService
         private readonly IProteinRepository _proteinRepository;
         private readonly ITruncation _Truncation;  // Protection Level Decided Later
         private readonly ITerminalModifications _TerminalModifications; //Protection Level Decided Later
+        private readonly IBlindPTMModule _BlindPostTranslationalModificationModule;
 
 
 
@@ -47,6 +48,7 @@ namespace PerceptronLocalService
             _molecularWeightModule = new MwModule();
             _proteinRepository = new ProteinRepositorySql();
             _postTranslationalModificationModule = new PtmCpu();
+            _BlindPostTranslationalModificationModule = new BlindPtmCpu();
             _insilicoFragmentsAdjustment = new InsilicoFragmentsAdjustmentCpu();
             _insilicoFilter = new InsilicoFilterCpu();
             _peakListFileReader = new PeakListFileReader();
@@ -245,7 +247,7 @@ namespace PerceptronLocalService
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
-                        //massSpectrometryData.WholeProteinMolecularWeight = old;
+                        //massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
                         EmailMsg = -2;
                         //Sending_Email(parameters, EmailMsg); // EmailMsg = -2 where -2 is for Invalid Parameters etc. //20200121
                         break;
@@ -267,7 +269,7 @@ namespace PerceptronLocalService
 
                     //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
                     //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
-                    
+
                     //StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
 
                     //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712 //COMMENTED FOR THE TIME BEING 20200712
@@ -275,15 +277,14 @@ namespace PerceptronLocalService
                     //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                     var candidateProteins = new List<ProteinDto>();
                     var CandidateProteinListTruncated = new List<ProteinDto>();
-                    
-                    
+
+
                     //Fetching Candidate Proteins From User Selected DataBase
 
                     ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
                     var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes);
                     candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                     CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
-                    
 
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                     ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
@@ -304,22 +305,18 @@ namespace PerceptronLocalService
 
                     candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
 
-                    var CandidateProtListModified = new List<ProteinDto>();
-                    var BlindPTM = new BlindPtmCpu();
-                    if (parameters.PtmAllow == 1)
-                    {
-                        var BlindPTMExtractionInfo = BlindPTM.BlindPTMExtraction(massSpectrometryData, parameters);
-                        CandidateProtListModified = BlindPTM.BlindPTMGeneral(candidateProteins, massSpectrometryData, 1, BlindPTMExtractionInfo, parameters, "BlindPTM");
-                    }
+                    var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
 
-                    candidateProteins.AddRange(CandidateProtListModified);
+                    CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
+
+                    candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
 
                     //Step 4 - ??? Algorithm - Spectral Comparison
                     var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
-                    ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes, CandidateProteinswithInsilicoScores);
+                    CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
 
                     // Localizing Unknown mass shift
-                    CandidateProteinswithInsilicoScores = BlindPTM.BlindPTMLocalization(CandidateProteinswithInsilicoScores, massSpectrometryData, parameters);
+                    CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList, parameters);
 
 
                     //Logging.DumpInsilicoScores(candidateProteins);
@@ -368,7 +365,7 @@ namespace PerceptronLocalService
                     if (parameters.EmailId != "")
                     {
                         EmailMsg = -1;
-                        Sending_Email(parameters, EmailMsg);
+                        //Sending_Email(parameters, EmailMsg);
                     }
 
                     string k = r.Message;
@@ -447,8 +444,7 @@ namespace PerceptronLocalService
                 var FilteredTruncatedList = _Truncation.FilterTruncatedProteins(parameters, TruncatedListwithFragAdjust, PstTags);
 
 
-
-                _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinListTrucnatedwithInsilicoScores);
+                CandidateProteinListTrucnatedwithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
 
 
 
@@ -465,7 +461,7 @@ namespace PerceptronLocalService
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            if (parameters.Autotune == 1)
+            if (parameters.Autotune == "true")
             {
                 _wholeProteinMassTuner.TuneWholeProteinMass(peakData, parameters);
             }
@@ -594,16 +590,16 @@ namespace PerceptronLocalService
         }
 
         //SPECTRAL COMPARISON ALGORITHM: 
-        private void ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes, List<ProteinDto> CandidateProteinswithInsilicoScores)
+        private List<ProteinDto> ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
             //if (parameters.InsilicoSweight != 0)
-            {
-                var CandidateProteins = new List<ProteinDto>();
-                
-                //ITS HEALTHY!!! 20200203
-                _insilicoFilter.ComputeInsilicoScore(CandidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit, CandidateProteinswithInsilicoScores);
-            }
+
+            var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+
+            //ITS HEALTHY!!! 20200203
+            CandidateProteinswithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+
 
             //if (parameters.PtmAllow == 0)  // ITS HEALTHY
             //    _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
@@ -619,49 +615,24 @@ namespace PerceptronLocalService
             //}
             moduleTimer.Stop();
             executionTimes.InsilicoTime = moduleTimer.Elapsed.ToString();
+            return CandidateProteinswithInsilicoScores;
         }
 
-        private List<ProteinDto> ExecutePostTranslationalModificationsModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins,
-            MsPeaksDto massSpectrometryData, ExecutionTimeDto executionTimes)
+        //Post Translational Modifcations (PTM)
+        private List<ProteinDto> ExecutePostTranslationalModificationsModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
-            List<ProteinDto> proteoformsList;
-
-            if (parameters.PtmAllow == 1)
+            var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
+            if (parameters.PtmAllow == "true")
             {
-                proteoformsList = _postTranslationalModificationModule.ExecutePtmModule(candidateProteins,
-                   massSpectrometryData, parameters);
-
-                //_insilicoFilter.ComputeInsilicoScore(proteoformsList, massSpectrometryData.Mass, parameters.HopThreshhold);//Commented
-                /* #CFTTB
-                 * _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
-                 */
-                _molecularWeightModule.FilterModifiedProteinsByWholeProteinMass(parameters, proteoformsList,
-               massSpectrometryData);
-            }
-
-            else
-            {
-                proteoformsList = candidateProteins;
-                foreach (var protein in proteoformsList)
-                {
-                    protein.PtmParticulars = new List<PostTranslationModificationsSiteDto>();
-                }
+                var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);
+                CandidateProteinListBlindPtmModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(candidateProteins, peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM"); //WHy UserHopThreshold = 1??? 
             }
 
             moduleTimer.Stop();
             executionTimes.PtmTime = moduleTimer.Elapsed.ToString();
-            return proteoformsList;
+            return CandidateProteinListBlindPtmModified;
         }
-
-        //private List<ProteinDto> ExecuteTruncationModule(SearchParametersDto parameters)
-        //{
-        //    if (parameters.Truncation == "true")
-        //    {
-        //        int abc = 0;
-        //    }
-
-        //}
 
         private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
@@ -755,4 +726,27 @@ namespace PerceptronLocalService
 //************************************************************************************************//
 
 
+/*  Previous Code  */
+//List<ProteinDto> proteoformsList;
 
+//if (parameters.PtmAllow == 1)
+//{
+//    proteoformsList = _postTranslationalModificationModule.ExecutePtmModule(candidateProteins,
+//       massSpectrometryData, parameters);
+
+//    //_insilicoFilter.ComputeInsilicoScore(proteoformsList, massSpectrometryData.Mass, parameters.HopThreshhold);//Commented
+//    /* #CFTTB
+//     * _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+//     */
+//    _molecularWeightModule.FilterModifiedProteinsByWholeProteinMass(parameters, proteoformsList,
+//   massSpectrometryData);
+//}
+
+//else
+//{
+//    proteoformsList = candidateProteins;
+//    foreach (var protein in proteoformsList)
+//    {
+//        protein.PtmParticulars = new List<PostTranslationModificationsSiteDto>();
+//    }
+//}
