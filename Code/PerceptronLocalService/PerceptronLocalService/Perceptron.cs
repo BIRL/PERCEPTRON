@@ -146,7 +146,7 @@ namespace PerceptronLocalService
         public static void Sending_Email(SearchParametersDto p, int EmailMsg)
         {
             var emailaddress = p.EmailId;
-            using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
+            using (var mm = new MailMessage("dummyemail@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
 
@@ -195,7 +195,7 @@ namespace PerceptronLocalService
 
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "BIRL123!@#Percep"); //LUMSProT@comBio
+                var networkCred = new NetworkCredential("dummyemail@lums.edu.pk", "*****");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
