@@ -87,7 +87,7 @@ namespace PerceptronLocalService
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     PerformSearch(searchParameters);
                 }
-                System.Threading.Thread.Sleep(10000);
+                //System.Threading.Thread.Sleep(10000);
             }
 
         }
@@ -195,7 +195,7 @@ namespace PerceptronLocalService
 
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "*****");
+                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "BIRL123!@#Percep"); //LUMSProT@comBio
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",

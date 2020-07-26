@@ -18,6 +18,8 @@ using System.IO;
 using PerceptronAPI.Engine;
 using System.Windows.Forms;
 using GraphForm;
+using System.Web.UI.WebControls;
+
 
 namespace PerceptronAPI.Controllers
 {
@@ -29,6 +31,7 @@ namespace PerceptronAPI.Controllers
         public SearchController()
         {
             _dataLayer = new SqlDatabase();
+            //Server.MapPath("~");
         }
         public string Get_progress(string em)
         {
@@ -81,24 +84,18 @@ namespace PerceptronAPI.Controllers
                     parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
                 }
 
-                //parametersDto.SearchParameters.DenovoAllow = 1;
-                //parametersDto.SearchParameters.PtmAllow = 1;
-                //parametersDto.SearchParameters.FilterDb = 1;
 
-                if (parametersDto.FixedMods != null)
+                if (parametersDto.FixedMods.FixedModifications != "")
                 {
                     parametersDto.FixedMods.QueryId = queryId;
                     parametersDto.FixedMods.ModificationId = 1;
                 }
 
-                if (parametersDto.VarMods != null)
+                if (parametersDto.VarMods.VariableModifications != "")
                 {
                     parametersDto.VarMods.QueryId = queryId;
                     parametersDto.VarMods.ModificationId = 1;
                 }
-
-
-
 
                 parametersDto.SearchParameters.QueryId = queryId;
                 parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
@@ -221,14 +218,24 @@ namespace PerceptronAPI.Controllers
             var MassSpectra = new FormForGraph();
             var InsilicoSpectra = MassSpectra.fillChart(temp2);
 
-
-
-            //var ImageForm = new DetailedProteinView();
-            //bool downloadresults = false;
-            //var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
             string NameofFile = "DetailedProteinView_Qid_" + temp2.Results.Results.QueryId + "_Rid_" + temp2.Results.Results.ResultId + ".jpg";
-            var Data = new ResultsVisualizeData(input, NameofFile, InsilicoSpectra);
+            var NameOfFileWithFullPath = HttpContext.Current.Server.MapPath("~/App_Data") + "\\Results\\TemporaryResults\\" + NameofFile;
 
+
+            var ImageForm = new DetailedProteinView();
+            bool downloadresults = false;
+            var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
+
+            //var imgURL = Url.Content(string.Format(@"C:\\inetpub\\wwwroot\\" + NameofFile, NameofFile));  //App_Data/Images/{0}
+
+            FileStream imgStream = File.OpenRead(NameOfFileWithFullPath);
+            byte[] blob = new byte[imgStream.Length];
+            imgStream.Read(blob, 0, (int)imgStream.Length);
+
+
+            var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra); //imgURL
+
+            imgStream.Dispose();
 
             return Data;
         }
@@ -241,24 +248,16 @@ namespace PerceptronAPI.Controllers
             var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
-            //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
+            ////ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
 
             DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
-
-            //var MassSpectra = new FormForGraph();
-            //var InsilicoSpectra = MassSpectra.fillChart(temp2);
-
-
-
             var ImageForm = new DetailedProteinView();
             bool downloadresults = false;
-            var NameofFile = ImageForm.writeOnImage(temp2, downloadresults);
+            var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
+            return NameofFileWithFullPath;
+            
 
-            return "Success";
-            //var Data = new ResultsVisualizeData(input, NameofFile);
-
-
-            //return Data;
+            //return "This is a testing string...";
         }
 
 
@@ -336,7 +335,7 @@ namespace PerceptronAPI.Controllers
                 //}  //I'M COMMENTED
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "BIRL123!@#Percep"); //LUMSProT@comBio
+                var networkCred = new NetworkCredential("dummyemail@lums.edu.pk", "*****");
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
