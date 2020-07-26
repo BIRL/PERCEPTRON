@@ -100,13 +100,13 @@
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select protein database from which you want to search protein(s)" matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="selectedValue1" #ProtDb='ngModel' required name="ProtDb">
-                <mat-option *ngFor="let problem of problems" [value]="problem.value">
-                  {{problem.viewValue}}
+              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required name="ProteinDatabase">
+                <mat-option *ngFor="let SelectedDatabase of ListOfDatabases" [value]="SelectedDatabase.value">
+                  {{SelectedDatabase.viewValue}}
                 </mat-option>
               </mat-select>
-              <mat-error style="font-style: italic;" *ngIf="ProtDb?.invalid && (ProtDb.dirty || ProtDb.touched)">
-                <div *ngIf="ProtDb.errors.required">
+              <mat-error style="font-style: italic;" *ngIf="ProteinDatabase?.invalid && (ProteinDatabase.dirty || ProteinDatabase.touched)">
+                <div *ngIf="ProteinDatabase.errors.required">
                   Please select protein database.
                 </div>
               </mat-error>
@@ -117,9 +117,9 @@
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select the number of candidate protein hits you want to receive in results" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
-              <mat-select placeholder="Recieve Top" [(ngModel)]="selectedValue2" name="NumberOfOutputs">
-                <mat-option *ngFor="let food of res" [value]="food.value">
-                  {{ food.viewValue }}
+              <mat-select placeholder="Recieve Top" [(ngModel)]="NoOfOutputResults" name="NumberOfOutputs">
+                <mat-option *ngFor="let NoOfResults of ListOutputResults" [value]="NoOfResults.value">
+                  {{ NoOfResults.viewValue }}
                 </mat-option>
               </mat-select>
               <span matSuffix>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Results</span>
@@ -384,7 +384,7 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding-left:15px; width:100%;">
-            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="selectedIons" 
+            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="SelectedSpecialIons" 
             placeholder="Select Special Ions" [disabled]="InsilicoFragType?.invalid" #HandleIons="ngModel" required name="HandleIons" multiple>
               <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
                 {{ Special.viewValue }}
@@ -503,8 +503,8 @@
           <mat-grid-list cols="8" rowHeight="75px">
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="TerminalModification"
-              placeholder="Terminal Modification" #Terminal_Modification="ngModel" required name="Terminal_Modification" ngModel multiple>
+            <mat-select matTooltip="Select terminal modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Terminal_Modification"
+              placeholder="Terminal Modification" #TerminalModification="ngModel" required name="TerminalModification" ngModel multiple>
               <mat-option *ngFor="let TerminalMod of TerminalMods" [value]="TerminalMod.value">
                 {{ TerminalMod.viewValue }}
               </mat-option>
@@ -605,8 +605,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%;">
-            <mat-select matTooltip="Select methionine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="MethionineChemicalModification"
-              placeholder="Methionine Chemical Modifications" name="Meth_Chem_Modifications">
+            <mat-select matTooltip="Select methionine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Methionine_ChemicalModification"
+              placeholder="Methionine Chemical Modifications" name="MethionineChemicalModification">
               <mat-option *ngFor="let mod of Meth" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
@@ -647,8 +647,8 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-            <mat-select matTooltip="Select cysteine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="CysteineChemicalModification"
-              placeholder="Cysteine Chemical Modifications" name="Cyst_Chem_Modifications" ngModel>
+            <mat-select matTooltip="Select cysteine chemical modifications to be included in the search process" matTooltipPosition="before" [(ngModel)]="Cysteine_ChemicalModification"
+              placeholder="Cysteine Chemical Modifications" name="CysteineChemicalModification" ngModel>
               <mat-option *ngFor="let mod of Cys" [value]="mod.value">
                 {{ mod.viewValue }}
               </mat-option>
