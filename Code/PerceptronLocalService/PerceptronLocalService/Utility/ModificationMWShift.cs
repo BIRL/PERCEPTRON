@@ -63,7 +63,8 @@ namespace PerceptronLocalService.Utility
                     return ModWeight = 305.068;
                 case "N-linked-Glycosylation":
                     return ModWeight = 317.122;
-                case "Carboxymethylation":        //Site = 'C'
+                case "Carboxymethylation":        //In SPECTRUM its name is Cys_CAM                     //Site = 'C'
+                case "Cys_CAM":
                     return ModWeight = 160.03065;
                 case "Pyridylethylation":         //Site = 'C'
                     return ModWeight = 208.067039;
