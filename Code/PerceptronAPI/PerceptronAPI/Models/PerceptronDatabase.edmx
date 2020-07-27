@@ -99,36 +99,38 @@
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="EmailId" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ProteinDatabase" Type="nvarchar(max)" Nullable="false" />
           <Property Name="NumberOfOutputs" Type="int" Nullable="false" />
-          <Property Name="InsilicoFragType" Type="nvarchar(max)" />
+          <Property Name="MassMode" Type="nvarchar(max)" />
           <Property Name="FilterDb" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="PtmTolerance" Type="float" Nullable="false" />
+          <Property Name="MwTolerance" Type="float" Nullable="false" />
+          <Property Name="MwToleranceUnit" Type="nvarchar(max)" />
+          <Property Name="PeptideTolerance" Type="float" Nullable="false" />
+          <Property Name="PeptideToleranceUnit" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Autotune" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="NeutralLoss" Type="float" Nullable="false" />
+          <Property Name="SliderValue" Type="float" Nullable="false" />
+          <Property Name="InsilicoFragType" Type="nvarchar(max)" />
+          <Property Name="HandleIons" Type="nvarchar(max)" />
+          <Property Name="DenovoAllow" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MinimumPstLength" Type="int" Nullable="false" />
           <Property Name="MaximumPstLength" Type="int" Nullable="false" />
-          <Property Name="MwTolerance" Type="float" Nullable="false" />
-          <Property Name="MwTolUnit" Type="nvarchar(max)" />
           <Property Name="HopThreshhold" Type="float" Nullable="false" />
           <Property Name="HopTolUnit" Type="nvarchar(max)" />
-          <Property Name="Autotune" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="HandleIons" Type="nvarchar(max)" />
+          <Property Name="PSTTolerance" Type="float" Nullable="false" />
+          <Property Name="Truncation" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TerminalModification" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PtmAllow" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PtmTolerance" Type="float" Nullable="false" />
+          <Property Name="PtmToleranceUnit" Type="nvarchar(max)" />
+          <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MwSweight" Type="float" Nullable="false" />
           <Property Name="PstSweight" Type="float" Nullable="false" />
           <Property Name="InsilicoSweight" Type="float" Nullable="false" />
-          <Property Name="DenovoAllow" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="PtmAllow" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="NeutralLoss" Type="float" Nullable="false" />
-          <Property Name="PSTTolerance" Type="float" Nullable="false" />
-          <Property Name="PeptideTolerance" Type="float" Nullable="false" />
-          <Property Name="PeptideToleranceUnit" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Truncation" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="TerminalModification" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="SliderValue" Type="float" Nullable="false" />
-          <Property Name="CysteineChemicalModification" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="MethionineChemicalModification" Type="nvarchar(max)" Nullable="false" />
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
@@ -307,36 +309,38 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
             <PropertyRef Name="QueryId" />
           </Key>
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProteinDatabase" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NumberOfOutputs" Type="Int32" Nullable="false" />
-          <Property Name="InsilicoFragType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MassMode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FilterDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PtmTolerance" Type="Double" Nullable="false" />
+          <Property Name="MwTolerance" Type="Double" Nullable="false" />
+          <Property Name="MwToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PeptideTolerance" Type="Double" Nullable="false" />
+          <Property Name="PeptideToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Autotune" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NeutralLoss" Type="Double" Nullable="false" />
+          <Property Name="SliderValue" Type="Double" Nullable="false" />
+          <Property Name="InsilicoFragType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HandleIons" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DenovoAllow" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MinimumPstLength" Type="Int32" Nullable="false" />
           <Property Name="MaximumPstLength" Type="Int32" Nullable="false" />
-          <Property Name="MwTolerance" Type="Double" Nullable="false" />
-          <Property Name="MwTolUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="HopThreshhold" Type="Double" Nullable="false" />
           <Property Name="HopTolUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Autotune" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="HandleIons" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PSTTolerance" Type="Double" Nullable="false" />
+          <Property Name="Truncation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TerminalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PtmAllow" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PtmTolerance" Type="Double" Nullable="false" />
+          <Property Name="PtmToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MwSweight" Type="Double" Nullable="false" />
           <Property Name="PstSweight" Type="Double" Nullable="false" />
           <Property Name="InsilicoSweight" Type="Double" Nullable="false" />
-          <Property Name="DenovoAllow" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PtmAllow" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NeutralLoss" Type="Double" Nullable="false" />
-          <Property Name="PSTTolerance" Type="Double" Nullable="false" />
-          <Property Name="PeptideTolerance" Type="Double" Nullable="false" />
-          <Property Name="PeptideToleranceUnit" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Truncation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TerminalModification" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="SliderValue" Type="Double" Nullable="false" />
-          <Property Name="CysteineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="MethionineChemicalModification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQuery">
@@ -515,36 +519,38 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchParameter">
               <MappingFragment StoreEntitySet="SearchParameters">
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ProteinDatabase" ColumnName="ProteinDatabase" />
                 <ScalarProperty Name="NumberOfOutputs" ColumnName="NumberOfOutputs" />
-                <ScalarProperty Name="InsilicoFragType" ColumnName="InsilicoFragType" />
+                <ScalarProperty Name="MassMode" ColumnName="MassMode" />
                 <ScalarProperty Name="FilterDb" ColumnName="FilterDb" />
-                <ScalarProperty Name="PtmTolerance" ColumnName="PtmTolerance" />
+                <ScalarProperty Name="MwTolerance" ColumnName="MwTolerance" />
+                <ScalarProperty Name="MwToleranceUnit" ColumnName="MwToleranceUnit" />
+                <ScalarProperty Name="PeptideTolerance" ColumnName="PeptideTolerance" />
+                <ScalarProperty Name="PeptideToleranceUnit" ColumnName="PeptideToleranceUnit" />
+                <ScalarProperty Name="Autotune" ColumnName="Autotune" />
+                <ScalarProperty Name="NeutralLoss" ColumnName="NeutralLoss" />
+                <ScalarProperty Name="SliderValue" ColumnName="SliderValue" />
+                <ScalarProperty Name="InsilicoFragType" ColumnName="InsilicoFragType" />
+                <ScalarProperty Name="HandleIons" ColumnName="HandleIons" />
+                <ScalarProperty Name="DenovoAllow" ColumnName="DenovoAllow" />
                 <ScalarProperty Name="MinimumPstLength" ColumnName="MinimumPstLength" />
                 <ScalarProperty Name="MaximumPstLength" ColumnName="MaximumPstLength" />
-                <ScalarProperty Name="MwTolerance" ColumnName="MwTolerance" />
-                <ScalarProperty Name="MwTolUnit" ColumnName="MwTolUnit" />
                 <ScalarProperty Name="HopThreshhold" ColumnName="HopThreshhold" />
                 <ScalarProperty Name="HopTolUnit" ColumnName="HopTolUnit" />
-                <ScalarProperty Name="Autotune" ColumnName="Autotune" />
-                <ScalarProperty Name="HandleIons" ColumnName="HandleIons" />
+                <ScalarProperty Name="PSTTolerance" ColumnName="PSTTolerance" />
+                <ScalarProperty Name="Truncation" ColumnName="Truncation" />
+                <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
+                <ScalarProperty Name="PtmAllow" ColumnName="PtmAllow" />
+                <ScalarProperty Name="PtmTolerance" ColumnName="PtmTolerance" />
+                <ScalarProperty Name="PtmToleranceUnit" ColumnName="PtmToleranceUnit" />
+                <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
+                <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
                 <ScalarProperty Name="MwSweight" ColumnName="MwSweight" />
                 <ScalarProperty Name="PstSweight" ColumnName="PstSweight" />
                 <ScalarProperty Name="InsilicoSweight" ColumnName="InsilicoSweight" />
-                <ScalarProperty Name="DenovoAllow" ColumnName="DenovoAllow" />
-                <ScalarProperty Name="PtmAllow" ColumnName="PtmAllow" />
-                <ScalarProperty Name="NeutralLoss" ColumnName="NeutralLoss" />
-                <ScalarProperty Name="PSTTolerance" ColumnName="PSTTolerance" />
-                <ScalarProperty Name="PeptideTolerance" ColumnName="PeptideTolerance" />
-                <ScalarProperty Name="PeptideToleranceUnit" ColumnName="PeptideToleranceUnit" />
-                <ScalarProperty Name="Truncation" ColumnName="Truncation" />
-                <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
-                <ScalarProperty Name="SliderValue" ColumnName="SliderValue" />
-                <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
-                <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
               </MappingFragment>
             </EntityTypeMapping>
