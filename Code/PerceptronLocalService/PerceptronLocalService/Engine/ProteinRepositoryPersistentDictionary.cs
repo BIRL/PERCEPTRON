@@ -1331,7 +1331,7 @@ namespace PerceptronLocalService.Engine
 
             var tempDic = Uniprot;      /*!< Temporary dictionary: It loads the user seleted database in it. */
             var tempList = new List<int>();         /*!< Temporary list: It loads the user selected database's protein falling within user defined mass window. */
-            if (filterDb == 0)      /*!< It checks user has asked us to filter the databse using mw window */
+            if (filterDb == "False")      /*!< It checks user has asked us to filter the databse using mw window */
                 tol = 1000;         /*!< If user hasn't asked to filter the database on mw then we will filter the database on a bigger window of 1 KDa. */
 
             if (CondVar != 1)      /*!< Check the conditional variable to see if the program is running for first time. if condition true load the databases into dic. */

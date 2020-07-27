@@ -62,7 +62,7 @@ namespace PerceptronLocalService.Engine
 
                 };
 
-                if (parameters.FilterDb == 1)
+                if (parameters.FilterDb == "True")
                 {
                     double TotalFixedWeight = 0.0;
                     double VariableWeight = 0.0;
@@ -80,7 +80,7 @@ namespace PerceptronLocalService.Engine
                             VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
                         }
                     }
-                    if (parameters.Truncation == 0)
+                    if (parameters.Truncation == "False")
                     {
                         if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
                         {
@@ -96,7 +96,7 @@ namespace PerceptronLocalService.Engine
                         }
                         else if (protein.Mw - IntactMass > parameters.MwTolerance)
                         {
-                            if (parameters.DenovoAllow == 1)
+                            if (parameters.DenovoAllow == "True")
                             {
                                 for (int i = 0; i < PstTags.Count; i++)
                                 {

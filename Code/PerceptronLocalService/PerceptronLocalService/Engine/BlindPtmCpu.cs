@@ -290,7 +290,7 @@ namespace PerceptronLocalService.Engine
                 protein.PtmParticulars[index].ModWeight = -1;
                 var MassDiff = peakData2DList[0].Mass - protein.Mw;  // peakData2DList[0].Mass = Intact Mass of Protein      ///////*R  peakData.Mass[0] *W peakData2DList[0].Mass
 
-                if (parameters.PtmAllow == 1)
+                if (parameters.PtmAllow == "True")
                 {
                     if (MassDiff > 13 && MassDiff < 951.3660) //Arbitrary number less then weight of methyl group && 3*N-linked-Glycosylation
                     {

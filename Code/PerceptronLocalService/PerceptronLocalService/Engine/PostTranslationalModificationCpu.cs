@@ -10811,7 +10811,7 @@ namespace PerceptronLocalService.Engine
                 else if (parameters.MethionineChemicalModification == "Methionine Sulfone")
                     All_Mets = MSONE(protein.Sequence, parameters.PtmTolerance);
             }
-            if (parameters.PtmAllow != 1)
+            if (parameters.PtmAllow != "True")
             {
                 var NumOfVarMods = parameters.PtmCodeVar.Count;
                 for (int varModIndex = 1; varModIndex < NumOfVarMods; varModIndex++)

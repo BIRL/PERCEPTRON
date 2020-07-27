@@ -13,7 +13,7 @@ namespace PerceptronLocalService.DTO
         public string Title;
         public string ProtDb;
         public string InsilicoFragType; // Its Specical Ions
-        public int FilterDb;
+        public string FilterDb;
         public double PtmTolerance;
         public int MinimumPstLength;
         public int MaximumPstLength;        
@@ -21,7 +21,7 @@ namespace PerceptronLocalService.DTO
         public string MwTolUnit;
         public double HopThreshhold;
         public string HopTolUnit;
-        public double GuiMass;
+        //public double GuiMass;
         //public string PeptideTolUnit;
 
         public List<int> PtmCodeVar;  //to be deleted after whole integration
@@ -33,14 +33,14 @@ namespace PerceptronLocalService.DTO
         public string[] PeakListUniqueFileNames;
         public string[] FileUniqueIdArray;
 
-        public int Autotune;
+        public string Autotune;
         public string HandleIons;
         public double MwSweight;
         public double PstSweight;
         public double InsilicoSweight;
         public int NumberOfOutputs;
-        public int DenovoAllow;
-        public int PtmAllow;
+        public string DenovoAllow;
+        public string PtmAllow;
 
         public double NeutralLoss; //  UPDATED: 20200121  -  public double? NeutralLoss; //Added 12Sep2019
         public double PSTTolerance; //Added 11Dec2019
@@ -49,7 +49,7 @@ namespace PerceptronLocalService.DTO
         public string PeptideToleranceUnit;
 
         public string TerminalModification;
-        public int? Truncation;
+        public string Truncation;
 
         public double SliderValue;  //20200121
         public string CysteineChemicalModification;

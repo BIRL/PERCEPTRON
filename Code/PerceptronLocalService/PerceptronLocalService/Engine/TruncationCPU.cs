@@ -170,7 +170,7 @@ namespace PerceptronLocalService.Engine
             var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
-            if (parameters.PtmAllow == 1)  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
+            if (parameters.PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
             {
                 // HERE WHEN BE BLIND PTM...
                 NEEDTOBEDECIDED = 128;
@@ -220,7 +220,7 @@ namespace PerceptronLocalService.Engine
                     }
                     if (leftIndex == -1)  ////////IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!
                     {
-                        if (parameters.PtmAllow == 1)
+                        if (parameters.PtmAllow == "True")
                         {
                             //proteinListRemaining.Add(protein);    //  IN SPECTRUM!!!!    -- IS IT BUG OR NOT....!!!
                             RemainingProteinsLeft.Add(protein);
@@ -263,7 +263,7 @@ namespace PerceptronLocalService.Engine
             var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
-            if (parameters.PtmAllow == 1)  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
+            if (parameters.PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
             {
                 // HERE THERE WILL BE BLIND PTM...
                 NEEDTOBEDECIDED = 256; factor = 0;
@@ -364,7 +364,7 @@ namespace PerceptronLocalService.Engine
             var CandidateProteinsListFinal = new List<ProteinDto>();
 
             string tag;
-            if (parameters.DenovoAllow == 1)
+            if (parameters.DenovoAllow == "True")
             {
                 for (int iterationOnProteinList = 0; iterationOnProteinList < CandidateProteinListInput.Count; iterationOnProteinList++)
                 {

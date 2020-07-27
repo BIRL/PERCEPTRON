@@ -25,7 +25,7 @@ namespace PerceptronLocalService.Engine
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
             {
-                if (parameters.DenovoAllow == 1 && candidateProteins[index].PstScore == 0)
+                if (parameters.DenovoAllow == "True" && candidateProteins[index].PstScore == 0)
                 {
                     continue;
                 }

@@ -68,7 +68,7 @@ namespace PerceptronLocalService.Engine
         {
             var tol = 1000;//parameters.MwTolerance;
             var database = "Human";// parameters.ProtDb;
-            var filterDb = 0;//parameters.FilterDb;
+            var filterDb = "False";//parameters.FilterDb;
             var mw = 6555;
 
             var parameters = new SearchParametersDto
