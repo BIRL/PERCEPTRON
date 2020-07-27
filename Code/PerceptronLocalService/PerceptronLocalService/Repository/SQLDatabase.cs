@@ -105,10 +105,27 @@ namespace PerceptronLocalService.Repository
                 var searchParameters = from b in db.SearchParameters
                             where b.QueryId == qid
                             select b;
+                //#JUSTNEEDED  (below)
+                string ptmFixed;
+                try
+                {
+                    ptmFixed = db.PtmFixedModifications.First(x => x.QueryId == qid).FixedModifications;
+                }
+                catch
+                {
+                    ptmFixed = "";
+                }
 
-                var ptmFixed = db.PtmFixedModifications.First(x => x.QueryId == qid).FixedModifications;
-
-                var ptmVariable = db.PtmVariableModifications.First(x => x.QueryId == qid).VariableModifications; 
+                string ptmVariable;
+                try
+                {
+                    ptmVariable = db.PtmVariableModifications.First(x => x.QueryId == qid).VariableModifications; 
+                }
+                catch
+                {
+                    ptmVariable = "";
+                }
+                //#JUSTNEEDED  (above)
 
                 var files = (from b in db.SearchFiles
                                    where b.QueryId == qid
@@ -120,6 +137,12 @@ namespace PerceptronLocalService.Repository
 
                 searchParametersDto = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First(), ptmVariable, ptmFixed, fileType, fileName, fileUniqueName, FileUniqueIdArray) : new SearchParametersDto();
             }
+            //#JUSTNEEDED  (below)
+            if (searchParametersDto.FixedModifications[0] == "")
+                searchParametersDto.FixedModifications = new List<string>();
+            if (searchParametersDto.VariableModifications[0] == "")
+                searchParametersDto.VariableModifications = new List<string>();
+            //#JUSTNEEDED  (above)
             return searchParametersDto;
         }
 
@@ -286,14 +309,14 @@ namespace PerceptronLocalService.Repository
                 Autotune = searchParameters.Autotune,
                 DenovoAllow = searchParameters.DenovoAllow,
                 FilterDb = searchParameters.FilterDb,
-                GuiMass = searchParameters.GuiMass,
+                //GuiMass = searchParameters.GuiMass,
                 HandleIons = searchParameters.HandleIons,
                 HopThreshhold = searchParameters.HopThreshhold,
                 HopTolUnit = searchParameters.HopTolUnit,
                 InsilicoFragType = searchParameters.InsilicoFragType,
                 UserId = searchParameters.UserId,
                 Title = searchParameters.Title,
-                ProtDb = searchParameters.ProtDb,
+                ProtDb = searchParameters.ProteinDatabase,
                 PtmTolerance = searchParameters.PtmTolerance,
                 MinimumPstLength = searchParameters.MinimumPstLength,
                 MaximumPstLength = searchParameters.MaximumPstLength,
