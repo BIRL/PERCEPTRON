@@ -415,7 +415,7 @@ namespace PerceptronLocalService
 
             var CandidateProteinListUnModified = new List<ProteinDto>();
             var CandidateProteinListTrucnatedwithInsilicoScores = new List<ProteinDto>();
-            if (parameters.Truncation == 1)
+            if (parameters.Truncation == "True")
             {
 
                 var CandidateProteinListTruncatedLeft = new List<ProteinDto>();
@@ -461,7 +461,7 @@ namespace PerceptronLocalService
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            if (parameters.Autotune == "true")
+            if (parameters.Autotune == "True")
             {
                 _wholeProteinMassTuner.TuneWholeProteinMass(peakData, parameters);
             }
@@ -476,7 +476,7 @@ namespace PerceptronLocalService
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
             var pstTags = new List<PstTagList>();
-            if (parameters.DenovoAllow == 1)
+            if (parameters.DenovoAllow == "True")
             {
 
                 pstTags = _pstGenerator.GeneratePeptideSequenceTags(parameters, massSpectrometryData);
@@ -509,7 +509,7 @@ namespace PerceptronLocalService
         private List<ProteinDto> UpdateGetCandidateProtein(SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> candidateProteins)
         {
             /* WithoutPTM_ParseDatabase.m */
-            if (parameters.DenovoAllow == 1)
+            if (parameters.DenovoAllow == "True")
             {
                 // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
                 _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
@@ -623,7 +623,7 @@ namespace PerceptronLocalService
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
             var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
-            if (parameters.PtmAllow == "true")
+            if (parameters.PtmAllow == "True")
             {
                 var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);
                 CandidateProteinListBlindPtmModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(candidateProteins, peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM"); //WHy UserHopThreshold = 1??? 
@@ -705,48 +705,3 @@ namespace PerceptronLocalService
     }
 }
 
-
-///Generate Insilico Fragments and Score Proteins on PSTs - Also Generate Modified Proteoforms
-///
-//************************************************************************************************//
-//******************ITS ORIGINAL******************//                    //************************************************//
-//************************************************************************************************//
-////Step X - ??? Algorithm - Post Translational Modifications (PTMs)    {{*****FARHAN!!! FOR THE TIME BEING ITS PTM IS AFTER INSILICO COMPARISON*****}}
-////string candidateProteins = "xyz";
-//candidateProteins = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, massSpectrometryData, executionTimes);
-//for (var i = 0; i < candidateProteins.Count; ++i)
-//{
-//    if (candidateProteins[i].PstScore > score)
-//    {
-//        score = candidateProteins[i].PstScore;
-//        lol = candidateProteins[i].Header;
-//        t = i;
-//    }
-//}
-//************************************************************************************************//
-
-
-/*  Previous Code  */
-//List<ProteinDto> proteoformsList;
-
-//if (parameters.PtmAllow == 1)
-//{
-//    proteoformsList = _postTranslationalModificationModule.ExecutePtmModule(candidateProteins,
-//       massSpectrometryData, parameters);
-
-//    //_insilicoFilter.ComputeInsilicoScore(proteoformsList, massSpectrometryData.Mass, parameters.HopThreshhold);//Commented
-//    /* #CFTTB
-//     * _insilicoFilter.ComputeInsilicoScore(candidateProteins, massSpectrometryData.Mass, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
-//     */
-//    _molecularWeightModule.FilterModifiedProteinsByWholeProteinMass(parameters, proteoformsList,
-//   massSpectrometryData);
-//}
-
-//else
-//{
-//    proteoformsList = candidateProteins;
-//    foreach (var protein in proteoformsList)
-//    {
-//        protein.PtmParticulars = new List<PostTranslationModificationsSiteDto>();
-//    }
-//}
