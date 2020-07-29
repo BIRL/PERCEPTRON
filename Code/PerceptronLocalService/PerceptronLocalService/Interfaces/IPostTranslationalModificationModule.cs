@@ -5,6 +5,8 @@ namespace PerceptronLocalService.Interfaces
 {
     public interface IPostTranslationalModificationModule
     {
-        List<ProteinDto> ExecutePtmModule(List<ProteinDto> input, MsPeaksDto peakData, SearchParametersDto parameters);
+        void PTMs_Generator_Insilico_Generator(ProteinDto protein, SearchParametersDto parameters);
+
+        //List<ProteinDto> ExecutePtmModule(List<ProteinDto> input, MsPeaksDto peakData, SearchParametersDto parameters);
     }
 }
