@@ -4,13 +4,14 @@ namespace PerceptronLocalService.Utility
 {
     public class PtmScoreNormalizer
     {
-        public static double Normalize(double value, int select)
+        // Normalization
+        public double Normalize(double value, int select)
         {
             double normalizedScore = 0;
             double max;
             double normFactor;
 
-            switch (@select)
+            switch (select)
             {
                 //Acetylation_A
                 case 1:
@@ -92,7 +93,7 @@ namespace PerceptronLocalService.Utility
                     else
                         normalizedScore = normFactor / Math.Log10(value);
                     break;
-                // N_linked_glycosylation_N
+                // N_Linked_Glycosylation_N
                 case 9:
                     max = 0.09 * 0.08 * 0.09 * 0.08 * 0.1 * 0.1 * 0.1 * 0.63 * 0.11 * 0.09 * 0.1 * 0.09;
 
@@ -102,7 +103,7 @@ namespace PerceptronLocalService.Utility
                     else
                         normalizedScore = normFactor / Math.Log10(value);
                     break;
-                // O_linked_glycosylation_T
+                // O_Linked_Glycosylation_T
                 case 10:
                     max = 0.44 * 0.36 * 0.45 * 0.26 * 0.44 * 0.32 * 0.31 * 0.43 * 0.36 * 0.44 * 0.33 * 0.48;
 
@@ -112,7 +113,7 @@ namespace PerceptronLocalService.Utility
                     else
                         normalizedScore = normFactor / Math.Log10(value);
                     break;
-                // O_linked_glycosylation_S
+                // O_Linked_Glycosylation_S
                 case 11:
                     max = 0.21 * 0.17 * 0.16 * 0.16 * 0.21 * 0.31 * 0.20 * 0.30 * 0.26 * 0.31 * 0.14 * 0.29;
 
@@ -164,5 +165,6 @@ namespace PerceptronLocalService.Utility
 
             return normalizedScore;
         }
+
     }
 }
