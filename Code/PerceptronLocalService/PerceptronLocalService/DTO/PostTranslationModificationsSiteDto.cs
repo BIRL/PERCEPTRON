@@ -13,6 +13,8 @@ namespace PerceptronLocalService.DTO
         public List<char> AminoAcid = new List<char>(); // amino acid sequence
         public int ModStartSite;
         public int ModEndSite;
+        //public char AminoAcid;
+        
 
         // Constructor
         public PostTranslationModificationsSiteDto()
