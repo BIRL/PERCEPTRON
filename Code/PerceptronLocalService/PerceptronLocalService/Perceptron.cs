@@ -47,7 +47,7 @@ namespace PerceptronLocalService
             _wholeProteinMassTuner = new WholeProteinMassTunerCpu();
             _molecularWeightModule = new MwModule();
             _proteinRepository = new ProteinRepositorySql();
-            _postTranslationalModificationModule = new PtmCpu();
+            _postTranslationalModificationModule = new PostTranslationalModificationModuleCpu();
             _BlindPostTranslationalModificationModule = new BlindPtmCpu();
             _insilicoFragmentsAdjustment = new InsilicoFragmentsAdjustmentCpu();
             _insilicoFilter = new InsilicoFilterCpu();
@@ -286,6 +286,14 @@ namespace PerceptronLocalService
                     candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                     CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
 
+                    ////DEL ME TESTING...
+                    //for (int i = 0; i < candidateProteins.Count; i++)
+                    //{
+                    //    if (candidateProteins[i].Header == "A6NHS1" || candidateProteins[i].Header == "Q9Y5J9")
+                    //    {
+                    //        int n = i;
+                    //    }
+                    //}
                     //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                     ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
                     //                 ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, CandidateProteinListTruncated); //Scoring for Candidate Protein List Truncated
@@ -513,17 +521,16 @@ namespace PerceptronLocalService
             {
                 // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
                 _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
+                //Irrespective to WithoutPTM_ParseDatabase.m  there is no need to assign PSTScore = 0 if DenovoAllow is false because we already initialize PSTScore = 0.0
             }
-
-            if (parameters.TerminalModification != "")
-            {
-                candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
-            }
+            
+            candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
+            
             /* WithoutPTM_ParseDatabase.m */
 
             /* Updated_ParseDatabase.m */
-
-            if (parameters.CysteineChemicalModification != null && parameters.MethionineChemicalModification != null && parameters.FixedModifications.Count > 0 && parameters.VariableModifications.Count > 0)
+            var Candi = new List<ProteinDto>();
+            if (parameters.CysteineChemicalModification != "None" && parameters.MethionineChemicalModification != "None" && parameters.FixedModifications.Count > 0 && parameters.VariableModifications.Count > 0)
             {
                 // HERE IT WILL BE PTMs_Generator_Insilico_Generator
             }
