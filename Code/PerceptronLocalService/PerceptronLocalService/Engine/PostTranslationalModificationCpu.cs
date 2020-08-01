@@ -26,7 +26,7 @@ namespace PerceptronLocalService.Engine
         MSO_CPU _MSO = new MSO_CPU();
         MSONE_CPU _MSONE = new MSONE_CPU();
         SwitchTypeOfPTM _SwitchTypeOfPTM = new SwitchTypeOfPTM();
-
+        Combinations _Combinations = new Combinations();
 
         private readonly IInsilicoFilter _insilicoFilter;
 
@@ -783,6 +783,45 @@ namespace PerceptronLocalService.Engine
             }
         }
 
+        
+                
+        //private IEnumerable<int[]> CombinationsRosettaWoRecursion(int m, int n)
+        //{
+        //    int[] result = new int[m];
+        //    Stack<int> stack = new Stack<int>(m);
+        //    stack.Push(0);
+        //    while (stack.Count > 0)
+        //    {
+        //        int index = stack.Count - 1;
+        //        int value = stack.Pop();
+        //        while (value < n)
+        //        {
+        //            result[index++] = value++;
+        //            stack.Push(value);
+        //            if (index != m) continue;
+        //            yield return (int[])result.Clone(); // thanks to @xanatos
+        //            //yield return result;
+        //            break;
+        //        }
+        //    }
+        //}
+        //public IEnumerable<T[]> CombinationsRosettaWoRecursionArray<T>(T[] array, int m)
+        //{
+        //    if (array.Length < m)
+        //        throw new ArgumentException("Array length can't be less than number of selected elements");
+        //    if (m < 1)
+        //        throw new ArgumentException("Number of selected elements can't be less than 1");
+        //    T[] result = new T[m];
+        //    foreach (int[] j in CombinationsRosettaWoRecursion(m, array.Length))
+        //    {
+        //        for (int i = 0; i < m; i++)
+        //        {
+        //            result[i] = array[j[i]];
+        //        }
+        //        yield return result;
+        //    }
+        //}
+
         public void PTMs_Generator_Insilico_Generator(ProteinDto protein, SearchParametersDto parameters)
         {
             ProteinDto ModifiedProtein = new ProteinDto();
@@ -810,6 +849,10 @@ namespace PerceptronLocalService.Engine
             
             if (parameters.PtmAllow != "True")
             {
+                //parameters.VariableModifications = new List<string>{"Acetylation_A", "Acetylation_K", "Acetylation_S", "Hydroxylation_P", "Methylation_K", 
+                //    "Methylation_R", "N_Linked_Glycosylation_N", "O_Linked_Glycosylation_S", "O_Linked_Glycosylation_T", "Phosphorylation_S", "Phosphorylation_T",
+                //"Phosphorylation_Y"};  ///Hard Code For the time being...//Momina!!
+
                 var NumOfVarMods = parameters.VariableModifications.Count; /// parameters.PtmCodeVar.Count;
                 for (int varModIndex = 0; varModIndex < NumOfVarMods; varModIndex++)   // Should Start from Zero Index
                 {
@@ -823,16 +866,19 @@ namespace PerceptronLocalService.Engine
                 }
             }
             var NumOfFixMods = parameters.FixedModifications.Count; /// parameters.PtmCodeFix.Count;
-            for (int fixModIndex = 1; fixModIndex < NumOfFixMods; fixModIndex++)   // Should Start from Zero Index
+            double FixedPTMTolerance = 0.0;
+            for (int fixModIndex = 0; fixModIndex < NumOfFixMods; fixModIndex++)   // Should Start from Zero Index
             {
                 var TypeOfModification = parameters.FixedModifications[fixModIndex];
 
-                var ModificationSite = _SwitchTypeOfPTM.SwitchToTypeOfPTM(TypeOfModification, protein.Sequence, parameters.PtmTolerance);
+                var ModificationSite = _SwitchTypeOfPTM.SwitchToTypeOfPTM(TypeOfModification, protein.Sequence, FixedPTMTolerance);
 
                 All_Fix_PTMs.AddRange(ModificationSite);
             }
             All_Fix_PTMs.AddRange(All_Mets);
             All_Fix_PTMs.AddRange(All_Cys);
+
+            var CombinedConsecutiveNumList = _Combinations.GetAllCombination(3);
 
             int count = All_Var_PTMs.Count;
             int[] array = new int[count];
@@ -967,10 +1013,12 @@ namespace PerceptronLocalService.Engine
        
         public int[] Combinations(string passingstr, int count)
         {
+            string[] returnArray = new string[] { };
             if (passingstr.Length == 1)
                 Convert.ToInt32(passingstr);
             char c = passingstr[passingstr.Length - 1];
-            string[] returnArray = Array.ConvertAll(Combinations(passingstr.Substring(0, passingstr.Length - 1), count), x => x.ToString());
+            //if(passingstr.Length - 1 != 0) //Was Added for testing...
+                returnArray = Array.ConvertAll(Combinations(passingstr.Substring(0, passingstr.Length - 1), count), x => x.ToString());
             List<string> finalArray = new List<string>();
             foreach (string s in returnArray)
                 finalArray.Add(s);
