@@ -13,7 +13,7 @@ namespace PerceptronLocalService.Utility
         PtmScoreNormalizer _PtmScoreNormalizer = new PtmScoreNormalizer();
 
         // Function (N_Linked_Glycosylation_N): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> N_Linked_Glycosylation_N(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> N_Linked_Glycosylation_N(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -622,7 +622,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  //Updated 20200714
+                    if (score >= Tolerance)  //Updated 20200714
                     {
                         //b = proteinSequence[i - 6];   Updated 20200714
                         //c = proteinSequence[i - 5];
@@ -678,7 +678,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (O_Linked_Glycosylation_T): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> O_Linked_Glycosylation_T(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> O_Linked_Glycosylation_T(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -725,336 +725,6 @@ namespace PerceptronLocalService.Utility
                     //variables to store sub - sequence
                     char minus6, minus5, minus4, minus3, minus2, minus1, plus1, plus2, plus3, plus4, plus5, plus6;
 
-                    //% it will score amino acid at position i - 6
-                    if (i - 6 >= 0) // Updated 20200714
-                    {
-                        minus6 = proteinSequence[i - 6];
-                        sub_sequence.Add(minus6); // Updated 20200714
-                        switch (proteinSequence[i - 6])
-                        {
-                            case 'N':
-                                score = 0.01;
-                                break;
-                            case 'D':
-                            case 'Q':
-                            case 'H':
-                            case 'M':
-                            case 'F':
-                                score = 0.03;
-                                break;
-                            case 'R':
-                            case 'I':
-                            case 'L':
-                            case 'V':
-                                score = 0.04;
-                                break;
-                            case 'E':
-                                score = 0.05;
-                                break;
-                            case 'G':
-                                score = 0.07;
-                                break;
-                            case 'K':
-                                score = 0.08;
-                                break;
-                            case 'A':
-                                score = 0.09;
-                                break;
-                            case 'P':
-                                score = 0.11;
-                                break;
-                            case 'S':
-                                score = 0.16;
-                                break;
-                            case 'T':
-                                score = 0.1;
-                                break;
-                            case 'W':
-                            case 'Y':
-                            case 'C':
-                                score = 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-
-                    //% it will score amino acid at position i - 5
-                    if (i - 5 >= 0) // Updated 20200714
-                    {
-                        minus5 = proteinSequence[i - 5];
-                        sub_sequence.Add(minus5); // Updated 20200714
-                        switch (proteinSequence[i - 5])
-                        {
-                            case 'M':
-                            case 'Y':
-                                score = score * 0.01;
-                                break;
-                            case 'N':
-                            case 'C':
-                            case 'F':
-                                score = score * 0.02;
-                                break;
-                            case 'H':
-                                score = score * 0.03;
-                                break;
-                            case 'I':
-                            case 'G':
-                            case 'E':
-                                score = score * 0.04;
-                                break;
-                            case 'A':
-                            case 'D':
-                            case 'Q':
-                                score = score * 0.05;
-                                break;
-                            case 'V':
-                                score = score * 0.06;
-                                break;
-                            case 'L':
-                            case 'K':
-                                score = score * 0.07;
-                                break;
-                            case 'S':
-                            case 'R':
-                                score = score * 0.08;
-                                break;
-                            case 'P':
-                                score = score * 0.11;
-                                break;
-                            case 'T':
-                                score = score * 0.13;
-                                break;
-                            case 'W':
-                                score = score * 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-
-                    //% it will score amino acid at position i - 4
-                    if (i - 4 >= 0) // Updated 20200714
-                    {
-                        minus4 = proteinSequence[i - 4];
-                        sub_sequence.Add(minus4); // Updated 20200714
-                        switch (proteinSequence[i - 4])
-                        {
-                            case 'H':
-                            case 'M':
-                                score = score * 0.01;
-                                break;
-                            case 'N':
-                            case 'I':
-                            case 'Y':
-                                score = score * 0.02;
-                                break;
-                            case 'F':
-                                score = score * 0.03;
-                                break;
-                            case 'D':
-                            case 'G':
-                            case 'L':
-                            case 'V':
-                            case 'R':
-                                score = score * 0.05;
-                                break;
-                            case 'E':
-                            case 'Q':
-                            case 'K':
-                                score = score * 0.06;
-                                break;
-                            case 'P':
-                                score = score * 0.07;
-                                break;
-                            case 'A':
-                                score = score * 0.1;
-                                break;
-                            case 'T':
-                                score = score * 0.13;
-                                break;
-                            case 'S':
-                                score = score * 0.15;
-                                break;
-                            case 'C':
-                            case 'W':
-                                score = score * 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-
-                    //% it will score amino acid at position i - 3
-                    if (i - 3 >= 0) // Updated 20200714
-                    {
-                        minus3 = proteinSequence[i - 3];
-                        sub_sequence.Add(minus3); // Updated 20200714
-                        switch (proteinSequence[i - 3])
-                        {
-                            case 'E':
-                            case 'H':
-                            case 'W':
-                                score = score * 0.01;
-                                break;
-                            case 'N':
-                            case 'D':
-                                score = score * 0.02;
-                                break;
-                            case 'G':
-                                score = score * 0.03;
-                                break;
-                            case 'Q':
-                            case 'I':
-                                score = score * 0.04;
-                                break;
-                            case 'R':
-                            case 'A':
-                            case 'K':
-                                score = score * 0.05;
-                                break;
-                            case 'Y':
-                                score = score * 0.06;
-                                break;
-                            case 'L':
-                                score = score * 0.07;
-                                break;
-                            case 'T':
-                                score = score * 0.09;
-                                break;
-                            case 'S':
-                                score = score * 0.11;
-                                break;
-                            case 'V':
-                                score = score * 0.15;
-                                break;
-                            case 'P':
-                                score = score * 0.17;
-                                break;
-                            case 'C':
-                            case 'M':
-                                score = score * 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-
-                    //% it will score amino acid at position i - 2
-                    if (i - 2 >= 0) // Updated 20200714
-                    {
-                        minus2 = proteinSequence[i - 2];
-                        sub_sequence.Add(minus2); // Updated 20200714
-                        switch (proteinSequence[i - 2])
-                        {
-                            case 'D':
-                            case 'C':
-                            case 'Y':
-                            case 'E':
-                                score = score * 0.01;
-                                break;
-                            case 'N':
-                            case 'H':
-                                score = score * 0.02;
-                                break;
-                            case 'R':
-                            case 'I':
-                            case 'F':
-                                score = score * 0.03;
-                                break;
-                            case 'Q':
-                                score = score * 0.04;
-                                break;
-                            case 'G':
-                            case 'L':
-                                score = score * 0.07;
-                                break;
-                            case 'T':
-                                score = score * 0.08;
-                                break;
-                            case 'K':
-                            case 'V':
-                                score = score * 0.09;
-                                break;
-                            case 'S':
-                                score = score * 0.11;
-                                break;
-                            case 'A':
-                                score = score * 0.12;
-                                break;
-                            case 'P':
-                                score = score * 0.16;
-                                break;
-                            case 'W':
-                            case 'M':
-                                score = score * 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-
-                    //% it will score amino acid at position i - 1
-                    if (i - 1 >= 0) // Updated 20200714
-                    {
-                        minus1 = proteinSequence[i - 1];
-                        sub_sequence.Add(minus1); // Updated 20200714
-                        switch (proteinSequence[i - 1])
-                        {
-                            case 'D':
-                            case 'H':
-                            case 'F':
-                                score = score * 0.01;
-                                break;
-                            case 'C':
-                            case 'E':
-                            case 'M':
-                                score = score * 0.02;
-                                break;
-                            case 'R':
-                                score = score * 0.03;
-                                break;
-                            case 'I':
-                            case 'L':
-                            case 'K':
-                                score = score * 0.04;
-                                break;
-                            case 'Q':
-                                score = score * 0.05;
-                                break;
-                            case 'G':
-                                score = score * 0.06;
-                                break;
-                            case 'A':
-                                score = score * 0.1;
-                                break;
-                            case 'P':
-                            case 'S':
-                                score = score * 0.12;
-                                break;
-                            case 'T':
-                                score = score * 0.15;
-                                break;
-                            case 'V':
-                                score = score * 0.16;
-                                break;
-                            case 'W':
-                            case 'Y':
-                            case 'N':
-                                score = score * 0;
-                                break;
-                            default:
-                                score = 0;
-                                break;
-                        }
-                    }
-                    sub_sequence.Add(proteinSequence[i]); // Updated 20200714
-
                     //It saves the score for i + 1 position
                     if (proteinSequence.Length > i + 1) // Updated 20200714
                     {
@@ -1063,46 +733,46 @@ namespace PerceptronLocalService.Utility
                         switch (proteinSequence[i + 1])
                         {
                             case 'Y':
-                                score = score * 0.01;
+                                score = 0.01;
                                 break;
                             case 'N':
                             case 'I':
                             case 'M':
                             case 'F':
-                                score = score * 0.02;
+                                score = 0.02;
                                 break;
                             case 'D':
-                                score = score * 0.03;
+                                score = 0.03;
                                 break;
                             case 'R':
                             case 'G':
                             case 'E':
                             case 'L':
-                                score = score * 0.04;
+                                score = 0.04;
                                 break;
                             case 'K':
-                                score = score * 0.06;
+                                score = 0.06;
                                 break;
                             case 'P':
-                                score = score * 0.07;
+                                score = 0.07;
                                 break;
                             case 'Q':
                             case 'V':
                                 score = 0.08;
                                 break;
                             case 'A':
-                                score = score * 0.1;
+                                score = 0.1;
                                 break;
                             case 'T':
-                                score = score * 0.14;
+                                score = 0.14;
                                 break;
                             case 'S':
-                                score = score * 0.17;
+                                score = 0.17;
                                 break;
                             case 'C':
                             case 'H':
                             case 'W':
-                                score = score * 0;
+                                score = 0;
                                 break;
                             default:
                                 score = 0;
@@ -1379,12 +1049,343 @@ namespace PerceptronLocalService.Utility
                         }
                     }
 
+                    sub_sequence.Insert(0, proteinSequence[i]); // Updated 20200714
+
+                    //% it will score amino acid at position i - 1
+                    if (i - 1 >= 0) // Updated 20200714
+                    {
+                        minus1 = proteinSequence[i - 1];
+                        sub_sequence.Insert(0, minus1); // Updated 20200714
+                        switch (proteinSequence[i - 1])
+                        {
+                            case 'D':
+                            case 'H':
+                            case 'F':
+                                score = score * 0.01;
+                                break;
+                            case 'C':
+                            case 'E':
+                            case 'M':
+                                score = score * 0.02;
+                                break;
+                            case 'R':
+                                score = score * 0.03;
+                                break;
+                            case 'I':
+                            case 'L':
+                            case 'K':
+                                score = score * 0.04;
+                                break;
+                            case 'Q':
+                                score = score * 0.05;
+                                break;
+                            case 'G':
+                                score = score * 0.06;
+                                break;
+                            case 'A':
+                                score = score * 0.1;
+                                break;
+                            case 'P':
+                            case 'S':
+                                score = score * 0.12;
+                                break;
+                            case 'T':
+                                score = score * 0.15;
+                                break;
+                            case 'V':
+                                score = score * 0.16;
+                                break;
+                            case 'W':
+                            case 'Y':
+                            case 'N':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = 0;
+                                break;
+                        }
+                    }
+
+                    //% it will score amino acid at position i - 2
+                    if (i - 2 >= 0) // Updated 20200714
+                    {
+                        minus2 = proteinSequence[i - 2];
+                        sub_sequence.Insert(0, minus2); // Updated 20200714
+                        switch (proteinSequence[i - 2])
+                        {
+                            case 'D':
+                            case 'C':
+                            case 'Y':
+                            case 'E':
+                                score = score * 0.01;
+                                break;
+                            case 'N':
+                            case 'H':
+                                score = score * 0.02;
+                                break;
+                            case 'R':
+                            case 'I':
+                            case 'F':
+                                score = score * 0.03;
+                                break;
+                            case 'Q':
+                                score = score * 0.04;
+                                break;
+                            case 'G':
+                            case 'L':
+                                score = score * 0.07;
+                                break;
+                            case 'T':
+                                score = score * 0.08;
+                                break;
+                            case 'K':
+                            case 'V':
+                                score = score * 0.09;
+                                break;
+                            case 'S':
+                                score = score * 0.11;
+                                break;
+                            case 'A':
+                                score = score * 0.12;
+                                break;
+                            case 'P':
+                                score = score * 0.16;
+                                break;
+                            case 'W':
+                            case 'M':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = 0;
+                                break;
+                        }
+                    }
+
+                    //% it will score amino acid at position i - 3
+                    if (i - 3 >= 0) // Updated 20200714
+                    {
+                        minus3 = proteinSequence[i - 3];
+                        sub_sequence.Insert(0, minus3); // Updated 20200714
+                        switch (proteinSequence[i - 3])
+                        {
+                            case 'E':
+                            case 'H':
+                            case 'W':
+                                score = score * 0.01;
+                                break;
+                            case 'N':
+                            case 'D':
+                                score = score * 0.02;
+                                break;
+                            case 'G':
+                                score = score * 0.03;
+                                break;
+                            case 'Q':
+                            case 'I':
+                                score = score * 0.04;
+                                break;
+                            case 'R':
+                            case 'A':
+                            case 'K':
+                                score = score * 0.05;
+                                break;
+                            case 'Y':
+                                score = score * 0.06;
+                                break;
+                            case 'L':
+                                score = score * 0.07;
+                                break;
+                            case 'T':
+                                score = score * 0.09;
+                                break;
+                            case 'S':
+                                score = score * 0.11;
+                                break;
+                            case 'V':
+                                score = score * 0.15;
+                                break;
+                            case 'P':
+                                score = score * 0.17;
+                                break;
+                            case 'C':
+                            case 'M':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = 0;
+                                break;
+                        }
+                    }
+
+                    //% it will score amino acid at position i - 4
+                    if (i - 4 >= 0) // Updated 20200714
+                    {
+                        minus4 = proteinSequence[i - 4];
+                        sub_sequence.Insert(0, minus4); // Updated 20200714
+                        switch (proteinSequence[i - 4])
+                        {
+                            case 'H':
+                            case 'M':
+                                score = score * 0.01;
+                                break;
+                            case 'N':
+                            case 'I':
+                            case 'Y':
+                                score = score * 0.02;
+                                break;
+                            case 'F':
+                                score = score * 0.03;
+                                break;
+                            case 'D':
+                            case 'G':
+                            case 'L':
+                            case 'V':
+                            case 'R':
+                                score = score * 0.05;
+                                break;
+                            case 'E':
+                            case 'Q':
+                            case 'K':
+                                score = score * 0.06;
+                                break;
+                            case 'P':
+                                score = score * 0.07;
+                                break;
+                            case 'A':
+                                score = score * 0.1;
+                                break;
+                            case 'T':
+                                score = score * 0.13;
+                                break;
+                            case 'S':
+                                score = score * 0.15;
+                                break;
+                            case 'C':
+                            case 'W':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = 0;
+                                break;
+                        }
+                    }
+
+                    //% it will score amino acid at position i - 5
+                    if (i - 5 >= 0) // Updated 20200714
+                    {
+                        minus5 = proteinSequence[i - 5];
+                        sub_sequence.Insert(0, minus5); // Updated 20200714
+                        switch (proteinSequence[i - 5])
+                        {
+                            case 'M':
+                            case 'Y':
+                                score = score * 0.01;
+                                break;
+                            case 'N':
+                            case 'C':
+                            case 'F':
+                                score = score * 0.02;
+                                break;
+                            case 'H':
+                                score = score * 0.03;
+                                break;
+                            case 'I':
+                            case 'G':
+                            case 'E':
+                                score = score * 0.04;
+                                break;
+                            case 'A':
+                            case 'D':
+                            case 'Q':
+                                score = score * 0.05;
+                                break;
+                            case 'V':
+                                score = score * 0.06;
+                                break;
+                            case 'L':
+                            case 'K':
+                                score = score * 0.07;
+                                break;
+                            case 'S':
+                            case 'R':
+                                score = score * 0.08;
+                                break;
+                            case 'P':
+                                score = score * 0.11;
+                                break;
+                            case 'T':
+                                score = score * 0.13;
+                                break;
+                            case 'W':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = 0;
+                                break;
+                        }
+                    }
+
+                    //% it will score amino acid at position i - 6
+                    if (i - 6 >= 0) // Updated 20200714
+                    {
+                        minus6 = proteinSequence[i - 6];
+                        sub_sequence.Insert(0, minus6); // Updated 20200714
+                        switch (proteinSequence[i - 6])
+                        {
+                            case 'N':
+                                score = score * 0.01;
+                                break;
+                            case 'D':
+                            case 'Q':
+                            case 'H':
+                            case 'M':
+                            case 'F':
+                                score = score * 0.03;
+                                break;
+                            case 'R':
+                            case 'I':
+                            case 'L':
+                            case 'V':
+                                score = score * 0.04;
+                                break;
+                            case 'E':
+                                score = score * 0.05;
+                                break;
+                            case 'G':
+                                score = score * 0.07;
+                                break;
+                            case 'K':
+                                score = score * 0.08;
+                                break;
+                            case 'A':
+                                score = score * 0.09;
+                                break;
+                            case 'P':
+                                score = score * 0.11;
+                                break;
+                            case 'S':
+                                score = score * 0.16;
+                                break;
+                            case 'T':
+                                score = score * 0.1;
+                                break;
+                            case 'W':
+                            case 'Y':
+                            case 'C':
+                                score = score * 0;
+                                break;
+                            default:
+                                score = score * 0;
+                                break;
+                        }
+                    }
+
                     // score scaling according to higest score
                     score = _PtmScoreNormalizer.Normalize(score, 10);
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //l = proteinSequence[i + 1];   // Updated 20200714
                         //k = proteinSequence[i + 2];
@@ -1439,7 +1440,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (O_Linked_Glycosylation_S): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> O_Linked_Glycosylation_S(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> O_Linked_Glycosylation_S(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -2134,7 +2135,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0)) Updated 20200714
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //l = proteinSequence[i + 1];   Updated 20200714
                         //k = proteinSequence[i + 2];
