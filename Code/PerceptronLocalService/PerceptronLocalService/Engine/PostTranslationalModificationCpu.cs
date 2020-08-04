@@ -822,10 +822,10 @@ namespace PerceptronLocalService.Engine
         //    }
         //}
 
-        public void PTMs_Generator_Insilico_Generator(ProteinDto protein, SearchParametersDto parameters)
+        public List<ProteinDto> PTMs_Generator_Insilico_Generator(double Experimentalmz, ProteinDto protein, SearchParametersDto parameters)
         {
-            ProteinDto ModifiedProtein = new ProteinDto();
-            List<ProteinDto> ModifiedProtSeq = new List<ProteinDto>();
+            List<ProteinDto> ListOfModifiedProteins = new List<ProteinDto>();
+
 
             List<PostTranslationModificationsSiteDto> All_Cys = new List<PostTranslationModificationsSiteDto>();
             List<PostTranslationModificationsSiteDto> All_Mets = new List<PostTranslationModificationsSiteDto>();
@@ -878,62 +878,49 @@ namespace PerceptronLocalService.Engine
             All_Fix_PTMs.AddRange(All_Mets);
             All_Fix_PTMs.AddRange(All_Cys);
 
-            var CombinedConsecutiveNumList = _Combinations.GetAllCombination(3);
+            var CombinedConsecutiveNumList = _Combinations.GetAllCombination(All_Var_PTMs.Count);
 
-            int count = All_Var_PTMs.Count;
-            int[] array = new int[count];
-            for (int i = 0; i < count; i++)
-                array[i] = i;
-            var passingstr = string.Join("", array);
-            int[] AllCombinations = Combinations(passingstr, count);
-            List<PostTranslationModificationsSiteDto> ModArray = new List<PostTranslationModificationsSiteDto>();
-            for (int i = 0; i < AllCombinations.Length; i++)
+            var ModificationsList = new List<List<List<PostTranslationModificationsSiteDto>>>();
+            
+
+            for (int index = 0; index < CombinedConsecutiveNumList.Count; index++)
             {
-                int num = AllCombinations[i].ToString().Count();
-                if (num == 1)
+                var subModificationsList = new List<List<PostTranslationModificationsSiteDto>>();
+                for (int index1 = 0; index1 < CombinedConsecutiveNumList[index].Count; index1++)
                 {
-                    int Index = AllCombinations[i];
-                    ModArray.Add(All_Var_PTMs[i]);
-                }
-                else
-                {
-                    var StringCombination = AllCombinations[i].ToString();
-                    for (int j = 0; j < num; j++)
+                    var tempModificationsList = new List<PostTranslationModificationsSiteDto>();
+                    for (int index2 = 0; index2 < CombinedConsecutiveNumList[index][index1].Count; index2++)
                     {
-                        var StringIndex = StringCombination[j];
-                        var NumIndex = Convert.ToInt16(StringIndex);
-                        ModArray.Add(All_Var_PTMs[i]);
+                        int CombinedIndex = CombinedConsecutiveNumList[index][index1][index2];
+                        //var info = All_Var_PTMs[CombinedIndex];
+                        tempModificationsList.Add(All_Var_PTMs[CombinedIndex]);
                     }
+                    subModificationsList.Add(tempModificationsList);
                 }
+                ModificationsList.Add(subModificationsList);
             }
-            ModifiedProtein.PtmScore = 0;
-            ModifiedProtein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft;
-            ModifiedProtein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight;
-            ModifiedProtein.Mw = protein.Mw;
-            ModifiedProtein.TerminalModification = protein.TerminalModification;
 
-            if (All_Fix_PTMs.Any())
+            ProteinDto ModifiedProtein = new ProteinDto(protein);
+
+            if (All_Fix_PTMs.Any())         //In case fixed modification is selected
             {
                 for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
                 {
-                    for (int protIndex = 0; protIndex < protein.Sequence.Length - 1; protIndex++)
+                    ModifiedProtein.Mw = ModifiedProtein.Mw + All_Fix_PTMs[fixedIndex].ModWeight;
+                    for (int protIndex = 0; protIndex < ModifiedProtein.Sequence.Length - 1; protIndex++)
                     {
-                        if (protIndex >= All_Fix_PTMs[protIndex].Index)
+                        if (protIndex >= All_Fix_PTMs[fixedIndex].Index)
                         {
                             ModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] = ModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] + All_Fix_PTMs[fixedIndex].ModWeight;
                         }
                     }
                 }
-                for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
-                {
-                    ModifiedProtein.Mw = ModifiedProtein.Mw + All_Fix_PTMs[fixedIndex].ModWeight;
-                }
 
                 for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
                 {
                     for (int protIndex = 0; protIndex < protein.Sequence.Length - 1; protIndex++)
                     {
-                        var id = protein.Sequence.Length - All_Fix_PTMs[fixedIndex].Index;
+                        var id = protein.Sequence.Length - All_Fix_PTMs[fixedIndex].Index - 1;  // "-1" for Zero Indexing...
                         if (protIndex >= id)
                         {
                             ModifiedProtein.InsilicoDetails.InsilicoMassRight[protIndex] = ModifiedProtein.InsilicoDetails.InsilicoMassRight[protIndex] + All_Fix_PTMs[fixedIndex].ModWeight;
@@ -941,123 +928,96 @@ namespace PerceptronLocalService.Engine
                     }
                 }
             }
-            if (ModArray.Count == 0 && All_Fix_PTMs.Count != 0)
+
+            if (ModificationsList.Count == 0 && All_Fix_PTMs.Count != 0)         //In case no variable modification is selected
             {
-                ModifiedProtein.Sequence = protein.Sequence;
-                ModifiedProtein.Header = protein.Header;
-                ModifiedProtein.Header = protein.Header;
-                var PTMIndex = 0;
                 for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
                 {
-                    PTMIndex = PTMIndex + 1;
                     ModifiedProtein.PtmScore = ModifiedProtein.PtmScore + All_Fix_PTMs[fixedIndex].Score;
-                    ModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(All_Fix_PTMs[fixedIndex].Index, All_Fix_PTMs[fixedIndex].ModName, All_Fix_PTMs[fixedIndex].Site));
+                    ModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto
+                        (All_Fix_PTMs[fixedIndex].Index, All_Fix_PTMs[fixedIndex].ModName, All_Fix_PTMs[fixedIndex].Site));
+                    
                 }
-                ModifiedProtein.PstScore = protein.PstScore;
-                var error = Math.Abs(protein.Mw - ModifiedProtein.Mw);
-                if (error == 0)
+                double Error = Math.Abs(Experimentalmz - ModifiedProtein.Mw);
+                if (Error == 0)
                     ModifiedProtein.MwScore = 1;
                 else
-                    ModifiedProtein.MwScore = Math.Pow((1 / 2), error);
+                    ModifiedProtein.MwScore = 1 / Math.Pow(2, Error);        //Math.Pow(1 / 2), error);
 
                 ModifiedProtein.PtmScore = 1 - Math.Exp(-ModifiedProtein.PtmScore / 3);
-                ModifiedProtSeq.Add(ModifiedProtein);
-            }
-            var MolW = ModifiedProtein.Mw;
-            var left = ModifiedProtein.InsilicoDetails.InsilicoMassLeft;
+                ListOfModifiedProteins.Add(ModifiedProtein);
 
-            for (int index = 0; index < ModArray.Count; index++)
+            }
+
+            double MolecularWeight = ModifiedProtein.Mw;
+            string LeftIons = Clone.CloneObject(ModifiedProtein.InsilicoDetails.InsilicoMassLeft); // Lists are referenced based so, therefore...
+
+            var ModifiedSite = new PostTranslationModificationsSiteDto();
+            for (int index = 0; index < ModificationsList.Count; index++)         //In case variable modification is selected
             {
-                var ModifiedSite = ModArray[index];
-                ModifiedProtein.Mw = ModifiedProtein.Mw + ModifiedSite.ModWeight;
-                for (int protIndex = 0; protIndex < protein.Sequence.Length; protIndex++)
+                for (int index1 = 0; index1 < ModificationsList[index].Count; index1++)
                 {
-                    if (protIndex >= ModifiedSite.Index)
-                        ModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] = ModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] + ModifiedSite.ModWeight;
-                }
-            }
-            for (int InsilicoIndex = 0; InsilicoIndex < ModifiedProtein.InsilicoDetails.InsilicoMassLeft.Count; InsilicoIndex++)
-            {
-                ModifiedProtein.InsilicoDetails.InsilicoMassRight[InsilicoIndex] = ModifiedProtein.Mw - MassAdjustment.H2O - ModifiedProtein.InsilicoDetails.InsilicoMassLeft[InsilicoIndex];
-            }
-            ModifiedProtein.Sequence = protein.Sequence;
-            ModifiedProtein.Header = protein.Header;
-
-            for (int PTMIndex = 0; PTMIndex < ModArray.Count; PTMIndex++)
-            {
-                var ModifiedSite = ModArray[PTMIndex];
-                ModifiedProtein.PtmScore = ModifiedProtein.PtmScore + ModifiedSite.Score;
-                ModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(ModifiedSite.Index, ModifiedSite.ModName, ModifiedSite.Site));
-            }
-
-            for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
-            {
-                //ModifiedProtein.PtmParticulars.Index.Add(All_Fix_PTMs[fixedIndex].Index);
-                ModifiedProtein.PtmScore = ModifiedProtein.PtmScore + All_Fix_PTMs[fixedIndex].Score;
-                //ModifiedProtein.PtmParticulars.Site.Add(All_Fix_PTMs[fixedIndex].Site); 
-                //ModifiedProtein.PtmParticulars.ModName.Add(All_Fix_PTMs[fixedIndex].ModName); 
-                ModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(All_Fix_PTMs[fixedIndex].Index, All_Fix_PTMs[fixedIndex].ModName, All_Fix_PTMs[fixedIndex].Site));
-            }
-            ModifiedProtein.PstScore = protein.PstScore;
-            var Error = Math.Abs(protein.Mw - ModifiedProtein.Mw);
-            if (Error == 0)
-                ModifiedProtein.MwScore = 1;
-            else
-                ModifiedProtein.MwScore = Math.Pow((1 / 2), Error);
-
-            ModifiedProtein.PtmScore = 1 - Math.Exp(-ModifiedProtein.PtmScore / 3);
-            ModifiedProtSeq.Add(ModifiedProtein);
-        }
-
-        
-       
-        public int[] Combinations(string passingstr, int count)
-        {
-            string[] returnArray = new string[] { };
-            if (passingstr.Length == 1)
-                Convert.ToInt32(passingstr);
-            char c = passingstr[passingstr.Length - 1];
-            //if(passingstr.Length - 1 != 0) //Was Added for testing...
-                returnArray = Array.ConvertAll(Combinations(passingstr.Substring(0, passingstr.Length - 1), count), x => x.ToString());
-            List<string> finalArray = new List<string>();
-            foreach (string s in returnArray)
-                finalArray.Add(s);
-            finalArray.Add(c.ToString());
-            int j = 0;
-            foreach (string s in returnArray)
-            {
-                finalArray.Add(s + c);
-                finalArray.Add(c + s);
-            }
-            returnArray = finalArray.ToArray();
-            foreach (string s in returnArray)
-            {
-                if (passingstr.Length == count)
-                {
-                    if (s.Length < passingstr.Length - 1)
+                    ProteinDto AnotherModifiedProtein = new ProteinDto(protein);
+                    AnotherModifiedProtein.Mw = MolecularWeight;
+                    AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft = Clone.Decrypt<List<double>>(LeftIons); // Lists are referenced based so, therefore...
+                    for (int index2 = 0; index2 < ModificationsList[index][index1].Count; index2++)
                     {
-                        foreach (char k in passingstr)
+                        ModifiedSite = ModificationsList[index][index1][index2];
+                        AnotherModifiedProtein.Mw = AnotherModifiedProtein.Mw + ModifiedSite.ModWeight;
+                        //AnotherModifiedProtein.PtmScore = AnotherModifiedProtein.PtmScore + ModifiedSite.Score;
+                        
+
+                        for (int protIndex = 0; protIndex < protein.Sequence.Length - 1; protIndex++)
                         {
-                            foreach (char m in passingstr)
+                            if (protIndex >= ModifiedSite.Index)
                             {
-                                if (k != m && !s.Contains(k) && !s.Contains(m))
-                                {
-                                    finalArray.Add(s + k);
-                                    finalArray.Add(s + m + k);
-                                    finalArray.Add(m.ToString() + k.ToString());
-                                    finalArray.Add(m + s + k);
-                                }
+                                AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] =
+                                                                    AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft[protIndex] + ModifiedSite.ModWeight;
                             }
                         }
                     }
-                }
-                j++;
+                    for (int InsilicoIndex = 0; InsilicoIndex < AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft.Count; InsilicoIndex++)
+                    {
+                        AnotherModifiedProtein.InsilicoDetails.InsilicoMassRight[InsilicoIndex] =
+                            AnotherModifiedProtein.Mw - MassAdjustment.H2O - AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft[InsilicoIndex];
+                    }
+                    //Reversing the order of "InsilicoDetails.InsilicoMassRight"
+                    AnotherModifiedProtein.InsilicoDetails.InsilicoMassRight.Reverse();
+
+                    for (int iter = 0; iter < ModificationsList[index][index1].Count; iter++)
+                    {
+                        ModifiedSite = ModificationsList[index][index1][iter];
+                        AnotherModifiedProtein.PtmScore = AnotherModifiedProtein.PtmScore + ModifiedSite.Score;
+                        AnotherModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(ModifiedSite.Index,ModifiedSite.ModName,ModifiedSite.Site));
+
+                    }
+
+                    for (int fixedIndex = 0; fixedIndex < All_Fix_PTMs.Count; fixedIndex++)
+                    {
+                        AnotherModifiedProtein.PtmScore = AnotherModifiedProtein.PtmScore + All_Fix_PTMs[fixedIndex].Score;
+                        AnotherModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(All_Fix_PTMs[fixedIndex].Index, All_Fix_PTMs[fixedIndex].ModName, All_Fix_PTMs[fixedIndex].Site));
+                    }
+                    //for (int varIndex = 0; varIndex < All_Var_PTMs.Count; varIndex++)
+                    //{
+                    //    AnotherModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(All_Var_PTMs[varIndex].Index, All_Var_PTMs[varIndex].ModName, All_Var_PTMs[varIndex].Site));
+                    //}
+                    //AnotherModifiedProtein.PtmParticulars = AnotherModifiedProtein.PtmParticulars.OrderBy(x => x.Index).ToList();
+
+                    double Error = Math.Abs(Experimentalmz - AnotherModifiedProtein.Mw);
+                    if (Error == 0)
+                        AnotherModifiedProtein.MwScore = 1;
+                    else
+                        AnotherModifiedProtein.MwScore = 1 / Math.Pow(2, Error);        //Math.Pow(1 / 2), error);
+
+                    AnotherModifiedProtein.PtmScore = 1 - Math.Exp(-AnotherModifiedProtein.PtmScore / 3);
+
+                    ProteinDto tempProtein = new ProteinDto(AnotherModifiedProtein); // Just for safety against referenced based property of list...
+                    ListOfModifiedProteins.Add(tempProtein);
+                }   
             }
-            //Converting the string array to int array    
-            int[] retarr = (Array.ConvertAll(finalArray.ToArray(), int.Parse)).Distinct().ToArray();
-            //Sorting array    
-            Array.Sort(retarr);
-            return retarr;
+
+            
+            return ListOfModifiedProteins;
         }
     }
 }
