@@ -14,40 +14,27 @@ namespace PerceptronLocalService.Engine
 
         public BlindPTMDto BlindPTMExtraction(List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters)
         {
-            //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
-
-
-            //WE already have this....
-            //var peakDatalist = new List<peakData2Dlist>();
-            //for (int row = 0; row <= peakData.Mass.Count - 1; row++)    //*R  peakData.Mass.Count  *W  peakData2DList.Count
-            //{
-            //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
-            //    peakDatalist.Add(dataforpeakDatalist);
-            //}
-
-
-
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();    ///*R  peakDatalist     *W   peakData2DList
-            var MolW = peakData2DList[peakData2DList.Count - 1].Mass;// Molar weight that is the last row of the peak list    //*R  peakData.Mass[peakData.Mass.Count - 1]   *W peakData2DList[peakData2DList.Count - 1].Mass
+            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
+            var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;// Molar weight that is the last row of the peak list
             var UserHopThreshold = 1;
 
-            // peaks has first index as 0, followed by all the peaklist except MolW, followed by MolW - all the peaks from peaklist and then at the last index, there is MolW
+            // Creation of "peaks" first index as 0 followed by all the peaklist except MolW and then, MolW - all the peaks from peaklist and then at the last index, there is MolW
             var peaks = new List<double>();
             peaks.Add(0);
-            for (int row = 0; row <= peakData2DList.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
+            for (int row = 0; row <= ExperimentalSpectrum.Count - 2; row++)     // "-1" is for Excluding Intact Mass & other "-1" is for Zero Indexing
             {
-                peaks.Add(peakData2DList[row].Mass);                          //  *R  peakData.Mass[row]    *W  peakData2DList[row].Mass
+                peaks.Add(ExperimentalSpectrum[row].Mass);                          
             }
-            for (int row = 0; row <= peakData2DList.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
+            for (int row = 0; row <= ExperimentalSpectrum.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
             {
-                peaks.Add(MolW - peakData2DList[row].Mass);                          //  *R  peakData.Mass[row]    *W  peakData2DList[row].Mass
+                peaks.Add(MolW - ExperimentalSpectrum[row].Mass);
             }
             peaks.Add(MolW);
             peaks = peaks.OrderBy(n => n).ToList(); // Sorting of peaks
 
             // InfoTable data
-            double[] InfoModMass = { 70.0055, 99.0321, 111.0321, 113.0477, 113.0477, 117.0248, 129.0426, 129.0426, 131.9994, 139.0634, 142.0742, 142.1106, 143.0583, 144.0899, 147.0354, 156.1263, 159.0354, 160.0848, 163.0303, 166.9983, 170.1056, 170.1167, 173.0147, 173.0324, 173.0511, 181.0140, 184.1324, 194.9932, 198.1117, 208.0484, 217.0252, 243.0296, 290.1114, 304.1271, 341.2392, 408.0772, 431.1649 };
+            double[] InfoModMass = { 70.0055000000000, 99.0321000000000, 111.032100000000, 113.047700000000, 113.047700000000, 117.024800000000, 129.042600000000, 129.042600000000, 131.999400000000, 139.063400000000, 142.074200000000, 142.110600000000, 143.058300000000, 144.089900000000, 147.035400000000, 156.126300000000, 159.035400000000, 160.084800000000, 163.030300000000, 166.998300000000, 170.105600000000, 170.116700000000, 173.014700000000, 173.032400000000, 173.051100000000, 181.014000000000, 184.132400000000, 194.993200000000, 198.111700000000, 208.048400000000, 217.025200000000, 243.029600000000, 290.111400000000, 304.127100000000, 341.239200000000, 408.077200000000, 431.164900000000 };
             char[] InfoModAminoAcids = { 'S', 'G', 'Q', 'A', 'P', 'C', 'S', 'P', 'C', 'P', 'G', 'K', 'T', 'K', 'M', 'K', 'M', 'K', 'M', 'S', 'K', 'R', 'C', 'E', 'M', 'T', 'R', 'D', 'R', 'Y', 'H', 'Y', 'S', 'T', 'C', 'C', 'N' };
             string[] InfoModName = { "Pyruvate-S", "Acetylation", "Pyrrolidone-Aarboxylic-Acid", "Acetylation", "Hydroxylation", "Methylation", "Acetylation", "DiHydroxylation", "S-Nitrosylation", "Acetylation", "Methylation", "Methylation", "Acetylation", "Hydroxylation", "Sulfoxide", "DiMethylation", "Formylation", "DiHydroxylation", "Sulfone", "Phosphorylation", "Acetylation", "Methylation", "Pyruvate-C", "Gamma-Carboxyglutamic-Acid", "Acetylation", "Phosphorylation", "DiMethylation", "Phosphorylation", "Acetylation", "Nitration", "Phosphorylation", "Phosphorylation", "O-linked-Glycosylation", "O-linked-Glycosylation", "Palmitoylation", "Glutathionylation", "N-linked-Glycosylation" };
 
@@ -63,7 +50,7 @@ namespace PerceptronLocalService.Engine
             {
                 for (int ExpJ = ExpI + 1; ExpJ <= peaks.Count - 1; ExpJ++)
                 {
-                    double PeakDiff = peaks[ExpI] - peaks[ExpJ];
+                    double PeakDiff = peaks[ExpJ] - peaks[ExpI];
                     for (int AAIndex = 0; AAIndex <= InfoModMass.Length - 1; AAIndex++)
                     {
                         double Error = PeakDiff - InfoModMass[AAIndex];
@@ -104,38 +91,27 @@ namespace PerceptronLocalService.Engine
             var PeptideTolerance = parameters.PeptideTolerance;
             var PeptideToleranceUnit = parameters.PeptideToleranceUnit;
             List<ProteinDto> CandidateProtListModified = new List<ProteinDto>();
-            var proteinIndex = 0;
-
-            /*We already have this...*/
-            //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
-            //var peakDatalist = new List<peakData2Dlist>();
-            //for (int row = 0; row < peakData.Mass.Count; row++)
-            //{
-            //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
-            //    peakDatalist.Add(dataforpeakDatalist);
-            //}
-
 
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();     ///*R peakDatalist   *W  peakData2DList
-            var MolW = peakData2DList[peakData2DList.Count - 1].Mass;    // Molar weight that is the last row of the peak list   /// *R peakData.Mass[peakData.Mass.Count - 1]  *W peakData2DList[peakData2DList.Count - 1].Mass
+            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
+            var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;    // Molar weight that is the last row of the peak list   /// *R peakData.Mass[peakData.Mass.Count - 1]  *W peakData2DList[peakData2DList.Count - 1].Mass
             double tolConv = 0;
 
             // if size of peakData is 1, then tolConv is equal to that one mass value, else it is the second-last mass value from the sorted peakData list
-            if (peakData2DList.Count == 1)     //// *R peakData.Mass.Count  *W 
+            if (ExperimentalSpectrum.Count == 1)
             {
-                tolConv = peakData2DList[peakData2DList.Count - 1].Mass; //*R peakData.Mass[peakData.Mass.Count - 1];
+                tolConv = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;
             }
             else
             {
-                tolConv = peakData2DList[peakData2DList.Count - 2].Mass;  //*R  peakData.Mass[peakData.Mass.Count - 2];  *W peakData2DList[peakData2DList.Count - 2].Mass
+                tolConv = ExperimentalSpectrum[ExperimentalSpectrum.Count - 2].Mass;
             }
             List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>();
             if (sizeHopInfo > 0)
             {
                 for (int row = 0; row < CandidateProtList.Count; row++)
                 {
-                    var protein = CandidateProtList.ElementAt(row); //Protein at index row is being processed
+                    ProteinDto protein = new ProteinDto(CandidateProtList[row]); //Protein at index row is being processed
                     var sequence = protein.Sequence;
                     //If the function is BlindPTM_Truncation_Left, the protein sequence is flipped, otherwise the original sequence is processed
                     if (TypeOfFunction == "BlindPTM_Truncation_Left")
@@ -210,11 +186,13 @@ namespace PerceptronLocalService.Engine
                                     Ladder_Index = Ladder_Index + 1;
 
                                     //Protein components are being updated 
-                                    ShortlistedHops.ElementAt(Ladder_Index).ModName = Mod;
-                                    ShortlistedHops.ElementAt(Ladder_Index).AminoAcidName = (AA);
-                                    ShortlistedHops.ElementAt(Ladder_Index).Start = Start;
-                                    ShortlistedHops.ElementAt(Ladder_Index).End = End;
-                                    ShortlistedHops.ElementAt(Ladder_Index).ThrI = ThrI;
+                                    var tempList = new PTMDataDto(Mod, AA, End, Start, ThrI);
+                                    ShortlistedHops.Add(tempList);
+                                    //ShortlistedHops.ElementAt(Ladder_Index).ModName = Mod;
+                                    //ShortlistedHops.ElementAt(Ladder_Index).AminoAcidName = (AA);
+                                    //ShortlistedHops.ElementAt(Ladder_Index).Start = Start;
+                                    //ShortlistedHops.ElementAt(Ladder_Index).End = End;
+                                    //ShortlistedHops.ElementAt(Ladder_Index).ThrI = ThrI;
                                 }
                             }
                         }
@@ -251,13 +229,17 @@ namespace PerceptronLocalService.Engine
 
                     for (int HopIndex = 0; HopIndex < ShortlistedHops.Count; HopIndex++)
                     {
+                        int index = 0;
                         // Updating the protein
-                        protein.PtmParticulars[HopIndex].ModName = ShortlistedHops.ElementAt(HopIndex).ModName;
-                        protein.PtmParticulars[HopIndex].Site = Convert.ToChar(ShortlistedHops.ElementAt(HopIndex).AminoAcidName);
+                        
                         if (TypeOfFunction == "BlindPTM_Truncation_Left")
-                            protein.PtmParticulars[HopIndex].Index = sequence.Length - ShortlistedHops.ElementAt(HopIndex).ThrI;
+                            index = sequence.Length - ShortlistedHops[HopIndex].ThrI;
                         else
-                            protein.PtmParticulars[HopIndex].Index = ShortlistedHops.ElementAt(HopIndex).ThrI + 1;
+                            index = ShortlistedHops[HopIndex].ThrI + 1;
+
+                        protein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(index, ShortlistedHops[HopIndex].ModName,
+                                                                                        Convert.ToChar(ShortlistedHops[HopIndex].AminoAcidName)));
+                        
                     }
                     // Protein molar weight scoring
                     if (TypeOfFunction == "BlindPTM")
@@ -266,29 +248,27 @@ namespace PerceptronLocalService.Engine
                         if (error == 0)
                             protein.MwScore = 1;
                         else
-                            protein.MwScore = Math.Pow((1 / 2), error);
+                            protein.MwScore = 1 / Math.Pow(2, error);
                     }
                     // All the updated proteins are being stored in a new list CandidateProtListModified
                     if (ShortlistedHops.Count > 0)
                     {
-                        proteinIndex = proteinIndex + 1;
-                        CandidateProtListModified[proteinIndex] = protein;
+                        ProteinDto tempProtein = new ProteinDto(protein);      // Just for safety against referenced based property of list...
+                        CandidateProtListModified.Add(tempProtein);
                     }
                 }
             }
             return CandidateProtListModified;
         }
 
-        public List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters)
+        public List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, double IntactMass, SearchParametersDto parameters)
         {
             for (int index = 0; index <= Matches.Count; index++)
             {
                 // Ptm parameters initialization
-                var protein = Matches.ElementAt(index);
-                protein.PtmParticulars[index].ModStartSite = -1;
-                protein.PtmParticulars[index].ModEndSite = -1;
-                protein.PtmParticulars[index].ModWeight = -1;
-                var MassDiff = peakData2DList[0].Mass - protein.Mw;  // peakData2DList[0].Mass = Intact Mass of Protein      ///////*R  peakData.Mass[0] *W peakData2DList[0].Mass
+                ProteinDto protein = Matches[index];
+
+                var MassDiff = IntactMass - protein.Mw;  // peakData2DList[0].Mass = Intact Mass of Protein
 
                 if (parameters.PtmAllow == "True")
                 {
@@ -312,12 +292,10 @@ namespace PerceptronLocalService.Engine
                         {
                             right = protein.InsilicoDetails.InsilicoMassLeft.Count; //Num of LeftIons (i.e. the index right next to where LeftIons end) gives the end site of modification
                         }
-                        if (left < right && left > 1 && right < protein.LeftMatchedIndex.Count)
+                        if (left < right && left > 1 && right < protein.InsilicoDetails.InsilicoMassLeft.Count)
                         {
-                            // Ptm parameters are beig updated
-                            protein.PtmParticulars[index].ModStartSite = left;
-                            protein.PtmParticulars[index].ModEndSite = right;
-                            protein.PtmParticulars[index].ModWeight = MassDiff;
+                            // Blind PTM Localization Information are beig updated
+                            protein.BlindPtmLocalizationInfo = new BlindPtmInfo(left, right, MassDiff);
                             protein.Mw = protein.Mw + MassDiff;
                         }
                     }
@@ -330,7 +308,7 @@ namespace PerceptronLocalService.Engine
                 }
                 else
                 {
-                    protein.MwScore = Math.Pow((1 / 2), error);
+                    protein.MwScore = 1 / Math.Pow(2, error);
                 }
             }
             return Matches;
