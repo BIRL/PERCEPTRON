@@ -11,6 +11,6 @@ namespace PerceptronLocalService.Interfaces
     {
         BlindPTMDto BlindPTMExtraction(List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters);
         List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, List<newMsPeaksDto> peakData2DList, double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction);
-        List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters);
+        List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, double IntactMass, SearchParametersDto parameters);
     }
 }
