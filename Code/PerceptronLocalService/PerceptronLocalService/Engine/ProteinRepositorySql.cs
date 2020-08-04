@@ -17,7 +17,7 @@ namespace PerceptronLocalService.Engine
     class ProteinRepositorySql : IProteinRepository
     {
 
-        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags) // Added "int CandidateList". 20200112
+        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags)
         {
             var query = GetQuery(parameters.ProtDb);
 
@@ -38,10 +38,6 @@ namespace PerceptronLocalService.Engine
 
             foreach (var proteinInfo in prot)
             {
-                //if (proteinInfo.ID == "P04439")  // Was for Testing
-                //{
-                //    int wait;
-                //}
                 var insilico = new InsilicoObjectDto()
                 {
                     InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
@@ -67,20 +63,20 @@ namespace PerceptronLocalService.Engine
                     double TotalFixedWeight = 0.0;
                     double VariableWeight = 0.0;
 
-                    if (parameters.FixedModifications != null && parameters.VariableModifications != null)
+                    if (parameters.FixedModifications.Count != 0 && parameters.VariableModifications.Count != 0)
                     {
-                        if (parameters.FixedModifications != null)
+                        if (parameters.FixedModifications.Count != 0)
                         {
                             double ChemicalModMass = GetChemicalModMass(parameters, protein.Sequence);
                             double FixedWeight = GetPTMModMassShift(parameters.FixedModifications, protein.Sequence);
                             TotalFixedWeight = ChemicalModMass + FixedWeight;
                         }
-                        if (parameters.VariableModifications != null)
+                        if (parameters.VariableModifications.Count != 0)
                         {
                             VariableWeight = GetPTMModMassShift(parameters.VariableModifications, protein.Sequence);
                         }
                     }
-                    if (parameters.Truncation == "False")
+                    if (parameters.Truncation == "False")//#Placeholder  // #POTENTIALBUG  IN SPECTRUM {isempty(truncation)} ///   
                     {
                         if (Math.Abs(protein.Mw + TotalFixedWeight - IntactMass) <= parameters.MwTolerance + VariableWeight)
                         {
@@ -134,8 +130,6 @@ namespace PerceptronLocalService.Engine
 
             return query;
         }
-
-
 
         private string GetConnectionString(string db)
         {
