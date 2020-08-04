@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PerceptronLocalService.Utility;
 
 namespace PerceptronLocalService.DTO
 {
@@ -60,36 +61,39 @@ namespace PerceptronLocalService.DTO
 
         }
 
-        public ProteinDto(ProteinDto protein)
+        public ProteinDto(ProteinDto protein) 
         {
-            Header = protein.Header;
-            OriginalSequence = protein.OriginalSequence;
-            Sequence = protein.Sequence;
-            PstScore = protein.PstScore;
-            InsilicoScore = protein.InsilicoScore;
-            PtmScore = protein.PtmScore;
-            Score = protein.Score;
-            MwScore = protein.MwScore;
-            Mw = protein.Mw;
-            PtmParticulars = new List<PostTranslationModificationsSiteDto>(protein.PtmParticulars);
-            InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
+            var proteinInfoClone = Clone.CloneObject(protein); // Lists are referenced based so, therefore...
+            ProteinDto ProteinClone = Clone.Decrypt<ProteinDto>(proteinInfoClone); // Lists are referenced based so, therefore...
 
-            TruncationIndex = protein.TruncationIndex;
-            TerminalModification = protein.TerminalModification;
-            Truncation = protein.Truncation;
-            TruncatedSequence = protein.TruncatedSequence;
-            TruncatedMolecaularWeight = protein.TruncatedMolecaularWeight;
-            InsilicoScore = protein.InsilicoScore;
-            MatchCounter = protein.MatchCounter;
+            Header = ProteinClone.Header;
+            OriginalSequence = ProteinClone.OriginalSequence;
+            Sequence = ProteinClone.Sequence;
+            PstScore = ProteinClone.PstScore;
+            InsilicoScore = ProteinClone.InsilicoScore;
+            PtmScore = ProteinClone.PtmScore;
+            Score = ProteinClone.Score;
+            MwScore = ProteinClone.MwScore;
+            Mw = ProteinClone.Mw;
+            PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
+            InsilicoDetails = new InsilicoObjectDto(ProteinClone.InsilicoDetails);
 
-            LeftMatchedIndex = protein.LeftMatchedIndex;
-            RightMatchedIndex = protein.RightMatchedIndex;
-            LeftPeakIndex = protein.LeftPeakIndex;
-            RightPeakIndex = protein.RightPeakIndex;
-            LeftType = protein.LeftType;
-            RightType = protein.RightType;
+            TruncationIndex = ProteinClone.TruncationIndex;
+            TerminalModification = ProteinClone.TerminalModification;
+            Truncation = ProteinClone.Truncation;
+            TruncatedSequence = ProteinClone.TruncatedSequence;
+            TruncatedMolecaularWeight = ProteinClone.TruncatedMolecaularWeight;
+            InsilicoScore = ProteinClone.InsilicoScore;
+            MatchCounter = ProteinClone.MatchCounter;
 
-            PstTagsWithComma = protein.PstTagsWithComma;
+            LeftMatchedIndex = ProteinClone.LeftMatchedIndex;
+            RightMatchedIndex = ProteinClone.RightMatchedIndex;
+            LeftPeakIndex = ProteinClone.LeftPeakIndex;
+            RightPeakIndex = ProteinClone.RightPeakIndex;
+            LeftType = ProteinClone.LeftType;
+            RightType = ProteinClone.RightType;
+
+            PstTagsWithComma = ProteinClone.PstTagsWithComma;
 
         }
 
