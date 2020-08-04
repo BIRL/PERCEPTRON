@@ -14,7 +14,9 @@ namespace PerceptronLocalService.DTO
         public double MwScore;
         public double Mw;
         public List<PostTranslationModificationsSiteDto> PtmParticulars;
+        public BlindPtmInfo BlindPtmLocalizationInfo;
         public InsilicoObjectDto InsilicoDetails;
+
 
         public int TruncationIndex;
         public string Truncation; //20200126
@@ -48,6 +50,7 @@ namespace PerceptronLocalService.DTO
             MwScore = 0;
             Mw = 0; // 20200122
             PtmParticulars = new List<PostTranslationModificationsSiteDto>();
+            BlindPtmLocalizationInfo = new BlindPtmInfo();
             InsilicoDetails = new InsilicoObjectDto();
 
             MatchCounter = 0;
@@ -76,6 +79,7 @@ namespace PerceptronLocalService.DTO
             MwScore = ProteinClone.MwScore;
             Mw = ProteinClone.Mw;
             PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
+            BlindPtmLocalizationInfo = ProteinClone.BlindPtmLocalizationInfo;
             InsilicoDetails = new InsilicoObjectDto(ProteinClone.InsilicoDetails);
 
             TruncationIndex = ProteinClone.TruncationIndex;
