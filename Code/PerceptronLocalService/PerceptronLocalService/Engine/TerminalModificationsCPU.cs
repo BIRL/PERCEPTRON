@@ -64,7 +64,7 @@ namespace PerceptronLocalService.Engine
 
             var DELMECandiList = new List<ProteinDto>();
 
-            if (IndividualModifications[0] == "None")
+            if (IndividualModifications.Contains("None"))
             {
                 var newProtein = new ProteinDto(tempprotein);
                 newProtein.TerminalModification = "None";
@@ -75,7 +75,7 @@ namespace PerceptronLocalService.Engine
             }
             if (tempseq[0] == 'M')
             {
-                if (IndividualModifications[0] == "NME" || IndividualModifications[1] == "NME") //Its Seems Like hard Code but not in Actual because We know the position of NME will always be either 0 or 1  //// Just checking NME with this method so to avoid conflict between NME and NME_Acetylation
+                if (IndividualModifications.Contains("NME")) // Used this (IndividualModifications) instead of this (parameters.TerminalModification) to avoid conflict between "NME" & "NME_Acetylation"
                 {
                     var newProtein = new ProteinDto(tempprotein)
                     {
