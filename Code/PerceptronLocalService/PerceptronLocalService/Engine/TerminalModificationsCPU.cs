@@ -17,11 +17,6 @@ namespace PerceptronLocalService.Engine
         {
             int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
 
-            //DELME TESTING
-            //int countDELME = 0;
-            var DELMELIST = new List<ProteinDto>();
-
-            //
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
             {
@@ -33,66 +28,37 @@ namespace PerceptronLocalService.Engine
 
                 //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
                 //{
-                    //countDELME = 1;
+                //countDELME = 1;
 
-                    //Preparing Protein Info
-                    var protein = candidateProteins[index];
-                    var tempprotein = new ProteinDto(protein);
+                //Preparing Protein Info
+                var protein = candidateProteins[index];
+                var tempprotein = new ProteinDto(protein);  // Lists are referenced based. Cloned a copy of protein
 
-                    //BELOW: Just for Safe Level
-                    var leftString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassLeft);
-                    var leftIons = Clone.Decrypt<List<double>>(leftString);
+                var sequence = tempprotein.Sequence;
+                var leftIons = tempprotein.InsilicoDetails.InsilicoMassLeft;
+                var rightIons = tempprotein.InsilicoDetails.InsilicoMassRight;
 
-                    var seqString = Clone.CloneObject(tempprotein.Sequence);
-                    var sequence = Clone.Decrypt<string>(seqString);
+                //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                leftIons.RemoveAt(leftIons.Count - 1);
+                rightIons.RemoveAt(rightIons.Count - 1);
 
-                    var rightString = Clone.CloneObject(tempprotein.InsilicoDetails.InsilicoMassRight);
-                    var rightIons = Clone.Decrypt<List<double>>(rightString);
-                    //ABOVE: Just for Safe Level
+                
 
-                    //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
-                    leftIons.RemoveAt(leftIons.Count - 1);
-                    rightIons.RemoveAt(rightIons.Count - 1);
+                double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
+                int tmpSeqLength = sequence.Length;
 
-                    double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
-                    int tmpSeqLength = sequence.Length;
-
-                    TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
-
-                    //}  // COMMENT ME !!!
-
-                    //if (candidateProteins[index].PstScore > 0)
-                    //{
-                    //    countDELME = countDELME + 1;
-                    //    DELMELIST.Add(candidateProteins[index]);
-                    //}
-
-                //}
+                TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
 
             }
 
-            //for (int i = 0; i < tempCandidateProteins.Count; i++)
-            //{
-            //    if (tempCandidateProteins[i].PstScore > 0)
-            //    {
-            //        DELMELIST.Add(candidateProteins[i]);
-            //    }
-
-
-            //}
-
-
-
-
             return tempCandidateProteins;
-            //candidateProteins = tempCandidateProteins;
-            //return candidateProteins;
+            
         }
 
         public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins) //#N2RIt!!!
         {
             double AcetylationWeight = MassAdjustment.AcetylationWeight;
-            double MethionineWeight = 131.04049; //RECEIVING so for the #TIMEBEING//= AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
+            double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
 
             string[] IndividualModifications = parameters.TerminalModification.Split(',');
 
