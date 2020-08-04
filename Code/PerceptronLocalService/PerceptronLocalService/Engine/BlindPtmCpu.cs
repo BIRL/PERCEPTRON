@@ -263,7 +263,7 @@ namespace PerceptronLocalService.Engine
 
         public List<ProteinDto> BlindPTMLocalization(List<ProteinDto> Matches, double IntactMass, SearchParametersDto parameters)
         {
-            for (int index = 0; index <= Matches.Count; index++)
+            for (int index = 0; index < Matches.Count; index++)
             {
                 // Ptm parameters initialization
                 ProteinDto protein = Matches[index];
