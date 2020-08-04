@@ -11,7 +11,7 @@ namespace PerceptronLocalService.Utility
     {
         ModificationMWShift ModificationTableClass = new ModificationMWShift();
 
-        public List<PostTranslationModificationsSiteDto> Cys_CAM(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Cys_CAM(string proteinSequence, double Tolerance)
         {
             var modName = "Carboxyamidomethylation";
             double modWeight = ModificationTableClass.ModificationMWShiftTable(modName);

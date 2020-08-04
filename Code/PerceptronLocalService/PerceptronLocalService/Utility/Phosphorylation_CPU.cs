@@ -13,7 +13,7 @@ namespace PerceptronLocalService.Utility
         PtmScoreNormalizer _PtmScoreNormalizer = new PtmScoreNormalizer();
 
         // Function (Phosphorylation_S): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Phosphorylation_S(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Phosphorylation_S(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -706,7 +706,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // Updated 20200714
+                    if (score >= Tolerance)  // Updated 20200714
                     {
                         //b = proteinSequence[i - 6];   Updated 20200714
                         //c = proteinSequence[i - 5];
@@ -761,7 +761,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (Phosphorylation_T): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Phosphorylation_T(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Phosphorylation_T(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -1458,7 +1458,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // Updated 20200714
+                    if (score >= Tolerance)  // Updated 20200714
                     {
                         //b = proteinSequence[i - 6];   Updated 20200714
                         //c = proteinSequence[i - 5];
@@ -1513,7 +1513,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (Phosphorylation_Y): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Phosphorylation_Y(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Phosphorylation_Y(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -2177,7 +2177,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //b = proteinSequence[i - 6];   Updated 20200714
                         //c = proteinSequence[i - 5];

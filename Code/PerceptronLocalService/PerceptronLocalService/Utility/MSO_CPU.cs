@@ -11,7 +11,7 @@ namespace PerceptronLocalService.Utility
     {
         ModificationMWShift ModificationTableClass = new ModificationMWShift();
 
-        public List<PostTranslationModificationsSiteDto> MSO(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> MSO(string proteinSequence, double Tolerance)
         {
             var modName = "Sulfoxide";
             double modWeight = ModificationTableClass.ModificationMWShiftTable(modName);

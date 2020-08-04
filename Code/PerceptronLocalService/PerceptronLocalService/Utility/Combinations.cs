@@ -32,7 +32,7 @@ namespace PerceptronLocalService.Utility
                         subresults.Add(listofnumbers[j]);
                     }
                 }
-                var temporarylist = subresults;
+                //var temporarylist = subresults;
                 //bool isConsecutive = !temporarylist.Select((z, j) => z - j).Distinct().Skip(1).Any();//Checking for consecutive numbers
                 //if (isConsecutive == true)
                 consecutivenumbers.Add(subresults); //Just collecting that numbers which are consecutives

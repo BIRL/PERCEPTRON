@@ -13,7 +13,7 @@ namespace PerceptronLocalService.Utility
         PtmScoreNormalizer _PtmScoreNormalizer = new PtmScoreNormalizer();
 
         // Function (Amidation_F): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Amidation_F(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Amidation_F(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -369,7 +369,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //f = proteinSequence[i - 1];   Updated 20200714
                         //e = proteinSequence[i - 2];

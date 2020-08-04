@@ -13,9 +13,8 @@ namespace PerceptronLocalService.Utility
         PtmScoreNormalizer _PtmScoreNormalizer = new PtmScoreNormalizer();
 
         // Function (Acetylation_A): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Acetylation_A(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Acetylation_A(string proteinSequence, double Tolerance)
         {
-
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
 
@@ -371,7 +370,7 @@ namespace PerceptronLocalService.Utility
                     // score scaling according to higest score
                     score = _PtmScoreNormalizer.Normalize(score, 1);
 
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //l = proteinSequence[i + 1];   Updated 20200714
                         //k = proteinSequence[i + 2];
@@ -413,7 +412,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (Acetylation_K): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Acetylation_K(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Acetylation_K(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -1091,7 +1090,7 @@ namespace PerceptronLocalService.Utility
 
                     //if ((score >= ptmTolerance) && (i - 6 >= 0) && (i - 5 >= 0) && (i - 4 >= 0) && (i - 3 >= 0) &&
                     //    (i - 2 >= 0) && (i - 1 >= 0))
-                    if (score >= ptmTolerance)  // Updated 20200714
+                    if (score >= Tolerance)  // Updated 20200714
                     {
                         //l = proteinSequence[i + 1];
                         //k = proteinSequence[i + 2];
@@ -1146,7 +1145,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (Acetylation_M): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Acetylation_M(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Acetylation_M(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -1510,7 +1509,7 @@ namespace PerceptronLocalService.Utility
                     // score scaling according to higest score
                     score = _PtmScoreNormalizer.Normalize(score, 3);
 
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //l = proteinSequence[i + 1];   // Updated 20200714
                         //k = proteinSequence[i + 2];
@@ -1553,7 +1552,7 @@ namespace PerceptronLocalService.Utility
         }
 
         // Function (Acetylation_S): Returns an object array with all the required parameters stored
-        public List<PostTranslationModificationsSiteDto> Acetylation_S(string proteinSequence, double ptmTolerance)
+        public List<PostTranslationModificationsSiteDto> Acetylation_S(string proteinSequence, double Tolerance)
         {
             //Sequence of protein
             //proteinSequence = "MAPNASCLCVHVRSEEWDLMTFDANPYDSVKKIKEHVRSKTKVPVQDQVLLLGSKILKPRRSLSSYGIDKEKTIHLTLKVVKPSDEELPLFLVESGDEAKRHLLQVRRSSSVAQVKAMIETKTGIIPETQIVTCNGKRLEDGKMMADYGIRKGNLLFLACYCIGG";
@@ -1912,7 +1911,7 @@ namespace PerceptronLocalService.Utility
                     // score scaling according to higest score
                     score = _PtmScoreNormalizer.Normalize(score, 4);
 
-                    if (score >= ptmTolerance)
+                    if (score >= Tolerance)
                     {
                         //l = proteinSequence[i + 1];   // Updated 20200714
                         //k = proteinSequence[i + 2];
