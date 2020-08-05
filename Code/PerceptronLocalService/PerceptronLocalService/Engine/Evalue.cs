@@ -8,143 +8,104 @@ namespace PerceptronLocalService.Engine
 {
     public class Evalue
     {
-        public static void ComputeEvalue(List<ProteinDto> candidateProteins)
+        ProbabilityOfSequence _ProbabilityOfSequence = new ProbabilityOfSequence();
+        public void ComputeEvalue(List<ProteinDto> CandidateProteinsList)
         {
-            var probOfSequence = new List<double>();
-            var spectralMatches = new List<int>();
+            List<double> ProbOfSequence = new List<double>();
+            List<int> SpectralMatches = new List<int>();
+            
+            List<bool> LogicalMatchCounterList = new List<bool>();
+            List<bool> SetLogicalMatchCounterList = new List<bool>();  //  Will be used for setting E-Value
+            List<int> setind = new List<int>();
 
-            foreach (var protein in candidateProteins)
+            //PrSM_Evalue.m
+            for (int i = 0; i < CandidateProteinsList.Count; i++)
             {
-                probOfSequence.Add(ProbabilityOfSequence.ComputeProb(protein.Sequence));
-                spectralMatches.Add(protein.MatchCounter);
+                ProbOfSequence.Add(_ProbabilityOfSequence.ProabailityAA(CandidateProteinsList[i].Sequence));
+                SpectralMatches.Add(CandidateProteinsList[i].MatchCounter);
             }
 
-            var uSpectralMatches = spectralMatches.Distinct().ToList();
-            uSpectralMatches.Sort((a, b) => Math.Sign(b - a));
+            List<int> USpectralMatches = SpectralMatches.Distinct().ToList();
+            USpectralMatches.Sort();
+            USpectralMatches.Reverse();
 
-            for (var i = 0; i < uSpectralMatches.Count; i++)
+            for (int i = 0; i < USpectralMatches.Count; i++)
             {
-                var matches = uSpectralMatches[i];
-                var ind = spectralMatches.Select(match => match == matches ? 1 : 0).ToList();
-                var temp = Clone.CloneObject(ind);
-                var setInd = Clone.Decrypt<List<int>>(temp);
-
-                if (i > 0)
+                int Matches = USpectralMatches[i];
+                LogicalMatchCounterList = new List<bool>();
+                for (int iteration = 0; iteration < SpectralMatches.Count; iteration++)
                 {
-                    for (var k = i - 1; k >= 1; k--)
+                    if (Matches == SpectralMatches[iteration])
                     {
-                        var tempInd = spectralMatches.Select(match => match == uSpectralMatches[k] ? 1 : 0).ToList();
-                        for (var index = 0; index < tempInd.Count; index++)
-                        {
-                            var element1 = tempInd[index];
-                            var element2 = ind[index];
-                            ind[index] = element1 + element2;
-                        }
+                        LogicalMatchCounterList.Add(true);
+                        //LogicalMatchCounterList[iteration] = true;
+                    }
+                    else
+                    {
+                        LogicalMatchCounterList.Add(false);
+                        //LogicalMatchCounterList.Insert(iteration, false);
+                        //LogicalMatchCounterList[iteration] = false;
                     }
                 }
 
-                var eval = 0.0;
-                var counter = 0;
+                var tempSetLogicalMatchCounterList = Clone.CloneObject(LogicalMatchCounterList); // Lists are referenced based so, therefore...
+                SetLogicalMatchCounterList = Clone.Decrypt<List<bool>>(tempSetLogicalMatchCounterList); // Lists are referenced based so, therefore...
 
-                //  Computing E-Value
-                for (var index = 0; index < spectralMatches.Count; index++)
+                List<int> iMinusList = new List<int>();
+                if (i > 0)
                 {
-                    if (ind[index] != 1) continue;
-                    eval = eval + probOfSequence[index];
-                    counter = counter + 1;
+                    List<bool> tempLogicalMatchCounterList = new List<bool>();
+                    for (int iMinus = i-1 ; iMinus >= 0; iMinus--)
+                    {
+                        iMinusList.Add(iMinus);
+                        for (int iteration = 0; iteration < SpectralMatches.Count; iteration++)
+                        {
+                            if (SpectralMatches[iteration] == USpectralMatches[iMinus])
+                            {
+                                tempLogicalMatchCounterList.Add(true);
+                            }
+                            else
+                            {
+                                tempLogicalMatchCounterList.Add(false);
+                            }
+                        }
+
+                        for (int index = 0; index < LogicalMatchCounterList.Count; index++)
+                        {
+                            LogicalMatchCounterList[index] = LogicalMatchCounterList[index] || tempLogicalMatchCounterList[index];
+                        }
+                            
+
+                    }
+                }
+
+                double eval = 0.0;
+                int counter = 0;
+                for (int j = 0; j < SpectralMatches.Count; j++)
+                {
+                    if (LogicalMatchCounterList[j] == true)
+                    {
+                        eval = eval + ProbOfSequence[j];
+                        counter = counter + 1;
+                    }
                 }
                 eval = counter * eval;
 
-                //  Saving E-Value for each Candidate Protein
-                var proteinListIndex = 0;
-                foreach (var protein in candidateProteins)
+                for (int iter = 0; iter < SpectralMatches.Count; iter++)
                 {
-                    if (setInd[proteinListIndex] != 1)
+                    if (SetLogicalMatchCounterList[iter] == true)
                     {
-                        proteinListIndex = proteinListIndex + 1;
-                        continue;
+                        if (CandidateProteinsList[iter].Truncation == "None")
+                        {
+                            CandidateProteinsList[iter].Evalue = eval;
+                        }
+                        else
+                        {
+                            CandidateProteinsList[iter].Evalue = eval * 0.693;
+                        }
                     }
-                    protein.Evalue = protein.Truncation == "" ? eval : eval * 0.693;
-                    proteinListIndex = proteinListIndex + 1;
                 }
             }
         }
     }
 }
-
-
-
-
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using PerceptronLocalService.DTO;
-//using PerceptronLocalService.Utility;
-
-//namespace PerceptronLocalService.Engine
-//{
-//    public class Evalue
-//    {
-//        public static void ComputeEvalue(List<ProteinDto> candidateProteins)
-//        {
-//            var probOfSequence = new List<double>();
-//            var spectralMatches = new List<int>();
-            
-//            foreach (var protein in candidateProteins)
-//            {
-//                probOfSequence.Add(ProbabilityOfSequence.ComputeProb(protein.Sequence));
-//                spectralMatches.Add(protein.MatchCounter);
-//            }
-
-//            var uSpectralMatches = spectralMatches.Distinct().ToList();
-//            uSpectralMatches.Sort((a, b) => Math.Sign(b - a));
-            
-//            for (var i = 0; i < uSpectralMatches.Count; i++)
-//            {
-//                var matches = uSpectralMatches[i];
-//                var ind = spectralMatches.Select(match => match == matches ? 1 : 0).ToList();
-//                var temp = Clone.CloneObject(ind);
-//                var setInd = Clone.Decrypt<List<int>>(temp);
-
-//                if (i > 0)
-//                {
-//                    for (var k = i - 1; k >= 1; k--)
-//                    {
-//                        var tempInd = spectralMatches.Select(match => match == uSpectralMatches[k] ? 1 : 0).ToList();
-//                        for (var index = 0; index < tempInd.Count; index++)
-//                        {
-//                            var element1 = tempInd[index];
-//                            var element2 = ind[index];
-//                            ind[index] = element1 + element2;
-//                        }
-//                    }
-//                }
-
-//                var eval = 0.0;
-//                var counter = 0;
-
-//                //  Computing E-Value
-//                for (var index = 0; index < spectralMatches.Count; index++)
-//                {
-//                    if (ind[index] != 1) continue;
-//                    eval = eval + probOfSequence[index];
-//                    counter = counter + 1;
-//                }
-//                eval = counter * eval;
-
-//                //  Saving E-Value for each Candidate Protein
-//                var proteinListIndex = 0;
-//                foreach (var protein in candidateProteins)
-//                {
-//                    if (setInd[proteinListIndex] != 1)
-//                    {
-//                        proteinListIndex = proteinListIndex + 1;
-//                        continue;
-//                    }
-//                    protein.Evalue = protein.Truncation == "" ? eval : eval*0.693;
-//                    proteinListIndex = proteinListIndex + 1;
-//                }
-//            }
-//        }
-//    }
-//}
