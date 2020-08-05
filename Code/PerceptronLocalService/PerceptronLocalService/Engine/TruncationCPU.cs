@@ -43,15 +43,9 @@ namespace PerceptronLocalService.Engine
                 var preTruncationIndex = prtLength;
                 var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + parameters.MwTolerance) / 168) - 1);
 
-
-                var leftString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassLeft);
-                var leftIons = Clone.Decrypt<List<double>>(leftString);
-
-                var seqString = Clone.CloneObject(protein.Sequence);
-                var sequence = Clone.Decrypt<string>(seqString);
-
-                var rightString = Clone.CloneObject(protein.InsilicoDetails.InsilicoMassRight);
-                var rightIons = Clone.Decrypt<List<double>>(rightString);
+                var leftIons = protein.InsilicoDetails.InsilicoMassLeft;
+                var sequence = protein.Sequence;
+                var rightIons = protein.InsilicoDetails.InsilicoMassRight;
 
 
                 preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, leftIons, prtLength);
@@ -102,11 +96,11 @@ namespace PerceptronLocalService.Engine
                 //Save Copy for Left Truncation
                 //protein = proteinList[i];
                 //newProtein = new ProteinDto(protein);
-                protein = new ProteinDto(protein1);
-                sequence = Clone.Decrypt<string>(seqString);
+                //protein = new ProteinDto(protein1);  //Updated 20200805
+                sequence = protein.Sequence;
                 prtLength = sequence.Length;
                 preTruncationIndex = prtLength;
-                rightIons = Clone.Decrypt<List<double>>(rightString);
+                rightIons = protein.InsilicoDetails.InsilicoMassRight;
 
                 preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, rightIons, prtLength);
 
@@ -126,7 +120,7 @@ namespace PerceptronLocalService.Engine
 
                     newProtein.Mw = rightIons[rightIons.Count - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
                     newProtein.TerminalModification = "None";
-                    leftIons = Clone.Decrypt<List<double>>(leftString);
+                    leftIons = protein.InsilicoDetails.InsilicoMassLeft;
 
                     double insilicoTruncationIdxMass1 = leftIons[truncationIndex - 1];
                     leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
@@ -263,7 +257,7 @@ namespace PerceptronLocalService.Engine
             var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
-            if (parameters.PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
+            if (parameters.PtmAllow == "True") //parameters.PtmAllow  == BlindPtm
             {
                 // HERE THERE WILL BE BLIND PTM...
                 NEEDTOBEDECIDED = 256; factor = 0;
@@ -311,10 +305,10 @@ namespace PerceptronLocalService.Engine
                         if (diff > tol)
                             break;
                     }
-                    int isPtmAllow = 1;
+                    
                     if (rightIndex == -1)////////IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!
                     {
-                        if (isPtmAllow != 1)
+                        if (parameters.PtmAllow == "True")
                         {
                             //proteinListRemaining.Add(protein);    //  IN SPECTRUM!!!!    -- IS IT BUG OR NOT....!!!
                             RemainingProteinsRight.Add(protein);
