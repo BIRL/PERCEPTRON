@@ -314,8 +314,6 @@ namespace PerceptronLocalService.Engine
             return Matches;
         }
 
-
-
         public List<ProteinDto> PTMTruncation_Modification(List<ProteinDto> CandidateProtListInput, List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters, string FunctionType)
         {
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
@@ -328,7 +326,7 @@ namespace PerceptronLocalService.Engine
             //}
             //Sorting the peakDatalist with respect to the Mass in ascending order
             var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
-            var MolW = peakData2DList[peakData2DList.Count - 1].Mass;    // Molar weight that is the last row of the peak list
+            var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;    // Molar weight that is the last row of the peak list
             double tolConv = 0;
             string cleavageType = parameters.InsilicoFragType;
 
@@ -345,13 +343,13 @@ namespace PerceptronLocalService.Engine
             var PeptideToleranceUnit = parameters.PeptideToleranceUnit;
             double tol = 0;
             if (PeptideToleranceUnit == "ppm")
-                tol = (tol / tolConv) * 1000000;
+                tol = (PeptideTolerance / tolConv) * 1000000;
             else if (PeptideToleranceUnit == "%")
-                tol = (tol / tolConv) * 100;
+                tol = (PeptideTolerance / tolConv) * 100;
 
             for (int index = 0; index < CandidateProtListInput.Count; index++)
             {
-                var protein = CandidateProtListInput.ElementAt(index);
+                var protein = new ProteinDto(CandidateProtListInput[index]);
                 var TruncationMass = protein.Mw - MolW;
                 if (cleavageType == "CID" || cleavageType == "IMD" || cleavageType == "BIRD" || cleavageType == "SID" || cleavageType == "HCD")
                 {
@@ -378,7 +376,7 @@ namespace PerceptronLocalService.Engine
                 if (TruncationMass > 0)
                 {
                     var Index = -1;
-                    for (int ind = 1; ind < protein.Sequence.Length; ind++)
+                    for (int ind = 0; ind < protein.Sequence.Length; ind++)
                     {
                         if (FunctionType == "Truncation_Left_Modification")
                         {
@@ -444,6 +442,5 @@ namespace PerceptronLocalService.Engine
             }
             return CandidateProtListOutput;
         }
-
     }
 }
