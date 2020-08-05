@@ -54,6 +54,7 @@ namespace PerceptronLocalService
             _peakListFileReader = new PeakListFileReader();
             _Truncation = new TruncationCPU();
             _TerminalModifications = new TerminalModificationsCPU();
+            
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////// THAT CODE WILL RUN THE GPU FILES(*Gpu.cs/*GPU.cs) FOR PROCESSING THE JOB/////////////////
@@ -321,6 +322,11 @@ namespace PerceptronLocalService
                     //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
                     FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
 
+
+                    //Evalue 
+                    Evalue _Evalue = new Evalue();
+                    _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
+
                     //Logging.DumpTotalScores(candidateProteins);
 
                     pipeLineTimer.Stop();
@@ -528,8 +534,6 @@ namespace PerceptronLocalService
         //ProteoformFinalAlgorithmsWeightage
         private static List<ProteinDto> ExecuteProteoformScoringModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
         {
-            List<ProteinDto> candidateProteins1 = new List<ProteinDto>();
-
             if (parameters.PstSweight != 0)
             {
                 double MaxPstScore = candidateProteins.Max(x => x.PstScore);
@@ -543,40 +547,13 @@ namespace PerceptronLocalService
                 }
             }
 
-            //"Module 8 of 9:  Evaluating Final Scores.";                                  //FARHAN
-
-            //for (int iter = 0; iter < candidateProteins.Count; iter++)
-            //{
-            //    candidateProteins[iter].Score = candidateProteins[iter]
-            //}
-
-
             for (int i = 0; i < candidateProteins.Count; i++)
             {
                 candidateProteins[i].set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);
             }
 
-            //foreach (var protein in candidateProteins)
-            //{
-            //    protein.set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);  //MwSweight is Intact Protein Mass Score Weightage
-            //}
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            //double score = 0;
-            //string lol;
-            //for (var i = 0; i < candidateProteins.Count; ++i)
-            //{
-
-            //    if (candidateProteins[i].Score > score)
-            //    {
-
-            //        score = candidateProteins[i].Score;
-            //        lol = candidateProteins[i].Header;
-            //    }
-            //}
-
-            candidateProteins1 = candidateProteins.OrderByDescending(x => x.Score).ToList();
-            return candidateProteins1;
+            candidateProteins = candidateProteins.OrderByDescending(x => x.Score).ToList();
+            return candidateProteins;
         }
 
         //SPECTRAL COMPARISON ALGORITHM: 
