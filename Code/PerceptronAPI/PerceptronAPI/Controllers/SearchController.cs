@@ -46,7 +46,6 @@ namespace PerceptronAPI.Controllers
 
             var a = HttpContext.Current.Response.Cookies.Count;
 
-            //var creationTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);  // Updated
             DateTime time = DateTime.Now;             // Fetching Current Time
             string format = "yyyy/MM/dd HH:mm:ss";
             var creationTime = time.ToString(format); // Formating creationTime and assigning
@@ -233,7 +232,7 @@ namespace PerceptronAPI.Controllers
             imgStream.Read(blob, 0, (int)imgStream.Length);
 
 
-            var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra); //imgURL
+            var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra, temp2.PeakListData); //imgURL
 
             imgStream.Dispose();
 
