@@ -47,6 +47,7 @@ namespace PerceptronLocalService.Repository
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
             using (var db = new PerceptronDatabaseEntities())
             {
+                int ResultPtmSitesId = 0;
                 var executionTime = GetExecutionTimeModel(res, fileName);
                 db.ExecutionTimes.Add(executionTime);
                 //db.SaveChanges();
@@ -59,21 +60,21 @@ namespace PerceptronLocalService.Repository
                     db.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
-
-                    if (protein.PtmParticulars == null) continue;
-                    foreach (var ptmSite in protein.PtmParticulars)
-                    {                        
-                        var resultPtmSites = GetResultPtmSitesModel(resId, ptmSite);
+                    if (protein.PtmParticulars.Count != 0)
+                    {
+                        ResultPtmSitesId = ResultPtmSitesId + 1;
+                        var resultPtmSites = GetResultPtmSitesModel(ResultPtmSitesId, resId, protein.PtmParticulars);
                         db.ResultPtmSites.Add(resultPtmSites);
                         //db.SaveChanges();
                     }
 
-                    var resultInsilicoMatchLeft = GetResultInsilicoMatchLeftModel(resId, protein.InsilicoDetails.PeaklistMassLeft);
-                    db.ResultInsilicoMatchLefts.Add(resultInsilicoMatchLeft);
-                    //db.SaveChanges();
+                    // NOT Using...
+                    //var resultInsilicoMatchLeft = GetResultInsilicoMatchLeftModel(resId, protein.InsilicoDetails.PeaklistMassLeft);
+                    //db.ResultInsilicoMatchLefts.Add(resultInsilicoMatchLeft);
+                    ////db.SaveChanges();
 
-                    var resultInsilicoMatchRight = GetResultInsilicoMatchLeftModel(resId, protein.InsilicoDetails.PeaklistMassRight);
-                    db.ResultInsilicoMatchLefts.Add(resultInsilicoMatchRight); //#PROBLEM_DETECTED??? Why this-->ResultInsilicoMatchLeftTable WHy not ResultInsilicoMatchRights
+                    //var resultInsilicoMatchRight = GetResultInsilicoMatchLeftModel(resId, protein.InsilicoDetails.PeaklistMassRight);
+                    //db.ResultInsilicoMatchLeft.Add(resultInsilicoMatchRight); //#PROBLEM_DETECTED??? Why this-->ResultInsilicoMatchLeftTable WHy not ResultInsilicoMatchRights
                     //db.SaveChanges();
                 }
 
@@ -188,18 +189,39 @@ namespace PerceptronLocalService.Repository
             return resultInsilicoMatch;
         }
 
-        private ResultPtmSite GetResultPtmSitesModel(Guid resId, PostTranslationModificationsSiteDto ptmSite) //ResultPtmSites
+        private ResultPtmSite GetResultPtmSitesModel(int ResultPtmSitesId, Guid resId, List<PostTranslationModificationsSiteDto> ptmSite) //ResultPtmSites
         {
+            // Data Preparation Below// Its not needed if data stored already in this form...
+            var ListofIndex = new List<string>();
+            var ListofSite = new List<string>();
+            var ListofModName = new List<string>();
+
+            //var ListAminoAcid = new List<string>();
+            //var ListofModWeight = new List<string>();
+            //var ListofScore = new List<string>();
+            
+            for (int i = 0; i < ptmSite.Count; i++)
+            {
+                ListofIndex.Add(ptmSite[i].Index.ToString());
+                ListofModName.Add(ptmSite[i].ModName.ToString());
+                ListofSite.Add(ptmSite[i].Site.ToString());
+
+                //ListAminoAcid.Add(ptmSite[i].AminoAcid.ToString());       Will add if needed
+                //ListofModWeight.Add(ptmSite[i].ModWeight.ToString());
+                //ListofScore.Add(ptmSite[i].Score.ToString());    
+            }
+            // Data Preparation Above//
+
             var ptmSites = new ResultPtmSite
             {
+                ResultPtmSitesId = ResultPtmSitesId,
                 ResultId = resId.ToString(),
-                AminoAcid = ptmSite.AminoAcid.Aggregate("", (current, t) => current + t),
-                Index = ptmSite.Index,
-                ModName = ptmSite.ModName,
-                ModWeight = ptmSite.ModWeight,
-                Score = ptmSite.Score,
-                Site = ptmSite.Site  //#MIGHTGETERROR //Converted it char(char(7000)) to avoiding string (nvarchar(MAX))
-                //Aik sa zyada modification sites of modifications ho skti hain...?
+                Index = string.Join(",", ListofIndex),
+                ModName = string.Join(",", ListofModName),
+                Site = string.Join(",", ListofSite)
+                //AminoAcid = string.Join("", ListAminoAcid),  //Will add if needed
+                //ModWeight = string.Join(",", ListofModWeight),
+                //Score = string.Join(",", ListofScore),
             };
             return ptmSites;
         }
@@ -250,7 +272,7 @@ namespace PerceptronLocalService.Repository
                 LeftType = string.Join(",", protein.LeftType),
 
 
-
+                //Insilico Spectral Ions Detail
                 InsilicoMassLeft = string.Join(",", protein.InsilicoDetails.InsilicoMassLeft),
                 InsilicoMassRight = string.Join(",", protein.InsilicoDetails.InsilicoMassRight),
                 InsilicoMassLeftAo = string.Join(",", protein.InsilicoDetails.InsilicoMassLeftAo),
@@ -262,7 +284,10 @@ namespace PerceptronLocalService.Repository
                 InsilicoMassRightZo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZo),
                 InsilicoMassRightZoo = string.Join(",", protein.InsilicoDetails.InsilicoMassRightZoo),
 
-                FileUniqueId = FileUniqueId
+                FileUniqueId = FileUniqueId,
+                BlindPtmLocalization = (protein.BlindPtmLocalizationInfo.Start +","+ protein.BlindPtmLocalizationInfo.Mass +","+ protein.BlindPtmLocalizationInfo.End).ToString(),
+                Evalue = protein.Evalue,
+                ProteinRank = protein.ProteinRank
 
 
             };
@@ -332,7 +357,7 @@ namespace PerceptronLocalService.Repository
                 PeakListFileName = fileName,
                 PeakListUniqueFileNames = fileUniqueName,
                 FileUniqueIdArray = FileUniqueIdArray,
-                NeutralLoss = searchParameters.NeutralLoss,  //Added 12Sep2019
+                NeutralLoss = searchParameters.NeutralLoss,
                 PSTTolerance = searchParameters.PSTTolerance,
 
                 PeptideTolerance = searchParameters.PeptideTolerance,
@@ -343,7 +368,7 @@ namespace PerceptronLocalService.Repository
 
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
-                EmailId = searchParameters.EmailId
+                EmailId = searchParameters.EmailId,
 
             };
             return searchParametersDto;
