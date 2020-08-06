@@ -1,7 +1,8 @@
 <div style="width:90%; min-width: 600px; margin:0 auto;">
 
   <mat-card>
-    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Detailed Result View</h4>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Detailed
+      Result View</h4>
   </mat-card>
   <br>
 
@@ -35,7 +36,7 @@
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;"  id="ProteinDB"></label>
+          <label style="font-size:15px;" id="ProteinDB"></label>
         </div>
       </mat-grid-tile>
 
@@ -62,7 +63,7 @@
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
-          <label  style="font-size:15px;" id="protTol"></label>
+          <label style="font-size:15px;" id="protTol"></label>
         </div>
       </mat-grid-tile>
 
@@ -133,8 +134,8 @@
       </mat-grid-tile>
     </mat-grid-list>
 
-     <!-- Row 4 -->
-     <mat-grid-list cols="8" rowHeight="60px">
+    <!-- Row 4 -->
+    <mat-grid-list cols="8" rowHeight="60px">
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
           <label style="font-weight:bold;">PST Length: </label>
@@ -225,7 +226,7 @@
         <div style="padding-left:5px; width:100%">
           <label style="font-weight:bold;">Protein Rank: </label>
         </div>
-      </mat-grid-tile> 
+      </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
           <label style="font-size:15px;" id="ProteinRank"></label>
@@ -241,9 +242,10 @@
         </div>
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
-        <div  style="padding-left:5px; width:100%; ">
+        <div style="padding-left:5px; width:100%; ">
 
-<a href={{constant}}><label style="color:rgba(65, 131, 253, 0.959); font-size:15px; cursor:pointer" id="ProteinID"></label></a>
+          <a href={{constant}}><label style="color:rgba(65, 131, 253, 0.959); font-size:15px; cursor:pointer"
+              id="ProteinID"></label></a>
         </div>
       </mat-grid-tile>
 
@@ -339,18 +341,20 @@
           <label style="font-size:15px;" id="Mods"></label>
         </div>
       </mat-grid-tile>
-    
+
     </mat-grid-list>
   </mat-card>
-  
-  <br/>
+
+  <br />
   <div>
-      <label style="color:red;">* Click on the Protein ID to access its information. </label>
-      <label style="color:blue;">Note that proteins have canonical sequences (<a href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
-    </div>
-    <br>
+    <label style="color:red;">* Click on the Protein ID to access its information. </label>
+    <label style="color:blue;">Note that proteins have canonical sequences (<a
+        href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
+  </div>
+  <br>
   <mat-card>
-    <h5 style="padding:0px; font-weight:bold; font-family: roboto, arial, sans-serif; display:inline-block;">Protein Search Time </h5>&nbsp;
+    <h5 style="padding:0px; font-weight:bold; font-family: roboto, arial, sans-serif; display:inline-block;">Protein
+      Search Time </h5>&nbsp;
     <p style="display:inline-block;">(in Seconds)</p>
     <!-- Row 1 -->
     <mat-grid-list cols="8" rowHeight="60px">
@@ -375,7 +379,7 @@
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
-        N/A
+          N/A
         </div>
       </mat-grid-tile>
 
@@ -433,19 +437,15 @@
       </mat-grid-tile>
     </mat-grid-list>
   </mat-card>
-  <br/>
+  <br />
 
   <mat-card>
-     <label style="font-size:15px;" id="sequence"></label>
+    <label style="font-size:15px;" id="sequence"></label>
   </mat-card>
-  <br/>
+  <br />
 
-  <!-- <div class="example-button-row">
-    <button class=""></button>
-      <a  routerLink = "/results-visualization"> Results Visualization </a>
-  </div> -->
+  <button mat-raised-button matTooltip="Click to Visualize Your Results " class="button-sumbit"
+    matTooltipPosition="after" (click)="getResultsView()" style="background-color: #201a93; color:aliceblue"
+    class="ui button">Results Visualization</button>
 
-      <button mat-raised-button matTooltip="Click to Visualize Your Results " class="button-sumbit" matTooltipPosition="after" (click)="getResultsView()" style="background-color: #201a93; color:aliceblue"
-        class="ui button">Results Visualization</button>
-  
 </div>
