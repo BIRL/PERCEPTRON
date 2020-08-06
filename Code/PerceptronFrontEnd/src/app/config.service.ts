@@ -54,13 +54,7 @@ export class ConfigService {
     postJSON(form, file) {
 
         let formData: FormData = new FormData();
-
-        // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
-        const stringofTerminalModification = form.TerminalModification.toString();
-        //Replacing Data in form
-        form.TerminalModification = stringofTerminalModification;
-        ///////////////////////////////////////////////////////////////////////////////////
-
+        
         var json = JSON.stringify(form);
                 
         formData.append('Jsonfile', json);
@@ -171,7 +165,7 @@ export class ConfigService {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         if (userId.emailVerified){
-            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId, { headers: headers })
+            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId.email, { headers: headers })
             .map(res => {
                 return res.json()
             });
