@@ -16,22 +16,16 @@ export class DetailedResultsComponent implements OnInit {
   querryId: any;
   resultId: any;
   rank: any;
-    constant: any;
+  constant: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
-
 
   constructor(private route: ActivatedRoute, private router: Router, private _httpService: ConfigService) {
     // Create 100 users
     const users: UserData[] = [];
     this.dataSource = new MatTableDataSource(users);
   }
-
-  // goToPage(pageName:string):void{
-  //   this.router.navigate([`${pageName}`])
-  // };
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -54,10 +48,9 @@ export class DetailedResultsComponent implements OnInit {
     const users: UserData[] = [];
     for (let i = 1; i <= data.length; i++) { users.push(createNewUser(i, data[i - 1])); }
     this.dataSource = new MatTableDataSource(users);
-    
-    
-    this.constant="http://www.uniprot.org/uniprot/"+data.Results.Results.Header;
-    
+
+    this.constant = "http://www.uniprot.org/uniprot/" + data.Results.Results.Header;
+
     let ProteinRank = <HTMLLabelElement>document.getElementById("ProteinRank");
     let ProteinID = <HTMLLabelElement>document.getElementById("ProteinID");
     let ProteinName = <HTMLLabelElement>document.getElementById("ProteinName");
@@ -83,7 +76,7 @@ export class DetailedResultsComponent implements OnInit {
 
     let title = <HTMLLabelElement>document.getElementById("SearchTitle");
     title.innerHTML = data.Paramters.SearchParameters.Title;
-   
+
     let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
     pdb.innerHTML = data.Paramters.SearchParameters.ProtDb;
 
@@ -91,23 +84,23 @@ export class DetailedResultsComponent implements OnInit {
     let protTol = <HTMLLabelElement>document.getElementById("protTol");
     protTol.innerHTML = data.Paramters.SearchParameters.MwTolerance;
 
-    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");            
+    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");
     autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
 
-    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");            
-    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;  
+    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");
+    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;
 
-    let fragt = <HTMLLabelElement>document.getElementById("FragType");            
-    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType; 
+    let fragt = <HTMLLabelElement>document.getElementById("FragType");
+    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType;
 
-    let SpecI = <HTMLLabelElement>document.getElementById("SI");            
-    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons; 
+    let SpecI = <HTMLLabelElement>document.getElementById("SI");
+    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons;
 
-    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");            
+    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");
     DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
 
-    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");            
-    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength ;
+    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");
+    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength;
 
     let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
     let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
@@ -129,7 +122,7 @@ export class DetailedResultsComponent implements OnInit {
     Truncation.innerHTML = "No";
     Mods.innerHTML = "3";
     let constant = ProteinID.innerHTML;
-  let met = constant;
+    let met = constant;
 
     totalTime.innerHTML = data.ExecutionTime.TotalTime;
     MWModule = data.ExecutionTime.MwFilterTime;
@@ -142,37 +135,32 @@ export class DetailedResultsComponent implements OnInit {
     let sequence = <HTMLLabelElement>document.getElementById("sequence");
     let sequenceText = data.Results.Results.Sequence;
     let text = sequenceText[0];
-    let a=1;
-    
+    let a = 1;
+
     for (let i = 1; i < sequenceText.length; i++) {
-      
-      
+
+
       if (i % 10 == 0) {
         ++a;
-        text = text + "\xa0\xa0\xa0\xa0\xa0" + a+". " + sequenceText[i];
+        text = text + "\xa0\xa0\xa0\xa0\xa0" + a + ". " + sequenceText[i];
       }
       else {
-        if (i==1){
-          text ="1. "+ text + "" + sequenceText[i];
-        }else
-        {
-        text = text + "" + sequenceText[i];
-      }
+        if (i == 1) {
+          text = "1. " + text + "" + sequenceText[i];
+        } else {
+          text = text + "" + sequenceText[i];
+        }
       }
     }
     sequence.innerHTML = text;
-    
+
   }
 
   getResultsView() {
-    this._httpService.CreateDetailedProteinViewHit(this.resultId).subscribe(data => this.what(data));
     let x = this.router;
-    x.navigate(["resultsvisualization", this.resultId, this.rank]);   //, ResultId
+    x.navigate(["resultsvisualization", this.resultId, this.rank]);
   }
 }
- 
-
-
 
 /** Builds and returns a new User. */
 function createNewUser(id: number, data: any): UserData {
