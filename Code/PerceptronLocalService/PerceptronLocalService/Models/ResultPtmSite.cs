@@ -14,12 +14,10 @@ namespace PerceptronLocalService.Models
     
     public partial class ResultPtmSite
     {
+        public int ResultPtmSitesId { get; set; }
         public string ResultId { get; set; }
-        public int Index { get; set; }
-        public double Score { get; set; }
-        public double ModWeight { get; set; }
+        public string Index { get; set; }
         public string ModName { get; set; }
-        public string AminoAcid { get; set; }
-        public char Site { get; set; }
+        public string Site { get; set; }
     }
 }
