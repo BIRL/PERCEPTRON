@@ -9,7 +9,7 @@
   <mat-card>
     <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
     <div>
-        <img [src]="ImageFilePath">
+      <img [src]="ImageFilePath">
     </div>
   </mat-card>
 
@@ -17,7 +17,9 @@
 
   <mat-card>
     <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
-    <div>
+    <div *ngIf="chart">
+      <canvas id="canvas">{{ chart }}</canvas>
+
 
     </div>
   </mat-card>
@@ -77,6 +79,53 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
   </mat-card>
+
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+  <mat-card>
+      <h6 style="text-align:center; font-weight:bold">Legends</h6>
+      <p style="color:red;"><b><i>P</i></b>     Phosphorylation</p>
+      <p style="color:red;"><b><i>DiM</i></b>     DiMethylation</p>
+      
+      <p style="color:red;"><b><i>M</i></b>     Methylation</p>
+      <p style="color:red;"><b><i>A</i></b>     Acetylation</p>
+      <p style="color:red;"><b><i>H</i></b>      Hydroxylation</p>
+      <p style="color:red;"><b><i>DiH</i></b>     DiHydroxylation</p>
+      <p style="color:red;"><b><i>OLG</i></b>     O-Linked-Glycosylation</p>
+      <p style="color:red;"><b><i>SO</i></b>      Sulfoxide</p>
+
+      <p style="color:red;"><b><i>G</i></b>     Glutathionylation</p>
+      <p style="color:red;"><b><i>Mk</i></b>      Methylation_K</p>
+      <p style="color:red;"><b><i>SN</i></b>      S-Nitrolysation</p>
+      <p style="color:red;"><b><i>Pal</i></b>     Palmitoylation</p>
+      <p style="color:red;"><b><i>F</i></b>     Formylation</p>
+      <p style="color:red;"><b><i>N</i></b>     Nitration</p>
+     
+      <p style="color:red;"><b><i>NLG</i></b>     N-Linked-Glycosylation</p>
+      <p style="color:red;"><b><i>SONE</i></b>      Sulfone</p>
+      <p style="color:red;"><b><i>Py</i></b>      Pyruvate</p>
+
+      <p style="color:red;"><b><i>PAA</i></b>     Pyrrolidone-Aarboxylic-Acid</p>
+      <p style="color:red;"><b><i>GCA</i> </b>      Gamma-Carboxyglutamic-Acid</p>
+
+      
+      <p style="color:red;"><b>*</b>      Blind PTM Mass</p>
+      <p style="color:blue;"><b>*</b>     Peptide Sequence Tag</p>
+      <p style="color:rgb(220, 105, 224);"><b>*</b>     Amino Acids - Possible Blind PTM Sites</p>
+
+      <p style="color:red;"><b><s>X</s></b>     Truncated Amino Acid</p>
+      
+      <p style="color:black;"><b>]</b>      N-terminal Fragment Match</p>
+      <p style="color:black;"><b>[</b>      C-terminal Fragment Match</p>
+      <p style="color:black;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>      An Amino Acid with its index</p>
+
+      <p style="color:rgba(255, 0, 0, 0.787);"><b>Experimental Mass</b></p>
+      <p style="color:green;"><b>Theoretical Mass</b></p>
+
+      <p style="color:black;"><b>Mass Difference between Experimental and Theoretical Peaks</b></p>
+
+
+    </mat-card>
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
 </div>
 
 <router-outlet></router-outlet>
