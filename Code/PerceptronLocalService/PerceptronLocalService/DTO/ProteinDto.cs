@@ -36,6 +36,7 @@ namespace PerceptronLocalService.DTO
 
 
         public double Evalue;
+        public int ProteinRank;
         public string PstTagsWithComma;
 
         public ProteinDto()
