@@ -521,17 +521,17 @@
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-checkbox matTooltip="Check the option to search for unknown modifications" matTooltipPosition="before" style="padding-left:15px; padding-bottom:20px; width:100%" color="primary"
-            id="PtmAllow" [(ngModel)]="PtmAllow" name="PtmAllow" (click)="disableMods();" ngModel>Blind-PTM Search</mat-checkbox>
-        </mat-grid-tile>
+            id="PtmAllow" [(ngModel)]="PtmAllow" name="PtmAllow"  ngModel>Blind-PTM Search</mat-checkbox>
+        </mat-grid-tile><!--(click)="disableMods();"    ForTheTimeBeing 20200806-->
 
         <mat-grid-tile></mat-grid-tile>
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding:0px; width:100%; padding-left:15px">
             <input matInput matTooltip="Set the tolerance for post-translational modification (PTM) mass shifts" (keypress)="keyPress($event)" [(ngModel)]="PtmTolerance" matTooltipPosition="before"
-              placeholder="PTM Tolerance" name="Ptm_Tolerance" #Ptm_Tolerance="ngModel" required ngModel>
-              <mat-error style="font-style: italic;" *ngIf="Ptm_Tolerance?.invalid && (Ptm_Tolerance.dirty || Ptm_Tolerance.touched)">
-                <div *ngIf="Ptm_Tolerance.errors.required">
+              placeholder="PTM Tolerance" name="PtmTolerance" #Ptm_Tolerance="ngModel" required ngModel>
+              <mat-error style="font-style: italic;" *ngIf="PtmTolerance?.invalid && (PtmTolerance.dirty || PtmTolerance.touched)">
+                <div *ngIf="PtmTolerance.errors.required">
                   Tolerance selection is required.
                 </div>
               </mat-error>
@@ -554,7 +554,7 @@
         <mat-grid-tile colspan="2" rowspan="2">
           <div style="padding:0px; width:100%; Height:100%">
             <label matTooltipPosition="before" matTooltip="Choose the possible post-translational modification (PTM) for inclusion in search process" style="padding:0px; padding-left:15px; Height:100%; font-weight:500;"> List of Modifications:
-              <select name="List_of_Modifications" id="List_of_Modifications" [disabled]="PtmAllow" size="8" style="padding:0px; Height:85%;"
+              <select name="List_of_Modifications" id="List_of_Modifications"  size="8" style="padding:0px; Height:85%;"
                 multiple ngModel>
                 <option value="1">Acetylation_A</option>
                 <option value="2">Acetylation_K</option>
@@ -620,12 +620,12 @@
           <div>
             <!-- <br> -->
             <!-- <br> -->
-            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)="fix_add_mod();">
+            <button mat-icon-button type="button"  style="float:right;" (click)="fix_add_mod();">
               <mat-icon>chevron_right</mat-icon>
             </button>
             <!-- <br> -->
 
-            <button mat-icon-button type="button" [disabled]="PtmAllow" style="float:right;" (click)="fix_remove_mod();">
+            <button mat-icon-button type="button"  style="float:right;" (click)="fix_remove_mod();">
               <mat-icon>chevron_left</mat-icon>
             </button>
           </div>
@@ -636,7 +636,7 @@
             <!-- <br> -->
             <label matTooltipPosition="before" matTooltip="Specify the selected post-translational modifications (PTMs) as a fixed PTM" style="padding-left:0px; Height:100%; font-weight:500;">Fixed Modifications: &nbsp; &nbsp;
               <!-- <br> -->
-              <select name="Fixed_Modification" id="Fixed_Modification" [disabled]="PtmAllow" size="4" style="padding:0px; width:100%; height:70%;"
+              <select name="Fixed_Modification" id="Fixed_Modification"  size="4" style="padding:0px; width:100%; height:70%;"
                 multiple ngModel>
               </select>
             </label>
