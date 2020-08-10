@@ -10,7 +10,9 @@ import { ConfigService } from '../config.service';
   providers: [ConfigService]
 })
 export class SummaryResultsComponent implements OnInit {
-  displayedColumns = ['rank', 'name', 'id', 'molW', 'term', 'mods', 'score', 'resId'];
+  //displayedColumns = ['rank', 'name', 'id', 'molW', 'term', 'mods', 'score', 'resId'];
+  displayedColumns = ['rank', 'id', 'molW', 'term', 'mods', 'score', 'resId'];
+  
   dataSource: MatTableDataSource<UserData>;
   querryId: any;
   fileID: any;
