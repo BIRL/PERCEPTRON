@@ -363,10 +363,92 @@ namespace PerceptronAPI.Repository
             }
             return detiledResults;
         }
+        //DownloadAllResults
+        public ScanResultsDownloadDataDto ScanResultsDownloadData(string qid)
+        {
+            var tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto();
+            var FileUniqueIdsList = new List<string>();
+            var FileNamesList = new List<string>();
+            var ListOfPeakData = new List<PeakListData>();
+            var ListOfSearchResults = new List<SearchResult>();
+            var ResultIds = new List<string>();
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+
+                        "SELECT FileUniqueId, FileName \nFROM SearchFiles\nWHERE QueryId = '" + qid + "'",
+
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    FileUniqueIdsList.Add(dataReader["FileUniqueId"].ToString());
+                    FileNamesList.Add(dataReader["FileName"].ToString());
+                }
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
+                
+                ListOfSearchResults.AddRange(db.SearchResults.Where(x => x.QueryId == qid));
+                var NoOfResultIds = ListOfSearchResults.Select(x => x.ResultId).Distinct().ToList();
+
+                var PtmSites = new List<ResultPtmSite>();
+                for (int i = 0; i < ListOfSearchResults.Count; i++)
+                {
+                    var ResultId = ListOfSearchResults[i].ResultId;
+                    PtmSites.AddRange(db.ResultPtmSites.Where(x => x.ResultId == ResultId));
+                }
+                var PtmVarMod = new List<PtmVariableModification>();
+                var PtmFixedMod = new List<PtmFixedModification>();
+                
+                //try
+                //{
+                //    PtmVarMod.AddRange(db.PtmVariableModifications.Where(x => x.QueryId == qid));
+                //}
+                //catch
+                //{
+                //    PtmVarMod = new List<PtmVariableModification>();
+                //}
+
+                //try
+                //{
+                //    PtmFixedMod.AddRange(db.PtmFixedModifications.Where(x => x.QueryId == qid));
+                //}
+                //catch
+                //{
+                //    PtmFixedMod = new List<PtmFixedModification>();
+                //}
+
+                //if (PtmVarMod.Count != 0 || PtmFixedMod.Count != 0)  //searchParameters[0].PtmAllow != "False" || 
+                //{
+                    //ListOfSearchResults.Select(x => x.ResultId).Distinct();(x 
+                    
+                
+                tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto(FileUniqueIdsList, FileNamesList, ListOfSearchResults, searchParameters.First(), PtmSites);
+            }
+            return tempScanResultsDownloadDataDto;
+        }
+
+        
+        
 
         public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid)
         {
-            string FileId = "";
+            string FileId = ""; var GetPeakListData = new PeakListData();
             var DetailedProteinHitViewResults = new DetailedProteinHitView();
             using (new PerceptronDatabaseEntities())
             {
@@ -376,6 +458,7 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
+                          //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
                         "SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
                         
                     CommandType = CommandType.Text,
@@ -388,6 +471,7 @@ namespace PerceptronAPI.Repository
                 {
                     qid = dataReader["QueryId"].ToString();
                     FileId = dataReader["FileUniqueId"].ToString();
+                    //GetPeakListData = dataReader["PeakListData"];
                     
                 }
                     
@@ -577,3 +661,37 @@ namespace PerceptronAPI.Repository
         //}
     }
 }
+
+//public List<string> ScanResultsAgainstFileUniqueId(string qid, string FileId)
+//{
+//    var FileUniqueIdsList = new List<string>();
+//    var R = new List<string>();
+//    using (new PerceptronDatabaseEntities())
+//    {
+//        var sqlConnection1 =
+//            new SqlConnection(
+//                "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+//        var cmd = new SqlCommand
+//        {
+//            CommandText =
+
+//                "SELECT ResultId \nFROM SearchResults \nWHERE QueryId = '" + qid + "' And FileUniqueId = '" + FileId + "'",
+
+//            CommandType = CommandType.Text,
+//            Connection = sqlConnection1
+//        };
+//        sqlConnection1.Open();
+
+//        var dataReader = cmd.ExecuteReader();
+//        while (dataReader.Read())
+//        {
+//            FileUniqueIdsList.Add(dataReader["FileUniqueId"].ToString());
+//            R.Add(dataReader["ResultId"].ToString());
+//        }
+
+//        dataReader.Close();
+//        cmd.Dispose();
+//        sqlConnection1.Close();
+//    }
+//    return FileUniqueIdsList;
+//}
