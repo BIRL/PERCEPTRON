@@ -78,7 +78,7 @@ export class DetailedResultsComponent implements OnInit {
     title.innerHTML = data.Paramters.SearchParameters.Title;
 
     let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
-    pdb.innerHTML = data.Paramters.SearchParameters.ProtDb;
+    pdb.innerHTML = data.Paramters.SearchParameters.ProteinDatabase;
 
 
     let protTol = <HTMLLabelElement>document.getElementById("protTol");
@@ -88,7 +88,7 @@ export class DetailedResultsComponent implements OnInit {
     autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
 
     let ppeptol = <HTMLLabelElement>document.getElementById("peptol");
-    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;
+    ppeptol.innerHTML = data.Paramters.SearchParameters.PeptideTolerance;
 
     let fragt = <HTMLLabelElement>document.getElementById("FragType");
     fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType;
@@ -106,9 +106,9 @@ export class DetailedResultsComponent implements OnInit {
     let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
     let SpecCompWeight = <HTMLLabelElement>document.getElementById("Slider3");
 
-    IPMSWeight.innerHTML = data.Results.Results.MwScore;
-    PSTWeight.innerHTML = data.Results.Results.PstScore;
-    SpecCompWeight.innerHTML = data.Results.Results.InsilicoScore;
+    IPMSWeight.innerHTML = data.Paramters.SearchParameters.MwSweight;//.toFixed(6);
+    PSTWeight.innerHTML = data.Paramters.SearchParameters.PstSweight;//.toFixed(4);
+    SpecCompWeight.innerHTML = data.Paramters.SearchParameters.InsilicoSweight;//.toFixed(4);
 
 
     ProteinRank.innerHTML = this.rank;
