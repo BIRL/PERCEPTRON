@@ -53,6 +53,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { UpdatePasswordComponent } from './update-password/update-password.component';
 import { UpdateUsernameComponent } from './update-username/update-username.component';
 import { ResultsVisualizationComponent } from './results-visualization/results-visualization.component';
+import { ResultsDownloadComponent } from './results-download/results-download.component';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { ResultsVisualizationComponent } from './results-visualization/results-v
     SettingsComponent,
     UpdatePasswordComponent,
     UpdateUsernameComponent,
-    ResultsVisualizationComponent
+    ResultsVisualizationComponent,
+    ResultsDownloadComponent
   ],
   imports: [
     MatIconModule,
