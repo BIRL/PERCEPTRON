@@ -13,13 +13,15 @@ namespace PerceptronAPI.Models
         public byte[] blob;
         //public string NameOfFileWithPath;
         public AssembleInsilicoSpectra InsilicoSpectra;
+        public PeakListData PeakListData;  // Just Used in Results Writing in TXT file
 
-        public ResultsVisualizeData(string cQueryId, byte[] cblob, AssembleInsilicoSpectra cInsilicoSpectra)
+        public ResultsVisualizeData(string cQueryId, byte[] cblob, AssembleInsilicoSpectra cInsilicoSpectra, PeakListData cPeakListData)
         {
             QueryId = cQueryId;
             blob = cblob;
             //NameOfFileWithPath = cNameOfFileWithPath;  //20200715  -- NameofFile
             InsilicoSpectra = cInsilicoSpectra;
+            PeakListData = cPeakListData;
         }
     }
 }
