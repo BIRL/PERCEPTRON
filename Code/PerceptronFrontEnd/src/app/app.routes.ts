@@ -25,6 +25,7 @@ import { ResultsVisualizationComponent } from './results-visualization/results-v
 import { ScanViewComponent } from './scan-view/scan-view.component';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
 import { ResultsDownloadComponent } from './results-download/results-download.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 // import { PatterngeneratorComponent } from './patterngenerator/patterngenerator.component';
 // import { HomeComponent } from './home/home.component';
 
@@ -66,6 +67,7 @@ export const router: Routes = [
     { path: 'summaryresults/:querryId/:fileID', component: SummaryResultsComponent},
     { path: 'detailedresults/:resultId/:rank', component: DetailedResultsComponent},
     { path: 'resultsdownload/:querryId', component: ResultsDownloadComponent},
+    { path: 'adminpanel' , component: AdminPanelComponent},
     //    children: [{path: 'results-visualization', component: ResultsVisualizationComponent}]},
 
     // { path: 'patterngenerator', component: PatterngeneratorComponent, canActivate: [AuthGuard]},
