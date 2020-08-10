@@ -126,8 +126,9 @@ namespace PerceptronLocalService.DTO
         }
 
 
-
-        public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
+        // Should be Discarded One Code Clean   // Should be Discarded One Code Clean
+        // Alternate of "set_score"  is in Perceptron.cs with name of  "AggregatedScoreByScoringComponents"
+        public void set_score(double mwSweight, double pstSweight, double insilicoSweight)   // Should be Discarded One Code Clean
         {
             Score = ((mwSweight * MwScore) + (pstSweight * PstScore) + (insilicoSweight * InsilicoScore)) / (mwSweight + pstSweight + insilicoSweight); //3.0;
 
