@@ -98,52 +98,6 @@ namespace PerceptronLocalService
             //ignored
         }
 
-
-        //public void Send_Results_Link(SearchParametersDto p)
-        //{
-        //    var creationtime = _dataLayer.GetCreationTime(p.Queryid);
-        //    var emailaddress = p.UserId;
-
-        //    using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
-        //    {
-        //        mm.Subject = "Perceptron: Protein Search Results";
-        //        var body = "Dear User,";
-        //        body += "<br /><br /> The results for protein search query submitted at " + creationtime + " with job title \""
-        //                + "<span style='font-weight:bold;font-size:15px;'>" + p.Title + "</span>" + "\" have been computed. To see the results please click on following link(s).<br />";
-        //        body += "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\'http://perceptron.lums.edu.pk/index.html#/scans/" + p.Queryid + " \'>Click here to see your Results of Protein Identification.</a>";
-        //        body += "<br /><br />Thank You for using Perceptron.";
-        //        body += "<br />Best Regards,";
-        //        body += "<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-family:calibri;font-weight:bold;font-size:12.5px;color:rgb(90, 60, 140);'>Team Proteomics,</span>";
-        //        body += "<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-family:calibri;font-size:12.5px;color:rgb(90, 60, 140);'>Biomedical Informatics Research Laboratory (BIRL),<br/>" +
-        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department of Biology, SBA School of Science and Engineering," +
-        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lahore University of Management Sciences (LUMS), Lahore, Pakistan>" +
-        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voice:<a href=\'http://biolabs.lums.edu.pk/BIRL/\'> +92 321 4255171</a> | Fax: +92 42 3560 8317" +
-        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email: <a href=\'http://perceptron@lums.edu.pk/\'>perceptron@lums.edu.pk</a>, <a href=\'http://chaudhary.safee.ullah@gmail.com/\'>chaudhary.safee.ullah@gmail.com</a>" +
-        //            "</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web:<a href=\'http://biolabs.lums.edu.pk/BIRL/\'> biolabs.lums.edu.pk/BIRL</a></span>";
-        //        mm.Body = body;
-        //        mm.IsBodyHtml = true;
-
-        //        var networkCred = new NetworkCredential("perceptron@lums.edu.pk", "LUMSProT@comBio");
-        //        var smtp = new SmtpClient
-        //        {
-        //            Host = "smtp.office365.com",
-        //            EnableSsl = true,
-        //            UseDefaultCredentials = true,
-        //            Credentials = networkCred,
-        //            Port = 587
-        //        };
-        //        try
-        //        {
-        //            smtp.Send(mm);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Debug.WriteLine(e.Message);
-        //        }
-        //    }
-        //}
-
-        //"<a href=\'" + BaseUrl + "/index.html#/getting >Getting Started</a>"
         public static void Sending_Email(SearchParametersDto p, int EmailMsg)
         {
             var emailaddress = p.EmailId;
@@ -322,6 +276,8 @@ namespace PerceptronLocalService
                     //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
                     FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
 
+                    // Ranking the Candidate Proteins according to their scores
+                    RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring); 
 
                     //Evalue 
                     Evalue _Evalue = new Evalue();
@@ -333,7 +289,8 @@ namespace PerceptronLocalService
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
 
                     StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
-                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+                    peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
+                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);  // Uncomment Me
                 }
                 catch (Exception r)
                 {
@@ -354,12 +311,12 @@ namespace PerceptronLocalService
             if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
             {
                 EmailMsg = 1;
-                Sending_Email(parameters, EmailMsg);
+                //Sending_Email(parameters, EmailMsg);
             }
             else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
             {
                 EmailMsg = -1;
-                Sending_Email(parameters, EmailMsg);
+                //Sending_Email(parameters, EmailMsg);
             }
 
             _dataLayer.Set_Progress(parameters.Queryid, 100);
@@ -510,9 +467,9 @@ namespace PerceptronLocalService
                 _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
                 //Irrespective to WithoutPTM_ParseDatabase.m  there is no need to assign PSTScore = 0 if DenovoAllow is false because we already initialize PSTScore = 0.0
             }
-            
-            var tempList = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
-            UpdatedCandidatedProteinList.AddRange(tempList);
+
+            candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
+            UpdatedCandidatedProteinList.AddRange(candidateProteins);
             
             /* WithoutPTM_ParseDatabase.m */
 
@@ -547,15 +504,32 @@ namespace PerceptronLocalService
                 }
             }
 
-            for (int i = 0; i < candidateProteins.Count; i++)
+            for (int iter = 0; iter < candidateProteins.Count; iter++)
             {
-                candidateProteins[i].set_score(parameters.MwSweight, parameters.PstSweight, parameters.InsilicoSweight);
+                //candidateProteins[iter].Score = candidateProteins[iter];
+                AggregatedScoreByScoringComponents(parameters, candidateProteins[iter]);
             }
 
-            candidateProteins = candidateProteins.OrderByDescending(x => x.Score).ToList();
             return candidateProteins;
         }
 
+        private static void AggregatedScoreByScoringComponents(SearchParametersDto parameters, ProteinDto Protein)
+        {
+            Protein.Score = ((parameters.MwSweight * Protein.MwScore) + (parameters.PstSweight * Protein.PstScore) +
+                (parameters.InsilicoSweight * Protein.InsilicoScore)) / (parameters.MwSweight + parameters.PstSweight + parameters.InsilicoSweight); //3.0;
+
+            //Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
+        }
+
+
+        private void RankCandidateProteinsList(List<ProteinDto> candidateProteins)
+        {
+            candidateProteins = candidateProteins.OrderByDescending(x => x.Score).ToList(); // CandidateProteinList in descending order: According to their Score
+            for (int iter = 0; iter < candidateProteins.Count; iter++) // Ranking the Candidate Proteins according to their scores
+            {
+                candidateProteins[iter].ProteinRank = iter+1;
+            }
+        }
         //SPECTRAL COMPARISON ALGORITHM: 
         private List<ProteinDto> ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
