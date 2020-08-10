@@ -128,6 +128,17 @@ check(){
     };
   }
 
+  adminpanel(){
+    var user = firebase.auth().currentUser;
+    if (user.email == "farhan.khalid@lums.edu.pk") {
+      this.router.navigate(['/adminpanel']);
+  } else {
+  alert("Dear User! You have restricted access.")
+  // this.router.navigate(['/login']);
+   
+  };
+}
+
   contact() {
     var user = firebase.auth().currentUser;
     if (user) {
