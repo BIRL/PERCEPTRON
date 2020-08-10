@@ -69,9 +69,9 @@ namespace PerceptronAPI.Repository
             {
                 return new ResultsDto
                 {
-                    InsilicioLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList(),
-                    InsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList(),
-                    PtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList(),
+                    //InsilicioLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList(),
+                    //InsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList(),
+                    //PtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList(),
                     Results = db.SearchResults.First(x => x.ResultId == rid)
                 };
             }
@@ -120,11 +120,7 @@ namespace PerceptronAPI.Repository
                 };
                 sqlConnection1.Open();
                 var t = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
-                //var ListFileUniqueId = new List<string>();
-                //for (int index = 0; index < t.Count; index++)
-                //{
-                //    ListFileUniqueId.Add(t[index].FileUniqueId);
-                //}
+                //var parameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList().First();
                 int j = 0;
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -182,13 +178,14 @@ namespace PerceptronAPI.Repository
                     var temp = new SummaryResults
                     {
                         ProteinId = dataReader["Header"].ToString(),
-                        Mods = 2,
+                        Mods = 2, /// Mods is a Number of Ptm Sites and "2" is not actual value so, actual one 
+                                  /// cannot be updated here so, here "2" will be considered as a placeholder only
                         MolW = (double)dataReader["Mw"],
                         ProteinName = "Protein " + j,
-                        ProteinRank = 1,
+                        ProteinRank = (int)dataReader["ProteinRank"], //1,
                         ResultId = dataReader["ResultId"].ToString(),
                         Score = (double)dataReader["Score"],
-                        TerminalMods = "no"
+                        TerminalMods = dataReader["TerminalModification"].ToString()
                     };
                     ++j;
                     summaryResults.Add(temp);
@@ -196,6 +193,17 @@ namespace PerceptronAPI.Repository
                 dataReader.Close();
                 cmd.Dispose();
                 sqlConnection1.Close();
+            }
+            using (var dbInfo = new PerceptronDatabaseEntities())
+            {
+                for (int i = 0; i < summaryResults.Count; i++)
+                {
+                    string ResultId = summaryResults[i].ResultId;
+                    int NoOfPtmSites = 0;
+                    if (dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).Count() != 0)
+                        NoOfPtmSites = dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm Sites
+                    summaryResults[i].Mods = NoOfPtmSites;  // Updating the actual value of "Mods" here...
+                }
             }
             return summaryResults;
         }
@@ -328,15 +336,19 @@ namespace PerceptronAPI.Repository
             {
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
-                var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
-                var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
+                //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
+                //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
+                
                 //var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
                 //var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
+
                 var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
                 var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
 
-
+                int NoOfPtmSites = 0;
+                if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
+                    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
 
 
                 if (searchParameters.Count != 0)
@@ -348,11 +360,11 @@ namespace PerceptronAPI.Repository
                 if (searchQuery.Count != 0)
                     detiledResults.Paramters.SearchQuerry = searchQuery.First();
 
-                detiledResults.Results.InsilicioLeft = resultInsilicoLeft;
-                detiledResults.Results.InsilicoRight = resultInsilicoRight;
+                //detiledResults.Results.InsilicioLeft = resultInsilicoLeft;
+                //detiledResults.Results.InsilicoRight = resultInsilicoRight;
 
 
-                detiledResults.Results.PtmSites = ptmSite;
+                detiledResults.Results.NoOfPtmSites = NoOfPtmSites;
                 if (searchResult.Count != 0)
                     detiledResults.Results.Results = searchResult.First();
                 if (execTime.Count != 0)
@@ -495,12 +507,21 @@ namespace PerceptronAPI.Repository
                 var ptmVarmod = db.PtmVariableModifications.Where(x => x.QueryId == qid).ToList();
                 var ptmFixedmod = db.PtmFixedModifications.Where(x => x.QueryId == qid).ToList();
                 var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
+
+                if (ptmSite.Count != 0)
+                {
+                    DetailedProteinHitViewResults.Results.PtmSitesInfo = ptmSite.First();
+                }
                 
+
                 /*  WILL USE IT LATER  */
                 
                 DetailedProteinHitViewResults.Results.Results = searchResult.First();
                 DetailedProteinHitViewResults.searchParameters = searchParameters.First();
                 DetailedProteinHitViewResults.PeakListData = peakListData.First();
+
+                //#4TTB
+                
 
                 //NO NEED 
                 //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
