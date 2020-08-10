@@ -11,14 +11,16 @@ namespace PerceptronAPI.Models
         public SearchResult Results;
         public List<ResultInsilicoMatchLeft> InsilicioLeft;
         public List<ResultInsilicoMatchRight> InsilicoRight;
-        public List<ResultPtmSite> PtmSites;
+        public ResultPtmSite PtmSitesInfo;
+        public int NoOfPtmSites;
 
         public ResultsDto()
         {
             Results=new SearchResult();
             InsilicioLeft=new List<ResultInsilicoMatchLeft>();
             InsilicoRight=new List<ResultInsilicoMatchRight>();
-            PtmSites=new List<ResultPtmSite>();
+            NoOfPtmSites = 0;
+            PtmSitesInfo = new ResultPtmSite();
         }
 
     }
