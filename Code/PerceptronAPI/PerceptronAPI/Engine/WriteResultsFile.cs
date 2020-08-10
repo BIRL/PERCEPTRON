@@ -55,7 +55,6 @@ namespace PerceptronAPI.Engine
                 if (AllRawResults[j].FileUniqueId == IndividualFileId)
                 {
                     var ResultsData = AllRawResults[j];
-                    PostTranslationModificationsSiteDto PtmSites = new PostTranslationModificationsSiteDto();
 
                     // Fetching Number of Matches
                     int LeftMatchedIndex = 0;
