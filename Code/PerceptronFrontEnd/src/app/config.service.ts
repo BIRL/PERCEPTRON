@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 import { database } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
-import {HttpResponse} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 
 
 @Injectable()
@@ -24,16 +24,16 @@ export class ConfigService {
             .map(res => res.json())
     }
 
-    postbugform(form){
+    postbugform(form) {
         let formData: FormData = new FormData();
         var json = JSON.stringify(form);
-        
+
         formData.append('Jsonfile', json);
         console.log(json);
 
         let headers = new Headers();
         headers.append('Accept', 'application/json');
-        return this._http.post( this.baseApiUrl + '/api/search/bug_form', formData, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/bug_form', formData, { headers: headers })
             .map(res => res.json())
             .subscribe(
                 data => console.log('success'),
@@ -50,13 +50,13 @@ export class ConfigService {
 
             .map(res => res.json())
     }
-    
+
     postJSON(form, file) {
 
         let formData: FormData = new FormData();
-        
+
         var json = JSON.stringify(form);
-                
+
         formData.append('Jsonfile', json);
         for (let i = 0; i < file.length; i++) {
             formData.append('uploadFile', file[i], file[i].name);
@@ -65,7 +65,7 @@ export class ConfigService {
         console.log(json);
         let headers = new Headers();
         headers.append('Accept', 'application/json');
-        return this._http.post( this.baseApiUrl + '/api/search/File_upload', formData, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/File_upload', formData, { headers: headers })
             .map(res => res.json())
             .subscribe(
                 data => console.log('success'),
@@ -76,21 +76,21 @@ export class ConfigService {
 
     postpattern(form) {
 
-        
+
         let formData: FormData = new FormData();
         var json = JSON.stringify(form);
 
         formData.append('Jsonfile', json);
-        
+
         let headers = new Headers();
-       headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         return this._http.post(this.baseApiUrl + '/api/search/Tpg', '=' + json, { headers: headers })
-        
+
             .map(res => res.json())
-           
-            
+
+
     }
-        GetPattern(qid) {
+    GetPattern(qid) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         return this._http.post(this.baseApiUrl + '/api/search/Post_pattern', '=' + qid, { headers: headers })
@@ -108,35 +108,22 @@ export class ConfigService {
             });
     }
 
-    // GetResultsDownload(qid): Observable<any> {
-    //     let headers = new Headers();
-    //     headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    //     return this._http.post(this.baseApiUrl + '/api/search/Results_Download', '=' + qid, { headers: headers })
-    //         .map(res => {
-    //             var blob = new Blob([res.blob()], {type: ".txt"} )
-    //             return blob;//res.json()
-    //         }); }
-// //Resutls Download Working...
-//             downloadFile(qid): Observable<any>{		
-//                 var abc = this._http.get(this.baseApiUrl + '/api/search/Results_Download=' + qid, { responseType: ResponseContentType.Blob });
+    GetResultsDownload(qid): Observable<any> {
 
-//                 return abc;
-
-//            }
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        return this._http.post(this.baseApiUrl + 'api/search/ResultsDownload', '=' + qid, { headers: headers })
+            .map(res => {
+                return res.json()
+            });
+    }
 
 
-//             { responseType: ResponseContentType.Blob })
-//   .map(
-//     (res) => {
-//           var blob = new Blob([res.blob()], {type: fileExtension} )
-//           return blob;            
-//     });
-    
 
     GetScReslts(qid) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post( this.baseApiUrl + '/api/search/Post_sc_results', '=' + qid, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/Post_sc_results', '=' + qid, { headers: headers })
             .map(res => {
                 return res.json()
             });
@@ -164,16 +151,16 @@ export class ConfigService {
     getUserHistory(userId) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        if (userId.emailVerified){
-            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId.email, { headers: headers })
-            .map(res => {
+        if (userId.emailVerified) {
+            return this._http.post(this.baseApiUrl + '/api/search/Post_history', '=' + userId.email, { headers: headers })
+                .map(res => {
+                    return res.json()
+                });
+        }
+        else { //For Guest's Search Results & History
+            return this._http.post(this.baseApiUrl + '/api/search/Post_history', '=' + userId.uid, { headers: headers }).map(res => {
                 return res.json()
             });
-        }
-        else{ //For Guest's Search Results & History
-            return this._http.post( this.baseApiUrl + '/api/search/Post_history', '=' + userId.uid, { headers: headers }).map(res => {
-            return res.json()
-        });
         }
     }
 
@@ -187,20 +174,18 @@ export class ConfigService {
                 return res.json()
             });
     }
-
-
-   
+    
     getfile(form) {
-        
+
         var json = JSON.stringify(form);
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + '/api/search/data','=' + json, { headers: headers })
-        .map(res => res.json())
-        .subscribe(
-            data => console.log('success'),
-            error => console.log(error)
-        )
+        return this._http.post(this.baseApiUrl + '/api/search/data', '=' + json, { headers: headers })
+            .map(res => res.json())
+            .subscribe(
+                data => console.log('success'),
+                error => console.log(error)
+            )
     }
 
     GetDetailedReslts(resId) {
