@@ -133,6 +133,101 @@ namespace PerceptronAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("api/search/Calling_API")]
+        public async Task<HttpResponseMessage> Calling_API_Processing()
+        {
+            var queryId = Guid.NewGuid().ToString();
+
+            var a = HttpContext.Current.Response.Cookies.Count;
+
+            DateTime time = DateTime.Now;             // Fetching Current Time
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var creationTime = time.ToString(format); // Formating creationTime and assigning
+            const string progress = "0";
+
+
+            var parametersDto = new SearchParametersDto
+            {
+                SearchFiles = new List<SearchFile>(),
+                SearchQuerry = new SearchQuery(),
+                FixedMods = new PtmFixedModification(),
+                VarMods = new PtmVariableModification()
+            };
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new CustomMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                var i = 0;
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var jsonData = provider.FormData.GetValues("Jsonfile");
+
+                if (jsonData != null)
+                {
+                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
+                    parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
+                    parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
+                }
+
+
+                if (parametersDto.FixedMods.FixedModifications != "")
+                {
+                    parametersDto.FixedMods.QueryId = queryId;
+                    parametersDto.FixedMods.ModificationId = 1;
+                }
+
+                if (parametersDto.VarMods.VariableModifications != "")
+                {
+                    parametersDto.VarMods.QueryId = queryId;
+                    parametersDto.VarMods.ModificationId = 1;
+                }
+
+                parametersDto.SearchParameters.QueryId = queryId;
+                parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
+                parametersDto.SearchQuerry.Progress = progress;
+                parametersDto.SearchQuerry.CreationTime = creationTime;
+                parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+
+                foreach (var file in provider.FileData)
+                {
+                    var FileUniqueId = Guid.NewGuid().ToString();
+                    string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+
+                    i++;
+                    var x = new SearchFile
+                    {
+                        FileId = i,
+                        FileName = file.LocalFileName,
+                        UniqueFileName = FileNameWithUniqueID,
+                        FileType = System.IO.Path.GetExtension(file.LocalFileName),
+                        QueryId = queryId,
+                        FileUniqueId = FileUniqueId
+                    };
+                    parametersDto.SearchFiles.Add(x);
+                }
+                var response = Search.ProteinSearch(parametersDto);
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception e)
+            {
+                if (parametersDto.SearchParameters.EmailId != "")
+                {
+                    Sending_Email(parametersDto, creationTime);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
         string AddSuffix(string filename, string suffix) // For adding FileUniqueId before the extension of the file
         {
             string FileDirectory = Path.GetDirectoryName(filename);
@@ -215,7 +310,7 @@ namespace PerceptronAPI.Controllers
         public ResultsVisualizeData Post_DetailedProteinHitView_results([FromBody] string input)
         {
             Debug.WriteLine(input);
-            var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
+            //var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
             //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
@@ -289,6 +384,46 @@ namespace PerceptronAPI.Controllers
         }
 
         [HttpPost]
+        [Route("a/api/search/FASTA_File_upload")]  //    
+        public async Task<HttpResponseMessage> FASTA_File_upload()
+        {
+            
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new CustomMultipartFormDataStreamProvider(root);
+
+            try
+            {
+                var i = 0;
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var jsonData = provider.FormData.GetValues("Jsonfile");
+
+                if (jsonData != null)
+                {
+                    //parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                    
+                }
+
+
+                
+
+                string response = "OK";
+                
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [HttpPost]
         [Route("api/search/bug_form")]
         public async Task<HttpResponseMessage> bug_form()
         {
@@ -317,6 +452,7 @@ namespace PerceptronAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, '1');
         }
+
 
 
         public static void Sending_Email(SearchParametersDto p, string CreationTime)//, int EmailMsg)
