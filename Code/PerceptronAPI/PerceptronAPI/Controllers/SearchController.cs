@@ -143,26 +143,34 @@ namespace PerceptronAPI.Controllers
 
 
         [HttpPost]
-        [Route("api/search/Results_Download")]
-        public FileStream Results_Download([FromBody] string input)
+        [Route("api/search/ResultsDownload")]
+        public ResultsDownloadDto ResultsDownload([FromBody] string input)
         {
+            List<byte[]> ListOfFileBlobs = new List<byte[]>();
+            var ScanData = _dataLayer.ScanResultsDownloadData(input);    //Scanning File Unique Ids from SearchFiles Table
 
-            var file = @"C:\inetpub\wwwroot\PerceptronAPI\App_Data\ResultsDownload\Results File Text\CompleteResults_2d1cf88f-48ce-46ce-b850-47ce88fd5712.txt";
-            return new FileStream(file, FileMode.Open, FileAccess.Read);
-            /*NEW FUNCTION WILL BE MADE FOR RESULTS DOWNLOAD*/
-            /*ITS ALL HEALTHY*/
-            //Preparing Here Results Download Data //
-            //try
-            //{
-            //    // Add Here If Statment Because Once Results are Ready then, no need to recalculate...
-            //    var download = new ResultsDownload();
-            //    var CompiledResults = download.MainCompileStoreWrite(input);
+            string filePath = @"C:\\PerceptronApi-tempResultsFolder\\";
 
-            //    //download.WritingCompleteDetailedResults(input, CompiledResults);
 
-            //    //_dataLayer.StoringCompiledResults(CompiledResults);
-            //}
-            //finally { }
+            WriteResultsFile _WriteResultsFile = new WriteResultsFile();
+            var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);
+
+            string fullfilename = "";
+            for (int i = 0; i < AllResultFilesNames.Count; i++)
+            {
+                //fullfilename = filePath + AllResultFilesNames[i];
+                fullfilename = filePath + AllResultFilesNames[i];
+                using (FileStream fileStream = File.OpenRead(fullfilename))
+                {
+                    byte[] blob = new byte[fileStream.Length];
+                    ListOfFileBlobs.Add(blob);
+                }
+
+            }
+
+            var ResultsDownloadData = new ResultsDownloadDto(AllResultFilesNames, ListOfFileBlobs);
+
+            return ResultsDownloadData;
         }
 
 
@@ -254,7 +262,7 @@ namespace PerceptronAPI.Controllers
             bool downloadresults = false;
             var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
             return NameofFileWithFullPath;
-            
+
 
             //return "This is a testing string...";
         }
@@ -265,6 +273,7 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Post_history")]
         public List<UserHistory> Post_history([FromBody] string input)
         {
+            //input = "farhan.khalid@Lums.edu.pk";
             Debug.WriteLine(input);
             var temp = _dataLayer.GetUserHistory(input);
             return temp;
