@@ -1,0 +1,60 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value);" class="ui form">
+<div style="width:90%; min-width: 600px; margin:0 auto;">
+    <mat-card>
+      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Admin Panel</h4>
+    </mat-card>
+
+    <br>
+
+    <mat-card>
+        <h6 style="text-align:center; font-weight:bold">Change Database</h6>
+        
+        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+            <span matTooltip="Browse and upload new database (FASTA format) " matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
+              <label class="required" style='display:inline;  font-weight:500;'>Upload FASTA File </label>
+              <br/>
+              <label style='display:inline;  font-weight:500; '>Select File(s): </label>
+                <style>
+                  .required:after {
+                    content:"*";
+                    margin: auto;
+                    padding: 5px;
+                    color: rgb(43, 39, 39);
+                  }
+                </style>
+              <label style="display:inline;">&nbsp;</label>
+              <div style='display:inline;' class="button-row">
+                <button mat-button class='buttonclass' type='button' style='display:inline; background-color:#212121 ' mat-mini-fab (click)="imgFileInput.click()">
+                  <mat-icon class='iconclass'>insert_drive_file</mat-icon>
+                </button>
+                <style>.buttonclass {width: 35px; height: 35px;}
+                .iconclass {font-size: 22px; margin-top: -4px;}
+                </style>
+                <br/>
+                <label style="display:inline;">&nbsp;</label>
+                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
+                <ng-template #onefile>
+                  <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
+                </ng-template>
+                <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
+                  accept=".txt, .mgf, .mzXML" multiple ngModel/>
+                <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length==0">
+                  Please select atleast one data file.
+                </mat-error>
+              </div>
+            </span>
+          </mat-grid-tile>
+        
+
+      </mat-card>
+      <mat-grid-tile colspan="1" rowspan="1">
+          <label style="padding-left:15px;"></label>
+          <button mat-raised-button matTooltip="Click to submit FASTA file " class="button-sumbit"  type="submit" style="background-color: #201a93; color:aliceblue"
+            class="ui button">Submit</button>
+        </mat-grid-tile>
+
+    </div>
+  </form>
+
+
+  <!-- [disabled]="!f.valid" matTooltipPosition="after" -->
