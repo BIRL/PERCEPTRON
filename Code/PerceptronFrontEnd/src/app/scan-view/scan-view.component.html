@@ -1,6 +1,7 @@
 <div style="width:90%; min-width: 600px; margin:0 auto;">
   <mat-card>
-    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Protein Spectral Matches</h4>
+    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Protein
+      Spectral Matches</h4>
   </mat-card>
   <br>
   <div class="example-header">
@@ -8,233 +9,24 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
   </div>
-  
+
   <div style="height:10px;font-size:1px;">&nbsp;</div>
-      
-      <!-- <label style="padding-right:15px;"></label>
-      <button mat-raised-button matTooltip="Click to Download Results"  type="submit" style="background-color: #201a93; color:aliceblue"
-      class="ui button" (click)=download()>Results Download</button> -->
-      
-      <div style="height:50px;font-size:1px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+  <label style="padding-right:15px;"></label>
+  <button mat-raised-button matTooltip="Click to Download Results" type="submit"
+    style="background-color: #201a93; color:aliceblue" class="ui button" (click)=download()>Results Download</button>
+
+  <div style="height:50px;font-size:1px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
 
-      <mat-expansion-panel>
-          <!-- <mat-expansion-panel-header style="background-color:rgba(0,0,0,.1); color:Black;">
-              <mat-panel-title style="font-size:large;  color:Black;">
-                User Search Parameters
-              </mat-panel-title> -->
-            <!-- </mat-expansion-panel-header> --> -->
-
-
-
-    <!-- Row 1 -->
-    <mat-grid-list cols="8" rowHeight="60px">
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Search Title: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="SearchTitle"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <!-- Include Uniprot Link -->
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Protein Database: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;"  id="ProteinDB"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Mass Mode: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="MassMode"></label>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <!-- Row 2 -->
-    <mat-grid-list cols="8" rowHeight="60px">
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Protein Mass Tolerance: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label  style="font-size:15px;" id="protTol"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Tune Mass: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="Tuner"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Peptide Tolerance: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="peptol"></label>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <!-- Row 3 -->
-    <mat-grid-list cols="8" rowHeight="60px">
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Fragmentation Type: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="FragType"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Special Ions: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="SI"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">PST Filter: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="PST"></label>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-     <!-- Row 4 -->
-     <mat-grid-list cols="8" rowHeight="60px">
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">PST Length: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="PSTLen"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Blind PTM: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="BPTMs"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Terminal Modifications: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="TermMods"></label>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <mat-grid-list cols="8" rowHeight="60px">
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Intact Protein Mass %: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="Slider1"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">PST %: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="Slider2"></label>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile></mat-grid-tile>
-
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Spectral Comparison %: </label>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div style="padding-left:5px; width:100%">
-          <label style="font-size:15px;" id="Slider3"></label>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-
-  </mat-expansion-panel>
+ 
 
 
 
 
   <div>
-    <label style="color:blue;">Note that proteins have canonical sequences (<a href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
+    <label style="color:blue;">Note that proteins have canonical sequences (<a
+        href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
   </div>
 
   <div class="example-container mat-elevation-z8">
@@ -244,59 +36,68 @@
 
       <!-- Serial Column -->
       <ng-container matColumnDef="serial">
-        <mat-header-cell *matHeaderCellDef mat-sort-header  style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. #
+        </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.serial}} </mat-cell>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> File Name </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> File Name
+        </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.name}} </mat-cell>
       </ng-container>
 
       <!-- ID Column -->
       <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein ID </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein ID
+        </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.id}} </mat-cell>
       </ng-container>
 
       <!-- Score Column -->
       <ng-container matColumnDef="score">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Protein Score </mat-header-cell>
-        <mat-cell matTooltip="{{row.score}}" style=" font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(4)}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Protein Score
+        </mat-header-cell>
+        <mat-cell matTooltip="{{row.score}}" style=" font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(4)}}
+        </mat-cell>
       </ng-container>
 
       <!-- Molecular Weight Column -->
       <ng-container matColumnDef="molW">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Molecular Weight </mat-header-cell>
-        <mat-cell matTooltip="{{row.molW}}" style=" font-size:15px;" *matCellDef="let row"> {{row.molW.toFixed(4)}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Molecular
+          Weight </mat-header-cell>
+        <mat-cell matTooltip="{{row.molW}}" style=" font-size:15px;" *matCellDef="let row"> {{row.molW.toFixed(4)}}
+        </mat-cell>
       </ng-container>
 
       <!-- Truncation Column -->
-      <ng-container matColumnDef="truncation">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Truncation </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.truncation}} </mat-cell>
-      </ng-container>
+      <!-- <ng-container matColumnDef="truncation">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Truncation </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.truncation}} </mat-cell>
+        </ng-container> -->
 
       <!-- # of Frags Column -->
-      <ng-container matColumnDef="frags">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Spectral Matches </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.frags}} </mat-cell>
-      </ng-container>
+      <!-- <ng-container matColumnDef="frags">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Spectral Matches </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.frags}} </mat-cell>
+        </ng-container> -->
 
       <!-- # of Modification Column -->
-      <ng-container matColumnDef="mods">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> No. of Modifications </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.mods}} </mat-cell>
-      </ng-container>
-<!-- # of Modification Column -->
-<ng-container matColumnDef="mix">
-    <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Total Search Time </mat-header-cell>
-    <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.mix}} </mat-cell>
-  </ng-container>
+      <!-- <ng-container matColumnDef="mods">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> No. of Modifications </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.mods}} </mat-cell>
+        </ng-container> -->
+      <!-- # of Modification Column -->
+      <!-- <ng-container matColumnDef="mix">
+      <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Total Search Time </mat-header-cell>
+      <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.mix}} </mat-cell>
+    </ng-container> -->
+
       <!-- FileId Column -->
       <ng-container matColumnDef="fileId">
-        <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;">
+        <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header
+          style="font-weight: bolder; font-size:15px;">
           File ID </mat-header-cell>
         <mat-cell [style.display]="'none'" *matCellDef="let row"> {{row.fileId}} </mat-cell>
       </ng-container>
@@ -314,7 +115,7 @@
 
     <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
-  <br/>
+  <br />
 
 
   <label style="color:red;">* Click on the table row for corresponding candidate proteins list. </label>

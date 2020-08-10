@@ -12,7 +12,9 @@ import * as fileSaver from 'file-saver';
   providers: [ConfigService]
 })
 export class ScanViewComponent implements OnInit {
-  displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'truncation', 'frags', 'mods', 'mix', 'fileId'];
+  //displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'truncation', 'frags', 'mods', 'mix', 'fileId'];
+  displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'fileId'];
+  
   dataSource: MatTableDataSource<UserData>;
   querryId: any;
 
@@ -41,20 +43,7 @@ export class ScanViewComponent implements OnInit {
     //this._httpService.downloadFile(this.querryId).subscribe(data => this.what(data));
   }
 
-  //Resutls Download Working...
-  // download() {
-  //   var abd = this.downloadFile(this.querryId).subscribe(response => {
-	// 		let blob:any = new Blob([response.blob()], { type: 'text; charset=utf-8' });
-	// 		const url= window.URL.createObjectURL(blob);
-	// 		window.open(url);
-	// 		window.location.href = response.url;
-	// 		fileSaver.saveAs(blob, 'Results.txt');
-  //   })
-  //   // , error => console.log('Error downloading the file'),
-  //   //              () => console.info('File downloaded successfully');
-  // }
-  // downloadFile(querryId: any): any {
-  // }
+ 
 
   what(data: any) {
     const users: UserData[] = [];
@@ -66,7 +55,7 @@ export class ScanViewComponent implements OnInit {
     title.innerHTML = data.Paramters.SearchParameters.Title;
 
     let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
-    pdb.innerHTML = data.Paramters.SearchParameters.ProtDb;
+    pdb.innerHTML = data.Paramters.SearchParameters.ProteinDatabase;
 
 
     let protTol = <HTMLLabelElement>document.getElementById("protTol");
@@ -93,10 +82,7 @@ export class ScanViewComponent implements OnInit {
     let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
     let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
     let SpecCompWeight = <HTMLLabelElement>document.getElementById("Slider3");
-
-    IPMSWeight.innerHTML = data.Results.Results.MwScore;
-    PSTWeight.innerHTML = data.Results.Results.PstScore;
-    SpecCompWeight.innerHTML = data.Results.Results.InsilicoScore;
+    
 
   }
 
@@ -105,6 +91,23 @@ export class ScanViewComponent implements OnInit {
     let x = this.router;
     x.navigate(["summaryresults", this.querryId, row.fileId]);
   }
+  download(){
+    let x = this.router;
+    x.navigate(["resultsdownload", this.querryId]);
+  }
+
+  //Resutls Download Working...
+    // download() {
+  //   var abd = this.downloadFile(this.querryId).subscribe(response => {
+	// 		let blob:any = new Blob([response.blob()], { type: 'text; charset=utf-8' });
+	// 		const url= window.URL.createObjectURL(blob);
+	// 		window.open(url);
+	// 		window.location.href = response.url;
+	// 		fileSaver.saveAs(blob, 'Results.txt');
+  //   })
+  //   // , error => console.log('Error downloading the file'),
+  //   //              () => console.info('File downloaded successfully');
+  // }
 }
 
 /** Builds and returns a new User. */
