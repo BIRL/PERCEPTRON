@@ -66,7 +66,12 @@ namespace PerceptronAPI.Engine
 
             int Matches = LeftMatches + RightMathces;
             int TruncationCount = 0;
+            int ProteinRank = ResultsData.ProteinRank;
 
+            var BlindPtm = new BlindPtmInfo(ResultsData.BlindPtmLocalization);
+            var BlindPtmLocalizationInfo = ResultsData.BlindPtmLocalization.Split(',').ToList<string>();
+
+            //BlindPtmLocalizationStart = 5; BlindPtmLocalizationEnd = 10; BlindPtmLocalizationMass = 54343.09;   // Just for testing
 
             string NameofFileWithFullPath = "";
             string NameofFile = "";
@@ -78,6 +83,7 @@ namespace PerceptronAPI.Engine
                 var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
                 var fontTruncation = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
                 var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
+                var fontBlindPtmLocalization = new Font("TimesNewRoman", 8, FontStyle.Bold, GraphicsUnit.Point);
 
                 int PictureBoxWidth = this.pictureBox1.Width;
 
@@ -108,7 +114,7 @@ namespace PerceptronAPI.Engine
 
                 string ProteinInfo = " >Protein ID: " + ResultsData.Header;
                 graphics.DrawString(ProteinInfo, font, Brushes.Blue, new PointF(xHeaderPoint, yPoint));
-                ProteinInfo = " >Mass: " + Math.Round(ResultsData.Mw, 4) + "        " + " Score: " + Math.Round(ResultsData.Score, 4) + "        " + " Rank: " + "?????" + "        " + " Matches: " + Matches;
+                ProteinInfo = " >Mass: " + Math.Round(ResultsData.Mw, 4) + "        " + " Score: " + Math.Round(ResultsData.Score, 4) + "        " + " Rank: " + ProteinRank + "        " + " Matches: " + Matches;
 
                 yPoint = yPoint + yHeaderLinedist; /* Distancing Variables */
                 graphics.DrawString(ProteinInfo, font, Brushes.Blue, new PointF(xHeaderPoint, yPoint));
@@ -158,9 +164,9 @@ namespace PerceptronAPI.Engine
                     nextLineStart(ref xPoint, ref PictureBoxWidth, ref yPoint, ref yNextLinedist);
 
 
-                    /* Peptide Sequence Tag */
+                    
                     //
-                    if (ListPSTTags[0] != "")
+                    if (ListPSTTags[0] != "")    /* Peptide Sequence Tag */
                     {
                         if (!PstIndex.Contains(i)) //i >= PstStartIndex[] && i < PstStartIndex[] + ListPSTTags[]
                         {
@@ -171,7 +177,31 @@ namespace PerceptronAPI.Engine
                             graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Blue, new PointF(xPoint, yPoint));
                         }
                     }
+                    else
+                    {
+                        if (searchParameters.PtmAllow == "True" && BlindPtm.BlindPtmLocalizationStart != -1)   /* BlindPtm */
+                        {
+                            if (i >= BlindPtm.BlindPtmLocalizationStart && i < BlindPtm.BlindPtmLocalizationEnd)
+                            {
+                                graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Magenta, new PointF(xPoint, yPoint));
+                                if (i == BlindPtm.BlindPtmLocalizationStart)
+                                {
+                                    graphics.DrawString(Math.Round(BlindPtm.BlindPtmLocalizationMass, 4).ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint - yLeftPeakMassdist));
+                                }
+                            }
+                            else                                                                        /* Simple */
+                            {
+                                graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Black, new PointF(xPoint, yPoint));
+                            }
+                        }
+                        else                                                                            /* Simple */
+                        {
+                            graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Black, new PointF(xPoint, yPoint));
+                        }
+                        
+                    }
 
+                   
                     if (LeftMatchedIndex.Count != 0)
                     {
 
@@ -180,14 +210,10 @@ namespace PerceptronAPI.Engine
                             int indexL = LeftMatchedIndex.IndexOf(i);
                             double PeakMass = Math.Round(PeakListMasses[LeftPeakIndex[indexL]], 4);
 
-
-
                             graphics.DrawString(LeftTruncation, fontTruncation, Brushes.Black, new PointF(xPoint + xLeftTruncationdist, yPoint - yTruncationdist));
                             graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
                             graphics.DrawString(Math.Round(InsilicoMassLeft[i], 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint, yPoint + yLeftMatchedMassdist));
-
                         }
-
                     }
 
                     if (RightMatchedIndex.Count != 0)
@@ -255,7 +281,7 @@ namespace PerceptronAPI.Engine
                     var navigatepath = HttpContext.Current.Server.MapPath("~/App_Data");  //Path.GetFullPath(Path.Combine(filepath, "..\\..\\"));
                     var DirectoryPath = "";
 
-                    var abds = HttpContext.Current.Server.MapPath("~/App_Data/Results/TemporaryResults");
+                    //var abds = HttpContext.Current.Server.MapPath("~/App_Data/Results/TemporaryResults");
 
                     if (downloadresults == false)//downloadresults = false; // Setting flag for Images will be stored at "App_Data" Folder
                         DirectoryPath = navigatepath + "\\Results\\TemporaryResults\\";  // Navigated to the path where Temporary Files should be created
