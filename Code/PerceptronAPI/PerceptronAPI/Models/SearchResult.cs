@@ -47,5 +47,8 @@ namespace PerceptronAPI.Models
         public string TruncationSite { get; set; }
         public int TruncationIndex { get; set; }
         public string FileUniqueId { get; set; }
+        public double Evalue { get; set; }
+        public string BlindPtmLocalization { get; set; }
+        public int ProteinRank { get; set; }
     }
 }
