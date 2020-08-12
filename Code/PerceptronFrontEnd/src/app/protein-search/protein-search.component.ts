@@ -103,6 +103,13 @@ export class ProteinSearchComponent implements OnInit {
   InstrumentAccuracy: any;
   InstrumentAccuracy1: any;
 
+  //////Placeholder Variables to avoid ng build --prod --aot error
+  PST_Tolerance: any;
+  Maximum_PstLength:any;
+  Hop_Threshhold:any;
+  filenameModel:any
+  ////
+
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
 
@@ -191,6 +198,10 @@ export class ProteinSearchComponent implements OnInit {
     //{ value: '%', viewValue: '%' },
 
   ];
+
+  UnitOfHopThreshhold = [
+    { value: 'Da', viewValue: 'Da' },
+  ]; 
 
 
   constructor(public af: AngularFireAuth, private router: Router, private _httpService: ConfigService, public dialog: MatDialog) {
@@ -283,12 +294,12 @@ export class ProteinSearchComponent implements OnInit {
     this.SpecialIonz = this.Special1;
     this.SelectedSpecialIons = ['bo','bstar','yo','ystar'];
 
-    this.Denovo_Allow = false;
+    this.Denovo_Allow = true;
     this.MinimumPstLength = '3';
     this.SetMaxTagLength();
-    this.MaximumPstLength = 6;
-    this.HopThreshhold = 0.1;  //Tolerance for each hop
-    this.PSTTolerance = 0.45;  //Overall tolerance for PST
+    this.MaximumPstLength = this.Maximum_PstLength = 6;  // Maximum_PstLength: Used because of  [(ngModel)]
+    this.HopThreshhold = this.Hop_Threshhold = 0.1;  //Tolerance for each hop  // Hop_Threshhold: Used because of  [(ngModel)]
+    this.PSTTolerance = this.PST_Tolerance = 0.45;  //Overall tolerance for PST // PST_Tolerance: Used because of  [(ngModel)]
 
     this.Truncation = false;
     this.Terminal_Modification = ['None', 'NME', 'NME_Acetylation', 'M_Acetylation'];//(['None', 'NME', 'NME_Acetylation', 'M_Acetylation']).join(",");//"None, NME, NME_Acetylation, M_Acetylation";

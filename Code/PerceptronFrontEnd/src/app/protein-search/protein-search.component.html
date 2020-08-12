@@ -460,7 +460,7 @@
         </div>
           <mat-form-field style="padding:0px;  width:20%">
             <mat-select matTooltip="Choose Units" [(ngModel)]="Hop_Tolerance_Unit" name="Hop_Tolerance_Unit" [disabled]="!Denovo_Allow" ngModel>
-              <mat-option *ngFor="let unit of units" [value]="unit.value">
+              <mat-option *ngFor="let unit of UnitOfHopThreshhold" [value]="unit.value">
                 {{ unit.viewValue }}
               </mat-option>
             </mat-select>
