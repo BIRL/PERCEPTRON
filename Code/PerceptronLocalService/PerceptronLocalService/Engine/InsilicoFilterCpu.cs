@@ -10,19 +10,28 @@ namespace PerceptronLocalService.Engine
     public class InsilicoFilterCpu : IInsilicoFilter
     {
 
-        public List<ProteinDto> ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> peakData2DList, double tol, string pepUnit) //List<newMsPeaksDto> peakData2DList   //List<double> peakList
+        public List<ProteinDto> ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> OriginalpeakData2DList, double tol, string pepUnit)
         {
             var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+            var peakData2DList = new List<newMsPeaksDto>();     // Lists are referenced based therefore, making a copy of new Peak List
             //tol = 15;
             //var pepUnit = "ppm";
             //int delme; var delmeList = new List<ProteinDto>();
 
-            for (int indexIntensity = 0; indexIntensity < peakData2DList.Count; indexIntensity++)
+            for (int index = 0; index < OriginalpeakData2DList.Count; index++)
             {
-                if (peakData2DList[indexIntensity].Intensity < 0.000092)
-                    peakData2DList[indexIntensity].Intensity = 0.001;
+                if (OriginalpeakData2DList[index].Intensity < 0.000092)
+                {
+                    var temp = new newMsPeaksDto(OriginalpeakData2DList[index].Mass, 0.001);
+                    peakData2DList.Add(temp);    // Lists are referenced based therefore, making a copy of new Peak List with modified intensities that will be used in this algo only
+                }
+
                 else
-                    peakData2DList[indexIntensity].Intensity = 1;
+                {
+                    var temp = new newMsPeaksDto(OriginalpeakData2DList[index].Mass, 1);
+                    peakData2DList.Add(temp);    // Lists are referenced based therefore, making a copy of new Peak List with modified intensities that will be used in this algo only
+                }
+                    
             }
             if (peakData2DList.Count > 16)//16) //Just to avoid small data. Because its hardly possible to get Spectral Matches with small peak Count
             {
