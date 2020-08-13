@@ -253,18 +253,18 @@ namespace PerceptronAPI.Controllers
             string fullfilename = "";
             for (int i = 0; i < AllResultFilesNames.Count; i++)
             {
-                //fullfilename = filePath + AllResultFilesNames[i];
+
                 fullfilename = filePath + AllResultFilesNames[i];
+
                 using (FileStream fileStream = File.OpenRead(fullfilename))
                 {
                     byte[] blob = new byte[fileStream.Length];
+                    fileStream.Read(blob, 0, (int)fileStream.Length);
                     ListOfFileBlobs.Add(blob);
                 }
-
             }
 
             var ResultsDownloadData = new ResultsDownloadDto(AllResultFilesNames, ListOfFileBlobs);
-
             return ResultsDownloadData;
         }
 
@@ -306,7 +306,7 @@ namespace PerceptronAPI.Controllers
         }
 
         [HttpPost]
-        [Route("api/search/Post_detailed_results/Post_DetailedProteinHitView_results")]
+        [Route("api/search/Post_DetailedProteinHitView_results")]
         public ResultsVisualizeData Post_DetailedProteinHitView_results([FromBody] string input)
         {
             Debug.WriteLine(input);
@@ -320,13 +320,13 @@ namespace PerceptronAPI.Controllers
             var MassSpectra = new FormForGraph();
             var InsilicoSpectra = MassSpectra.fillChart(temp2);
 
-            string NameofFile = "DetailedProteinView_Qid_" + temp2.Results.Results.QueryId + "_Rid_" + temp2.Results.Results.ResultId + ".jpg";
-            var NameOfFileWithFullPath = HttpContext.Current.Server.MapPath("~/App_Data") + "\\Results\\TemporaryResults\\" + NameofFile;
+            //string NameofFile = "DetailedProteinView_Qid_" + temp2.Results.Results.QueryId + "_Rid_" + temp2.Results.Results.ResultId + ".jpg";
+            //var NameOfFileWithFullPath = HttpContext.Current.Server.MapPath("~/App_Data") + "\\Results\\TemporaryResults\\" + NameofFile;
 
 
             var ImageForm = new DetailedProteinView();
             bool downloadresults = false;
-            var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
+            var NameOfFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
 
             //var imgURL = Url.Content(string.Format(@"C:\\inetpub\\wwwroot\\" + NameofFile, NameofFile));  //App_Data/Images/{0}
 
@@ -337,7 +337,8 @@ namespace PerceptronAPI.Controllers
 
             var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra, temp2.PeakListData); //imgURL
 
-            imgStream.Dispose();
+            
+
 
             return Data;
         }
@@ -368,7 +369,6 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Post_history")]
         public List<UserHistory> Post_history([FromBody] string input)
         {
-            //input = "farhan.khalid@Lums.edu.pk";
             Debug.WriteLine(input);
             var temp = _dataLayer.GetUserHistory(input);
             return temp;
@@ -384,7 +384,7 @@ namespace PerceptronAPI.Controllers
         }
 
         [HttpPost]
-        [Route("a/api/search/FASTA_File_upload")]  //    
+        [Route("api/search/FASTA_File_upload")]  //    
         public async Task<HttpResponseMessage> FASTA_File_upload()
         {
             
