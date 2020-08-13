@@ -112,7 +112,7 @@ export class ConfigService {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + 'api/search/ResultsDownload', '=' + qid, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/ResultsDownload', '=' + qid, { headers: headers })
             .map(res => {
                 return res.json()
             });
@@ -200,7 +200,7 @@ export class ConfigService {
     GetDetailedProteinHitViewResults(resId) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + 'api/search/Post_detailed_results/Post_DetailedProteinHitView_results', '=' + resId, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/Post_DetailedProteinHitView_results', '=' + resId, { headers: headers })
             .map(res => {
                 return res.json()
             });
@@ -208,10 +208,32 @@ export class ConfigService {
     CreateDetailedProteinViewHit(resId) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + 'api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit', '=' + resId, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit', '=' + resId, { headers: headers })
             .map(res => {
                 return res.json()
             });
+    }
+
+    postFile(form, file) {
+
+        let formData: FormData = new FormData();
+
+        var json = JSON.stringify(form);
+
+        formData.append('Jsonfile', json);
+        for (let i = 0; i < file.length; i++) {
+            formData.append('uploadFile', file[i], file[i].name);
+        }
+
+        console.log(json);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        return this._http.post(this.baseApiUrl + '/api/search/FASTA_File_upload', formData, { headers: headers })
+            .map(res => res.json())
+            .subscribe(
+                data => console.log('success'),
+                error => console.log(error)
+            )
     }
 
 
