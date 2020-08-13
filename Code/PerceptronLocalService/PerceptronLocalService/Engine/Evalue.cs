@@ -54,9 +54,10 @@ namespace PerceptronLocalService.Engine
                 List<int> iMinusList = new List<int>();
                 if (i > 0)
                 {
-                    List<bool> tempLogicalMatchCounterList = new List<bool>();
+                    
                     for (int iMinus = i-1 ; iMinus >= 0; iMinus--)
                     {
+                        List<bool> tempLogicalMatchCounterList = new List<bool>();  //Updated 20200813
                         iMinusList.Add(iMinus);
                         for (int iteration = 0; iteration < SpectralMatches.Count; iteration++)
                         {
