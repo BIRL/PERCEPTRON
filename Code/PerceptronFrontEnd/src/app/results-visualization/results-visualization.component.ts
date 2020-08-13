@@ -85,200 +85,45 @@ export class ResultsVisualizationComponent implements OnInit {
 //     let minDataValue = Math.min(Math.min(this.PeakListMasses), options.ticks.suggestedMin);
 // let maxDataValue = Math.max(Math.max(this.PeakListMasses), options.ticks.suggestedMax);
 
-    this.chart = new Chart('canvas', {
-      type: 'bar',
-      data: {
-        labels: this.LabelsArray,
-        datasets: [{
-          label: "Experimental m/z",
-          data: this.Experimentalmz,
-          borderColor: 'rgba(10, 0, 10, 0.1)',
-          fill: true,
-          barPercentage: 0.5,
-          barThickness: 6,
-          maxBarThickness: 8,
-          minBarLength: 2
+this.chart = new Chart('canvas', {
+  type: 'bar',
+  options: {
+    scales: {
+        xAxes: [{
+            ticks: {
+                display: false //this will remove only the label
+            },
+            gridLines: {
+              display: false,
+            }
+        }]
+    }
+},
 
+  data: {
+    labels:  this.PeakListMasses,
+    // type: 'column',
+    datasets: [{
+      label: "Experimental Mass",
+      data: [1], //this.Experimentalmz,
+      barThickness: 1,
+      backgroundColor: 'rgba(255, 0, 0, 1.0)'
+    },
+    {
+      label: "Peak List Masses",
+      data: this.PeakListIntensities,
+      barThickness: 1,
+      backgroundColor: 'rgba(0, 0, 0, 1.0)'
+    },
+    {
+      label : "Theoretical Mass",
+      data: [1], //this.Theoreticalmz,
+      barThickness: 1,
+      backgroundColor: 'rgba(0, 128, 0, 1.0)'
+    }]
+  }
+})
 
-        },
-        {
-          label: "Peak List Masses",
-          data: this.PeakListMasses,
-          borderColor: 'rgba(0, 0, 0, 0.1)',
-          fill: true,
-          barPercentage: 0.5,
-          barThickness: 6,
-          maxBarThickness: 8,
-          minBarLength: 2
-        },
-        {
-          label : "Theoretical m/z",
-          data: this.Theoreticalmz,
-          borderColor: 'rgba(01, 10, 0, 0.1)',
-          fill: true,
-          barPercentage: 0.5,
-          barThickness: 6,
-          maxBarThickness: 8,
-          minBarLength: 2
-        }
-
-        ]
-      },
-      options: {
-        legend:{
-          display:true
-        },
-        // scales:{
-        //   xAxes:[{display:true}],
-        //   yAxes:[{display:true}]
-        // },
-        responsive: true,
-        // title: { text: "THICCNESS SCALE", display: true },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                max: 1.5,
-                min: 0,
-                stepSize: 0.5
-              },
-
-              gridLines: {
-                display: false,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              gridLines: {
-                display: true,
-              },
-              label: ["mz"]
-            },
-          ],
-        },
-        pan: {
-          enabled: true,
-          mode: "xy",
-          speed: 1,
-          threshold: 1,
-        },
-        zoom: {
-          enabled: true,
-          drag: true,
-          mode: "xy",
-          limits: {
-            max: 1,
-            min: 0.5,
-          },
-
-          ticks: {
-            suggestedMin: Math.min(this.PeakListMasses),
-            suggestedMax: Math.max(this.PeakListMasses)
-          },
-          rangeMin: {
-            x: 2,
-            y: 1,
-          },
-          rangeMax: {
-            x: 10,
-            y: 150,
-          },
-        },
-      },
-      plugins: {
-        zoom: {
-          // Container for pan options
-          pan: {
-            // Boolean to enable panning
-            enabled: true,
-      
-            // Panning directions. Remove the appropriate direction to disable
-            // Eg. 'y' would only allow panning in the y direction
-            // A function that is called as the user is panning and returns the
-            // available directions can also be used:
-            //   mode: function({ chart }) {
-            //     return 'xy';
-            //   },
-            mode: 'xy',
-      
-            rangeMin: {
-              // Format of min pan range depends on scale type
-              x: null,
-              y: null
-            },
-            rangeMax: {
-              // Format of max pan range depends on scale type
-              x: null,
-              y: null
-            },
-      
-            // On category scale, factor of pan velocity
-            speed: 20,
-      
-            // Minimal pan distance required before actually applying pan
-            threshold: 10,
-      
-            // Function called while the user is panning
-            onPan: function({chart}) { console.log(`I'm panning!!!`); },
-            // Function called once panning is completed
-            onPanComplete: function({chart}) { console.log(`I was panned!!!`); }
-          },
-      
-          // Container for zoom options
-          zoom: {
-            // Boolean to enable zooming
-            enabled: true,
-      
-            // Enable drag-to-zoom behavior
-            drag: true,
-      
-            // Drag-to-zoom effect can be customized
-            // drag: {
-            // 	 borderColor: 'rgba(225,225,225,0.3)'
-            // 	 borderWidth: 5,
-            // 	 backgroundColor: 'rgb(225,225,225)',
-            // 	 animationDuration: 0
-            // },
-      
-            // Zooming directions. Remove the appropriate direction to disable
-            // Eg. 'y' would only allow zooming in the y direction
-            // A function that is called as the user is zooming and returns the
-            // available directions can also be used:
-            //   mode: function({ chart }) {
-            //     return 'xy';
-            //   },
-            mode: 'xy',
-      
-            rangeMin: {
-              // Format of min zoom range depends on scale type
-              x: null,
-              y: null
-            },
-            rangeMax: {
-              // Format of max zoom range depends on scale type
-              x: null,
-              y: null
-            },
-      
-            // Speed of zoom via mouse wheel
-            // (percentage of zoom on a wheel event)
-            speed: 0.1,
-      
-            // Minimal zoom distance required before actually applying zoom
-            threshold: 2,
-      
-            // On category scale, minimal zoom level before actually applying zoom
-            sensitivity: 3,
-      
-            // Function called while the user is zooming
-            onZoom: function({chart}) { console.log(`I'm zooming!!!`); },
-            // Function called once zooming is completed
-            onZoomComplete: function({chart}) { console.log(`I was zoomed!!!`); }
-          }
-        }
-      }
-    })
   }
 }
 
