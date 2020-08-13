@@ -71,6 +71,19 @@ namespace PerceptronAPI.Engine
             var BlindPtm = new BlindPtmInfo(ResultsData.BlindPtmLocalization);
             var BlindPtmLocalizationInfo = ResultsData.BlindPtmLocalization.Split(',').ToList<string>();
 
+            var PtmSites = new List<PostTranslationModificationsSiteDto>();
+            if (RawData.Results.PtmSitesInfo.Index != null)
+            {
+                PostTranslationModificationsSiteDto _PostTranslationModificationsSiteDto = new PostTranslationModificationsSiteDto();
+                var PtmSitesInfo = new PostTranslationModificationsSiteDto(RawData.Results.PtmSitesInfo);
+
+                var tempInfo = _PostTranslationModificationsSiteDto.ProcessPtmSiteInfo(PtmSitesInfo);
+                PtmSites.AddRange(tempInfo);
+                PtmSites = PtmSites.OrderBy(x => x.SiteIndex).ToList();
+            }
+                
+
+
             //BlindPtmLocalizationStart = 5; BlindPtmLocalizationEnd = 10; BlindPtmLocalizationMass = 54343.09;   // Just for testing
 
             string NameofFileWithFullPath = "";
@@ -237,6 +250,16 @@ namespace PerceptronAPI.Engine
 
                     }
 
+                    for (int indexPtmSites = 0; indexPtmSites < PtmSites.Count; indexPtmSites++)
+                    {
+                        if (PtmSites[indexPtmSites].SiteIndex == i)
+                        {
+                            string ModSymbol = ModificationSymbol(PtmSites[indexPtmSites].ModName);
+                            graphics.DrawString(ModSymbol, fontMasses, Brushes.Red, new PointF(xPoint, yPoint - yLeftPeakMassdist - 5));
+                        }
+                        
+                    }
+
                     NumString = (i + 1).ToString();  //- NumCount
                     graphics.DrawString(NumString.ToString(), fontSeqNum, Brushes.Black, new PointF(xPoint + 13, yPoint + 10));
                     xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
@@ -296,7 +319,7 @@ namespace PerceptronAPI.Engine
                     //DirectoryPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\inetpub\\wwwroot\\"));      //Overriding DirectoryPath..
 
 
-
+                    DirectoryPath = @"C:\\PerceptronApi-tempResultsFolder\\";
                     NameofFileWithFullPath = DirectoryPath + NameofFile;
                     imageSave.Save(NameofFileWithFullPath);
 
@@ -323,6 +346,75 @@ namespace PerceptronAPI.Engine
                 
             }
             return NameofFileWithFullPath;
+        }
+
+        private string ModificationSymbol(string modification)
+        {
+            string symbol = "";
+
+            switch (modification)
+            {
+                case "Phosphorylation":
+                    return symbol = "\u03D6";
+                case "DiMethylation":
+                    return symbol = "\u03C9";
+
+                case "Methylation":
+                    return symbol = "\u03C8";
+
+                case "Acetylation":
+                    return symbol = "\u03B1";
+
+                case "Hydroxylation":
+                    return symbol = "\u03B8";
+
+                case "DiHydroxylation":
+                    return symbol = "\u2294";
+
+                case "O-Linked-Glycosylation":
+                    return symbol = "\u2295";
+
+                case "Sulfoxide":
+                    return symbol = "\u00D8";
+
+                case "Glutathionylation":
+                    return symbol = "\u2207";
+
+                case "Methylation_K":
+                    return symbol = "\u0394";
+
+                case "S-Nitrosylation":
+                    return symbol = "\u2663";
+
+                case "Palmitoylation":
+                    return symbol = "\u2665";
+
+                case "Formylation":
+                    return symbol = "\u2660";
+
+                case "Nitration":
+                    return symbol = "\u25CA";
+
+                case "N-Linked-Glycosylation":
+                    return symbol = "\u211C";
+
+                case "Sulfone":
+                    return symbol = "\u03B6";
+
+                case "Pyruvate-S":
+                    return symbol = "\u22A5";
+
+                case "Pyrrolidone-Aarboxylic-Acid":
+                    return symbol = "\u2228";
+
+                case "Gamma-Carboxyglutamic-Acid":
+                    return symbol = "\u03C9";
+
+                default:
+                    return symbol;
+            }
+
+
         }
         private List<int> PstIndexFind(string Sequence, List<string> ListPSTTags)
         {
