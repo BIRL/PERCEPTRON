@@ -19,8 +19,8 @@ export class ResultsVisualizationComponent implements OnInit {
   resultId: any;
   ImageFilePath: any;
   base64data: any;
-  PeakListIntensities: any;
-  PeakListMasses: any;
+  PeakListIntensities: number[] = [];
+  PeakListMasses: number[] = [];
   Experimentalmz: number[] = [];
   Theoreticalmz: number[] = [];
   LabelsArray: string[] = [];
@@ -49,14 +49,14 @@ export class ResultsVisualizationComponent implements OnInit {
         data.InsilicoSpectra.ListAbsError[i].toString()
       ));
     }
-    //this.Experimentalmz.push() //(data.InsilicoSpectra.ListExperimental_mz[i]);
-    //this.Experimentalmz = tempExperimentalmz;
-    //this.Theoreticalmz.push(data.InsilicoSpectra.ListTheoretical_mz[i]);
-    //this.Theoreticalmz = tempTheoreticalmz;
     for (let i = 0; i < data.InsilicoSpectra.ListIndices.length; i++) {
       this.Experimentalmz.push(data.InsilicoSpectra.ListExperimental_mz[i]);
       this.Theoreticalmz.push(data.InsilicoSpectra.ListTheoretical_mz[i]);
-      //this.LabelsArray.push();
+    }
+    for(let j = 0; j<data.PeakListData.length; j++)
+    {
+      this.PeakListMasses.push(data.PeakListData[j].Mass);
+      this.PeakListIntensities.push(data.PeakListData[j].Intensity);
     }
 
 
@@ -66,8 +66,8 @@ export class ResultsVisualizationComponent implements OnInit {
 
     //this.array = data.PeakListMasses.split(",",100);
     //Data Preparation for Graph
-    this.PeakListMasses = data.PeakListData.PeakListMasses.split(',').map(Number);
-    this.PeakListIntensities = data.PeakListData.PeakListIntensities.split(',').map(Number);
+    // this.PeakListMasses = data.PeakListData.PeakListMasses.split(',').map(Number);
+    // this.PeakListIntensities = data.PeakListData.PeakListIntensities.split(',').map(Number);
     //this.LabelsArray = data.PeakListData.PeakListMasses;
     // var maxPeakListMass = Math.max(this.PeakListMasses);
     // var minPeakListMass = Math.min(this.PeakListMasses);
@@ -81,7 +81,7 @@ export class ResultsVisualizationComponent implements OnInit {
     this.LabelsArray.push(Math.max.apply(Math, this.PeakListMasses).toString());
 
     let as = Math.max.apply(Math, this.PeakListMasses);
-    let v = Math.min(this.PeakListMasses);
+    //let v = Math.min(this.PeakListMasses);
 //     let minDataValue = Math.min(Math.min(this.PeakListMasses), options.ticks.suggestedMin);
 // let maxDataValue = Math.max(Math.max(this.PeakListMasses), options.ticks.suggestedMax);
 
