@@ -333,12 +333,10 @@ namespace PerceptronAPI.Controllers
             FileStream imgStream = File.OpenRead(NameOfFileWithFullPath);
             byte[] blob = new byte[imgStream.Length];
             imgStream.Read(blob, 0, (int)imgStream.Length);
+            MsPeaksDto _MsPeaksDto = new MsPeaksDto();
+            var PeakListInfo = _MsPeaksDto.PeakListInfo(temp2.PeakListData);    //Formatting the Peak List Info also, in ascending order
 
-
-            var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra, temp2.PeakListData); //imgURL
-
-            
-
+            var Data = new ResultsVisualizeData(input, blob, InsilicoSpectra, PeakListInfo);
 
             return Data;
         }
