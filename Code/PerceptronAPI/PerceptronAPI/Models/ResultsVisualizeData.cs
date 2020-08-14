@@ -13,9 +13,9 @@ namespace PerceptronAPI.Models
         public byte[] blob;
         //public string NameOfFileWithPath;
         public AssembleInsilicoSpectra InsilicoSpectra;
-        public PeakListData PeakListData;  // Just Used in Results Writing in TXT file
+        public List<MsPeaksDto> PeakListData;  // Just Used in Results Writing in TXT file
 
-        public ResultsVisualizeData(string cQueryId, byte[] cblob, AssembleInsilicoSpectra cInsilicoSpectra, PeakListData cPeakListData)
+        public ResultsVisualizeData(string cQueryId, byte[] cblob, AssembleInsilicoSpectra cInsilicoSpectra, List<MsPeaksDto> cPeakListData)
         {
             QueryId = cQueryId;
             blob = cblob;
