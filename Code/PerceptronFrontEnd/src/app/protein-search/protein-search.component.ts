@@ -177,7 +177,7 @@ export class ProteinSearchComponent implements OnInit {
     { value: '70', viewValue: '70' },
     { value: '80', viewValue: '80' },
     { value: '90', viewValue: '90' },
-    { value: '100', viewValue: '100' },
+    { value: '100', viewValue: '100' }
 
   ];
 
@@ -283,7 +283,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Title = "Default Run";
     this.EmailId = '';
     this.NameOfDatabase = 'Human';
-    this.NoOfOutputResults = '50';
+    this.NoOfOutputResults = '100';
     this.MassMode = 2;   // For Selecting M(Neutral)
     this.FilterDB = true;
     this.Mass_Tolerance = 500;
