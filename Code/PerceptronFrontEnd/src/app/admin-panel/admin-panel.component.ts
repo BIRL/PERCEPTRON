@@ -2,23 +2,56 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../config.service';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
-  styleUrls: ['./admin-panel.component.css']
+  styleUrls: ['./admin-panel.component.css'],
+  providers: [ConfigService]
 })
 export class AdminPanelComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private _httpService: ConfigService) { }
+  IsWaitSubmit = 0;
+  IsWaitDownload = 0;
+  stateCtrl: FormControl;
+  filteredStates: Observable<any[]>;
+
+  constructor(private route: ActivatedRoute, private router: Router, private _httpService: ConfigService) {
+    this.stateCtrl = new FormControl();
+    this.filteredStates = this.stateCtrl.valueChanges
+      .startWith(null)
+      .map(state => state ? this.filterStates(state) : this.states.slice());
+   }
+
+   filterStates(name: string) {
+    return this.states.filter(state =>
+      state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  }
 
   ngOnInit() {
   }
-
+  
+  ListOfDatabases = [
+    // { value: 'Swissprot', viewValue: 'Swissprot' },
+    // { value: 'TrEMBL', viewValue: 'TrEMBL' },
+    { value: 'Human', viewValue: 'Human' },
+    { value: 'Ecoli', viewValue: 'Ecoli' }
+  ];
+  states = [
+    { name: 'Human', viewValue: 'Human' },
+    { name: 'Ecoli', viewValue: 'Ecoli' }
+  ];
 
   onSubmit(file: any): void {
   
+  }
+
+  onDownload(fileDownload: any): void{
+    this.IsWaitDownload = 1;
+    alert("Dear! User your database is successfully downloaded.");
+    this.IsWaitDownload = 0;
   }
 
 
