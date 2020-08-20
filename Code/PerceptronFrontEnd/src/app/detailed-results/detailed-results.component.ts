@@ -116,11 +116,11 @@ export class DetailedResultsComponent implements OnInit {
     ProteinName.innerHTML = data.Results.Results.Header;
     ProteinScore.innerHTML = data.Results.Results.Score.toFixed(6);
     MolW.innerHTML = data.Results.Results.Mw.toFixed(6);
-    MatchedFrags.innerHTML = "12";
-    TermMods.innerHTML = "NME";
-    TermMod.innerHTML = "NME";
-    Truncation.innerHTML = "No";
-    Mods.innerHTML = "3";
+    MatchedFrags.innerHTML = data.Results.NoOfMatchedFragments;
+    TermMods.innerHTML = data.Results.Results.TerminalModification;
+    TermMod.innerHTML = data.Results.Results.TerminalModification;
+    Truncation.innerHTML = data.Results.Results.TruncationSite;
+    Mods.innerHTML = data.Results.NoOfPtmSites;
     let constant = ProteinID.innerHTML;
     let met = constant;
 
