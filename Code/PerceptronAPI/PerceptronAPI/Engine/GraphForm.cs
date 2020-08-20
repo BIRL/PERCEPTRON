@@ -143,11 +143,22 @@ namespace GraphForm
             if (Type == "Left")
             {
                 if (FragmentationType == "ECD" || FragmentationType == "ETD")
+                {
                     ListFragIon.Add("C");
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+                }
+                    
                 else if (FragmentationType == "EDD" || FragmentationType == "NETD")
+                {
                     ListFragIon.Add("A");
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+                }
                 else
+                {
                     ListFragIon.Add("B");
+                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+                }
+                    
             }
             else
             {
