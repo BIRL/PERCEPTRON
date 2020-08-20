@@ -199,13 +199,42 @@ namespace PerceptronAPI.Repository
                 for (int i = 0; i < summaryResults.Count; i++)
                 {
                     string ResultId = summaryResults[i].ResultId;
-                    int NoOfPtmSites = 0;
-                    if (dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).Count() != 0)
-                        NoOfPtmSites = dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm Sites
-                    summaryResults[i].Mods = NoOfPtmSites;  // Updating the actual value of "Mods" here...
+                    //int NoOfPtmSites = 0; 
+                    //if (dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).Count() != 0)
+                    //    NoOfPtmSites = dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm Sites
+
+
+                    summaryResults[i].Mods = NoOfPTMMods(ResultId, dbInfo); //Updated 20200821 //NoOfPtmSites;  // Updating the actual value of "Mods" here...
                 }
             }
             return summaryResults;
+        }
+
+        private int NoOfPTMMods(string ResultId, PerceptronDatabaseEntities dbInfo) //Added 20200821
+        {
+            int NoOfPtmSites = 0;
+            if (dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).Count() != 0)
+                NoOfPtmSites = dbInfo.ResultPtmSites.Where(x => x.ResultId == ResultId).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm Sites
+            return NoOfPtmSites;
+        }
+
+        private int NoOfMatchedFrags(SearchResult searchResult)
+        {
+            int LeftMatches = 0; int RightMathces = 0;
+            if (searchResult.LeftMatchedIndex != "")
+            {
+                var LeftMatchedIndex = searchResult.LeftMatchedIndex.Split(',').Select(int.Parse).ToList();
+                LeftMatches = LeftMatchedIndex.Count;
+            }
+
+            if (searchResult.RightMatchedIndex != "")
+            {
+                var RightMatchedIndex = searchResult.RightMatchedIndex.Split(',').Select(int.Parse).ToList();
+                RightMathces = RightMatchedIndex.Count;
+            }
+
+            int NoOfMatches = LeftMatches + RightMathces;
+            return NoOfMatches;
         }
 
         public List<UserHistory> GetUserHistory(string Uid)
@@ -346,9 +375,9 @@ namespace PerceptronAPI.Repository
                 var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
 
-                int NoOfPtmSites = 0;
-                if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
-                    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
+                
+                //if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
+                //    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
 
 
                 if (searchParameters.Count != 0)
@@ -364,8 +393,10 @@ namespace PerceptronAPI.Repository
                 //detiledResults.Results.InsilicoRight = resultInsilicoRight;
 
 
-                detiledResults.Results.NoOfPtmSites = NoOfPtmSites;
-                if (searchResult.Count != 0)
+                detiledResults.Results.NoOfPtmSites = NoOfPTMMods(rid, db);    //Updated 20200821
+                detiledResults.Results.NoOfMatchedFragments = NoOfMatchedFrags(searchResult.First());   //Updated 20200821
+
+                if (searchResult.Count != 0)    //Why if for Safe...?
                     detiledResults.Results.Results = searchResult.First();
                 if (execTime.Count != 0)
                     detiledResults.ExecutionTime = execTime.First();
