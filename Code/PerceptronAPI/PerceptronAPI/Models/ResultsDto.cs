@@ -13,6 +13,7 @@ namespace PerceptronAPI.Models
         public List<ResultInsilicoMatchRight> InsilicoRight;
         public ResultPtmSite PtmSitesInfo;
         public int NoOfPtmSites;
+        public int NoOfMatchedFragments;
 
         public ResultsDto()
         {
@@ -21,6 +22,7 @@ namespace PerceptronAPI.Models
             InsilicoRight=new List<ResultInsilicoMatchRight>();
             NoOfPtmSites = 0;
             PtmSitesInfo = new ResultPtmSite();
+            NoOfMatchedFragments = 0;
         }
 
     }
