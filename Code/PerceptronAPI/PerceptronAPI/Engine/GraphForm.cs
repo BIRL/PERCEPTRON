@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using PerceptronAPI.Models;
 using Newtonsoft.Json;
+using PerceptronAPI.Models;
+using PerceptronAPI.Engine;
 
 
 namespace GraphForm
@@ -32,7 +33,9 @@ namespace GraphForm
             /* Preparation of Data */
             List<double> PeakListMasses = RawData.PeakListData.PeakListMasses.Split(',').Select(double.Parse).ToList();
             List<double> PeakListIntensities = RawData.PeakListData.PeakListIntensities.Split(',').Select(double.Parse).ToList();
-            var InsilicoDetails = InsilicoMassDataPrep(RawData.Results.Results);
+
+            
+            var InsilicoDetails = new InsilicoMassIons(RawData.Results.Results);
 
             var Results = RawData.Results.Results;
 
@@ -43,48 +46,50 @@ namespace GraphForm
 
         }
 
-        private InsilicoMassIons InsilicoMassDataPrep(SearchResult Results)
-        {
-            var InsilicoDetail = new InsilicoMassIons();
-            InsilicoDetail.InsilicoMassLeftIons = Results.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();
-            InsilicoDetail.InsilicoMassRightIons = Results.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
+        //private InsilicoMassIons InsilicoMassDataPrep(SearchResult Results)
+        //{
+        //    var InsilicoDetail = new InsilicoMassIons();
+        //    InsilicoDetail.InsilicoMassLeftIons = Results.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();
+        //    InsilicoDetail.InsilicoMassRightIons = Results.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassLeftAo != "")
-                InsilicoDetail.InsilicoMassLeftAo = Results.InsilicoMassLeftAo.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassLeftAo != "")
+        //        InsilicoDetail.InsilicoMassLeftAo = Results.InsilicoMassLeftAo.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassLeftBo != "")
-                InsilicoDetail.InsilicoMassLeftBo = Results.InsilicoMassLeftBo.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassLeftBo != "")
+        //        InsilicoDetail.InsilicoMassLeftBo = Results.InsilicoMassLeftBo.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassLeftAstar != "")
-                InsilicoDetail.InsilicoMassLeftAstar = Results.InsilicoMassLeftAstar.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassLeftAstar != "")
+        //        InsilicoDetail.InsilicoMassLeftAstar = Results.InsilicoMassLeftAstar.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassLeftBstar != "")
-                InsilicoDetail.InsilicoMassLeftBstar = Results.InsilicoMassLeftBstar.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassLeftBstar != "")
+        //        InsilicoDetail.InsilicoMassLeftBstar = Results.InsilicoMassLeftBstar.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassRightYo != "")
-                InsilicoDetail.InsilicoMassRightYo = Results.InsilicoMassRightYo.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassRightYo != "")
+        //        InsilicoDetail.InsilicoMassRightYo = Results.InsilicoMassRightYo.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassRightYstar != "")
-                InsilicoDetail.InsilicoMassRightYstar = Results.InsilicoMassRightYstar.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassRightYstar != "")
+        //        InsilicoDetail.InsilicoMassRightYstar = Results.InsilicoMassRightYstar.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassRightZo != "")
-                InsilicoDetail.InsilicoMassRightZo = Results.InsilicoMassRightZo.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassRightZo != "")
+        //        InsilicoDetail.InsilicoMassRightZo = Results.InsilicoMassRightZo.Split(',').Select(double.Parse).ToList();
 
-            if (Results.InsilicoMassRightZoo != "")
-                InsilicoDetail.InsilicoMassRightZoo = Results.InsilicoMassRightZoo.Split(',').Select(double.Parse).ToList();
+        //    if (Results.InsilicoMassRightZoo != "")
+        //        InsilicoDetail.InsilicoMassRightZoo = Results.InsilicoMassRightZoo.Split(',').Select(double.Parse).ToList();
 
-            return InsilicoDetail;
-        }
+        //    return InsilicoDetail;
+        //}
 
         private AssembleInsilicoSpectra InsilicoSpectraPrep(SearchResult Results, InsilicoMassIons InsilicoDetails, string FragmentationType, List<double> PeakListMasses, List<double> PeakListIntensities)
         {
+
+            var _ExtractInsilicoMass = new ExtractInsilicoMass();
             var ListIndices = new List<int>();
             var ListFragIon = new List<string>();
             var ListExperimental_mz = new List<double>();
             var ListTheoretical_mz = new List<double>();
             var ListAbsError = new List<double>();
 
-            double tempTheoretical_mz = 0.0;
+            double tempTheoretical_mz;
             double tempExperimental_mz;
             double tempError;
 
@@ -98,9 +103,9 @@ namespace GraphForm
 
                 for (int index = 0; index < LeftMatchedIndex.Count; index++)
                 {
-                    ListIndices.Add(LeftMatchedIndex[index]);
+                    ListIndices.Add(LeftMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
 
-                    ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails, Results, ref tempTheoretical_mz);
+                    tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails);
                     ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
 
                     tempExperimental_mz = PeakListMasses[LeftPeakIndex[index]];
@@ -119,9 +124,9 @@ namespace GraphForm
                 for (int index = RightMatchedIndex.Count - 1; index > -1; index--)  //int index = 0; index < RightMatchedIndex.Count; index++
                 {
 
-                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] - 1); // -1 is for Zero Indexing
+                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
 
-                    ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails, Results, ref tempTheoretical_mz);
+                    tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails);
                     ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
 
                     tempExperimental_mz = PeakListMasses[RightPeakIndex[index]];
@@ -138,94 +143,94 @@ namespace GraphForm
 
         }
 
-        private void ExtractInsilicoLeftMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, SearchResult Results, ref double tempTheoretical_mz)
-        {
-            if (Type == "Left")
-            {
-                if (FragmentationType == "ECD" || FragmentationType == "ETD")
-                {
-                    ListFragIon.Add("C");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
-                }
+        //private void ExtractInsilicoLeftMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, ref double tempTheoretical_mz)
+        //{
+        //    if (Type == "Left")
+        //    {
+        //        if (FragmentationType == "ECD" || FragmentationType == "ETD")
+        //        {
+        //            ListFragIon.Add("C");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+        //        }
                     
-                else if (FragmentationType == "EDD" || FragmentationType == "NETD")
-                {
-                    ListFragIon.Add("A");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
-                }
-                else
-                {
-                    ListFragIon.Add("B");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
-                }
+        //        else if (FragmentationType == "EDD" || FragmentationType == "NETD")
+        //        {
+        //            ListFragIon.Add("A");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+        //        }
+        //        else
+        //        {
+        //            ListFragIon.Add("B");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftIons[MatchedIndex];
+        //        }
                     
-            }
-            else
-            {
-                ListFragIon.Add(Type); /////CHECKING CHECKING WHETHER BUG .... EXISTS....?????
+        //    }
+        //    else
+        //    {
+        //        ListFragIon.Add(Type); /////CHECKING CHECKING WHETHER BUG .... EXISTS....?????
 
-                if (Type == "A'")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAo[MatchedIndex];
-                }
-                else if (Type == "B'")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBo[MatchedIndex];
-                }
-                else if (Type == "A*")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAstar[MatchedIndex];
-                }
-                else if (Type == "B*")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBstar[MatchedIndex];
-                }
+        //        if (Type == "A'")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAo[MatchedIndex];
+        //        }
+        //        else if (Type == "B'")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBo[MatchedIndex];
+        //        }
+        //        else if (Type == "A*")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftAstar[MatchedIndex];
+        //        }
+        //        else if (Type == "B*")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassLeftBstar[MatchedIndex];
+        //        }
 
-            }
-        }
-        private void ExtractInsilicoRightMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, SearchResult Results, ref double tempTheoretical_mz)
-        {
-            if (Type == "Right")
-            {
-                if (FragmentationType == "ECD" || FragmentationType == "ETD")
-                {
-                    ListFragIon.Add("Z");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
-                }
-                else if (FragmentationType == "EDD" || FragmentationType == "NETD")
-                {
-                    ListFragIon.Add("X");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
-                }
-                else
-                {
-                    ListFragIon.Add("Y");
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
-                }
-            }
-            else
-            {
+        //    }
+        //}
+        //private void ExtractInsilicoRightMass(int index, List<string> ListFragIon, string FragmentationType, string Type, int MatchedIndex, InsilicoMassIons InsilicoDetails, ref double tempTheoretical_mz)
+        //{
+        //    if (Type == "Right")
+        //    {
+        //        if (FragmentationType == "ECD" || FragmentationType == "ETD")
+        //        {
+        //            ListFragIon.Add("Z");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+        //        }
+        //        else if (FragmentationType == "EDD" || FragmentationType == "NETD")
+        //        {
+        //            ListFragIon.Add("X");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+        //        }
+        //        else
+        //        {
+        //            ListFragIon.Add("Y");
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightIons[MatchedIndex];
+        //        }
+        //    }
+        //    else
+        //    {
 
-                ListFragIon.Add(Type);
+        //        ListFragIon.Add(Type);
 
-                if (Type == "Y'")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYo[MatchedIndex];
-                }
-                else if (Type == "Z'")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZo[MatchedIndex];
-                }
-                else if (Type == "Z''")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZoo[MatchedIndex];
-                }
-                else if (Type == "Y*")
-                {
-                    tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYstar[MatchedIndex];
-                }
-            }
-        }
+        //        if (Type == "Y'")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYo[MatchedIndex];
+        //        }
+        //        else if (Type == "Z'")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZo[MatchedIndex];
+        //        }
+        //        else if (Type == "Z''")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightZoo[MatchedIndex];
+        //        }
+        //        else if (Type == "Y*")
+        //        {
+        //            tempTheoretical_mz = InsilicoDetails.InsilicoMassRightYstar[MatchedIndex];
+        //        }
+        //    }
+        //}
 
         private void CloseWindowGraphForm()
         {
