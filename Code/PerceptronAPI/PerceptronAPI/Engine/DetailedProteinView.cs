@@ -46,13 +46,15 @@ namespace PerceptronAPI.Engine
             int RightMathces = 0;
             var InsilicoMassRight = new List<double>();
 
+            var InsilicoDetails = new InsilicoMassIons(ResultsData);
+
             if (ResultsData.LeftMatchedIndex != "")
             {
                 LeftMatchedIndex = ResultsData.LeftMatchedIndex.Split(',').Select(int.Parse).ToList();
                 LeftPeakIndex = ResultsData.LeftPeakIndex.Split(',').Select(int.Parse).ToList();
                 LeftType = ResultsData.LeftType.Split(',').ToList();
                 LeftMatches = LeftMatchedIndex.Count;
-                InsilicoMassLeft = ResultsData.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();
+                //InsilicoMassLeft = ResultsData.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();     //Update: Know Will Extract the Insilico Mass Ions According to type Using ExtractInsilicoMass
             }
 
             if (ResultsData.RightMatchedIndex != "")
@@ -61,8 +63,10 @@ namespace PerceptronAPI.Engine
                 RightPeakIndex = ResultsData.RightPeakIndex.Split(',').Select(int.Parse).ToList();
                 RightType = ResultsData.RightType.Split(',').ToList();
                 RightMathces = RightMatchedIndex.Count;
-                InsilicoMassRight = ResultsData.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
+                //InsilicoMassRight = ResultsData.InsilicoMassRight.Split(',').Select(double.Parse).ToList();     //Update: Know Will Extract the Insilico Mass Ions According to type Using ExtractInsilicoMass
             }
+
+
 
             int Matches = LeftMatches + RightMathces;
             int TruncationCount = 0;
@@ -211,10 +215,12 @@ namespace PerceptronAPI.Engine
                         {
                             graphics.DrawString(ProteinSequence[i].ToString(), font, Brushes.Black, new PointF(xPoint, yPoint));
                         }
-                        
+
                     }
 
-                   
+                    double Theoretical_mz = 0.0;
+                    var _ExtractInsilicoMass = new ExtractInsilicoMass();
+
                     if (LeftMatchedIndex.Count != 0)
                     {
 
@@ -225,7 +231,10 @@ namespace PerceptronAPI.Engine
 
                             graphics.DrawString(LeftTruncation, fontTruncation, Brushes.Black, new PointF(xPoint + xLeftTruncationdist, yPoint - yTruncationdist));
                             graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
-                            graphics.DrawString(Math.Round(InsilicoMassLeft[i], 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint, yPoint + yLeftMatchedMassdist));
+                            var ListFragIon = new List<string>();   //No, Need of ListFragIon here but just used as placeholder to fulfill the requirements of pre-existing method. Basically, want to use the pre-existing method named as _ExtractInsilicoMass.ExtractInsilicoLeftMass
+                            Theoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(indexL, ListFragIon, searchParameters.InsilicoFragType, LeftType[indexL], LeftMatchedIndex[indexL], InsilicoDetails);
+
+                            graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint, yPoint + yLeftMatchedMassdist));
                         }
                     }
 
@@ -239,12 +248,15 @@ namespace PerceptronAPI.Engine
                             {
 
                                 double PeakMass = Math.Round(PeakListMasses[RightPeakIndex[index]], 4);
-                                double RightMatchedMass = Math.Round(InsilicoMassRight[RightMatchedIndex[index]], 4);
+                                //double RightMatchedMass = Math.Round(InsilicoMassRight[RightMatchedIndex[index]], 4);
 
 
                                 graphics.DrawString(RightTruncation, fontTruncation, Brushes.Black, new PointF(xPoint - xRightTruncationdist, yPoint - yTruncationdist));
                                 graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint - xRightTruncationdist, yPoint + yRightPeakMassdist));
-                                graphics.DrawString(RightMatchedMass.ToString(), fontMasses, Brushes.Green, new PointF(xPoint - xRightTruncationdist, yPoint + yRightMatchedMassdist));
+
+                                var ListFragIon = new List<string>();   //No, Need of ListFragIon here but just used as placeholder to fulfill the requirements of pre-existing method. Basically, want to use the pre-existing method named as _ExtractInsilicoMass.ExtractInsilicoRightMass
+                                Theoretical_mz = _ExtractInsilicoMass.ExtractInsilicoRightMass(index, ListFragIon, searchParameters.InsilicoFragType, RightType[index], RightMatchedIndex[index], InsilicoDetails);
+                                graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint - xRightTruncationdist, yPoint + yRightMatchedMassdist));
                             }
                         }
 
