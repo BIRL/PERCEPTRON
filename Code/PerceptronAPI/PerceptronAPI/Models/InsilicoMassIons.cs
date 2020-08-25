@@ -32,18 +32,50 @@ namespace PerceptronAPI.Models
             InsilicoMassRightZoo = new List<double>();
         }
 
-        public InsilicoMassIons(InsilicoMassIons insilico)
+        public InsilicoMassIons(SearchResult Results)
         {
-            InsilicoMassLeftIons = insilico.InsilicoMassLeftIons;
-            InsilicoMassRightIons = insilico.InsilicoMassRightIons;
-            InsilicoMassLeftAo = insilico.InsilicoMassLeftAo;
-            InsilicoMassLeftBo = insilico.InsilicoMassLeftBo;
-            InsilicoMassLeftAstar = insilico.InsilicoMassLeftAstar;
-            InsilicoMassLeftBstar = insilico.InsilicoMassLeftBstar;
-            InsilicoMassRightYo = insilico.InsilicoMassRightYo;
-            InsilicoMassRightYstar = insilico.InsilicoMassRightYstar;
-            InsilicoMassRightZo = insilico.InsilicoMassRightZo;
-            InsilicoMassRightZoo = insilico.InsilicoMassRightZoo;
+            
+            InsilicoMassLeftIons = Results.InsilicoMassLeft.Split(',').Select(double.Parse).ToList();
+            InsilicoMassRightIons = Results.InsilicoMassRight.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassLeftAo != "")
+                InsilicoMassLeftAo = Results.InsilicoMassLeftAo.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassLeftBo != "")
+                InsilicoMassLeftBo = Results.InsilicoMassLeftBo.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassLeftAstar != "")
+                InsilicoMassLeftAstar = Results.InsilicoMassLeftAstar.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassLeftBstar != "")
+                InsilicoMassLeftBstar = Results.InsilicoMassLeftBstar.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassRightYo != "")
+                InsilicoMassRightYo = Results.InsilicoMassRightYo.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassRightYstar != "")
+                InsilicoMassRightYstar = Results.InsilicoMassRightYstar.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassRightZo != "")
+                InsilicoMassRightZo = Results.InsilicoMassRightZo.Split(',').Select(double.Parse).ToList();
+
+            if (Results.InsilicoMassRightZoo != "")
+                InsilicoMassRightZoo = Results.InsilicoMassRightZoo.Split(',').Select(double.Parse).ToList();
+
         }
+
+        //public InsilicoMassIons(InsilicoMassIons insilico)
+        //{
+        //    InsilicoMassLeftIons = insilico.InsilicoMassLeftIons;
+        //    InsilicoMassRightIons = insilico.InsilicoMassRightIons;
+        //    InsilicoMassLeftAo = insilico.InsilicoMassLeftAo;
+        //    InsilicoMassLeftBo = insilico.InsilicoMassLeftBo;
+        //    InsilicoMassLeftAstar = insilico.InsilicoMassLeftAstar;
+        //    InsilicoMassLeftBstar = insilico.InsilicoMassLeftBstar;
+        //    InsilicoMassRightYo = insilico.InsilicoMassRightYo;
+        //    InsilicoMassRightYstar = insilico.InsilicoMassRightYstar;
+        //    InsilicoMassRightZo = insilico.InsilicoMassRightZo;
+        //    InsilicoMassRightZoo = insilico.InsilicoMassRightZoo;
+        //}
     }
 }
