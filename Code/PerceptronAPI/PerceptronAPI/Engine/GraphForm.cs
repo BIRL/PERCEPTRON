@@ -106,9 +106,10 @@ namespace GraphForm
                     ListIndices.Add(LeftMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
 
                     tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails);
-                    ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
+                    tempTheoretical_mz = Math.Round(tempTheoretical_mz, 4);
+                    ListTheoretical_mz.Add(tempTheoretical_mz);
 
-                    tempExperimental_mz = PeakListMasses[LeftPeakIndex[index]];
+                    tempExperimental_mz = Math.Round( PeakListMasses[LeftPeakIndex[index]] , 4 );
                     ListExperimental_mz.Add(Math.Round(tempExperimental_mz, 4));
 
                     tempError = Math.Abs(tempExperimental_mz - tempTheoretical_mz);
@@ -127,9 +128,10 @@ namespace GraphForm
                     ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
 
                     tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails);
-                    ListTheoretical_mz.Add(Math.Round(tempTheoretical_mz, 4));
+                    tempTheoretical_mz = Math.Round(tempTheoretical_mz, 4);
+                    ListTheoretical_mz.Add(tempTheoretical_mz);
 
-                    tempExperimental_mz = PeakListMasses[RightPeakIndex[index]];
+                    tempExperimental_mz = Math.Round ( PeakListMasses[RightPeakIndex[index]] , 4 );
                     ListExperimental_mz.Add(Math.Round(tempExperimental_mz, 4));
 
                     tempError = Math.Abs(tempExperimental_mz - tempTheoretical_mz);
