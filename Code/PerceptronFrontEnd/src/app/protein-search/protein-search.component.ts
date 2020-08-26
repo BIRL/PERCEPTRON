@@ -566,7 +566,13 @@ export class ProteinSearchComponent implements OnInit {
     console.log(form);
     stats = this._httpService.postJSON(form, fi.files);
     console.log(stats)
-    alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    if (user.emailVerified == true) {
+      alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    }
+    else{
+      alert("Dear Guest! \nYour search query has been submitted for results please visit 'Search Results & History' tab. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+    }
+    
   }
 
   onReset(form: any): void {
