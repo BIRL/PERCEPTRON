@@ -3,9 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { ConfigService } from '../config.service';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Chart } from 'chart.js';
-import Hammer from 'hammerjs';
-import { max } from 'rxjs/operator/max';
+import * as CanvasJS from 'canvasjs-non-commercial-2.3.2/canvasjs.min';
 
 @Component({
   selector: 'app-results-visualization',
@@ -25,7 +23,9 @@ export class ResultsVisualizationComponent implements OnInit {
   Theoreticalmz: number[] = [];
   LabelsArray: string[] = [];
 
-  chart = [];
+  dataPointsPeakList: any;// number[] = [];//this.dataPoints1 = [];
+  dataPointsExperimentalmz:any;// number[] = [];//this.dataPoints2 = [];
+  dataPointsTheoreticalmz:any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -64,16 +64,6 @@ export class ResultsVisualizationComponent implements OnInit {
     this.base64data = data.blob;
     this.ImageFilePath = this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64,' + this.base64data);
 
-    //this.array = data.PeakListMasses.split(",",100);
-    //Data Preparation for Graph
-    // this.PeakListMasses = data.PeakListData.PeakListMasses.split(',').map(Number);
-    // this.PeakListIntensities = data.PeakListData.PeakListIntensities.split(',').map(Number);
-    //this.LabelsArray = data.PeakListData.PeakListMasses;
-    // var maxPeakListMass = Math.max(this.PeakListMasses);
-    // var minPeakListMass = Math.min(this.PeakListMasses);
-    // var PeakListMassHalf = maxPeakListMass/2;
-    // var PeakListMassOneFourth = maxPeakListMass * 0.25;
-    // var PeakListMassThreeFourth = maxPeakListMass * 0.75;
     this.LabelsArray.push(Math.min.apply(Math, this.PeakListMasses).toString());
     this.LabelsArray.push((Math.max.apply(Math, this.PeakListMasses) * 0.25).toString());
     this.LabelsArray.push((Math.max.apply(Math, this.PeakListMasses) * .50).toString());
@@ -81,48 +71,82 @@ export class ResultsVisualizationComponent implements OnInit {
     this.LabelsArray.push(Math.max.apply(Math, this.PeakListMasses).toString());
 
     let as = Math.max.apply(Math, this.PeakListMasses);
-    //let v = Math.min(this.PeakListMasses);
-//     let minDataValue = Math.min(Math.min(this.PeakListMasses), options.ticks.suggestedMin);
-// let maxDataValue = Math.max(Math.max(this.PeakListMasses), options.ticks.suggestedMax);
 
-this.chart = new Chart('canvas', {
-  type: 'bar',
-  options: {
-    scales: {
-        xAxes: [{
-            ticks: {
-                display: false //this will remove only the label
-            },
-            gridLines: {
-              display: false,
-            }
-        }]
+    this.dataPointsPeakList = [];   //dataPoints1
+    this.dataPointsExperimentalmz = [];          //dataPoints2
+    this.dataPointsTheoreticalmz = [];          //dataPoints3
+
+    for (var i = 0; i < this.PeakListMasses.length; i++) {
+
+      //let xvalue: any = this.x1[i];
+      this.dataPointsPeakList.push({
+        x:this.PeakListMasses[i],   //x1
+        y: this.PeakListIntensities[i] //y1
+      });
     }
-},
-
-  data: {
-    labels:  this.PeakListMasses,
-    // type: 'column',
-    datasets: [{
-      label: "Experimental Mass",
-      data: [1], //this.Experimentalmz,
-      barThickness: 1,
-      backgroundColor: 'rgba(255, 0, 0, 1.0)'
-    },
-    {
-      label: "Peak List Masses",
-      data: this.PeakListIntensities,
-      barThickness: 1,
-      backgroundColor: 'rgba(0, 0, 0, 1.0)'
-    },
-    {
-      label : "Theoretical Mass",
-      data: [1], //this.Theoreticalmz,
-      barThickness: 1,
-      backgroundColor: 'rgba(0, 128, 0, 1.0)'
-    }]
-  }
-})
+    for (var i = 0; i < this.Experimentalmz.length; i++){
+      this.dataPointsExperimentalmz.push({
+        x: this.Experimentalmz[i],   //x2
+        y: 1
+      });
+    }
+    for (var i = 0; i < this.Theoreticalmz.length; i++){
+      this.dataPointsTheoreticalmz.push({
+        x: this.Theoreticalmz[i],  //x3
+        y: 1
+      });
+    }
+    let chart = new CanvasJS.Chart("chartContainer", {
+      // title: {
+      //   text: "Basic Column Chart in Angular"
+      // },
+      // width:550,
+      dataPointMaxWidth: 1.5,
+      zoomEnabled: true,
+      axisY:{
+        title:'Normalized Relative Abundance',
+        gridThickness: 0,
+        titleFontSize: 16,
+      },
+      axisX:{
+        title: 'm/z',
+        tickLength: 8,
+        titleFontSize: 16,
+        valueFormatString: '#######',
+      },
+      toolTip:{
+        content: '{name} <br/> x: {x}, y: {y}',
+      },
+      data: [{
+        type: "column",
+        color: 'black',
+        name: 'PeakListMasses',
+        showInLegend: true,
+        legendText: 'PeakListMasses',
+        xValueFormatString: '####.####',
+        dataPoints: this.dataPointsPeakList
+      },
+      {
+        type: "column",
+        color: 'red',
+        name: 'Experimental m/z',
+        showInLegend: true,
+        legendText: 'Experimental m/z',
+        xValueFormatString: '####.####',
+        dataPoints: this.dataPointsExperimentalmz
+      },
+      {
+        type: "column",
+        color: 'green',
+        name: 'Theoretical m/z',
+        showInLegend: true,
+        legendText: 'Theoretical m/z',
+        xValueFormatString: '####.####',
+        dataPoints: this.dataPointsTheoreticalmz
+      }]
+    });
+    chart.render();
+  
 
   }
 }
