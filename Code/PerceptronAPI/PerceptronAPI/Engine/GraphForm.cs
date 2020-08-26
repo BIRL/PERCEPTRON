@@ -103,7 +103,7 @@ namespace GraphForm
 
                 for (int index = 0; index < LeftMatchedIndex.Count; index++)
                 {
-                    ListIndices.Add(LeftMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
+                    ListIndices.Add(LeftMatchedIndex[index] + 1);    // +1 is for to overcoming Zero Indexing
 
                     tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(index, ListFragIon, FragmentationType, LeftType[index], LeftMatchedIndex[index], InsilicoDetails);
                     tempTheoretical_mz = Math.Round(tempTheoretical_mz, 4);
@@ -125,7 +125,7 @@ namespace GraphForm
                 for (int index = RightMatchedIndex.Count - 1; index > -1; index--)  //int index = 0; index < RightMatchedIndex.Count; index++
                 {
 
-                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] + 1);    // +1 is for to over comming Zero Indexing
+                    ListIndices.Add(InsilicoDetails.InsilicoMassLeftIons.Count - RightMatchedIndex[index] + 1);    // +1 is for to overcoming Zero Indexing
 
                     tempTheoretical_mz = _ExtractInsilicoMass.ExtractInsilicoRightMass(index, ListFragIon, FragmentationType, RightType[index], RightMatchedIndex[index], InsilicoDetails);
                     tempTheoretical_mz = Math.Round(tempTheoretical_mz, 4);
