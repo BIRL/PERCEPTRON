@@ -1,114 +1,116 @@
 <div style="width:90%; min-width: 600px; margin:0 auto;">
-  <mat-card>
-    <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Results
-      Visualization</h4>
-  </mat-card>
-
-  <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-  <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
-    <div>
-      <img [src]="ImageFilePath">
-    </div>
-  </mat-card>
-
-  <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-  <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
-    <div *ngIf="chart">
-      <canvas id="canvas">{{ chart }}</canvas>
-
-
-    </div>
-  </mat-card>
-
-  <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-  <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Matched Fragments</h6>
-    <div class="example-container mat-elevation-z8"></div>
-
-    <mat-table [dataSource]="dataSource" matSort>
-
-      <!-- Serial Column -->
-      <ng-container matColumnDef="rank">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein Rank
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.rank}} </mat-cell>
-      </ng-container>
-
-      <!-- FragmentID Column -->
-      <ng-container matColumnDef="FragmentID">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment ID
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentID}} </mat-cell>
-      </ng-container>
-
-      <!-- FragmentIon Column -->
-      <ng-container matColumnDef="FragmentIon">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment Ion
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentIon}} </mat-cell>
-      </ng-container>
-
-      <!-- ExperimentalMZ Column -->
-      <ng-container matColumnDef="ExperimentalMZ">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Experimental MZ
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.ExperimentalMZ}} </mat-cell>
-      </ng-container>
-
-      <!-- TheoreticalMZ Column -->
-      <ng-container matColumnDef="TheoreticalMZ">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Theoretical MZ
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.TheoreticalMZ}} </mat-cell>
-      </ng-container>
-
-
-      <!-- MassDifference Column -->
-      <ng-container matColumnDef="MassDifference">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Mass Difference
-        </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.MassDifference}} </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  </mat-card>
-
-  <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-  <mat-card>
-      <div>
-          <h6 style="text-align:center; font-weight:bold">Legends</h6>
-          <p><span style="color: red">&piv;</span> <span style="color: black">Phosphorylation</span> <span style="padding-left: 20px; color: red"> &omega;</span> <span style="color: black">DiMehylation</span> <span style="padding-left: 20px; color: red;"> &Psi;</span> <span style="color: black">Mehylation</span> <span style="padding-left: 20px; color: red;"> &alpha;</span> <span style="color: black">Acetylation</span> </p>
-          <p><span style="color: red">&theta;</span> <span style="color: black">Hydroxylation</span> <span style="padding-left: 20px; color: red"> &otimes;</span> <span style="color: black">DiHydroxylation</span> <span style="padding-left: 20px; color: red;"> &oplus;</span> <span style="color: black">O-Linked-Glycosylation</span> <span style="padding-left: 20px; color: red;"> &Oslash;</span> <span style="color: black">Sulfoxide</span> </p>
-          <p><span style="color: red">&nabla;</span> <span style="color: black">Glutathionylation</span> <span style="padding-left: 20px; color: red"> &Delta;</span> <span style="color: black">Mehylation<sub>K</sub></span> <span style="padding-left: 20px; color: red;"> &clubs;</span> <span style="color: black">S-Nitrosylation</span> <span style="padding-left: 20px; color: red;"> &hearts;</span> <span style="color: black">Palmitoylation</span> </p>
-          <p><span style="color: red">&spades;</span> <span style="color: black">Formylation</span> <span style="padding-left: 20px; color: red"> &loz;</span> <span style="color: black">Nitration</span> <span style="padding-left: 20px; color: red;"> &real;</span> <span style="color: black">N-Linked-Glycosylation</span> <span style="padding-left: 20px; color: red;"> &zeta;</span> <span style="color: black">Sulfone</span> </p>
-          <p><span style="color: red">&perp;</span> <span style="color: black">Pyruvate</span> <span style="padding-left: 20px; color: red"> &or;</span> <span style="color: black">Pyrrolidone-Aarboxylic-Acid</span> <span style="padding-left: 20px; color: red;"> &omega;</span> <span style="color: black">Gamma-Carboxyglutamic-Acid</span></p>
-              
-          <p><span style="color: red">*</span> <span style="color: black">Blind PTM Mass</span>
-      <p style="color:blue;"><b>*</b>     Peptide Sequence Tag</p>
-      <p style="color:rgb(220, 105, 224);"><b>*</b>     Amino Acids - Possible Blind PTM Sites</p>
-
-      <p style="color:red;"><b><s>X</s></b>     Truncated Amino Acid</p>
-      
-      <p style="color:black;"><b>]</b>      N-terminal Fragment Match</p>
-      <p style="color:black;"><b>[</b>      C-terminal Fragment Match</p>
-      <p style="color:black;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>      An Amino Acid with its index</p>
-
-      <p style="color:rgba(255, 0, 0, 0.787);"><b>Experimental Mass</b></p>
-      <p style="color:green;"><b>Theoretical Mass</b></p>
-
-      <p style="color:black;"><b>Mass Difference between Experimental and Theoretical Peaks</b></p>
-        </div>
-  </mat-card>
-
+    <mat-card>
+      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Results
+        Visualization</h4>
+    </mat-card>
+  
     <div style="height:10px;font-size:1px;">&nbsp;</div>
-</div>
-
-<router-outlet></router-outlet>
+  
+    <mat-card>
+      <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
+      <div  class='inner'>
+        <img [src]="ImageFilePath">
+      </div>
+    </mat-card>
+  
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+  
+    <mat-card>
+      <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
+      <!-- <div *ngIf="chart"> -->
+        <div id="chartContainer" class='inner'>
+          <!-- <canvas id="canvas"></canvas> -->
+        </div>        
+      <!-- </div> -->
+      <div style="height:400px;font-size:1px;">&nbsp;</div>
+      <a href ="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US"> Courtesy By: CanvasJS.com </a>
+    </mat-card>
+  
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+  
+    <mat-card>
+      <h6 style="text-align:center; font-weight:bold">Matched Fragments</h6>
+      <div class="example-container mat-elevation-z8"></div>
+  
+      <mat-table [dataSource]="dataSource" matSort>
+  
+        <!-- Serial Column -->
+        <ng-container matColumnDef="rank">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Serial No.
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.rank}} </mat-cell>
+        </ng-container>
+  
+        <!-- FragmentID Column -->
+        <ng-container matColumnDef="FragmentID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment ID
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentID}} </mat-cell>
+        </ng-container>
+  
+        <!-- FragmentIon Column -->
+        <ng-container matColumnDef="FragmentIon">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment Ion
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentIon}} </mat-cell>
+        </ng-container>
+  
+        <!-- ExperimentalMZ Column -->
+        <ng-container matColumnDef="ExperimentalMZ">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Experimental MZ
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.ExperimentalMZ}} </mat-cell>
+        </ng-container>
+  
+        <!-- TheoreticalMZ Column -->
+        <ng-container matColumnDef="TheoreticalMZ">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Theoretical MZ
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.TheoreticalMZ}} </mat-cell>
+        </ng-container>
+  
+  
+        <!-- MassDifference Column -->
+        <ng-container matColumnDef="MassDifference">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Mass Difference
+          </mat-header-cell>
+          <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.MassDifference}} </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </mat-card>
+  
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+  
+    <mat-card>
+        <div>
+          <h6 style="text-align:center; font-weight:bold">Legends</h6>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&piv;</span> <span style="color: black">Phosphorylation</span> <span style="padding-left: 20px; color: red"> &omega;</span> <span style="color: black">DiMehylation</span> <span style="padding-left: 42px; color: red;"> &Psi;</span> <span style="color: black; padding-right:105px">Mehylation</span> <span style='display:inline-block'><span style="color: red"> &alpha;</span> <span style="color: black">Acetylation</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&theta;</span> <span style="color: black">Hydroxylation</span> <span style="padding-left: 41px; color: red"> &otimes;</span> <span style="color: black">DiHydroxylation</span> <span style="padding-left: 20px; color: red;"> &oplus;</span> <span style="color: black; padding-right:20px">O-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &Oslash;</span> <span style="color: black">Sulfoxide</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&nabla;</span> <span style="color: black">Glutathionylation</span> <span style="padding-left: 18px; color: red"> &Delta;</span> <span style="color: black">Mehylation<sub>K</sub></span> <span style="padding-left: 50px; color: red;"> &clubs;</span> <span style="color: black; padding-right:82px">S-Nitrosylation</span> <span style='display:inline-block'><span style="color: red;"> &hearts;</span> <span style="color: black">Palmitoylation</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&spades;</span> <span style="color: black">Formylation</span> <span style="padding-left: 58px; color: red"> &loz;</span> <span style="color: black">Nitration</span> <span style="padding-left: 75px; color: red;"> &real;</span> <span style="color: black; padding-right:23px">N-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &zeta;</span> <span style="color: black">Sulfone</span></span> </p>
+          <p style='font-size: 16px; line-height:32px'><span style="color: red">&perp;</span> <span style="color: black">Pyruvate</span> <span style="padding-left: 76px; color: red"> &or;</span> <span style="color: black">Pyrrolidone-Aarboxylic-Acid</span> <span style="padding-left: 20px; color: red;"> &omega;</span> <span style="color: black">Gamma-Carboxyglutamic-Acid</span></p>
+  
+          <p style=' line-height:20px'><span style="color: red">*</span> <span style="color: black">Blind PTM Mass</span> <span style="color:blue; padding-left:27px"><b>*</b>Peptide Sequence Tag</span> <span style="color:rgb(220, 105, 224); padding-left:28px"><b>*</b>Amino Acids - Possible Blind PTM Sites</span>
+          
+          <!-- <p style="color:blue;"><b>*</b>     Peptide Sequence Tag</p>
+          <p style="color:rgb(220, 105, 224);"><b>*</b>     Amino Acids - Possible Blind PTM Sites</p> -->
+  
+          <p style='line-height:20px'> <span style="color:red;"><b><s>X</s></b>Truncated Amino Acid</span> <span style="color:black; padding-left:72px"><b>]</b>N-terminal Fragment Match</span></p>
+          <!-- <p style="color:black;"><b>]</b>      N-terminal Fragment Match</p> -->
+          <p> <span style="color:black;"><b>[</b>C-terminal Fragment Match</span> <span style="color:black; padding-left:40px"><b>A<sub>n</sub>]/[A<sub>n</sub></b>An Amino Acid with its index</span></p>
+          <!-- <p style="color:black;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>      An Amino Acid with its index</p> -->
+  
+          <p style="color:rgba(255, 0, 0, 0.787); height:15px"><b>Experimental Mass</b></p>
+          <p style="color:green; height:15px"><b>Theoretical Mass</b></p>
+  
+          <p style="color:black;"><b>Mass Difference between Experimental and Theoretical Peaks</b></p>
+        </div>
+    </mat-card>
+  
+      <div style="height:10px;font-size:1px;">&nbsp;</div>
+  </div>
+  
+  <router-outlet></router-outlet>
