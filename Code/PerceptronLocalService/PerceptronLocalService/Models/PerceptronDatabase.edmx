@@ -62,16 +62,13 @@
         </EntityType>
         <EntityType Name="ResultPtmSites">
           <Key>
-            <PropertyRef Name="ResultId" />
-            <PropertyRef Name="Index" />
+            <PropertyRef Name="ResultPtmSitesId" />
           </Key>
+          <Property Name="ResultPtmSitesId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Index" Type="int" Nullable="false" />
-          <Property Name="Score" Type="float" Nullable="false" />
-          <Property Name="ModWeight" Type="float" Nullable="false" />
-          <Property Name="ModName" Type="nvarchar(max)" />
-          <Property Name="AminoAcid" Type="nvarchar(max)" />
-          <Property Name="Site" Type="varchar(max)" />
+          <Property Name="Index" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ModName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Site" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="ResultsDownloadable">
           <Key>
@@ -180,6 +177,9 @@
           <Property Name="TruncationSite" Type="nvarchar(max)" />
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
           <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Evalue" Type="float" Nullable="false" />
+          <Property Name="BlindPtmLocalization" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ProteinRank" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -272,16 +272,13 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
         </EntityType>
         <EntityType Name="ResultPtmSite">
           <Key>
-            <PropertyRef Name="ResultId" />
-            <PropertyRef Name="Index" />
+            <PropertyRef Name="ResultPtmSitesId" />
           </Key>
+          <Property Name="ResultPtmSitesId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Index" Type="Int32" Nullable="false" />
-          <Property Name="Score" Type="Double" Nullable="false" />
-          <Property Name="ModWeight" Type="Double" Nullable="false" />
-          <Property Name="ModName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AminoAcid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Index" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ModName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="ResultsDownloadable">
           <Key>
@@ -390,6 +387,9 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <Property Name="TruncationSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
           <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Evalue" Type="Double" Nullable="false" />
+          <Property Name="BlindPtmLocalization" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProteinRank" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Test">
           <Key>
@@ -482,12 +482,10 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <EntitySetMapping Name="ResultPtmSites">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultPtmSite">
               <MappingFragment StoreEntitySet="ResultPtmSites">
+                <ScalarProperty Name="ResultPtmSitesId" ColumnName="ResultPtmSitesId" />
                 <ScalarProperty Name="ResultId" ColumnName="ResultId" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
-                <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="ModWeight" ColumnName="ModWeight" />
                 <ScalarProperty Name="ModName" ColumnName="ModName" />
-                <ScalarProperty Name="AminoAcid" ColumnName="AminoAcid" />
                 <ScalarProperty Name="Site" ColumnName="Site" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -601,6 +599,9 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
                 <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+                <ScalarProperty Name="Evalue" ColumnName="Evalue" />
+                <ScalarProperty Name="BlindPtmLocalization" ColumnName="BlindPtmLocalization" />
+                <ScalarProperty Name="ProteinRank" ColumnName="ProteinRank" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
