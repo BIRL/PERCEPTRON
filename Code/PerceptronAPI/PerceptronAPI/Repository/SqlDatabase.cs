@@ -206,6 +206,7 @@ namespace PerceptronAPI.Repository
 
                     summaryResults[i].Mods = NoOfPTMMods(ResultId, dbInfo); //Updated 20200821 //NoOfPtmSites;  // Updating the actual value of "Mods" here...
                 }
+                summaryResults = summaryResults.OrderBy(x => x.ProteinRank).ToList();
             }
             return summaryResults;
         }
