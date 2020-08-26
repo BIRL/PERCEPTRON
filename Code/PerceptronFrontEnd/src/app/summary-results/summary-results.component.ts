@@ -45,6 +45,7 @@ export class SummaryResultsComponent implements OnInit {
   what(data: any) {
     const users: UserData[] = [];
     for (let i = 1; i <= data.length; i++) { users.push(createNewUser(i, data[i - 1])); }
+    //users.sort(x=>x.rank)
     this.dataSource = new MatTableDataSource(users);
   }
 
@@ -57,7 +58,7 @@ export class SummaryResultsComponent implements OnInit {
 /** Builds and returns a new User. */
 function createNewUser(id: number, data): UserData {
   return {
-    rank: id.toString(),
+    rank: data.ProteinRank,
     name: data.ProteinName,
     id: data.ProteinId,
     molW: data.MolW,
