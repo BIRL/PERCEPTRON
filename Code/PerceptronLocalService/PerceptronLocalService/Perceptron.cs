@@ -277,7 +277,7 @@ namespace PerceptronLocalService
                     FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
 
                     // Ranking the Candidate Proteins according to their scores
-                    RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring); 
+                    FinalCandidateProteinListforFinalScoring = RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring); 
 
                     //Evalue 
                     Evalue _Evalue = new Evalue();
@@ -289,7 +289,7 @@ namespace PerceptronLocalService
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
 
                     StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
-                    peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
+                    //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                     StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);  // Uncomment Me
                 }
                 catch (Exception r)
@@ -522,13 +522,15 @@ namespace PerceptronLocalService
         }
 
 
-        private void RankCandidateProteinsList(List<ProteinDto> candidateProteins)
+        private List<ProteinDto> RankCandidateProteinsList(List<ProteinDto> candidateProteins)
         {
             candidateProteins = candidateProteins.OrderByDescending(x => x.Score).ToList(); // CandidateProteinList in descending order: According to their Score
             for (int iter = 0; iter < candidateProteins.Count; iter++) // Ranking the Candidate Proteins according to their scores
             {
                 candidateProteins[iter].ProteinRank = iter+1;
             }
+
+            return candidateProteins;
         }
         //SPECTRAL COMPARISON ALGORITHM: 
         private List<ProteinDto> ExecuteSpectralComparisonModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
