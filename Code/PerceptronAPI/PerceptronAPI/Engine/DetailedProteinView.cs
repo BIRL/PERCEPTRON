@@ -98,7 +98,7 @@ namespace PerceptronAPI.Engine
                 var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
                 var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
                 var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
-                var fontTruncation = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
+                var fontMatchFragment = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
                 var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
                 var fontBlindPtmLocalization = new Font("TimesNewRoman", 8, FontStyle.Bold, GraphicsUnit.Point);
 
@@ -108,8 +108,8 @@ namespace PerceptronAPI.Engine
                 graphics.Clear(BackColor);
 
                 /* Image Data Preparation*/
-                string LeftTruncation = "]";
-                string RightTruncation = "[";
+                string LeftMatchFragment = "]";    
+                string RightMatchFragment = "[";
 
                 /* Distancing Variables */
                 int xPoint = 20;
@@ -119,9 +119,9 @@ namespace PerceptronAPI.Engine
                 int yHeaderLinedist = 20;
                 int yNextLinedist = 100;
                 int yNextTruncatedLinedist = 30;
-                int xLeftTruncationdist = 20;
-                int xRightTruncationdist = 70;
-                int yTruncationdist = 5;
+                int xLeftMatchFragmentDist = 20;
+                int xRightMatchFragmentDist = 70;
+                int yMatchFragmentDist = 5;
                 //int xMassesdist = 15;
                 int yLeftPeakMassdist = 23;
                 int yLeftMatchedMassdist = 35;
@@ -229,7 +229,7 @@ namespace PerceptronAPI.Engine
                             int indexL = LeftMatchedIndex.IndexOf(i);
                             double PeakMass = Math.Round(PeakListMasses[LeftPeakIndex[indexL]], 4);
 
-                            graphics.DrawString(LeftTruncation, fontTruncation, Brushes.Black, new PointF(xPoint + xLeftTruncationdist, yPoint - yTruncationdist));
+                            graphics.DrawString(LeftMatchFragment, fontMatchFragment, Brushes.Black, new PointF(xPoint + xLeftMatchFragmentDist, yPoint - yMatchFragmentDist));
                             graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
                             var ListFragIon = new List<string>();   //No, Need of ListFragIon here but just used as placeholder to fulfill the requirements of pre-existing method. Basically, want to use the pre-existing method named as _ExtractInsilicoMass.ExtractInsilicoLeftMass
                             Theoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(indexL, ListFragIon, searchParameters.InsilicoFragType, LeftType[indexL], LeftMatchedIndex[indexL], InsilicoDetails);
@@ -242,21 +242,21 @@ namespace PerceptronAPI.Engine
                     {
                         for (int index = 0; index < RightMatchedIndex.Count; index++)
                         {
-                            int RightTruncationIndexPosition = ProteinSequence.Length - RightMatchedIndex[index];
+                            int RightMatchFragmentIndexPosition = ProteinSequence.Length - RightMatchedIndex[index];
 
-                            if (RightTruncationIndexPosition == i)
+                            if (RightMatchFragmentIndexPosition == i)
                             {
 
                                 double PeakMass = Math.Round(PeakListMasses[RightPeakIndex[index]], 4);
                                 //double RightMatchedMass = Math.Round(InsilicoMassRight[RightMatchedIndex[index]], 4);
 
 
-                                graphics.DrawString(RightTruncation, fontTruncation, Brushes.Black, new PointF(xPoint - xRightTruncationdist, yPoint - yTruncationdist));
-                                graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint - xRightTruncationdist, yPoint + yRightPeakMassdist));
+                                graphics.DrawString(RightMatchFragment, fontMatchFragment, Brushes.Black, new PointF(xPoint - xRightMatchFragmentDist, yPoint - yMatchFragmentDist));
+                                graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint - xRightMatchFragmentDist, yPoint + yRightPeakMassdist));
 
                                 var ListFragIon = new List<string>();   //No, Need of ListFragIon here but just used as placeholder to fulfill the requirements of pre-existing method. Basically, want to use the pre-existing method named as _ExtractInsilicoMass.ExtractInsilicoRightMass
                                 Theoretical_mz = _ExtractInsilicoMass.ExtractInsilicoRightMass(index, ListFragIon, searchParameters.InsilicoFragType, RightType[index], RightMatchedIndex[index], InsilicoDetails);
-                                graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint - xRightTruncationdist, yPoint + yRightMatchedMassdist));
+                                graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint - xRightMatchFragmentDist, yPoint + yRightMatchedMassdist));
                             }
                         }
 
@@ -351,7 +351,7 @@ namespace PerceptronAPI.Engine
                 font.Dispose();
                 fontSeqNum.Dispose();
                 fontStrikethrough.Dispose();
-                fontTruncation.Dispose();
+                fontMatchFragment.Dispose();
                 fontMasses.Dispose();
                 image.Dispose();
                 graphics.Dispose();
