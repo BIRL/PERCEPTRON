@@ -66,8 +66,8 @@ namespace PerceptronAPI.Engine
                     int Matches = LeftMatchedIndex + RightMatchedIndex;
                     // Fetching Number of Matches
 
-                    sw.WriteLine("> " + ResultsData.Header + " | Score: " + ResultsData.Score + " | Molweight: " + Math.Round(ResultsData.Mw, 4)
-                        + " | # Matched Fragments: " + Matches + " | Terminal Modification: " + ResultsData.TerminalModification + " | E-Value: " + Math.Round(ResultsData.Evalue), 4);
+                    sw.WriteLine("> " + ResultsData.Header + " | Score: " + Math.Round(ResultsData.Score, 6) + " | Molweight: " + Math.Round(ResultsData.Mw, 4)
+                        + " | # Matched Fragments: " + Matches + " | Terminal Modification: " + ResultsData.TerminalModification + " | E-Value: " + ResultsData.Evalue);
                     sw.WriteLine(ResultsData.Sequence);
 
                     for (int index = 0; index < ScanData.PtmSites.Count; index++)
