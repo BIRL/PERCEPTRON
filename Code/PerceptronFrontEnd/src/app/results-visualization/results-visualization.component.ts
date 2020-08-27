@@ -110,6 +110,7 @@ export class ResultsVisualizationComponent implements OnInit {
       },
       axisX:{
         title: 'm/z',
+        minimum: 0,
         tickLength: 8,
         titleFontSize: 16,
         valueFormatString: '#######',
