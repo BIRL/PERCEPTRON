@@ -566,7 +566,8 @@ export class ProteinSearchComponent implements OnInit {
     console.log(form);
     stats = this._httpService.postJSON(form, fi.files);
     console.log(stats)
-    if (user.emailVerified == true) {
+    if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
+    {
       alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
     }
     else{
