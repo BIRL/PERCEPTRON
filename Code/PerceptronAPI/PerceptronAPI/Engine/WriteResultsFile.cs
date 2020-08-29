@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using PerceptronAPI.Models;
 using System.IO;
+using PerceptronAPI.Models;
 
 namespace PerceptronAPI.Engine
 {
@@ -12,8 +12,8 @@ namespace PerceptronAPI.Engine
         public List<string> ResultFilesWrite(ScanResultsDownloadDataDto ScanData, string filePath)
         {
             List<string> AllResultFilesNames = new List<string>();
+            var TopProteinsOfEachFile = new List<ProteinDto>();
 
-            
 
             int NoOfFiles = ScanData.FileUniqueIdsList.Count;
 
@@ -21,23 +21,30 @@ namespace PerceptronAPI.Engine
             {
                 var IndividualFileId = ScanData.FileUniqueIdsList[i];   /// IndividualFileId will direct and/or seggregate the results of different input data files in SearchResults
                 var IndividualNameOfFile = ScanData.FileNamesList[i];
-                AllResultFilesNames.Add(WriteSingleResultsFile(ScanData, filePath, IndividualFileId, IndividualNameOfFile));
+                var IndividualUniqueFileName = ScanData.UniqueFileNameList[i];
+                AllResultFilesNames.Add(WriteSingleResultsFile(ScanData, filePath, IndividualFileId, IndividualNameOfFile, IndividualUniqueFileName, TopProteinsOfEachFile));
             }
 
             if (NoOfFiles > 1)
             {
-                AllResultFilesNames.Add(WriteBatchResultsFile(ScanData, filePath));
+                string FileWithPath = filePath + ScanData.searchParameters.Title + ".csv";
+                AllResultFilesNames.Add(WriteBatchResultsFile(FileWithPath, TopProteinsOfEachFile));
             }
 
             return AllResultFilesNames;
         }
 
-        public string WriteSingleResultsFile(ScanResultsDownloadDataDto ScanData, string filePath, string IndividualFileId, string IndividualNameOfFile)
+        public string WriteSingleResultsFile(ScanResultsDownloadDataDto ScanData, string filePath, string IndividualFileId, string IndividualNameOfFile, string IndividualUniqueFileName, 
+            List<ProteinDto> TopProteinsOfEachFile)
         {
             //var currentdirectory = Directory.GetCurrentDirectory();
 
             //var navigatepath = Path.GetFullPath(Path.Combine(currentdirectory, "..\\..\\PerceptronApi-tempResultsFolder\\"));
+            string isEmptyFile = "FileIsEmpty";     //Cheking Whether Any data is written into the file or not...
+            double ElapsedTime = 0.0;
 
+            //[ON HOLD ENHANCEMENT] To avoiding replacing files because of same name using "IndividualUniqueFileName" (UniqueFileName) for saving the result fiel but User will see the file name of "IndividualNameOfFile"
+            // (FileName) {a User selected file name of Input Peak List File}
             string InputPeakListName = Path.GetFileName(IndividualNameOfFile);  /// IndividualNameOfFile   is a a name of input PeakList
             string FileWithPath = filePath + "\\" + ScanData.searchParameters.Title + "_" + InputPeakListName;
 
@@ -49,9 +56,10 @@ namespace PerceptronAPI.Engine
 
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
-
+            
             for (int j = 0; j < AllRawResults.Count; j++)
             {
+
                 if (AllRawResults[j].FileUniqueId == IndividualFileId)
                 {
                     var ResultsData = AllRawResults[j];
@@ -70,6 +78,7 @@ namespace PerceptronAPI.Engine
                         + " | # Matched Fragments: " + Matches + " | Terminal Modification: " + ResultsData.TerminalModification + " | E-Value: " + ResultsData.Evalue);
                     sw.WriteLine(ResultsData.Sequence);
 
+                    int NoOfPtmModifications = 0;
                     for (int index = 0; index < ScanData.PtmSites.Count; index++)
                     {
                         var PtmInfo = ScanData.PtmSites;
@@ -77,7 +86,7 @@ namespace PerceptronAPI.Engine
                         if (ResultsData.ResultId == PtmInfo[index].ResultId)
                         {
                             var PtmSitesInfo = new PostTranslationModificationsSiteDto(PtmInfo[index]);
-
+                            NoOfPtmModifications = PtmSitesInfo.ListModName.Count;
                             for (int iter = 0; iter < PtmSitesInfo.ListSiteIndex.Count; iter++)
                             {
                                 sw.WriteLine("Modification Name: " + PtmSitesInfo.ListModName[iter] + " | Modification Site: " +
@@ -96,34 +105,43 @@ namespace PerceptronAPI.Engine
                                 + " | Modification lies between index: " + BlindPtm.BlindPtmLocalizationStart + " - " + BlindPtm.BlindPtmLocalizationEnd);
                         }
                     }
-
+                    if (ResultsData.ProteinRank == 1)   //Collecting Data for Batch File (*.csv). Each Files' Top Protein which will be written there
+                    {
+                        isEmptyFile = "FileIsNotEmpty"; //Setting Flag that File contains some data...
+                        var tempTopProtein = new ProteinDto(Path.GetFileName(IndividualNameOfFile), ResultsData.Header, ResultsData.TerminalModification, ResultsData.Sequence, ResultsData.TruncationSite,
+                            ResultsData.TruncationIndex, ResultsData.Score, ResultsData.Mw, NoOfPtmModifications, Matches, ElapsedTime, ResultsData.Evalue);
+                        TopProteinsOfEachFile.Add(tempTopProtein);  
+                    }
 
                 }
+
+            }
+            if (isEmptyFile == "FileIsEmpty")   //If File does not contain any data...
+            {
+                sw.WriteLine("No Result Found Please search with another set of parameters");
             }
             sw.Close();
             return Path.GetFileName(FileWithPath);
         }
 
 
-        public string WriteBatchResultsFile(ScanResultsDownloadDataDto ScanData, string filePath)
+        public string WriteBatchResultsFile(string FileWithPath, List<ProteinDto> TopProteinsOfEachFile)
         {
 
-            //MAKING FILE TO WRITE IN //BATCHRUN
-            string NameofFile = ScanData.searchParameters.Title + ".csv";
 
 
-            string FileWithPath = filePath + NameofFile;
+            //string FileWithPath = filePath + NameofFile;
 
 
-            //Preparation of Data for Printing...
+            ////Preparation of Data for Printing...
 
-            var TopProteinOfEachFile = ScanData.ListOfSearchResults.Where(x => x.ProteinRank == 1).ToList();            //Select(x => x.ResultId).Distinct().ToList();
-            TopProteinOfEachFile.OrderByDescending(x => x.Score);
+            //var TopProteinOfEachFile = ScanData.ListOfSearchResults.Where(x => x.ProteinRank == 1).ToList();            //Select(x => x.ResultId).Distinct().ToList();
+            //TopProteinOfEachFile = TopProteinOfEachFile.OrderByDescending(x => x.Score).ToList();
 
             //Preparation of Data for Printing...
 
-            if (File.Exists(NameofFile))
-                File.Delete(NameofFile); //Deleted Pre-existing file
+            if (File.Exists(FileWithPath))
+                File.Delete(FileWithPath); //Deleted Pre-existing file
 
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
@@ -132,76 +150,77 @@ namespace PerceptronAPI.Engine
             string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
             sw.WriteLine(HeaderOfCsv);
 
-            for (int i = 0; i < TopProteinOfEachFile.Count; i++) //is this correct alternate for directorycontents
+            for (int i = 0; i < TopProteinsOfEachFile.Count; i++) //is this correct alternate for directorycontents
             {
-
-                // Fetching File Name
-                int NoOfFiles = ScanData.FileUniqueIdsList.Count;
-                string IndividualFileId = "";
-                string FileName = "";
-
-                for (int index = 0; index < NoOfFiles; index++)
-                {
-                    IndividualFileId = ScanData.FileUniqueIdsList[index];   /// IndividualFileId will direct and/or seggregate the results of different input data files in SearchResults
-
-                    if (TopProteinOfEachFile[index].FileUniqueId == IndividualFileId)
-                    {
-                        FileName = Path.GetFileName(ScanData.FileNamesList[index]);   //   ScanData.FileNamesList[index]  "index"  value of is exaclty correspond to "index" value of ScanData.FileUniqueIdsList[index]
-                    }
-                }
-                // Fetching File Name
-
-                // Fetching Number of Matches
-
-                int LeftMatchedIndex = 0;
-                int RightMatchedIndex = 0;
-                if (TopProteinOfEachFile[i].LeftMatchedIndex != "")
-                    LeftMatchedIndex = TopProteinOfEachFile[i].LeftMatchedIndex.Split(',').Select(int.Parse).ToList().Count;
-                if (TopProteinOfEachFile[i].RightMatchedIndex != "")
-                    RightMatchedIndex = TopProteinOfEachFile[i].RightMatchedIndex.Split(',').Select(int.Parse).ToList().Count;
-                int NoOfFragmentsMatched = LeftMatchedIndex + RightMatchedIndex;
-                // Fetching Number of Matches
-                
-                // Fetching Number of Ptm Sites
-                int NoOfPtmModifications = 0;
-                for (int iter = 0; iter < ScanData.PtmSites.Count; iter++)
-                {
-                    var PtmInfo = ScanData.PtmSites;
-
-                    if (TopProteinOfEachFile[i].ResultId == PtmInfo[iter].ResultId)
-                    {
-                        var PtmSitesInfo = new PostTranslationModificationsSiteDto(PtmInfo[iter]);
-                        NoOfPtmModifications = PtmSitesInfo.ListSite.Count;
-                    }
-
-                }
-                // Fetching Number of Ptm Sites
+                var Protein = TopProteinsOfEachFile[i];
 
                 var Truncation_Message = "";
-                if (TopProteinOfEachFile[i].TruncationSite == "Left")
+                if (Protein.TruncationSite == "Left")
                 {
                     Truncation_Message = "Truncation at N-Terminal Side";
                 }
-                else if (TopProteinOfEachFile[i].TruncationSite == "Right")
+                else if (Protein.TruncationSite == "Right")
                 {
                     Truncation_Message = "Truncation at C-Terminal Side";
                 }
                 else
                 {
                     Truncation_Message = "No Truncation";
-                    TopProteinOfEachFile[i].TruncationSite = "-1";
                 }
 
-                
-                double ElapsedTime = Math.Round(0.0, 4);
+
                 //Writing in file
-                sw.WriteLine(FileName + "," + TopProteinOfEachFile[i].Header + "," + TopProteinOfEachFile[i].TerminalModification + "," + TopProteinOfEachFile[i].Sequence +
-                    "," + Truncation_Message + "," + TopProteinOfEachFile[i].TruncationSite + "," + Math.Round(TopProteinOfEachFile[i].Score, 4) + "," +
-                    Math.Round(TopProteinOfEachFile[i].Mw, 4) + "," +
-                    NoOfPtmModifications + "," + NoOfFragmentsMatched + "," + ElapsedTime + "," + TopProteinOfEachFile[i].Evalue);
+                sw.WriteLine(Protein.FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
+                    "," + Truncation_Message + "," + Protein.TruncationSite + "," + Math.Round(Protein.Score, 6) + "," +
+                    Math.Round(Protein.Mw, 4) + "," +
+                    Protein.NoOfPtmModifications + "," + Protein.NoOfFragmentsMatched + "," + Protein.ElapsedTime + "," + Protein.Evalue);
+
+                // Fetching File Name
+                //int NoOfFiles = ScanData.FileUniqueIdsList.Count;
+                //string IndividualFileId = "";
+                //string FileName = "";
+
+                //for (int index = 0; index < NoOfFiles; index++)
+                //{
+                //    IndividualFileId = ScanData.FileUniqueIdsList[index];   /// IndividualFileId will direct and/or seggregate the results of different input data files in SearchResults
+
+                //    if (TopProteinOfEachFile[i].FileUniqueId == IndividualFileId)
+                //    {
+                //        FileName = Path.GetFileName(ScanData.FileNamesList[index]);   //   ScanData.FileNamesList[index]  "index"  value of is exaclty correspond to "index" value of ScanData.FileUniqueIdsList[index]
+                //    }
+                //}
+                // Fetching File Name
+
+                // Fetching Number of Matches
+
+                //int LeftMatchedIndex = 0;
+                //int RightMatchedIndex = 0;
+                //if (TopProteinOfEachFile[i].LeftMatchedIndex != "")
+                //    LeftMatchedIndex = TopProteinOfEachFile[i].LeftMatchedIndex.Split(',').Select(int.Parse).ToList().Count;
+                //if (TopProteinOfEachFile[i].RightMatchedIndex != "")
+                //    RightMatchedIndex = TopProteinOfEachFile[i].RightMatchedIndex.Split(',').Select(int.Parse).ToList().Count;
+                //int NoOfFragmentsMatched = LeftMatchedIndex + RightMatchedIndex;
+                // Fetching Number of Matches
+
+                // Fetching Number of Ptm Sites
+                //int NoOfPtmModifications = 0;
+                //for (int iter = 0; iter < ScanData.PtmSites.Count; iter++)
+                //{
+                //    var PtmInfo = ScanData.PtmSites;
+
+                //    if (TopProteinOfEachFile[i].ResultId == PtmInfo[iter].ResultId)
+                //    {
+                //        var PtmSitesInfo = new PostTranslationModificationsSiteDto(PtmInfo[iter]);
+                //        NoOfPtmModifications = PtmSitesInfo.ListSite.Count;
+                //    }
+
+                //}
+                // Fetching Number of Ptm Sites
+
+
             }
             sw.Close();
-            return NameofFile;
+            return Path.GetFileName(FileWithPath);
         }
     }
 }
