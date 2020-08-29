@@ -244,7 +244,7 @@ namespace PerceptronLocalService
                     {
                         EmailMsg = -1;
                         //Sending_Email(parameters, EmailMsg);
-                        break;
+                        continue;
                     }
 
                     candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
