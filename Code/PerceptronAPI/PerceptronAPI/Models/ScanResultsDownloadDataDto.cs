@@ -10,6 +10,7 @@ namespace PerceptronAPI.Models
 
         public List<string> FileUniqueIdsList = new List<string>();
         public List<string> FileNamesList = new List<string>();
+        public List<string> UniqueFileNameList = new List<string>();
         public List<SearchResult> ListOfSearchResults = new List<SearchResult>();
         public SearchParameter searchParameters;
         public List<ResultPtmSite> PtmSites = new List<ResultPtmSite>();
@@ -20,12 +21,13 @@ namespace PerceptronAPI.Models
 
         }
 
-        public ScanResultsDownloadDataDto(List<string> cFileUniqueIdsList, List<string> cFileNamesList, List<SearchResult> cListOfSearchResults,
+        public ScanResultsDownloadDataDto(List<string> cFileUniqueIdsList, List<string> cFileNamesList, List<string> cUniqueFileNameList, List<SearchResult> cListOfSearchResults,
             SearchParameter csearchParameters, List<ResultPtmSite> cPtmSites)
         {
 
             FileUniqueIdsList = cFileUniqueIdsList;
             FileNamesList = cFileNamesList;
+            UniqueFileNameList = cUniqueFileNameList;
             ListOfSearchResults = cListOfSearchResults;
             searchParameters = csearchParameters;
             PtmSites = cPtmSites;
