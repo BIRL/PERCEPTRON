@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Newtonsoft.Json;
-using PerceptronAPI.Models;
-using PerceptronAPI.Repository;
-using PerceptronAPI.ServiceLayer;
 using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
@@ -19,6 +16,9 @@ using PerceptronAPI.Engine;
 using System.Windows.Forms;
 using GraphForm;
 using System.Web.UI.WebControls;
+using PerceptronAPI.Models;
+using PerceptronAPI.Repository;
+using PerceptronAPI.Utility;
 
 
 namespace PerceptronAPI.Controllers
@@ -33,15 +33,16 @@ namespace PerceptronAPI.Controllers
             _dataLayer = new SqlDatabase();
             //Server.MapPath("~");
         }
-        public string Get_progress(string em)
-        {
-            return Search.Progress_reporter(em);
-        }
+        //public string Get_progress(string em)
+        //{
+        //    return Search.Progress_reporter(em);
+        //}
 
         [HttpPost]
         [Route("api/search/File_upload")]
         public async Task<HttpResponseMessage> File_upload()
         {
+            AddSuffixInName _AddSuffixInName = new AddSuffixInName();
             var queryId = Guid.NewGuid().ToString();
 
             var a = HttpContext.Current.Response.Cookies.Count;
@@ -105,7 +106,7 @@ namespace PerceptronAPI.Controllers
                 foreach (var file in provider.FileData)
                 {
                     var FileUniqueId = Guid.NewGuid().ToString();
-                    string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
                     System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
 
                     i++;
@@ -120,7 +121,7 @@ namespace PerceptronAPI.Controllers
                     };
                     parametersDto.SearchFiles.Add(x);
                 }
-                var response = Search.ProteinSearch(parametersDto);
+                var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (Exception e)
@@ -133,108 +134,102 @@ namespace PerceptronAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/search/Calling_API")]
-        public async Task<HttpResponseMessage> Calling_API_Processing()
-        {
-            var queryId = Guid.NewGuid().ToString();
+        //[HttpPost]
+        //[Route("api/search/Calling_API")]
+        //public async Task<HttpResponseMessage> Calling_API_Processing()
+        //{
+        //    var queryId = Guid.NewGuid().ToString();
 
-            var a = HttpContext.Current.Response.Cookies.Count;
+        //    var a = HttpContext.Current.Response.Cookies.Count;
 
-            DateTime time = DateTime.Now;             // Fetching Current Time
-            string format = "yyyy/MM/dd HH:mm:ss";
-            var creationTime = time.ToString(format); // Formating creationTime and assigning
-            const string progress = "0";
-
-
-            var parametersDto = new SearchParametersDto
-            {
-                SearchFiles = new List<SearchFile>(),
-                SearchQuerry = new SearchQuery(),
-                FixedMods = new PtmFixedModification(),
-                VarMods = new PtmVariableModification()
-            };
-            // Check if the request contains multipart/form-data.
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
-
-            var root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new CustomMultipartFormDataStreamProvider(root);
-
-            try
-            {
-                var i = 0;
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                var jsonData = provider.FormData.GetValues("Jsonfile");
-
-                if (jsonData != null)
-                {
-                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
-                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
-                    parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
-                    parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
-                }
+        //    DateTime time = DateTime.Now;             // Fetching Current Time
+        //    string format = "yyyy/MM/dd HH:mm:ss";
+        //    var creationTime = time.ToString(format); // Formating creationTime and assigning
+        //    const string progress = "0";
 
 
-                if (parametersDto.FixedMods.FixedModifications != "")
-                {
-                    parametersDto.FixedMods.QueryId = queryId;
-                    parametersDto.FixedMods.ModificationId = 1;
-                }
+        //    var parametersDto = new SearchParametersDto
+        //    {
+        //        SearchFiles = new List<SearchFile>(),
+        //        SearchQuerry = new SearchQuery(),
+        //        FixedMods = new PtmFixedModification(),
+        //        VarMods = new PtmVariableModification()
+        //    };
+        //    // Check if the request contains multipart/form-data.
+        //    if (!Request.Content.IsMimeMultipartContent())
+        //    {
+        //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+        //    }
 
-                if (parametersDto.VarMods.VariableModifications != "")
-                {
-                    parametersDto.VarMods.QueryId = queryId;
-                    parametersDto.VarMods.ModificationId = 1;
-                }
+        //    var root = HttpContext.Current.Server.MapPath("~/App_Data");
+        //    var provider = new CustomMultipartFormDataStreamProvider(root);
 
-                parametersDto.SearchParameters.QueryId = queryId;
-                parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
-                parametersDto.SearchQuerry.Progress = progress;
-                parametersDto.SearchQuerry.CreationTime = creationTime;
-                parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+        //    try
+        //    {
+        //        var i = 0;
+        //        await Request.Content.ReadAsMultipartAsync(provider);
 
-                foreach (var file in provider.FileData)
-                {
-                    var FileUniqueId = Guid.NewGuid().ToString();
-                    string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
-                    System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+        //        var jsonData = provider.FormData.GetValues("Jsonfile");
 
-                    i++;
-                    var x = new SearchFile
-                    {
-                        FileId = i,
-                        FileName = file.LocalFileName,
-                        UniqueFileName = FileNameWithUniqueID,
-                        FileType = System.IO.Path.GetExtension(file.LocalFileName),
-                        QueryId = queryId,
-                        FileUniqueId = FileUniqueId
-                    };
-                    parametersDto.SearchFiles.Add(x);
-                }
-                var response = Search.ProteinSearch(parametersDto);
-                return Request.CreateResponse(HttpStatusCode.OK, response);
-            }
-            catch (Exception e)
-            {
-                if (parametersDto.SearchParameters.EmailId != "")
-                {
-                    Sending_Email(parametersDto, creationTime);
-                }
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
-        }
+        //        if (jsonData != null)
+        //        {
+        //            parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+        //            parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
+        //            parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
+        //            parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
+        //        }
 
-        string AddSuffix(string filename, string suffix) // For adding FileUniqueId before the extension of the file
-        {
-            string FileDirectory = Path.GetDirectoryName(filename);
-            string fName = Path.GetFileNameWithoutExtension(filename);
-            string fExt = Path.GetExtension(filename);
-            return Path.Combine(FileDirectory, String.Concat(fName, suffix, fExt));
-        }
+
+        //        if (parametersDto.FixedMods.FixedModifications != "")
+        //        {
+        //            parametersDto.FixedMods.QueryId = queryId;
+        //            parametersDto.FixedMods.ModificationId = 1;
+        //        }
+
+        //        if (parametersDto.VarMods.VariableModifications != "")
+        //        {
+        //            parametersDto.VarMods.QueryId = queryId;
+        //            parametersDto.VarMods.ModificationId = 1;
+        //        }
+
+        //        parametersDto.SearchParameters.QueryId = queryId;
+        //        parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
+        //        parametersDto.SearchQuerry.Progress = progress;
+        //        parametersDto.SearchQuerry.CreationTime = creationTime;
+        //        parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+
+        //        foreach (var file in provider.FileData)
+        //        {
+        //            var FileUniqueId = Guid.NewGuid().ToString();
+        //            string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+        //            System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+
+        //            i++;
+        //            var x = new SearchFile
+        //            {
+        //                FileId = i,
+        //                FileName = file.LocalFileName,
+        //                UniqueFileName = FileNameWithUniqueID,
+        //                FileType = System.IO.Path.GetExtension(file.LocalFileName),
+        //                QueryId = queryId,
+        //                FileUniqueId = FileUniqueId
+        //            };
+        //            parametersDto.SearchFiles.Add(x);
+        //        }
+        //        var response = Search.ProteinSearch(parametersDto);
+        //        return Request.CreateResponse(HttpStatusCode.OK, response);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        if (parametersDto.SearchParameters.EmailId != "")
+        //        {
+        //            Sending_Email(parametersDto, creationTime);
+        //        }
+        //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+        //    }
+        //}
+
+
 
 
         [HttpPost]
