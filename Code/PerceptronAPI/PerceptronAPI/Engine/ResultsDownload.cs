@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PerceptronAPI.Models;
-using PerceptronAPI.ServiceLayer;
 using PerceptronAPI.Repository;
 using PerceptronAPI.Controllers;
 using GraphForm;
