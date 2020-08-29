@@ -8,10 +8,10 @@ namespace PerceptronAPI.Models
     public class Results
     {
         public string QueryId;
-        public List<Proteins> FinalProt;
+        public List<ProteinDto> FinalProt;
         public ExecutionTime Times;
 
-        public Results(string qId, List<Proteins> prt, ExecutionTime t)
+        public Results(string qId, List<ProteinDto> prt, ExecutionTime t)
         {
             QueryId = qId;
             FinalProt = prt;
@@ -19,7 +19,7 @@ namespace PerceptronAPI.Models
         }
         public Results()
         {
-            FinalProt = new List<Proteins>();
+            FinalProt = new List<ProteinDto>();
             Times = new ExecutionTime();
         }
     }
