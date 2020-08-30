@@ -202,10 +202,10 @@ namespace PerceptronLocalService
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
-                        //massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
+                        massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
                         EmailMsg = -2;
                         //Sending_Email(parameters, EmailMsg); // EmailMsg = -2 where -2 is for Invalid Parameters etc. //Send Email we will use Intact Mass 20200805
-                        break;
+                        //continue;
 
                     }
 
@@ -629,7 +629,8 @@ namespace PerceptronLocalService
             //// Maximum Intensity selected from the peak data file & Intensities of "*"MS2"*" are normalized by dividing the selected maximum intensity
             for (int peakDataindex = 1; peakDataindex <= peakData.Mass.Count - 1; peakDataindex++)//Loop will run only for MS2 so that why its starting from "1".
             {
-                peakData.Mass[peakDataindex] = peakData.Mass[peakDataindex] + 1.00727647; //monoisotopic to m/z value
+                if (parameters.MassMode == "M(Neutral)")
+                    peakData.Mass[peakDataindex] = peakData.Mass[peakDataindex] + 1.00727647; //monoisotopic to m/z value
                 peakData.Intensity[peakDataindex] = peakData.Intensity[peakDataindex] / maxIntensity; //Normalized by dividing the selected maximum intensity 
             }
 
