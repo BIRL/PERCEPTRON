@@ -626,6 +626,7 @@ namespace PerceptronAPI.Repository
                 QueryId = searchParameters.QueryId,
                 Autotune = searchParameters.Autotune,
                 DenovoAllow = searchParameters.DenovoAllow,
+                MassMode = searchParameters.MassMode,
                 FilterDb = searchParameters.FilterDb,
                 HandleIons = searchParameters.HandleIons,
                 HopThreshhold = searchParameters.HopThreshhold,
