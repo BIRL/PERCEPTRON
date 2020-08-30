@@ -130,19 +130,19 @@ export class ProteinSearchComponent implements OnInit {
   EmptyArray = [];
 
   Special1 = [
-    { value: 'bo', viewValue: 'b°' },
+    { value: 'bo', viewValue: 'b\'' }, //b°
     { value: 'bstar', viewValue: 'b*' },
-    { value: 'yo', viewValue: 'y°' },
+    { value: 'yo', viewValue: 'y\'' }, //y°
     { value: 'ystar', viewValue: 'y*' }
   ];
 
   Special2 = [
-    { value: 'zd', viewValue: 'z\'' },
-    { value: 'zdd', viewValue: 'z\"' }
+    { value: 'zo', viewValue: 'z\'' },
+    { value: 'zoo', viewValue: 'z\"' }
   ];
 
   Special3 = [
-    { value: 'ao', viewValue: 'a°' },
+    { value: 'ao', viewValue: 'a\'' },  //a°
     { value: 'astar', viewValue: 'a*' }
   ];
 
