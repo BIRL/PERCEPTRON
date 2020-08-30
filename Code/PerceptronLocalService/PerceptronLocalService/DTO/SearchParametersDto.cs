@@ -12,6 +12,7 @@ namespace PerceptronLocalService.DTO
         public string UserId;
         public string Title;
         public string ProtDb;
+        public string MassMode;
         public string InsilicoFragType; // Its Specical Ions
         public string FilterDb;
         public double PtmTolerance;
@@ -21,6 +22,7 @@ namespace PerceptronLocalService.DTO
         public string MwTolUnit;
         public double HopThreshhold;
         public string HopTolUnit;
+
         //public double GuiMass;
         //public string PeptideTolUnit;
 
