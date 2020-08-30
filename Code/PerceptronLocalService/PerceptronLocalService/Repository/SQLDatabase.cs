@@ -333,6 +333,7 @@ namespace PerceptronLocalService.Repository
                 Queryid = searchParameters.QueryId,
                 Autotune = searchParameters.Autotune,
                 DenovoAllow = searchParameters.DenovoAllow,
+                MassMode = searchParameters.MassMode,
                 FilterDb = searchParameters.FilterDb,
                 //GuiMass = searchParameters.GuiMass,
                 HandleIons = searchParameters.HandleIons,
