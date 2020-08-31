@@ -67,7 +67,7 @@ function createNewUser(id: number, data: any): UserData {
     title: data.title,
     time: data.time,
     qid: data.qid,
-    progress: "Completed"
+    progress: data.progress
   };
 }
 
