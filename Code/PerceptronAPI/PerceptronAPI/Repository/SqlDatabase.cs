@@ -261,7 +261,7 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        "SELECT P.Queryid, P.Title, R.CreationTime \nFROM SearchQueries as R, SearchParameters as P \nWHERE P.UserId = '" + Uid + "'AND P.Queryid=R.QueryId ",
+                        "SELECT P.Queryid, P.Title, R.CreationTime, R.Progress \nFROM SearchQueries as R, SearchParameters as P \nWHERE P.UserId = '" + Uid + "'AND P.Queryid=R.QueryId ",
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -274,7 +274,8 @@ namespace PerceptronAPI.Repository
                     {
                         title = dataReader["Title"].ToString(),
                         qid = dataReader["Queryid"].ToString(),
-                        time = dataReader["CreationTime"].ToString()
+                        time = dataReader["CreationTime"].ToString(),
+                        progress = dataReader["Progress"].ToString()
                     };
                     summaryResults.Add(temp);
                 }
@@ -283,7 +284,13 @@ namespace PerceptronAPI.Repository
                 sqlConnection1.Close();
             }
 
-
+            for (int index = 0; index < summaryResults.Count; index++)
+            {
+                if (summaryResults[index].progress == "100")
+                    summaryResults[index].progress = "Completed";
+                else
+                    summaryResults[index].progress = "In Progress";
+            }
             return summaryResults.OrderByDescending(x => x.time).ToList();
         }
 
