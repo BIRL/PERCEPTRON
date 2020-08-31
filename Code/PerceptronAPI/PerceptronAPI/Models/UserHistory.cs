@@ -10,5 +10,6 @@ namespace PerceptronAPI.Models
         public string title { get; set; }
         public string time { get; set; }
         public string qid { get; set; }
+        public string progress { get; set; }
     }
 }
