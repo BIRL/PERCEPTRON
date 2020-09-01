@@ -179,13 +179,15 @@ namespace PerceptronLocalService
             //Logging.DumpParameters(parameters);
 
             //var counter = 0;
-            int EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Somthing Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
+            int EmailMsg = 0;
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
+
+            var SQLDataBaseProteins = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
                 //Logging.CreatePeakFileDirectory(fileNumber);
-
+                EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Somthing Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
                 try
                 {
                     var executionTimes = new ExecutionTimeDto();
@@ -229,7 +231,7 @@ namespace PerceptronLocalService
 
                     //Fetching Candidate Proteins From User Selected DataBase
                     ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
-                    var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes);
+                    var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, SQLDataBaseProteins, executionTimes);
                     candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                     CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
 
@@ -440,12 +442,12 @@ namespace PerceptronLocalService
         }
         //GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, 
 
-        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, ExecutionTimeDto executionTimes)
+        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, List<ProteinDto> SQLDataBaseProteins, ExecutionTimeDto executionTimes)
         {
 
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags);
+            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags, SQLDataBaseProteins);
 
             moduleTimer.Stop();
 
