@@ -40,7 +40,7 @@ export class EmailComponent implements OnInit {
       })
   }
 
-
+  UserEmailID:any;
   onSubmit(formData) {
     if (formData.valid) {
       var x = this.router;
@@ -51,7 +51,7 @@ export class EmailComponent implements OnInit {
       this.af.auth.signInWithEmailAndPassword(email, password).then((success) => {
         this.myapp.disabled1=false;
         localStorage.setItem('login','1');
-        x.navigate(['/search']);
+        x.navigate(['/home']);   //     //Update 20200903   Redirecting to Home Page Previously, it's  >>>        navigate(['/search'])  
       }).catch((err) => {
         var errorCode = err.code;
         var errorMessage = err.message;
