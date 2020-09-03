@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -114,8 +115,10 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        "SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid +
-                        "' AND ABS(E.score - (SELECT max(E2.score)  FROM SearchResults E2 Where E2.QueryId=E.QueryId AND E2.FileId = E.FileId)) <= 0.01",
+                        //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid +
+                        //"' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
+                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + 
+                        "' AND P.ProteinRank = '"+1+"' AND P.FileUniqueId=R.FileUniqueId ",
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -127,34 +130,49 @@ namespace PerceptronAPI.Repository
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    if (j == t.Count())
-                        break;
-                    int startPos = t[j].FileName.LastIndexOf("C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\") + "C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\".Length;
-                    int length = t[j].FileName.Length - startPos;
-                    t[j].FileName = t[j].FileName.Substring(startPos, length);
-
-                    for (int index = 0; index < FileSpecificData.Count; index++)    //Loop & Conditional Statement Required to Filter the files. Only those files will be selected having "Search Results" into the Database.
-                    {
-                        if (FileSpecificData[index].FileUniqueId == t[j].FileUniqueId)
-                        {
-                            var temp = new ScanResults
+                    var temp = new ScanResults
                             {
                                 FileId = dataReader["FileId"].ToString(),
-                                FileName = t[j].FileName,
+                                FileName = Path.GetFileName(dataReader["FileName"].ToString()),
                                 Frags = 1,
                                 Mods = 1,
                                 MolW = (double)dataReader["Mw"],
                                 Truncation = "No",
                                 ProteinId = dataReader["Header"].ToString(),
                                 Score = (double)dataReader["Score"],
-                                FileUniqueId = t[j].FileUniqueId
+                                FileUniqueId = dataReader["FileUniqueId"].ToString()
                             };
-                            scanResults.Add(temp);
-                            break;
-                        }
-                    }
+                    scanResults.Add(temp);
+
                     
-                    ++j;
+                    //////if (j == t.Count())
+                    //////    break;
+                    //////int startPos = t[j].FileName.LastIndexOf("C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\") + "C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\".Length;
+                    //////int length = t[j].FileName.Length - startPos;
+                    //////t[j].FileName = t[j].FileName.Substring(startPos, length);
+
+                    //////for (int index = 0; index < FileSpecificData.Count; index++)    //Loop & Conditional Statement Required to Filter the files. Only those files will be selected having "Search Results" into the Database.
+                    //////{
+                    //////    if (FileSpecificData[index].FileUniqueId == t[j].FileUniqueId)
+                    //////    {
+                    //////        var temp = new ScanResults
+                    //////        {
+                    //////            FileId = "1",//dataReader["FileId"].ToString(),
+                    //////            FileName = t[j].FileName,
+                    //////            Frags = 1,
+                    //////            Mods = 1,
+                    //////            MolW = (double)dataReader["Mw"],
+                    //////            Truncation = "No",
+                    //////            ProteinId = dataReader["Header"].ToString(),
+                    //////            Score = (double)dataReader["Score"],
+                    //////            FileUniqueId = t[j].FileUniqueId
+                    //////        };
+                    //////        scanResults.Add(temp);
+                    //////        break;
+                    //////    }
+                    //////}
+                    
+                    //////++j;
                 }
                 dataReader.Close();
                 cmd.Dispose();
