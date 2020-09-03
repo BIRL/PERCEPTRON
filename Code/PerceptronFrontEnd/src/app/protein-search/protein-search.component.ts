@@ -29,6 +29,9 @@ import { from } from 'rxjs/observable/from';
 })
 
 export class ProteinSearchComponent implements OnInit {
+
+  IsProgressbarOn = 0;
+
   @ViewChild("imgFileInput") imgFileInput;
   @ViewChild("PtmAllow") PtmAllow;
 
@@ -284,7 +287,7 @@ export class ProteinSearchComponent implements OnInit {
     this.EmailId = '';
     this.NameOfDatabase = 'Human';
     this.NoOfOutputResults = '100';
-    this.MassMode = 2;   // For Selecting M(Neutral)
+    this.MassMode = "2";   // For Selecting M(Neutral)
     this.FilterDB = true;
     this.Mass_Tolerance = 500;
     this.Peptide_Tolerance = 15;
@@ -449,14 +452,18 @@ export class ProteinSearchComponent implements OnInit {
   }
 
 
+  
   onSubmit(form: any): void {
+    this.IsProgressbarOn = 1;
+    
+
     var user = firebase.auth().currentUser;
 
     // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
     form.HandleIons= form.HandleIons.toString();
     form.TerminalModification = form.TerminalModification.toString();
 
-    if (form.MassMode == 1){
+    if (form.MassMode == "1"){
       form.MassMode = "MH+";
     }
     else{
@@ -560,6 +567,7 @@ export class ProteinSearchComponent implements OnInit {
     //   form.PtmAllow = 0;
     // }
   
+
 
     let fi = this.imgFileInput.nativeElement;
     let stats: any = 'false';
