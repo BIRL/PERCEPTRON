@@ -22,6 +22,7 @@ export class AppComponent {
   loginButtonVisibility: any;
   @ViewChild('my') my1;
   sidebutton: any = '';
+  UserEmailID : any;  //For show/hide Admin Panel
   // menubutton: boolean;
   
   
@@ -31,8 +32,7 @@ export class AppComponent {
   @ViewChild("menubutton") menubutton;
   buttonDisabled:any;
   constructor(public af: AngularFireAuth,private router: Router) {
-    this.check();  
-    
+    this.check();
    }
   isOn: boolean;
 
@@ -52,24 +52,31 @@ export class AppComponent {
   
   ];
 
-    about() {
-     this.router.navigate(['/about']);
-    };
+  login() {
+    this.router.navigate(['/login']);
+  }
 
-    youtube() {
+  perceptron(){
+    var user = firebase.auth().currentUser;
+    this.UserEmailID = user.email;
+    if (user) {
+    this.router.navigate(['/home']);
+  } else {
+    this.router.navigate(['/home']);
+  }
+  };
+
+  about() {
+    var user = firebase.auth().currentUser;
+    this.UserEmailID = user.email;
+    this.router.navigate(['/about']);
+  };
+
+    getting_started() {
       var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/youtube']);
-    } else {
-      alert("Kindly login or use as a guest!")
-      this.router.navigate(['/login']);
-      };
-     };
-
-     getting_started() {
+    this.UserEmailID = user.email;
       this.router.navigate(['/getting']);    // /about
      };
-     
     //  {
     //   var user = firebase.auth().currentUser;
     //   if (user) {
@@ -79,10 +86,23 @@ export class AppComponent {
     //   this.router.navigate(['/login']);
     //   };
     //  };
- 
+
+    search() {
+      var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
+      if (user) {
+        this.router.navigate(['/search']);
+        // this.disabled=false;
+    } else {
+    alert("Kindly login or use as a guest!")
+    this.router.navigate(['/login']);
+    // this.disabled=false;
+    };
+    };
 
     history() {
       var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
       if (user) {
         this.router.navigate(['/history']);
     } else {
@@ -92,23 +112,53 @@ export class AppComponent {
      };
 
 
-
-check(){
-  var user = firebase.auth().currentUser;
-
+     data() {  // Sample Data
+      var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
       if (user) {
-        this.disabled=true;
-        this.disabled1=false;
-        
+        this.router.navigate(['/repository']);
     } else {
-      this.disabled=false;
-      this.disabled1=true;
-    
+      alert("Kindly login or use as a guest!");
+      this.router.navigate(['/login']);
+    } 
+    };
+
+    help() {
+      var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
+      if (user) {
+        this.router.navigate(['/help']);
+    } else {
+    alert("Kindly login or use as a guest!")
+    this.router.navigate(['/login']);
+     
+    };
+  }
+
+    youtube() {  // Video Tutorials
+      var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
+      if (user) {
+        this.router.navigate(['/youtube']);
+    } else {
+      alert("Kindly login or use as a guest!")
+      this.router.navigate(['/login']);
       };
      };
 
-     team() {
+     bug() {
       var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
+      if (user) {
+        this.router.navigate(['/bug-report']);
+    } else {
+      alert("Kindly login or use as a guest!");
+      this.router.navigate(['/login']);
+    }
+    };
+    team() {
+      var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
       if (user) {
         this.router.navigate(['/team']);
     } else {
@@ -116,15 +166,14 @@ check(){
     this.router.navigate(['/login']);
       };
      };
-
-    help() {
+    contact() {
       var user = firebase.auth().currentUser;
+      this.UserEmailID = user.email;
       if (user) {
-        this.router.navigate(['/help']);
+        this.router.navigate(['/contact']);
     } else {
     alert("Kindly login or use as a guest!")
     this.router.navigate(['/login']);
-     
     };
   }
 
@@ -139,42 +188,19 @@ check(){
   };
 }
 
-  contact() {
-    var user = firebase.auth().currentUser;
-    if (user) {
-      this.router.navigate(['/contact']);
-  } else {
-  alert("Kindly login or use as a guest!")
-  this.router.navigate(['/login']);
-   
-  };
-}
-   
+check(){
+  var user = firebase.auth().currentUser;
 
-
-    demo() {
-      this.router.navigate(['/demo']);
-    };
-    hudiara(){
-      var user = firebase.auth().currentUser;
       if (user) {
-        this.router.navigate(['/hudiara']);
+        this.disabled=true;
+        this.disabled1=false;
+        
     } else {
-    alert("Kindly login or use as a guest!")
-    this.router.navigate(['/login']);
-    };
-      
-    }
-    maps() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/maps']);
-    } else {
-    alert("Kindly login or use as a guest!")
-    this.router.navigate(['/login']);
-    };
-  };
-
+      this.disabled=false;
+      this.disabled1=true;
+    
+      };
+     };
   update_password() {
     alert('a');
     var user = firebase.auth().currentUser;
@@ -185,45 +211,6 @@ check(){
   this.router.navigate(['/login']);
   };
 };
-
-search() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/search']);
-        // this.disabled=false;
-    } else {
-    alert("Kindly login or use as a guest!")
-    this.router.navigate(['/login']);
-    // this.disabled=false;
-    };
-      
-    };
-    patterngenerator() {
-
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/patterngenerator']);
-      } else {
-      alert("Kindly login first!")
-      this.router.navigate(['/login']);
-      };  
-      }
-
-
-
-    
-    login() {
-      this.router.navigate(['/login']);
-    }
-
-    perceptron(){
-      var user = firebase.auth().currentUser;
-      if (user) {
-      this.router.navigate(['/home']);
-    } else {
-      this.router.navigate(['/home']);
-    }
-    };
 
     ngOnInit() {
     
@@ -240,37 +227,16 @@ search() {
      } else{
       this.disabled=false;
       this.disabled1=true;
-      }
-     
-      
+     }
     }
     okk(){
       alert("in okk");
       this.disabled=true;
     }
 
-    data() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/repository']);
-    } else {
-      alert("Kindly login or use as a guest!");
-      this.router.navigate(['/login']);
-    }
-      
-    };
+
   
-    bug() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.router.navigate(['/bug-report']);
-    } else {
-      alert("Kindly login or use as a guest!");
-      this.router.navigate(['/login']);
-    }
-      
-   
-    };
+
     account() {
       var user = firebase.auth().currentUser;
       if (user.emailVerified == true){
@@ -281,6 +247,7 @@ search() {
           this.disabled1=true;
           localStorage.removeItem('login');
           localStorage.removeItem('logged_in_user');
+          this.UserEmailID = "";
           this.router.navigateByUrl('/home');
         }
       }
@@ -292,6 +259,7 @@ search() {
         this.disabled1=true;
         localStorage.removeItem('login');
         localStorage.removeItem('logged_in_user');
+        this.UserEmailID = "";
         this.router.navigateByUrl('/home');
       }
       };
@@ -306,13 +274,48 @@ search() {
       }
 
       };
-      
       //Now, Added...!!!
       toggle = true;
 
       EnableDisableButtonColor(job){
         this.toggle = !this.toggle;
       }
+
+
+
+
+      demo() {
+        this.router.navigate(['/demo']);
+      };
+      hudiara(){
+        var user = firebase.auth().currentUser;
+        if (user) {
+          this.router.navigate(['/hudiara']);
+      } else {
+      alert("Kindly login or use as a guest!")
+      this.router.navigate(['/login']);
+      };
+        
+      }
+      maps() {
+        var user = firebase.auth().currentUser;
+        if (user) {
+          this.router.navigate(['/maps']);
+      } else {
+      alert("Kindly login or use as a guest!")
+      this.router.navigate(['/login']);
+      };
+      };
+          patterngenerator() {
+      
+            var user = firebase.auth().currentUser;
+            if (user) {
+              this.router.navigate(['/patterngenerator']);
+            } else {
+            alert("Kindly login first!")
+            this.router.navigate(['/login']);
+            };  
+            }
 
   }
 
