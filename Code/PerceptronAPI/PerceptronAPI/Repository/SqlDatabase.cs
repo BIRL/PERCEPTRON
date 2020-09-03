@@ -759,6 +759,36 @@ namespace PerceptronAPI.Repository
 
         }
 
+        public string UpdatingDataBase(string DatabaseName, List<FastaProteinDataDto> FastaProteinInfo)
+        {
+            string Message = "Database Successfully Updated";
+
+            try
+            {
+                string ConnetionString = "Data Source=CHIRAGH-II;Initial Catalog=" + DatabaseName + ";Integrated Security=True";
+                SqlConnection Connection = new SqlConnection(ConnetionString);
+                Connection.Open();
+
+                var QueryInfo = "";
+
+                for (int index = 0; index < FastaProteinInfo.Count; index++)
+                {
+                    QueryInfo = "Insert INTO " + DatabaseName + ".dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR) Values ('"
+                     + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "')";
+
+                    var Command = new SqlCommand(QueryInfo, Connection);
+                    Command.ExecuteNonQuery();
+                }
+
+                Connection.Close();
+            }
+
+            catch (Exception e)
+            {
+                Message = "Error";
+            }
+            return Message;
+        }
 
         //private SearchParameter GetresultInsilicoLeftDtoModel(List<ResultInsilicoMatchLeft> resultInsilicoLeft)
         //{

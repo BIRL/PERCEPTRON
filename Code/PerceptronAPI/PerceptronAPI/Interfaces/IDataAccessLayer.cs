@@ -16,6 +16,7 @@ namespace PerceptronAPI
         SearchParameter GetSearchParmeters(string qid);
         ScanResultsDownloadDataDto ScanResultsDownloadData(string qid);
         string StoreSearchParameters(SearchParametersDto parameters);
+        string UpdatingDataBase(string DatabaseName, List<FastaProteinDataDto> FastaProteinInfo);
         
         //List<string> ScanResultsAgainstFileUniqueId(string qid, string FileId);
         //MassSpectrumImagedetail GetImagePathMassSpectrum(string qid);
