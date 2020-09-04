@@ -12,29 +12,28 @@ namespace PerceptronAPI.Engine
 {
     public class FastaReader
     {
-        //readonly IDataAccessLayer _dataLayer;
         SqlDatabase _dataLayer = new SqlDatabase();
 
         AminoAcids _AminoAcids = new AminoAcids();
 
-        public void MainFastaReader(string DatabaseName, string FastaFilePath)
+        public string MainFastaReader(string DatabaseName, string FastaFilePath)
         {
 
             try
             {
                 Stopwatch Time = Stopwatch.StartNew();
-                var tempD = new List<FastaProteinDataDto>();
-                FastaFilePath = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
-                string FileName = "Human";  //Add here fasta File Name
-                string FastaFullFileName = FastaFilePath + FileName + ".fasta";
+                var tempD = new List<FastaReaderProteinDataDto>();
+                //FastaFilePath = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
+                //DatabaseName = "Human";  //Add here fasta File Name
+                string FastaFullFileName = FastaFilePath + DatabaseName + ".fasta";
 
-                var ExcelFileName = FastaFilePath + FileName + ".xlsx";
+                var ExcelFileName = FastaFilePath + DatabaseName + ".xlsx";
 
 
                 var FastaFile = new StreamReader(FastaFullFileName);
                 var ReadPeripheralFastaFile = new StreamReader(FastaFullFileName); // Reading same file but for using ReadLine() method separately...!
 
-                var FastaProteinInfo = new List<FastaProteinDataDto>();
+                var FastaProteinInfo = new List<FastaReaderProteinDataDto>();
                 int FastaFileLineCount = File.ReadLines(FastaFullFileName).Count();  //ReadLines is more computationally efficient than ReadAllLines  &  ReadLines() creates an enumerator on the file, reading it line-by-line (actually using StreamReader. ReadLine() ).
 
                 string NextLine = ReadPeripheralFastaFile.ReadLine();
@@ -50,6 +49,7 @@ namespace PerceptronAPI.Engine
                     tempHeader = "";
                     tempSequence = "";
                     string FastaFileLine;
+                    string ProteinDescription = "";
                     //string NextLine;
 
                     while (true)
@@ -64,6 +64,8 @@ namespace PerceptronAPI.Engine
                                 /*Uniprot Accession Number have 6 to 10 alphanumrical characters...*/
                                 /* https://www.uniprot.org/help/accession_numbers  */
                                 //FastaFileLine = ">sp|ABCDEFGHIJKL123|NUD|||||4B"; //I am Just for testing
+                                ProteinDescription = FastaFileLine;
+                                ProteinDescription = ProteinDescription.Replace("'", "''");
 
                                 tempHeader = FastaFileLine.Substring(4, 6); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
                                 if (FastaFileLine[10] != '|') //If Accession Number Length is >6
@@ -87,15 +89,16 @@ namespace PerceptronAPI.Engine
                             break;
                         }
                     }
-                    GetSequenceInfoData(tempHeader, FastaFilePath, FileName, tempSequence, FastaProteinInfo);
+                    GetSequenceInfoData(tempHeader, ProteinDescription, FastaFilePath, DatabaseName, tempSequence, FastaProteinInfo);
 
                 }
                 FastaProteinInfo = FastaProteinInfo.OrderByDescending(n => n.MolecularWeight).ToList();  //Sort By Descending Order
 
-                var Message = _dataLayer.UpdatingDataBase(DatabaseName, FastaProteinInfo);
+                string Message = _dataLayer.UpdatingDatabase(DatabaseName, FastaProteinInfo);
 
                 FastaFile.Close();
                 Time.Stop();
+                return Message;
             }
             catch (Exception)
             {
@@ -103,8 +106,7 @@ namespace PerceptronAPI.Engine
             }
         }
 
-
-        public List<FastaProteinDataDto> GetSequenceInfoData(string Header, string Path, string FileName, string Sequence, List<FastaProteinDataDto> FastaProteinInfo)
+        public List<FastaReaderProteinDataDto> GetSequenceInfoData(string Header, string ProteinDescription, string Path, string FileName, string Sequence, List<FastaReaderProteinDataDto> FastaProteinInfo)
         {//This method will calculate Insilico Left & Right Ion Fragments
 
             int SequenceLength = Sequence.Length;
@@ -135,7 +137,7 @@ namespace PerceptronAPI.Engine
             RightIonString = String.Join(",", RightIonArray);
             double WholeProteinMass = RightIonMass + 2 * (1.0078250321) + 15.9949146221; // RightIonMass + H2O
 
-            var temp = new FastaProteinDataDto(Header, WholeProteinMass, Sequence, LeftIonString, RightIonString);
+            var temp = new FastaReaderProteinDataDto(Header, ProteinDescription, WholeProteinMass, Sequence, LeftIonString, RightIonString);
             FastaProteinInfo.Add(temp);
 
 

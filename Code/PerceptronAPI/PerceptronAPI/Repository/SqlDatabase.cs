@@ -759,7 +759,7 @@ namespace PerceptronAPI.Repository
 
         }
 
-        public string UpdatingDataBase(string DatabaseName, List<FastaProteinDataDto> FastaProteinInfo)
+        public string UpdatingDatabase(string DatabaseName, List<FastaReaderProteinDataDto> FastaReaderProteinInfo)  //For Updating Database Enteries by FastaReader (.fasta to SQL query)
         {
             string Message = "Database Successfully Updated";
 
@@ -769,12 +769,17 @@ namespace PerceptronAPI.Repository
                 SqlConnection Connection = new SqlConnection(ConnetionString);
                 Connection.Open();
 
+                var Query0 = "DELETE FROM " + DatabaseName + ".dbo.ProteinInfoes";      //Deleting previous data from the Database to avoid error like "Duplicating Primary Key Rule"
+                var Command0 = new SqlCommand(Query0, Connection);
+                Command0.ExecuteNonQuery();
+
                 var QueryInfo = "";
 
-                for (int index = 0; index < FastaProteinInfo.Count; index++)
+
+                for (int index = 0; index < FastaReaderProteinInfo.Count; index++)
                 {
-                    QueryInfo = "Insert INTO " + DatabaseName + ".dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR) Values ('"
-                     + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "')";
+                    QueryInfo = "Insert INTO " + DatabaseName + ".dbo.ProteinInfoes (ID, ProteinDescription, MW, Seq, Insilico, InsilicoR) Values ('"
+                     + FastaReaderProteinInfo[index].ID + "','" + FastaReaderProteinInfo[index].ProteinDescription + "','" + FastaReaderProteinInfo[index].MolecularWeight + "','" + FastaReaderProteinInfo[index].Sequence + "','" + FastaReaderProteinInfo[index].InsilicoLeft + "','" + FastaReaderProteinInfo[index].InsilicoRight + "')";
 
                     var Command = new SqlCommand(QueryInfo, Connection);
                     Command.ExecuteNonQuery();
@@ -789,6 +794,49 @@ namespace PerceptronAPI.Repository
             }
             return Message;
         }
+
+        public List<FastaWriterProteinDataDto> ReadingDataBase(string DatabaseName)  //For Downloading Database Enteries by FastaWriter (SQL Database to .fasta)
+        {
+            var FastaWriterProteinInfo = new List<FastaWriterProteinDataDto>();
+            try
+            {
+                using (new PerceptronDatabaseEntities())
+                {
+                    var sqlConnection1 =
+                        new SqlConnection(
+                            "Server= CHIRAGH-II; Database= " + DatabaseName + "; Integrated Security=SSPI;");
+                    var cmd = new SqlCommand
+                    {
+                        CommandText =
+                            "SELECT ProteinDescription, Seq \nFROM ProteinInfoes",
+                        CommandType = CommandType.Text,
+                        Connection = sqlConnection1
+                    };
+                    sqlConnection1.Open();
+
+                    var dataReader = cmd.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        var tempFastaWriterProteinInfo = new FastaWriterProteinDataDto()
+                        {
+                            ProteinDescription = dataReader["ProteinDescription"].ToString(),
+                            Sequence = dataReader["Seq"].ToString(),
+                        };
+                        FastaWriterProteinInfo.Add(tempFastaWriterProteinInfo);
+                    }
+
+                    dataReader.Close();
+                    cmd.Dispose();
+                    sqlConnection1.Close();
+                }
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+            return FastaWriterProteinInfo;
+        }
+
 
         //private SearchParameter GetresultInsilicoLeftDtoModel(List<ResultInsilicoMatchLeft> resultInsilicoLeft)
         //{
