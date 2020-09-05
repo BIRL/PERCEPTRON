@@ -1,3 +1,4 @@
+<div class="loader"></div>
 <div style="width:90%; min-width: 600px; margin:0 auto;">
   <mat-card>
     <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Protein
@@ -19,7 +20,7 @@
   <div style="height:50px;font-size:1px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
 
- 
+
 
 
 
@@ -28,38 +29,38 @@
     <label style="color:blue;">Note that proteins have canonical sequences (<a
         href="https://www.uniprot.org/help/canonical_and_isoforms">link</a>). </label>
   </div>
-
+  <!-- <mat-progress-bar mode="indeterminate" *ngIf='this.condition==1'></mat-progress-bar> -->
   <div class="example-container mat-elevation-z8">
 
 
     <mat-table [dataSource]="dataSource" matSort>
-
+      <div class="loader"></div>
       <!-- Serial Column -->
       <ng-container matColumnDef="serial">
         <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. #
         </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.serial}} </mat-cell>
+        <mat-cell style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.serial}}</mat-cell>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> File Name
         </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.name}} </mat-cell>
+        <mat-cell style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.name}} </mat-cell>
       </ng-container>
 
       <!-- ID Column -->
       <ng-container matColumnDef="id">
         <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein ID
         </mat-header-cell>
-        <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.id}} </mat-cell>
+        <mat-cell style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.id}} </mat-cell>
       </ng-container>
 
       <!-- Score Column -->
       <ng-container matColumnDef="score">
         <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Protein Score
         </mat-header-cell>
-        <mat-cell matTooltip="{{row.score}}" style=" font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(4)}}
+        <mat-cell matTooltip="{{row.score}}" style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(4)}}
         </mat-cell>
       </ng-container>
 
@@ -67,7 +68,7 @@
       <ng-container matColumnDef="molW">
         <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size: 15px;"> Molecular
           Weight </mat-header-cell>
-        <mat-cell matTooltip="{{row.molW}}" style=" font-size:15px;" *matCellDef="let row"> {{row.molW.toFixed(4)}}
+        <mat-cell matTooltip="{{row.molW}}" style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.molW.toFixed(4)}}
         </mat-cell>
       </ng-container>
 
