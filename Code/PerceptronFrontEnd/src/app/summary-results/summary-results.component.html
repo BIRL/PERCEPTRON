@@ -52,7 +52,7 @@
         <!-- Score Column -->
         <ng-container matColumnDef="score">
           <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Protein Score </mat-header-cell>
-          <mat-cell matTooltip="{{row.score}}"  style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(4)}} </mat-cell>
+          <mat-cell matTooltip="{{row.score}}"  style="cursor: pointer; font-size:15px;" *matCellDef="let row"> {{row.score.toFixed(5)}} </mat-cell>
         </ng-container>
   
         <!-- ResID Column -->

@@ -114,7 +114,7 @@ export class DetailedResultsComponent implements OnInit {
     ProteinRank.innerHTML = this.rank;
     ProteinID.innerHTML = data.Results.Results.Header;
     ProteinName.innerHTML = data.Results.Results.Header;
-    ProteinScore.innerHTML = data.Results.Results.Score.toFixed(6);
+    ProteinScore.innerHTML = data.Results.Results.Score;   //data.Results.Results.Score.toFixed(6)
     MolW.innerHTML = data.Results.Results.Mw.toFixed(6);
     MatchedFrags.innerHTML = data.Results.NoOfMatchedFragments;
     TermMods.innerHTML = data.Results.Results.TerminalModification;
