@@ -7,12 +7,12 @@ namespace PerceptronAPI.Models
 {
     public class ResultsDownloadDto
     {
-        public List<string> AllResultFilesNames;
+        public string ZipFileWithPath;
         public List<byte[]> ListOfFileBlobs;
         
-        public ResultsDownloadDto(List<string> cAllResultFilesNames, List<byte[]> cListOfFileBlobs)
+        public ResultsDownloadDto(string cZipFileWithPath, List<byte[]> cListOfFileBlobs)
         {
-            AllResultFilesNames = cAllResultFilesNames;
+            ZipFileWithPath = cZipFileWithPath;
             ListOfFileBlobs = cListOfFileBlobs;
         }
     }
