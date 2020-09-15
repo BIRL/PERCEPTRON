@@ -1,0 +1,169 @@
+<form #formSubmit="ngForm" (ngSubmit)="onSubmit(formSubmit.value);" class="ui form">
+  <div style="width:90%; min-width: 600px; margin:0 auto;">
+    <mat-card>
+      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">False Discovery Rate</h4>
+    </mat-card>
+
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+    <div>
+      <p style="font-size:12px; font-style: italic; color:red;">
+        Required Fields *
+      </p>
+    </div>
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
+        <mat-panel-title style="font-size:23px; font-weight:600;  color:Black;">
+          Ganday Bhaiya
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card-content>
+          <mat-grid-list cols="8" rowHeight="130px">
+  
+              <mat-grid-tile colspan="2" rowspan="1" rowHeight="50px">
+                  <mat-form-field style="padding-left:15px; width:100%">
+                    <input matInput matTooltip="I don't know whta to write here so..."
+                      matTooltipClass="mat-tooltip" (keypress)="keyPress1($event)" matTooltipPosition="before"
+                      placeholder="Some Text Here" class="asterisk" required #textHere='ngModel' name='TextHere'
+                      [(ngModel)]='TextHere' ngModel>
+                    <mat-error style="font-style: italic;" *ngIf="textHere?.invalid && (textHere.dirty || textHere.touched)">
+                      <div *ngIf="textHere.errors.required">
+                        Something is required here.
+                      </div>
+                    </mat-error>
+                  </mat-form-field>
+                </mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+  
+            <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+              <span matTooltip="Browse and upload the Excel file"
+                matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
+                <label class="required" style='display:inline;  font-weight:500;'>Upload Excel File</label>
+               
+                <br />
+                <label style='display:inline;  font-weight:500; '>Select File * : </label>
+                <style>
+                  .required:after {
+                    content: "*";
+                    margin: auto;
+                    padding: 5px;
+                    color: rgb(43, 39, 39);
+                  }
+                </style>
+                <label style="display:inline;">&nbsp;</label>
+                <div style='display:inline;' class="button-row">
+                  <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
+                    mat-mini-fab (click)="imgFileInput.click()">
+                    <mat-icon class='iconclass'>insert_drive_file</mat-icon>
+                  </button>
+                  <style>
+                    .buttonclass {
+                      width: 35px;
+                      height: 35px;
+                    }
+  
+                    .iconclass {
+                      font-size: 22px;
+                      margin-top: -4px;
+                    }
+                  </style>
+                  <br />
+                  <label style="display:inline;">&nbsp;</label>
+                  <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
+                    *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
+  
+                  <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
+                    name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(Uploaded_File)"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
+                    Please select an Excel file.
+                  </mat-error>
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length>1">
+                    Please select just one Excel file.
+                  </mat-error>
+                </div>
+              </span>
+            </mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+
+            <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+              <span matTooltip="Browse and upload the Excel file"
+                matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
+                <label class="required" style='display:inline;  font-weight:500;'>Upload the other Excel File</label>
+               
+                <br />
+                <label style='display:inline;  font-weight:500; '>Select File * : </label>
+                <style>
+                  .required:after {
+                    content: "*";
+                    margin: auto;
+                    padding: 5px;
+                    color: rgb(43, 39, 39);
+                  }
+                </style>
+                <label style="display:inline;">&nbsp;</label>
+                <div style='display:inline;' class="button-row">
+                  <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
+                    mat-mini-fab (click)="imgFile_Input.click()">
+                    <mat-icon class='iconclass'>insert_drive_file</mat-icon>
+                  </button>
+                  <style>
+                    .buttonclass {
+                      width: 35px;
+                      height: 35px;
+                    }
+  
+                    .iconclass {
+                      font-size: 22px;
+                      margin-top: -4px;
+                    }
+                  </style>
+                  <br />
+                  <label style="display:inline;">&nbsp;</label>
+                  <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
+                    *ngIf='File_Info.files.length==1'>{{File_Info.files[0].name}}</i></a>
+  
+                  <input #File_Info type="file" #imgFile_Input (ngModel)="File_Info" #File_Name="ngModel" required
+                    name="File_Name" [(ngModel)]="filenameModel" style="display: none;" id="File_Name" (change)="upload(Uploaded_File)"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length==0">
+                    Please select an Excel file.
+                  </mat-error>
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length>1">
+                    Please select just one Excel file.
+                  </mat-error>
+                </div>
+              </span>
+            </mat-grid-tile>
+          </mat-grid-list>
+
+      </mat-card-content>
+  </mat-expansion-panel>
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+  <mat-grid-list cols="8" rowHeight="100px">
+
+      <mat-grid-tile colspan='5'></mat-grid-tile>
+  
+      <mat-grid-tile colspan="1" rowspan="1">
+      <mat-progress-bar mode="indeterminate" *ngIf="this.IsWaitSubmit"></mat-progress-bar>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+      <label style="padding-right:15px;"></label>
+      <button mat-raised-button matTooltip="Click to clear all values" matTooltipPosition="before" type="reset"
+          style="background-color: #212121; color:aliceblue" class="ui button">Reset</button>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+      <label style="padding-left:15px;"></label>
+      <button mat-raised-button matTooltip="Click to submit FASTA file" class="button-sumbit"
+          [disabled]="!formSubmit.valid || this.IsWaitDownload == 1 || FileInfo.files.length>1 || File_Info.files.length>1" matTooltipPosition="after" type="submit"
+          style="background-color: #201a93; color:aliceblue" class="ui button">Submit</button>
+      </mat-grid-tile>
+  </mat-grid-list>
+        
+</div>
+</form>
