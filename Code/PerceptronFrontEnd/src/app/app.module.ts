@@ -55,6 +55,7 @@ import { UpdateUsernameComponent } from './update-username/update-username.compo
 import { ResultsVisualizationComponent } from './results-visualization/results-visualization.component';
 import { ResultsDownloadComponent } from './results-download/results-download.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { FdrComponent } from './fdr/fdr.component';
 
 
 @NgModule({
@@ -95,7 +96,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     UpdateUsernameComponent,
     ResultsVisualizationComponent,
     ResultsDownloadComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    FdrComponent
   ],
   imports: [
     MatIconModule,

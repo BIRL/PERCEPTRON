@@ -3,6 +3,7 @@ import { HudiaraComponent } from './hudiara/hudiara.component';
 import { BugComponent } from './bug/bug.component';
 import { HelpComponent } from './help/help.component';
 import { HistoryComponent } from './history/history.component';
+import { FdrComponent } from './fdr/fdr.component';
 import { DemoComponent } from './demo/demo.component';
 import { AboutComponent } from './about/about.component';
 import { TestformComponent } from './testform/testform.component';
@@ -62,6 +63,7 @@ export const router: Routes = [
     { path: 'demo', component: DemoComponent,  canActivate: [AuthGuard]},
     { path: 'team', component: TeamComponent,  canActivate: [AuthGuard]},
     { path: 'history', component: HistoryComponent, canActivate: [AuthGuard]},
+    { path: 'fdr', component: FdrComponent, canActivate: [AuthGuard]},
     { path: 'help', component: HelpComponent, canActivate: [AuthGuard]},
     { path: 'suggest', component: SuggestionsComponent, canActivate: [AuthGuard]},
     { path: 'summaryresults/:querryId/:fileID', component: SummaryResultsComponent},
