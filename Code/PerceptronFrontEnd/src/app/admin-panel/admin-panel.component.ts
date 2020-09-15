@@ -13,6 +13,10 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AdminPanelComponent implements OnInit {
 
+  NameOfDatabase: any;
+  filenameModel: any;
+
+
   IsWaitSubmit = 0;
   IsWaitDownload = 0;
   stateCtrl: FormControl;
@@ -23,19 +27,22 @@ export class AdminPanelComponent implements OnInit {
     this.filteredStates = this.stateCtrl.valueChanges
       .startWith(null)
       .map(state => state ? this.filterStates(state) : this.states.slice());
-   }
+  }
 
-   filterStates(name: string) {
+  filterStates(name: string) {
     return this.states.filter(state =>
       state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
   ngOnInit() {
   }
-  
-  ListOfDatabases = [
-    // { value: 'Swissprot', viewValue: 'Swissprot' },
-    // { value: 'TrEMBL', viewValue: 'TrEMBL' },
+
+  ListOfDatabasesForUpdate = [
+    { value: 'Human', viewValue: 'Human' },
+    { value: 'Ecoli', viewValue: 'Ecoli' }
+  ];
+
+  ListOfDatabasesForDownload = [
     { value: 'Human', viewValue: 'Human' },
     { value: 'Ecoli', viewValue: 'Ecoli' }
   ];
@@ -45,16 +52,19 @@ export class AdminPanelComponent implements OnInit {
   ];
 
   onSubmit(file: any): void {
-  
+
   }
 
-  onDownload(fileDownload: any): void{
+  onDownload(fileDownload: any): void {
     this.IsWaitDownload = 1;
     alert("Dear! User your database is successfully downloaded.");
     this.IsWaitDownload = 0;
   }
 
 
+  upload(Uploaded_File: any): void {
+
+  }
   // let fi = this.imgFileInput.nativeElement;
   //   let stats: any = 'false';
   //   console.log(form);

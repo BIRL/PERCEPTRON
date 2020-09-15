@@ -14,37 +14,39 @@
 
     </div>
 
-    <mat-card>
-      <mat-card-header>
-        <h3 style="padding-left:0px; font-weight:bold; font-family: roboto, arial, sans-serif;">Update Database</h3>
-      </mat-card-header>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
+        <mat-panel-title style="font-size:23px; font-weight:600;  color:Black;">
+          Update Database
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
       <mat-card-content>
         <mat-grid-list cols="8" rowHeight="130px">
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <mat-form-field matTooltip="Select protein database from which you want to search protein(s)"
+            <mat-form-field matTooltip="Select protein database which you want to replace with the new one"
               matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
-                name="ProteinDatabase">
-                <mat-option *ngFor="let SelectedDatabase of ListOfDatabases" [value]="SelectedDatabase.value">
-                  {{SelectedDatabase.viewValue}}
+              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabaseToBeUpdated" #UpdateDatabase='ngModel' required
+                name="UpdateDatabase">
+                <mat-option *ngFor="let SelectDatabaseToUpdate of ListOfDatabasesForUpdate" [value]="SelectDatabaseToUpdate.value">
+                  {{SelectDatabaseToUpdate.viewValue}}
                 </mat-option>
               </mat-select>
               <mat-error style="font-style: italic;"
-                *ngIf="ProteinDatabase?.invalid && (ProteinDatabase.dirty || ProteinDatabase.touched)">
-                <div *ngIf="ProteinDatabase.errors.required">
-                  Please select protein database.
+                *ngIf="UpdateDatabase?.invalid && (UpdateDatabase.dirty || UpdateDatabase.touched)">
+                <div *ngIf="UpdateDatabase.errors.required">
+                  Please select protein database to be updated.
                 </div>
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
 
-
-          <mat-grid-tile colspan="3" rowspan="1" style="padding:0px;">
+          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <span matTooltip="Browse and upload FASTA file (‘fasta' file for updating database) "
               matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-              <!-- <label class="required" style='display:inline;  font-weight:500;'>Upload FASTA File</label> -->
+              <label class="required" style='display:inline;  font-weight:500;'>Upload FASTA File</label>              
               <br />
               <label style='display:inline;  font-weight:500; '>Select File * : </label>
               <style>
@@ -57,7 +59,7 @@
               </style>
               <label style="display:inline;">&nbsp;</label>
               <div style='display:inline;' class="button-row">
-                <button mat-button class='buttonclass' type='button' style='display:inline; background-color:#212121 '
+                <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
                   mat-mini-fab (click)="imgFileInput.click()">
                   <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                 </button>
@@ -74,12 +76,11 @@
                 </style>
                 <br />
                 <label style="display:inline;">&nbsp;</label>
+                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
+                  *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
 
-                <ng-template #onefile>
-                  <i *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i>
-                </ng-template>
                 <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
-                  name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
+                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(Uploaded_File)"
                   accept=".fasta" multiple ngModel />
                 <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                   Please select FASTA file.
@@ -90,27 +91,29 @@
               </div>
             </span>
           </mat-grid-tile>
+          <!-- <mat-grid-tile></mat-grid-tile> -->
 
-          <mat-grid-tile colspan="2" rowspan="1">
+          <mat-grid-tile colspan="1" rowspan="1">
             <mat-progress-bar mode="indeterminate" *ngIf="this.IsWaitSubmit"></mat-progress-bar>
           </mat-grid-tile>
 
-          <mat-grid-tile colspan="1" rowspan="2">
+          <mat-grid-tile colspan="1" rowspan="1">
+            <label style="padding-right:15px;"></label>
+            <button mat-raised-button matTooltip="Click to clear all values" matTooltipPosition="before" type="reset"
+              style="background-color: #212121; color:aliceblue" class="ui button">Reset</button>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="1" rowspan="1">
             <label style="padding-left:15px;"></label>
             <button mat-raised-button matTooltip="Click to submit FASTA file" class="button-sumbit"
-              [disabled]="!formSubmit.valid || this.IsWaitDownload == 1" matTooltipPosition="after" type="submit"
-              style="background-color: #201a93; color:aliceblue" class="ui button">Submit</button>
+              [disabled]="!formSubmit.valid || this.IsWaitDownload == 1 || FileInfo.files.length>1" matTooltipPosition="after" type="submit"
+              style="background-color: #201a93; color:aliceblue" class="ui button">Update</button>
           </mat-grid-tile>
-        </mat-grid-list>
 
-        <mat-grid-tile colspan="1" rowspan="2">
-          <button mat-raised-button matTooltip="Click to clear all values" matTooltipPosition="before" type="reset"
-            style="background-color: #212121; color:aliceblue" class="ui button">Reset</button>
-          <label style="padding-right:15px;"></label>
-        </mat-grid-tile>
+      </mat-grid-list>
 
       </mat-card-content>
-    </mat-card>
+    </mat-expansion-panel>
   </div>
 </form>
 
@@ -120,10 +123,16 @@
 
 <form #formDownload="ngForm" (ngDownload)="onDownload(formDownload.value);" class="ui form">
   <div style="width:90%; min-width: 600px; margin:0 auto;">
-    <mat-card>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
+        <mat-panel-title style="font-size:23px; font-weight:600;  color:Black;">
+          Download Database
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    <!-- <mat-card>
       <mat-card-header>
-        <h3 style="padding-left:0px; font-weight:bold; font-family: roboto, arial, sans-serif;">Download Database</h3>
-      </mat-card-header>
+        <h4 style="padding-left:0px; font-weight:bold; font-family: roboto, arial, sans-serif;">Download Database</h4>
+      </mat-card-header> -->
 
       <mat-card-content>
         <mat-grid-list cols="8" rowHeight="100px">
@@ -133,33 +142,40 @@
               matTooltipPosition="before" style="width: 100%; padding-left:15px;">
               <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
                 name="ProteinDatabase">
-                <mat-option *ngFor="let SelectedDatabase of ListOfDatabases" [value]="SelectedDatabase.value">
-                  {{SelectedDatabase.viewValue}}
+                <mat-option *ngFor="let SelectDatabaseToDownload of ListOfDatabasesForDownload" [value]="SelectDatabaseToDownload.value">
+                  {{SelectDatabaseToDownload.viewValue}}
                 </mat-option>
               </mat-select>
               <mat-error style="font-style: italic;"
                 *ngIf="ProteinDatabase?.invalid && (ProteinDatabase.dirty || ProteinDatabase.touched)">
                 <div *ngIf="ProteinDatabase.errors.required">
-                  Please select protein database to download.
+                  Please select protein database to be downloaded.
                 </div>
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
+          <mat-grid-tile colspan="2"></mat-grid-tile>
+          <!-- <mat-grid-tile colspan="2"></mat-grid-tile> -->
+
+          <mat-grid-tile colspan="2" rowspan="1">
+            <mat-progress-bar mode="indeterminate" *ngIf="this.IsWaitDownload"></mat-progress-bar>
+          </mat-grid-tile>
 
           <mat-grid-tile colspan="1" rowspan="1">
+            <label style="padding-right:15px;"></label>
+            <button mat-raised-button matTooltip="Click to clear all values" matTooltipPosition="before" type="reset"
+              style="background-color: #212121; color:aliceblue" class="ui button">Reset</button>
+          </mat-grid-tile>
+          
+          <mat-grid-tile colspan="1.5" rowspan="1">
             <label style="padding-left:15px;"></label>
             <button mat-raised-button matTooltip="Click to download FASTA file" class="button-sumbit"
               [disabled]="!formDownload.valid  || this.IsWaitSubmit == 1" matTooltipPosition="after" type="submit"
               style="background-color: #201a93; color:aliceblue" class="ui button">Download</button>
           </mat-grid-tile>
 
-
-          <mat-grid-tile colspan="2" rowspan="1">
-            <mat-progress-bar mode="indeterminate" *ngIf="this.IsWaitDownload"></mat-progress-bar>
-          </mat-grid-tile>
-
         </mat-grid-list>
       </mat-card-content>
-    </mat-card>
+    </mat-expansion-panel>
   </div>
 </form>
