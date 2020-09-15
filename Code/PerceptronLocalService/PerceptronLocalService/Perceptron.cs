@@ -187,7 +187,7 @@ namespace PerceptronLocalService
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
                 //Logging.CreatePeakFileDirectory(fileNumber);
-                EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Somthing Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
+                EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Something Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
                 try
                 {
                     var executionTimes = new ExecutionTimeDto();
