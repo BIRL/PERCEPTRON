@@ -111,6 +111,11 @@ export class AppComponent {
       };
      };
 
+     fdr() {
+      var user = firebase.auth().currentUser;
+    this.UserEmailID = user.email;
+      this.router.navigate(['/fdr']);
+     };
 
      data() {  // Sample Data
       var user = firebase.auth().currentUser;

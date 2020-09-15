@@ -127,6 +127,20 @@
           Search Results & History</label>
 
       </button>
+
+      <button matTooltip="Calculate the false discovery rate" matTooltipPosition="after" mat-button
+        style="color:grey; height: 45px; width:100%; text-align:left;  font-size:large;" (click)="fdr()">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+          <path fill="#007a8a"
+            d="M16.5,12A2.5,2.5 0 0,0 19,9.5A2.5,2.5 0 0,0 16.5,7A2.5,2.5 0 0,0 14,9.5A2.5,2.5 0 0,0 16.5,12M9,11A3,3 0 0,0 12,8A3,3 0 0,0 9,5A3,3 0 0,0 6,8A3,3 0 0,0 9,11M16.5,14C14.67,14 11,14.92 11,16.75V19H22V16.75C22,14.92 18.33,14 16.5,14M9,13C6.67,13 2,14.17 2,16.5V19H9V16.75C9,15.9 9.33,14.41 11.37,13.28C10.5,13.1 9.66,13 9,13Z" />
+        </svg>
+
+        <label
+          style="display:inline-block; color:#212121;  cursor:pointer;font-size:15px; font-weight:500; letter-spacing:0px; font-family: Roboto, Arial, sans-serif;padding-left: 15px;">
+          False Discovery Rate</label>
+
+      </button>
+
       <div style="height:10px;font-size:1px;">&nbsp;</div>
       <button matTooltip="Sample top-down mass spectrometry data for use with PERCEPTRON" matTooltipPosition="after"
         mat-button style="color:grey;  width:100%; height: 45px; text-align:left; font-size:large;" (click)="data()">
