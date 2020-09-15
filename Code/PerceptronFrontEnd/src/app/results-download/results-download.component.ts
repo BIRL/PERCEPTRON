@@ -26,9 +26,9 @@ export class ResultsDownloadComponent implements OnInit {
     //See it later just for #Know
     //var Data = this.sanitizer.bypassSecurityTrustUrl('data:text/plain;base64,' + filedata);
 
-    for (let i = 0; i < ResultsData.ListOfFileBlobs.length; i++) {
-      let FileName = ResultsData.AllResultFilesNames[i];
-      let CheckFileType =  FileName.split('.').pop();
+    for (let i = 0; i < ResultsData.ListOfFileBlobs.length; i++) {  //#ENNT: Can be Removed...
+      let FileName = ResultsData.ZipFileWithPath;
+      let CheckFileType = FileName.split('.').pop();
       let IndividualResultsFile = ResultsData.ListOfFileBlobs[i];
 
       const byteCharacters = atob(IndividualResultsFile);
@@ -37,21 +37,13 @@ export class ResultsDownloadComponent implements OnInit {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      //const blob = new Blob();
-      if (CheckFileType == "txt"){
-        this.blob = new Blob([byteArray], { type: "text/plain;charset=utf-8" });
-      }
-      else if(CheckFileType == "csv"){
-        this.blob = new Blob([byteArray], { type: "text/csv;charset=utf-8" });
-      }
-      //const blobUrl = URL.createObjectURL(blob);
+      this.blob = new Blob([byteArray], { type: "application/zip;charset=utf-8" })//"text/plain;charset=utf-8" });
 
       fileSaver.saveAs(this.blob, FileName);
       console.log(FileName + "Successfully Downloaded!!!");
     }
-    alert("Dear User Your Result File(s) Downloaded. \nPlease See Your Download Folder.");
+    //alert("Dear User Your Result File(s) Downloaded. \nPlease See Your Download Folder.");
 
 
   }
-
 }
