@@ -17,27 +17,34 @@ namespace PerceptronLocalService.Engine
     class ProteinRepositorySql : IProteinRepository
     {
 
-        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags)
+        public List<ProteinDto> FetchingSqlDatabaseProteins(SearchParametersDto parameters)
         {
             var query = GetQuery(parameters.ProtDb);
 
             var connectionString = GetConnectionString(parameters.ProtDb);
-            List<SerializedProteinDataDto> prot;
+            List<SerializedProteinDataDto> FetchedSqlProteins;
             using (var connection = new SqlConnection(connectionString))
             {
-                prot = connection.Query<SerializedProteinDataDto>(query).ToList();
-
+                FetchedSqlProteins = connection.Query<SerializedProteinDataDto>(query).ToList();
             }
 
-            var proteins = new List<ProteinDto>();
+            var SqlDatabaseProteins = new List<ProteinDto>();
 
-            CandidateProteinListsDto CandidateProteinListsInfo = new CandidateProteinListsDto();
-            var CandidateList = CandidateProteinListsInfo.CandidateProteinList;
-            var CandidateListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
-
-
-            foreach (var proteinInfo in prot)
+            foreach (var proteinInfo in FetchedSqlProteins)
             {
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //if ((proteinInfo.ID == "P60624"))///***      P62805      // || (proteinInfo.ID == "A0A0B4J280"))// || (proteinInfo.ID != "P04439"))
+                ////(proteinInfo.ID != "A0A087WTH1")// || proteinInfo.ID != "A0A0B4J280" || proteinInfo.ID != "P57738")   //   A6NHS1    for ptm insilico generator
+                //{
+                //    int wait = 1;
+                //}
+                //else
+                //{
+                //    continue;
+                //}
+
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                 var insilico = new InsilicoObjectDto()
                 {
                     InsilicoMassLeft = proteinInfo.Insilico.Split(',').Select(double.Parse).ToList(),
@@ -57,6 +64,24 @@ namespace PerceptronLocalService.Engine
                     OriginalSequence = proteinInfo.Seq
 
                 };
+
+                SqlDatabaseProteins.Add(protein);
+
+            }
+            return SqlDatabaseProteins;
+        }
+
+
+        public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> SqlDatabaseProteins)
+        {
+            CandidateProteinListsDto CandidateProteinListsInfo = new CandidateProteinListsDto();
+            var CandidateList = CandidateProteinListsInfo.CandidateProteinList;
+            var CandidateListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+
+            for (int index = 0; index < SqlDatabaseProteins.Count; index++)
+            {
+                var protein = SqlDatabaseProteins[index];
+
 
                 if (parameters.FilterDb == "True")
                 {
@@ -117,6 +142,7 @@ namespace PerceptronLocalService.Engine
                     CandidateListTruncated.Add(protein);
                 }
             }
+
             return CandidateProteinListsInfo;
         }
 
