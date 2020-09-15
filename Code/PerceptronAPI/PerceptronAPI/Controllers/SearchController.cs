@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,6 +11,8 @@ using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
 using System.Net.Mail;
 using System.IO;
+using System.IO.Compression;
+//using System.IO.Compression.FileSystem;
 using PerceptronAPI.Engine;
 using System.Windows.Forms;
 using GraphForm;
@@ -31,6 +32,9 @@ namespace PerceptronAPI.Controllers
         public SearchController()
         {
             _dataLayer = new SqlDatabase();
+
+            //var blob = Database_Download();
+            //var Message = Database_Update();
             //Server.MapPath("~");
         }
         //public string Get_progress(string em)
@@ -240,26 +244,33 @@ namespace PerceptronAPI.Controllers
             var ScanData = _dataLayer.ScanResultsDownloadData(input);    //Scanning File Unique Ids from SearchFiles Table
 
             string filePath = @"C:\\PerceptronApi-tempResultsFolder\\";
-
+            string ZipFileName = filePath + "Results_" + input + ".zip";
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
-            var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);
+            var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);   // Writing: All Results files 
 
             string fullfilename = "";
-            for (int i = 0; i < AllResultFilesNames.Count; i++)
+
+            if (File.Exists(ZipFileName))
+                File.Delete(ZipFileName); //Deleted Pre-existing file
+
+            using (var archieve = ZipFile.Open(ZipFileName, ZipArchiveMode.Create)) // Creating Zip File
             {
-
-                fullfilename = filePath + AllResultFilesNames[i];
-
-                using (FileStream fileStream = File.OpenRead(fullfilename))
+                for (int i = 0; i < AllResultFilesNames.Count; i++)
                 {
-                    byte[] blob = new byte[fileStream.Length];
-                    fileStream.Read(blob, 0, (int)fileStream.Length);
-                    ListOfFileBlobs.Add(blob);
+                    fullfilename = filePath + AllResultFilesNames[i];
+                    archieve.CreateEntryFromFile(fullfilename, Path.GetFileName(fullfilename));   // Adding all results files into the zip file
                 }
             }
 
-            var ResultsDownloadData = new ResultsDownloadDto(AllResultFilesNames, ListOfFileBlobs);
+            using (FileStream fileStream = File.OpenRead(ZipFileName))
+            {
+                byte[] blob = new byte[fileStream.Length];
+                fileStream.Read(blob, 0, (int)fileStream.Length);
+                ListOfFileBlobs.Add(blob);
+            }
+
+            var ResultsDownloadData = new ResultsDownloadDto(ZipFileName, ListOfFileBlobs);
             return ResultsDownloadData;
         }
 
@@ -336,25 +347,25 @@ namespace PerceptronAPI.Controllers
             return Data;
         }
 
-        [HttpPost]
-        [Route("api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit")]
-        public string Create_Detailed_Protein_View_Hit([FromBody] string input)
-        {
-            Debug.WriteLine(input);
-            var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
+        //[HttpPost]
+        //[Route("api/search/Post_detailed_results/Create_Detailed_Protein_View_Hit")]
+        //public string Create_Detailed_Protein_View_Hit([FromBody] string input)
+        //{
+        //    Debug.WriteLine(input);
+        //    var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
-            ////ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
+        //    ////ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
 
-            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
-            var ImageForm = new DetailedProteinView();
-            bool downloadresults = false;
-            var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
-            return NameofFileWithFullPath;
+        //    DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+        //    var ImageForm = new DetailedProteinView();
+        //    bool downloadresults = false;
+        //    var NameofFileWithFullPath = ImageForm.writeOnImage(temp2, downloadresults);
+        //    return NameofFileWithFullPath;
 
 
-            //return "This is a testing string...";
-        }
+        //    //return "This is a testing string...";
+        //}
 
 
 
@@ -376,45 +387,46 @@ namespace PerceptronAPI.Controllers
             return temp;
         }
 
+        //[HttpPost]
+        //[Route("api/search/FASTA_File_upload")]  //    
+        //public async Task<HttpResponseMessage> FASTA_File_upload()
+
         [HttpPost]
-        [Route("api/search/FASTA_File_upload")]  //    
-        public async Task<HttpResponseMessage> FASTA_File_upload()
+        [Route("api/search/Database_Update")]
+        public string Database_Update()
         {
-            
-            // Check if the request contains multipart/form-data.
-            if (!Request.Content.IsMimeMultipartContent())
+            FastaReader _FastaReader = new FastaReader();
+            string DatabaseName = "Ecoli";  //Add here fasta File Name
+            string FastaFilePath = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
+            string Message = _FastaReader.MainFastaReader(DatabaseName, FastaFilePath);
+            return Message;
+        }
+
+        [HttpPost]
+        [Route("api/search/Database_Download")]
+        public byte[] Database_Download()
+        {
+            string DatabaseName = "Ecoli";  //Add here fasta File Name
+            string FastaFilePath = @"C:\PerceptronApi-tempResultsFolder\";  // Add here fasta file location
+            FastaWriter _FastaWriter = new FastaWriter();
+            string FullFileName = FastaFilePath + "Download_" + DatabaseName + ".fasta";
+            _FastaWriter.MainFastaWriter(DatabaseName, FullFileName);
+
+            using (FileStream fileStream = File.OpenRead(FullFileName))
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
+                byte[] blob = new byte[fileStream.Length];
+                fileStream.Read(blob, 0, (int)fileStream.Length);
 
-            var root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new CustomMultipartFormDataStreamProvider(root);
-
-            try
-            {
-                var i = 0;
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                var jsonData = provider.FormData.GetValues("Jsonfile");
-
-                if (jsonData != null)
-                {
-                    //parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
-                    
-                }
-
-
-                
-
-                string response = "OK";
-                
-                return Request.CreateResponse(HttpStatusCode.OK, response);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return blob;
             }
         }
+
+
+
+
+
+
+
 
         [HttpPost]
         [Route("api/search/bug_form")]
