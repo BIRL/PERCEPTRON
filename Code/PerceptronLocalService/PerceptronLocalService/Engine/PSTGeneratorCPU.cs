@@ -81,9 +81,10 @@ namespace PerceptronLocalService.Engine
 
                     for (int AminoAcidIndex = 0; AminoAcidIndex <= AminoAcidMasses.Length - 1; AminoAcidIndex++) //Taking 21 amino acids
                     {
-                        var TagError = Math.Abs(massDifferenceBetweenPeaks - AminoAcidMasses[AminoAcidIndex]);
+                        var TagError = massDifferenceBetweenPeaks - AminoAcidMasses[AminoAcidIndex];      // Updated 20200920
+                        var absTagError = Math.Abs(TagError);      // Updated 20200920
 
-                        if (TagError <= parameters.HopThreshhold)
+                        if (absTagError <= parameters.HopThreshhold)      // Updated 20200920  -- Changed TagError to absTagError
                         {
                             var aminoAcid = AminoAcidSymbol[AminoAcidIndex];
                             double avgIntensityList = (peakDatalistsort[home_peakIndexsingle].Intensity + peakDatalistsort[hop_peakIndexsingle].Intensity) / 2;

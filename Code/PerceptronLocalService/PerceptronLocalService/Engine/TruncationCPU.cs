@@ -376,13 +376,13 @@ namespace PerceptronLocalService.Engine
                         tag = PstTags[iteration].PstTags;
                         if (protein.Sequence.Contains(tag))// && protein.Header == "A6H8Y1")
                         {
-                            LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1);   // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
-                            RightIons = RightIons.GetRange(0, RightIons.Count - 1); // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                            //BELOW - For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                            protein.InsilicoDetails.InsilicoMassLeft = LeftIons.GetRange(0, LeftIons.Count - 1);     // Updated 20200920   -- Assigned to protein.InsilicoDetails.InsilicoMassLeft
+                            protein.InsilicoDetails.InsilicoMassRight = RightIons.GetRange(0, RightIons.Count - 1);     // Updated 20200920   -- Assigned to protein.InsilicoDetails.InsilicoMassRight
 
                             PstTagsExists.Add(PstTags[iteration].PstTags);
+                            break;     // Updated 20200920   -- Added
 
-                            
-                            
                         }
                     }
                     if (PstTagsExists.Count != 0)
@@ -402,8 +402,9 @@ namespace PerceptronLocalService.Engine
                     var LeftIons = protein.InsilicoDetails.InsilicoMassLeft;
                     var RightIons = protein.InsilicoDetails.InsilicoMassRight;
 
-                    LeftIons = LeftIons.GetRange(0, LeftIons.Count - 1); // For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
-                    RightIons = RightIons.GetRange(0, RightIons.Count - 1);// For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                    //BELOW - For Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
+                    protein.InsilicoDetails.InsilicoMassLeft = LeftIons.GetRange(0, LeftIons.Count - 1);     // Updated 20200920   -- Assigned to protein.InsilicoDetails.InsilicoMassLeft
+                    protein.InsilicoDetails.InsilicoMassRight = RightIons.GetRange(0, RightIons.Count - 1);     // Updated 20200920   -- Assigned to protein.InsilicoDetails.InsilicoMassRight
 
                     CandidateProteinsListFinal.Add(protein);
                 }

@@ -12,7 +12,7 @@ namespace PerceptronLocalService.Engine
 
         public List<ProteinDto> ComputeInsilicoScore(List<ProteinDto> proteinList, List<newMsPeaksDto> OriginalpeakData2DList, double tol, string pepUnit)
         {
-            var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+            var CandidateProteinswithInsilicoScores = new List<ProteinDto>(proteinList.Count);
             var peakData2DList = new List<newMsPeaksDto>();     // Lists are referenced based therefore, making a copy of new Peak List
             //tol = 15;
             //var pepUnit = "ppm";
@@ -67,8 +67,8 @@ namespace PerceptronLocalService.Engine
 
                         //For Finding consecutive region & Variables are Reference Type
                         int Counter = 0; // 
-                        int OldConsec = 0;
-                        int OldConsec2 = 0;
+                        int OldConsec = -1;      // Updated 20200917   -- Changed from 0 to -1
+                        int OldConsec2 = -1;     // Updated 20200917   -- Changed from 0 to -1
                         int ConsecutiveRegion = 0;
 
                         for (int indexPeakList = 1; indexPeakList < peakData2DList.Count; indexPeakList++)//Starts from One!!! Do not interested in Intact Protein Mass  /////EXPERIMENTAL PEAK LIST
@@ -114,7 +114,7 @@ namespace PerceptronLocalService.Engine
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, LeftMatched_Index, LeftPeak_Index, indexLeftSide, Type, LeftType);
                                     }
                                 }
-                                if (difference < -peakDifferenceTolerance && indexLeftSide > 1)
+                                if (difference < -peakDifferenceTolerance && indexLeftSide > 0)  // Updated 20200917   -- Changed from 1 to 0
                                 {
                                     IdxL = indexLeftSide - 1;
                                     break;
@@ -155,7 +155,7 @@ namespace PerceptronLocalService.Engine
                                         SpectralComparison(difference, peakData2DList[indexPeakList], indexPeakList, peakDifferenceTolerance, ref Consecutive, ref Counter, ref OldConsec, ref OldConsec2, ref ConsecutiveRegion, ref Matches_Score, ref MatchCounter, RightMatched_Index, RightPeak_Index, indexRightSide, Type, RightType);
                                     }
                                 }
-                                if (difference < -peakDifferenceTolerance && indexRightSide > 1)
+                                if (difference < -peakDifferenceTolerance && indexRightSide > 0)  // Updated 20200917   -- Changed from 1 to 0
                                 {
                                     IdxR = indexRightSide - 1;
                                     break;

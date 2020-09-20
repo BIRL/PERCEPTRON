@@ -159,6 +159,7 @@ namespace PerceptronLocalService.Engine
         private static void MakeAdjustment(List<double> leftIons, List<double> rightIons, double rightOffset, double leftOffset)  // specialDependecy == prot.InsilicoDetails.InsilicoMassLeft  OR specialDependecy == prot.InsilicoDetails.InsilicoMassRight
         {
             ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+            //// Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
             ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
             for (int index = 0; index < leftIons.Count; index++)
             {
@@ -171,6 +172,7 @@ namespace PerceptronLocalService.Engine
         private static void MakeAdjustmentInSpecialIons(List<double> MainIon, List<double> SpecialFragmentIonList, double Offset)
         {
             ////#FORTHETIMEBEING: Updated 20200115 COMMENTED: PREVIOUSLY Removing Last Entry(MW of Protein - Water). So, now Just For Fragments Now Added: -1
+            //// Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
             ////#Update: Updated 20200202:  "-1" is Removed and now its just ".Count"
             for (int iter = 0; iter < MainIon.Count; iter++)
             {
