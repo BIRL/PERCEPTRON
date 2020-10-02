@@ -180,7 +180,8 @@ export class ProteinSearchComponent implements OnInit {
     { value: '70', viewValue: '70' },
     { value: '80', viewValue: '80' },
     { value: '90', viewValue: '90' },
-    { value: '100', viewValue: '100' }
+    { value: '100', viewValue: '100' },
+    { value: '100+', viewValue: '100+' }
 
   ];
 
@@ -273,7 +274,7 @@ export class ProteinSearchComponent implements OnInit {
   }
 
   keyPress1(event: any) {
-    const pattern = /[0-9\+\-\.\ \a-z\@\A-Z]/;
+    const pattern = /[_\0-9\+\-\.\ \a-z\@\A-Z]/;
 
     let inputChar = String.fromCharCode(event.charCode);
     if (event.keyCode != 8 && !pattern.test(inputChar)) {
@@ -286,7 +287,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Title = "Default Run";
     this.EmailId = '';
     this.NameOfDatabase = 'Human';
-    this.NoOfOutputResults = '100';
+    this.NoOfOutputResults = '100+';
     this.MassMode = "2";   // For Selecting M(Neutral)
     this.FilterDB = true;
     this.Mass_Tolerance = 500;
@@ -576,10 +577,10 @@ export class ProteinSearchComponent implements OnInit {
     console.log(stats)
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
     {
-      alert("Dear User! \nYour search query has been submitted for results either visit 'Search Results & History' tab and/or check your email. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else{
-      alert("Dear Guest! \nYour search query has been submitted for results please visit 'Search Results & History' tab. \n\nThank You for using PERCEPTRON. \nThe PERCEPTRON Team");
+      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     
   }
