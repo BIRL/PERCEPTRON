@@ -376,28 +376,28 @@ namespace PerceptronAPI.Repository
         public DetailedResults Detailed_Results(string qid, string rid)
         {
             var detiledResults = new DetailedResults();
-            using (new PerceptronDatabaseEntities())
-            {
-                var sqlConnection1 =
-                    new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
-                var cmd = new SqlCommand
-                {
-                    CommandText =
-                        "SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
-                sqlConnection1.Open();
+            ////using (new PerceptronDatabaseEntities())            /// ITS HEALTHY
+            ////{
+            ////    var sqlConnection1 =
+            ////        new SqlConnection(
+            ////            "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+            ////    var cmd = new SqlCommand
+            ////    {
+            ////        CommandText =
+            ////            "SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+            ////        CommandType = CommandType.Text,
+            ////        Connection = sqlConnection1
+            ////    };
+            ////    sqlConnection1.Open();
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                    qid = dataReader["QueryId"].ToString();
+            ////    var dataReader = cmd.ExecuteReader();
+            ////    while (dataReader.Read())
+            ////        qid = dataReader["QueryId"].ToString();
 
-                dataReader.Close();
-                cmd.Dispose();
-                sqlConnection1.Close();
-            }
+            ////    dataReader.Close();
+            ////    cmd.Dispose();
+            ////    sqlConnection1.Close();
+            ////}
             using (var db = new PerceptronDatabaseEntities())
             {
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
