@@ -29,7 +29,7 @@ namespace PerceptronAPI.Engine
             var searchParameters = _dataLayer.GetSearchParmeters(QueryId);  // Getting Search Parameteres from Database
             string FileWithPath = "";
             var sw = GenerateFile(QueryId, ref FileWithPath); //Generating new text file 
-            sw = WriteParametersInTXTFile(sw, searchParameters); //Writting Parameters
+            //sw = WriteParametersInTXTFile(sw, searchParameters); //Writting Parameters
 
             
             var ListNameOfImageFiles = new List <string>();
@@ -232,93 +232,93 @@ namespace PerceptronAPI.Engine
             return sw;
         }
 
-        public StreamWriter WriteParametersInTXTFile(StreamWriter sw, SearchParameter searchParameters)
-        {
-            string Enabled = "Enabled";
-            string Disabled = "Disabled";
+        //public StreamWriter WriteParametersInTXTFile(StreamWriter sw, SearchParameter searchParameters)
+        //{
+        //    string Enabled = "Enabled";
+        //    string Disabled = "Disabled";
 
-            /* SEARCH PARAMETERS */
-            sw.WriteLine("User Defined Search Parameters");
-            sw.WriteLine("\n");
-            sw.WriteLine("Query Id = " + searchParameters.QueryId);  //Showing Query Id to the User
-            sw.WriteLine("\n");
-            sw.WriteLine("Title = " + searchParameters.Title);
+        //    /* SEARCH PARAMETERS */
+        //    sw.WriteLine("User Defined Search Parameters");
+        //    sw.WriteLine("\n");
+        //    sw.WriteLine("Query Id = " + searchParameters.QueryId);  //Showing Query Id to the User
+        //    sw.WriteLine("\n");
+        //    sw.WriteLine("Title = " + searchParameters.Title);
 
-            //File Names  /// HERE 
-            if (searchParameters.EmailId != "")
-                sw.WriteLine("Email Id = " + searchParameters.EmailId);
-            else
-                sw.WriteLine("Email Id = User not Provided");
+        //    //File Names  /// HERE 
+        //    if (searchParameters.EmailId != "")
+        //        sw.WriteLine("Email Id = " + searchParameters.EmailId);
+        //    else
+        //        sw.WriteLine("Email Id = User not Provided");
 
-            sw.WriteLine("Protein Database = " + searchParameters.ProteinDatabase);
-            sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
+        //    sw.WriteLine("Protein Database = " + searchParameters.ProteinDatabase);
+        //    sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
 
-            //BUG Mass Mode Not Present
+        //    //BUG Mass Mode Not Present
 
-            string FilterDb;
-            if (searchParameters.FilterDb == "True")
-                FilterDb = Enabled;
-            else
-                FilterDb = Disabled;
+        //    string FilterDb;
+        //    if (searchParameters.FilterDb == "True")
+        //        FilterDb = Enabled;
+        //    else
+        //        FilterDb = Disabled;
 
-            sw.WriteLine("Filter Database = " + FilterDb);
+        //    sw.WriteLine("Filter Database = " + FilterDb);
 
-            sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
+        //    sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
 
-            if (searchParameters.Autotune == "True"){
-                sw.WriteLine("Mass Tuner = Enabled");
-                sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
-                sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
-            }                
-            else
-                sw.WriteLine("Mass Tuner = Disabled");
+        //    if (searchParameters.Autotune == "True"){
+        //        sw.WriteLine("Mass Tuner = Enabled");
+        //        sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
+        //        sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
+        //    }                
+        //    else
+        //        sw.WriteLine("Mass Tuner = Disabled");
 
             
 
 
-            sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
-            sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
-            sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
+        //    sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
+        //    sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
+        //    sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
 
-            if (searchParameters.DenovoAllow == "True"){
-                sw.WriteLine("Peptide Sequence Tag (PST) = Enabled");
-                sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
-                sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
+        //    if (searchParameters.DenovoAllow == "True"){
+        //        sw.WriteLine("Peptide Sequence Tag (PST) = Enabled");
+        //        sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
+        //        sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
 
-                sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
-                sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
-                sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
-            }
-            else
-                sw.WriteLine("Peptide Sequence Tag (PST) = Disabled");
+        //        sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
+        //        sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = " + searchParameters.HopTolUnit);
+        //        sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
+        //    }
+        //    else
+        //        sw.WriteLine("Peptide Sequence Tag (PST) = Disabled");
 
-            string Truncation;
-            if (searchParameters.Truncation == "True")
-                Truncation = Enabled;
-            else
-                Truncation = Disabled;
-            sw.WriteLine("Truncation = " + Truncation);
+        //    string Truncation;
+        //    if (searchParameters.Truncation == "True")
+        //        Truncation = Enabled;
+        //    else
+        //        Truncation = Disabled;
+        //    sw.WriteLine("Truncation = " + Truncation);
 
-            sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
+        //    sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
 
-            string PtmAllow;
-            if (searchParameters.PtmAllow == "True")
-                PtmAllow = Enabled;
-            else
-                PtmAllow = Disabled;
-            sw.WriteLine("Post Translational Modification (PTM) = " + PtmAllow);
+        //    string PtmAllow;
+        //    if (searchParameters.PtmAllow == "True")
+        //        PtmAllow = Enabled;
+        //    else
+        //        PtmAllow = Disabled;
+        //    sw.WriteLine("Post Translational Modification (PTM) = " + PtmAllow);
 
-            sw.WriteLine("Post Translational Modification Tolerance = " + searchParameters.PtmTolerance);
-            sw.WriteLine("Cysteine Chemical Modification = " + searchParameters.CysteineChemicalModification);
-            sw.WriteLine("Methionine Chemical Modification = " + searchParameters.MethionineChemicalModification);
+        //    sw.WriteLine("Post Translational Modification Tolerance = " + searchParameters.PtmTolerance);
+        //    sw.WriteLine("Cysteine Chemical Modification = " + searchParameters.CysteineChemicalModification);
+        //    sw.WriteLine("Methionine Chemical Modification = " + searchParameters.MethionineChemicalModification);
 
 
-            sw.WriteLine("Molecular Scoring Weight = " + searchParameters.MwSweight);
-            sw.WriteLine("PST Scoring Weight = " + searchParameters.PstSweight);
-            sw.WriteLine("Insilico Scoring Weight = " + searchParameters.InsilicoSweight);
+        //    sw.WriteLine("Molecular Scoring Weight = " + searchParameters.MwSweight);
+        //    sw.WriteLine("PST Scoring Weight = " + searchParameters.PstSweight);
+        //    sw.WriteLine("Insilico Scoring Weight = " + searchParameters.InsilicoSweight);
 
-            sw.Flush();
-            return sw;
-        }
+        //    sw.Flush();
+        //    return sw;
+        //}
     }
 }
