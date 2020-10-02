@@ -33,7 +33,7 @@ namespace PerceptronLocalService.Engine
             {
                 for (int j = i + 1; j <= peakDatalistsort.Count - 1; j++)//j starts from 0 so that's why peakDatalistsort.Count - 1 and according to Formula just "n"
                 {
-                    double cpusummationMassData = peakDatalistsort[i].Mass + peakDatalistsort[j].Mass + parameters.NeutralLoss; //Making Tuple sums of MS2 masses + Neutral Loss Mass if user know the Loss of Mass during experimentation // 20200121 - - NeutralLoss Added 
+                    double cpusummationMassData = peakDatalistsort[i].Mass + peakDatalistsort[j].Mass + parameters.NeutralLoss; //Making Tuple sums of MS2 masses + Neutral Mass Loss if user know the Loss of Mass during experimentation // 20200121 - - NeutralLoss Added 
                     if (peakData.WholeProteinMolecularWeight - molTolerance <= cpusummationMassData && cpusummationMassData <= peakData.WholeProteinMolecularWeight + molTolerance)//Masses & Intensities filter out due to the selected RANGE OF INTACT MASS +/- PROTEIN MASS TOLERANCE
                     {
                         double cpuaverageIntensityData = (peakDatalistsort[i].Intensity + peakDatalistsort[j].Intensity) / 2;
@@ -47,7 +47,6 @@ namespace PerceptronLocalService.Engine
             {
                 peakData.WholeProteinMolecularWeight = 0;
                 return;
-                
             }
 
             //FIGURE 5: STEP 3 Running window have size of Proton (and starts from smallest mass of FIGURE 5: STEP 2 list) [REF: SPCTRUM PAPER]
@@ -59,11 +58,13 @@ namespace PerceptronLocalService.Engine
             var oldindex = new List<int>();   //CHANGE MY NAME...
             var count = new List<int>();   //CHANGE MY NAME...
             double olddiff = 1, newdiff = 0;
-            
-            
-            parameters.SliderValue = 50;  //#FutureWork3b(CPU)  //When SliderValue will be added into FrontEnd then, there will be no need of this. For now its just a dummy value.
-            double SlidingWindowValue;  //Value for sliding the window  
-            SlidingWindowValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200120 - Slider value will be changed according to Intact Protein Mass
+
+            //double SlidingWindowValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200915 - Value for sliding the window  
+            double SlidingWindowValue = 50.0;
+            if (parameters.SliderValue != 0)
+                SlidingWindowValue = parameters.SliderValue;
+            SlidingWindowValue = (SlidingWindowValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//20200915 - Value for sliding the window  
+
 
             int summationMassandaverageintensityindex = summationMassandaverageintensity.Count - 1;
             while (windowposition < summationMassandaverageintensity[summationMassandaverageintensityindex].Mass)
