@@ -123,7 +123,7 @@ export class ResultsVisualizationComponent implements OnInit {
         color: 'black',
         name: 'PeakListMasses',
         showInLegend: true,
-        legendText: 'PeakListMasses',
+        legendText: 'PeakList Masses',
         xValueFormatString: '####.####',
         dataPoints: this.dataPointsPeakList
       },
