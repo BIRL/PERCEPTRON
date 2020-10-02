@@ -222,6 +222,106 @@ namespace PerceptronAPI.Engine
             sw.Close();
             return Path.GetFileName(FileWithPath);
         }
+
+
+        public string WriteParametersInTXTFile(SearchParameter searchParameters, string filePath)
+        {
+            string FileName = "SearchParameters-qid-" + searchParameters.QueryId + ".txt";
+            string FileWithPath = filePath + "\\" + FileName;
+            if (File.Exists(FileWithPath))
+                File.Delete(FileWithPath); //Deleted Pre-existing file
+
+            var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+            var sw = new StreamWriter(fout);
+
+            string Enabled = "Enabled";
+            string Disabled = "Disabled";
+
+            /* SEARCH PARAMETERS */
+            sw.WriteLine("User Defined Search Parameters");
+            sw.WriteLine("\n");
+            sw.WriteLine("Query Id = " + searchParameters.QueryId);  //Showing Query Id to the User
+            sw.WriteLine("\n");
+            sw.WriteLine("Title = " + searchParameters.Title);
+
+            //File Names  /// HERE 
+            if (searchParameters.EmailId != "")
+                sw.WriteLine("Email Id = " + searchParameters.EmailId);
+            else
+                sw.WriteLine("Email Id = User not Provided");
+
+            sw.WriteLine("Protein Database = " + searchParameters.ProteinDatabase);
+            sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
+
+            //BUG Mass Mode Not Present
+
+            string FilterDb;
+            if (searchParameters.FilterDb == "True")
+                FilterDb = Enabled;
+            else
+                FilterDb = Disabled;
+
+            sw.WriteLine("Filter Database = " + FilterDb);
+
+            sw.WriteLine("Molecular Weight Tolerance = " + searchParameters.MwTolerance);
+
+            if (searchParameters.Autotune == "True")
+            {
+                sw.WriteLine("Mass Tuner = Enabled");
+                sw.WriteLine("Autotune Tolerance = " + searchParameters.SliderValue);
+                sw.WriteLine("Neutral Loss = " + searchParameters.NeutralLoss);
+            }
+            else
+                sw.WriteLine("Mass Tuner = Disabled");
+
+
+
+
+            sw.WriteLine("Peptide Tolerance = " + searchParameters.PeptideTolerance + searchParameters.PeptideToleranceUnit);
+            sw.WriteLine("Insilico Fragmentation Type = " + searchParameters.InsilicoFragType);
+            sw.WriteLine("Special Ions = " + searchParameters.HandleIons);
+
+            if (searchParameters.DenovoAllow == "True")
+            {
+                sw.WriteLine("Peptide Sequence Tag (PST) = Enabled");
+                sw.WriteLine("Minimum PST tag Length = " + searchParameters.MinimumPstLength);
+                sw.WriteLine("Maximum PST tag Length = " + searchParameters.MaximumPstLength);
+
+                sw.WriteLine("Peptide Sequence Tag Hop Threshhold = " + searchParameters.HopThreshhold);
+                sw.WriteLine("Peptide Sequence Tag Hop Threshold Unit = Da");
+                sw.WriteLine("Peptide Sequence Tag Tolerance = " + searchParameters.PSTTolerance);
+            }
+            else
+                sw.WriteLine("Peptide Sequence Tag (PST) = Disabled");
+
+            string Truncation;
+            if (searchParameters.Truncation == "True")
+                Truncation = Enabled;
+            else
+                Truncation = Disabled;
+            sw.WriteLine("Truncation = " + Truncation);
+
+            sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
+
+            string PtmAllow;
+            if (searchParameters.PtmAllow == "True")
+                PtmAllow = Enabled;
+            else
+                PtmAllow = Disabled;
+            sw.WriteLine("Post Translational Modification (PTM) = " + PtmAllow);
+
+            sw.WriteLine("Post Translational Modification Tolerance = " + searchParameters.PtmTolerance + "Units");
+            sw.WriteLine("Cysteine Chemical Modification = " + searchParameters.CysteineChemicalModification);
+            sw.WriteLine("Methionine Chemical Modification = " + searchParameters.MethionineChemicalModification);
+
+
+            sw.WriteLine("Molecular Scoring Weight = " + searchParameters.MwSweight);
+            sw.WriteLine("PST Scoring Weight = " + searchParameters.PstSweight);
+            sw.WriteLine("Insilico Scoring Weight = " + searchParameters.InsilicoSweight);
+
+            sw.Close();
+            return FileName;
+        }
     }
 }
 
