@@ -51,7 +51,7 @@ export class SummaryResultsComponent implements OnInit {
 
   getRecord(row) {
     let x = this.router;
-    x.navigate(["detailedresults", row.resId, row.rank]);
+    x.navigate(["detailedresults", this.querryId, row.resId, row.rank]);
   }
 }
 
