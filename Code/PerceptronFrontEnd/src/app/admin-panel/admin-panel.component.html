@@ -80,7 +80,7 @@
                   *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
 
                 <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
-                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(Uploaded_File)"
+                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(UploadedFile)"
                   accept=".fasta" multiple ngModel />
                 <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                   Please select FASTA file.
