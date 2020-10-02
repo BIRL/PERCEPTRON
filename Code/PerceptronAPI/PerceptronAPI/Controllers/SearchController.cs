@@ -247,7 +247,9 @@ namespace PerceptronAPI.Controllers
             string ZipFileName = filePath + "Results_" + input + ".zip";
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
-            var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);   // Writing: All Results files 
+            var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);   // Writing: All Results files
+            var WriteSearchParametersFile = _WriteResultsFile.WriteParametersInTXTFile(ScanData.searchParameters, filePath);
+            AllResultFilesNames.Add(WriteSearchParametersFile);
 
             string fullfilename = "";
 
@@ -303,10 +305,10 @@ namespace PerceptronAPI.Controllers
         public DetailedResults Post_detailed_results([FromBody] string input)
         {
             Debug.WriteLine(input);
-            //string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            //var qid = values[0];
-            //var resultid = values[1];
-            var temp = _dataLayer.Detailed_Results("1", input);
+            string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var qid = values[0];
+            var resultid = values[1];
+            var temp = _dataLayer.Detailed_Results(qid, resultid);
 
             return temp;
         }
