@@ -95,12 +95,12 @@ namespace PerceptronAPI.Engine
             /* Image */
             using (var image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height))
             {
-                var font = new Font("TimesNewRoman", 10, FontStyle.Regular, GraphicsUnit.Point);
-                var fontSeqNum = new Font("TimesNewRoman", 5, FontStyle.Regular, GraphicsUnit.Point);
-                var fontStrikethrough = new Font("TimesNewRoman", 10, FontStyle.Strikeout, GraphicsUnit.Point);
-                var fontMatchFragment = new Font("TimesNewRoman", 15, FontStyle.Regular, GraphicsUnit.Point);
-                var fontMasses = new Font("TimesNewRoman", 8, FontStyle.Regular, GraphicsUnit.Point);
-                var fontBlindPtmLocalization = new Font("TimesNewRoman", 8, FontStyle.Bold, GraphicsUnit.Point);
+                var font = new Font("TimesNewRoman", 14, FontStyle.Regular, GraphicsUnit.Point);
+                var fontSeqNum = new Font("TimesNewRoman", 9, FontStyle.Regular, GraphicsUnit.Point);
+                var fontStrikethrough = new Font("TimesNewRoman", 12, FontStyle.Strikeout, GraphicsUnit.Point);
+                var fontMatchFragment = new Font("TimesNewRoman", 17, FontStyle.Regular, GraphicsUnit.Point);
+                var fontMasses = new Font("TimesNewRoman", 9, FontStyle.Regular, GraphicsUnit.Point);
+                var fontBlindPtmLocalization = new Font("TimesNewRoman", 9, FontStyle.Bold, GraphicsUnit.Point);
 
                 int PictureBoxWidth = this.pictureBox1.Width;
 
@@ -119,7 +119,7 @@ namespace PerceptronAPI.Engine
                 int yHeaderLinedist = 20;
                 int yNextLinedist = 100;
                 int yNextTruncatedLinedist = 30;
-                int xLeftMatchFragmentDist = 20;
+                int xLeftMatchFragmentDist = 28;
                 int xRightMatchFragmentDist = 70;
                 int yMatchFragmentDist = 5;
                 //int xMassesdist = 15;
@@ -127,7 +127,7 @@ namespace PerceptronAPI.Engine
                 int yLeftMatchedMassdist = 35;
                 int yRightPeakMassdist = 43;
                 int yRightMatchedMassdist = 55;
-
+                
 
                 string ProteinInfo = " >Protein ID: " + ResultsData.Header;
                 graphics.DrawString(ProteinInfo, font, Brushes.Blue, new PointF(xHeaderPoint, yPoint));
@@ -230,11 +230,18 @@ namespace PerceptronAPI.Engine
                             double PeakMass = Math.Round(PeakListMasses[LeftPeakIndex[indexL]], 4);
 
                             graphics.DrawString(LeftMatchFragment, fontMatchFragment, Brushes.Black, new PointF(xPoint + xLeftMatchFragmentDist, yPoint - yMatchFragmentDist));
-                            graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
                             var ListFragIon = new List<string>();   //No, Need of ListFragIon here but just used as placeholder to fulfill the requirements of pre-existing method. Basically, want to use the pre-existing method named as _ExtractInsilicoMass.ExtractInsilicoLeftMass
                             Theoretical_mz = _ExtractInsilicoMass.ExtractInsilicoLeftMass(indexL, ListFragIon, searchParameters.InsilicoFragType, LeftType[indexL], LeftMatchedIndex[indexL], InsilicoDetails);
 
+                            graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
                             graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint, yPoint + yLeftMatchedMassdist));
+
+                            //for (int iterLeft = 0; iterLeft <= LeftMatchedIndex.FindAll(abx =>abx == i).Count(); iterLeft++)   // COMMENTED FOR NOW: If needed use it .. Used to avoid overlapping of Experimenatl & Theoretical m/zs
+                            //{
+                            //    graphics.DrawString(PeakMass.ToString(), fontMasses, Brushes.Red, new PointF(xPoint, yPoint + yLeftPeakMassdist));
+                            //    graphics.DrawString(Math.Round(Theoretical_mz, 4).ToString(), fontMasses, Brushes.Green, new PointF(xPoint, yPoint + yLeftMatchedMassdist));
+                            //    yPoint = yPoint + 20;
+                            //}
                         }
                     }
 
@@ -273,7 +280,7 @@ namespace PerceptronAPI.Engine
                     }
 
                     NumString = (i + 1).ToString();  //- NumCount
-                    graphics.DrawString(NumString.ToString(), fontSeqNum, Brushes.Black, new PointF(xPoint + 13, yPoint + 10));
+                    graphics.DrawString(NumString.ToString(), fontSeqNum, Brushes.Black, new PointF(xPoint + 18, yPoint + 10));
                     xPoint = xPoint + xdistBetween2;/////////////////////////////////yPoint = yPoint + 20; /* Distancing Variables */
                 }
 
