@@ -86,7 +86,12 @@ namespace PerceptronLocalService
                 {
                     //Send_Results_Link(searchParameters);
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
+                    var TotalTime = new Stopwatch();
+                    TotalTime.Start();
                     PerformSearch(searchParameters);
+                    TotalTime.Stop();
+                    string time = TotalTime.Elapsed.ToString();
+                    int a = 1;
                 }
                 //System.Threading.Thread.Sleep(10000);
             }
@@ -98,14 +103,14 @@ namespace PerceptronLocalService
             //ignored
         }
 
-        public static void Sending_Email(SearchParametersDto p, int EmailMsg)
+        public static void Sending_Email(SearchParametersDto p, string EmailMsg)
         {
             var emailaddress = p.EmailId;
             using (var mm = new MailMessage("dummyemail@lums.edu.pk", emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
 
-                if (EmailMsg == 1)
+                if (EmailMsg == "ResultsReady")
                 {
                     mm.Subject = "PERCEPTRON: Protein Search Results";
                     var body = "Dear User,";
@@ -119,7 +124,7 @@ namespace PerceptronLocalService
                     body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
                     mm.Body = body;
                 }
-                else if (EmailMsg == -1) // Email Msg for Something Wrong With Entered Query
+                else if (EmailMsg == "ProteinListEmpty" || EmailMsg == "Exception") // Email Msg for Something Wrong With Entered Query
                 {
                     mm.Subject = "PERCEPTRON: Protein Search Results";
                     var body = "Dear User,";
@@ -133,20 +138,20 @@ namespace PerceptronLocalService
                     body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
                     mm.Body = body;
                 }
-                else if (EmailMsg == -2)
-                {
-                    mm.Subject = "PERCEPTRON: Invalid Parameters";
-                    var body = "Dear User,";
-                    body += "<br/><br/> Search couldn't complete for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
-                            p.Title + "\" Either MS1 or MS2 are not accurate enough to perform Mass Tuning. Deactivate auto-tune option in main GUI to proceed.";
-                    //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                    body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
+                //else if (EmailMsg == -2)
+                //{
+                //    mm.Subject = "PERCEPTRON: Invalid Parameters";
+                //    var body = "Dear User,";
+                //    body += "<br/><br/> Search couldn't complete for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
+                //            p.Title + "\" Either MS1 or MS2 are not accurate enough to perform Mass Tuning. Deactivate auto-tune option in main GUI to proceed.";
+                //    //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
+                //    body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
 
-                    body += "</br></br>Thank You for using Perceptron.";
-                    body += "</br><b>The PERCEPTRON Team</b>";
-                    body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
-                    mm.Body = body;
-                }
+                //    body += "</br></br>Thank You for using Perceptron.";
+                //    body += "</br><b>The PERCEPTRON Team</b>";
+                //    body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
+                //    mm.Body = body;
+                //}
 
 
                 mm.IsBodyHtml = true;
@@ -179,7 +184,7 @@ namespace PerceptronLocalService
             //Logging.DumpParameters(parameters);
 
             //var counter = 0;
-            int EmailMsg = 0;
+            string EmailMsg = "";
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             var SQLDataBaseProteins = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
@@ -187,7 +192,7 @@ namespace PerceptronLocalService
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
                 //Logging.CreatePeakFileDirectory(fileNumber);
-                EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Something Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
+                //EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Something Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
                 try
                 {
                     var executionTimes = new ExecutionTimeDto();
@@ -205,10 +210,9 @@ namespace PerceptronLocalService
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
                         massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
-                        EmailMsg = -2;
+                        //EmailMsg = -2;
                         //Sending_Email(parameters, EmailMsg); // EmailMsg = -2 where -2 is for Invalid Parameters etc. //Send Email we will use Intact Mass 20200805
                         //continue;
-
                     }
 
                     //Logging.DumpMwTunerResult(massSpectrometryData);
@@ -242,9 +246,9 @@ namespace PerceptronLocalService
 
                     //////UpdatedParse_database.m
                     candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
-                    if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0 && parameters.EmailId != "") // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                    if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
-                        EmailMsg = -1;
+                        EmailMsg = "ProteinListEmpty"; // -1;
                         //Sending_Email(parameters, EmailMsg);
                         continue;
                     }
@@ -267,7 +271,7 @@ namespace PerceptronLocalService
                     //Logging.DumpInsilicoScores(candidateProteins);
 
                     //Executing Truncation 
-                    var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList);
+                    var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
 
                     var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>();
 
@@ -292,13 +296,14 @@ namespace PerceptronLocalService
 
                     StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                     //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
-                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);  // Uncomment Me
+                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+                    EmailMsg = "";
                 }
                 catch (Exception r)
                 {
                     if (parameters.EmailId != "")
                     {
-                        EmailMsg = -1;
+                        EmailMsg = "Exception";
                         //Sending_Email(parameters, EmailMsg);
                     }
 
@@ -310,16 +315,19 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-            if (numberOfPeaklistFiles >= 1 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
+            if (parameters.EmailId != "")
             {
-                EmailMsg = 1;
-                //Sending_Email(parameters, EmailMsg);
+                if (numberOfPeaklistFiles >= 1 && EmailMsg != "ProteinListEmpty" && EmailMsg != "Exception") // Email Sent: Single or Batch Mode Results are Ready
+                {
+                    EmailMsg = "ResultsReady";
+                    //Sending_Email(parameters, EmailMsg);
+                }
+                else if (EmailMsg == "ProteinListEmpty" || EmailMsg == "Exception") // Email Sent: Search couldn't completed
+                {
+                    //Sending_Email(parameters, EmailMsg);
+                }
             }
-            else if (numberOfPeaklistFiles == 0 && EmailMsg != -2 && EmailMsg != -1 && parameters.EmailId != "")
-            {
-                EmailMsg = -1;
-                //Sending_Email(parameters, EmailMsg);
-            }
+            
 
             _dataLayer.Set_Progress(parameters.Queryid, 100);
 
@@ -343,14 +351,14 @@ namespace PerceptronLocalService
             }
         }
 
-        private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList)
+        private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch modulerTimer = Stopwatch.StartNew();
 
             var CandidateProteinListUnModified = new List<ProteinDto>();
             var CandidateProteinListTrucnatedwithInsilicoScores = new List<ProteinDto>();
             var CandidateProteinList = new List<ProteinDto>();
-            if (parameters.Truncation == "True")
+            if (parameters.Truncation == "True" && CandidateProteinListTruncated.Count !=0)   /// #TESTRUN : Additionally, added "" && CandidateProteinListTruncated.Count !=0 ""
             {
 
                 var CandidateProteinListTruncatedLeft = new List<ProteinDto>();
@@ -404,7 +412,8 @@ namespace PerceptronLocalService
                 var FilteredTruncatedList = _Truncation.FilterTruncatedProteins(parameters, CandidateProteinList, PstTags);
                 CandidateProteinListTrucnatedwithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
             }
-            modulerTimer.Stop(); // #FutureWork: Will be added into FE also for Truncation Time
+            modulerTimer.Stop();
+            executionTimes.TruncationEngineTime = modulerTimer.Elapsed.ToString();
             return CandidateProteinListTrucnatedwithInsilicoScores;
         }
 
@@ -454,7 +463,7 @@ namespace PerceptronLocalService
 
             //TimeSpan time = TimeSpan.Parse(executionTimes.InsilicoTime);
             //var totaltime = moduleTimer + time;
-            //executionTimes.MwFilterTime = moduleTimer.Elapsed.ToString();
+            executionTimes.MwFilterTime = moduleTimer.Elapsed.ToString();
 
             return CandidateProteinListsInfo;
         }
@@ -589,8 +598,15 @@ namespace PerceptronLocalService
             //if (candidateProteins.Count > Constants.NumberOfResultsToStore)                        //ITS HEALTHY.....!!!
             //    candidateProteins = candidateProteins.Take(Constants.NumberOfResultsToStore).ToList<ProteinDto>();
 
-            if (candidateProteins.Count > parameters.NumberOfOutputs)
-                candidateProteins = candidateProteins.Take(parameters.NumberOfOutputs).ToList<ProteinDto>();
+            if (parameters.NumberOfOutputs != "100+")
+            {
+                int NumberOfOutputs=  Convert.ToInt16(parameters.NumberOfOutputs);
+                if (candidateProteins.Count > NumberOfOutputs)
+                {
+                    candidateProteins = candidateProteins.Take(NumberOfOutputs).ToList<ProteinDto>();
+                }
+            }
+
 
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
             _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber);
