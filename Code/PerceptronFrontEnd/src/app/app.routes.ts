@@ -67,7 +67,7 @@ export const router: Routes = [
     { path: 'help', component: HelpComponent, canActivate: [AuthGuard]},
     { path: 'suggest', component: SuggestionsComponent, canActivate: [AuthGuard]},
     { path: 'summaryresults/:querryId/:fileID', component: SummaryResultsComponent},
-    { path: 'detailedresults/:resultId/:rank', component: DetailedResultsComponent},
+    { path: 'detailedresults/:querryId/:resultId/:rank', component: DetailedResultsComponent},
     { path: 'resultsdownload/:querryId', component: ResultsDownloadComponent},
     { path: 'adminpanel' , component: AdminPanelComponent},
     //    children: [{path: 'results-visualization', component: ResultsVisualizationComponent}]},
