@@ -15,7 +15,8 @@ export class AdminPanelComponent implements OnInit {
 
   NameOfDatabase: any;
   filenameModel: any;
-
+  NameOfDatabaseToBeUpdated: any;
+  UploadedFile: any;
 
   IsWaitSubmit = 0;
   IsWaitDownload = 0;
@@ -52,17 +53,17 @@ export class AdminPanelComponent implements OnInit {
   ];
 
   onSubmit(file: any): void {
-
+    var a = 1;
   }
 
-  onDownload(fileDownload: any): void {
+  onDownload(form: any): void {
     this.IsWaitDownload = 1;
     alert("Dear! User your database is successfully downloaded.");
     this.IsWaitDownload = 0;
   }
 
 
-  upload(Uploaded_File: any): void {
+  upload(UploadedFile: any): void {
 
   }
   // let fi = this.imgFileInput.nativeElement;
