@@ -39,9 +39,10 @@ export class DetailedResultsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this.route.params.subscribe((params: Params) => this.resultId = params['resultId']);
     this.route.params.subscribe((params: Params) => this.rank = params['rank']);
-    this._httpService.GetDetailedReslts(this.resultId).subscribe(data => this.what(data));
+    this._httpService.GetDetailedReslts(this.querryId,this.resultId).subscribe(data => this.what(data));
   }
 
   what(data: any) {
@@ -62,7 +63,7 @@ export class DetailedResultsComponent implements OnInit {
     let Truncation = <HTMLLabelElement>document.getElementById("Truncation"); //
     let Mods = <HTMLLabelElement>document.getElementById("Mods");
     let totalTime = <HTMLLabelElement>document.getElementById("totalTime");
-    let MWModule = "N/A";
+    let MWModule = <HTMLLabelElement>document.getElementById("MWModule");//"N/A";
     let PSTModule = <HTMLLabelElement>document.getElementById("PSTModule");
     let InsilicoModule = <HTMLLabelElement>document.getElementById("InsilicoModule");
     let PTMModule = <HTMLLabelElement>document.getElementById("PTMModule");
@@ -70,8 +71,8 @@ export class DetailedResultsComponent implements OnInit {
     let massmode = <HTMLLabelElement>document.getElementById("MassMode");
     let BPTMS = <HTMLLabelElement>document.getElementById("BPTMs");
 
-    massmode.innerHTML = "MH+";
-    BPTMS.innerHTML = "No";
+    massmode.innerHTML = data.Paramters.SearchParameters.MassMode;//"MH+";
+    BPTMS.innerHTML = data.Paramters.SearchParameters.PtmAllow;  // "No";
 
 
     let title = <HTMLLabelElement>document.getElementById("SearchTitle");
@@ -100,7 +101,7 @@ export class DetailedResultsComponent implements OnInit {
     DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
 
     let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");
-    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength;
+    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + "," + data.Paramters.SearchParameters.MaximumPstLength;
 
     let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
     let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
@@ -125,12 +126,12 @@ export class DetailedResultsComponent implements OnInit {
     let met = constant;
 
     totalTime.innerHTML = data.ExecutionTime.TotalTime;
-    MWModule = data.ExecutionTime.MwFilterTime;
+    MWModule.innerHTML = data.ExecutionTime.MwFilterTime;
     PSTModule.innerHTML = data.ExecutionTime.PstTime;
     InsilicoModule.innerHTML = data.ExecutionTime.InsilicoTime;
     PTMModule.innerHTML = data.ExecutionTime.PtmTime;
     // add later
-    TruncationModule.innerHTML = data.ExecutionTime.TotalTime;
+    TruncationModule.innerHTML = data.ExecutionTime.TruncationEngineTime;
 
     let sequence = <HTMLLabelElement>document.getElementById("sequence");
     let sequenceText = data.Results.Results.Sequence;
