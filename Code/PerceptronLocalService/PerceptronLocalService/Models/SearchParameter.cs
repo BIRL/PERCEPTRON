@@ -19,7 +19,7 @@ namespace PerceptronLocalService.Models
         public string EmailId { get; set; }
         public string UserId { get; set; }
         public string ProteinDatabase { get; set; }
-        public int NumberOfOutputs { get; set; }
+        public string NumberOfOutputs { get; set; }
         public string MassMode { get; set; }
         public string FilterDb { get; set; }
         public double MwTolerance { get; set; }
