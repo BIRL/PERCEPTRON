@@ -248,7 +248,7 @@ namespace PerceptronAPI.Engine
             if (searchParameters.EmailId != "")
                 sw.WriteLine("Email Id = " + searchParameters.EmailId);
             else
-                sw.WriteLine("Email Id = User not Provided");
+                sw.WriteLine("Email Id = N/A");
 
             sw.WriteLine("Protein Database = " + searchParameters.ProteinDatabase);
             sw.WriteLine("Number Of Output Results = " + searchParameters.NumberOfOutputs);
