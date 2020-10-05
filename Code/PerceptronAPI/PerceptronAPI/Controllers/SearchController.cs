@@ -244,7 +244,8 @@ namespace PerceptronAPI.Controllers
             var ScanData = _dataLayer.ScanResultsDownloadData(input);    //Scanning File Unique Ids from SearchFiles Table
 
             string filePath = @"C:\\PerceptronApi-tempResultsFolder\\";
-            string ZipFileName = filePath + "Results_" + input + ".zip";
+            string ZipFileName = "Results_" + input + ".zip";
+            string ZipFullFileName = filePath + ZipFileName;
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
             var AllResultFilesNames = _WriteResultsFile.ResultFilesWrite(ScanData, filePath);   // Writing: All Results files
@@ -253,10 +254,10 @@ namespace PerceptronAPI.Controllers
 
             string fullfilename = "";
 
-            if (File.Exists(ZipFileName))
-                File.Delete(ZipFileName); //Deleted Pre-existing file
+            if (File.Exists(ZipFullFileName))
+                File.Delete(ZipFullFileName); //Deleted Pre-existing file
 
-            using (var archieve = ZipFile.Open(ZipFileName, ZipArchiveMode.Create)) // Creating Zip File
+            using (var archieve = ZipFile.Open(ZipFullFileName, ZipArchiveMode.Create)) // Creating Zip File
             {
                 for (int i = 0; i < AllResultFilesNames.Count; i++)
                 {
@@ -265,7 +266,7 @@ namespace PerceptronAPI.Controllers
                 }
             }
 
-            using (FileStream fileStream = File.OpenRead(ZipFileName))
+            using (FileStream fileStream = File.OpenRead(ZipFullFileName))
             {
                 byte[] blob = new byte[fileStream.Length];
                 fileStream.Read(blob, 0, (int)fileStream.Length);
