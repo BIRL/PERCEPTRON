@@ -69,7 +69,7 @@ namespace PerceptronLocalService.Engine
             var arch = gpu.GetArchitecture();
             var km = CudafyTranslator.Cudafy(arch);
             gpu.LoadModule(km);
-
+            // Create a new thread -- (GPU Initializations)
             // GPU variable initalizations
             var lengthGpuArray = sizeofarray; //peak * peak [In the given case (51 * 51 = 2601)]
             var monoisotopicMassPeaks = peakData.Mass.ToArray();
@@ -158,14 +158,14 @@ namespace PerceptronLocalService.Engine
 
             // Sorting gpuprocessedpeaklistdata(2D-list) with respect to the Masses in ascending Order
             var gpuprocessedpeaklistdatasorted = gpuprocessedpeaklistdata.OrderBy(n => n.Masses).ToList(); // for obtaining Ascending Order list
-
+            
             //FIGURE 5: STEP 2:::: SUMMATIONS FOR EACH M/Z I,J IN MS2 DATA [REF: SPCTRUM PAPER]
             //Description::: Calculate Peak Sums and shortlist those falling within user specified tolerance.
             var gpushortlistedpeaklist = new List<gpuprocessedmassandintensity>();
 
             for (int rowiselistelements = 0; rowiselistelements <= gpusummationMassDataIndex - 1; rowiselistelements++)
             {
-                if (peakData.WholeProteinMolecularWeight - molTolerance <= gpuprocessedpeaklistdatasorted[rowiselistelements].Masses && gpuprocessedpeaklistdatasorted[rowiselistelements].Masses <= peakData.WholeProteinMolecularWeight + molTolerance)//Masses & Intensities filter out due to the selected RANGE OF INTACT MASS +/- PROTEIN MASS TOLERANCE
+                if (peakData.WholeProteinMolecularWeight - molTolerance <= gpuprocessedpeaklistdatasorted[rowiselistelements].Masses + parameters.NeutralLoss && gpuprocessedpeaklistdatasorted[rowiselistelements].Masses + parameters.NeutralLoss  <= peakData.WholeProteinMolecularWeight + molTolerance)//Masses & Intensities filter out due to the selected RANGE OF INTACT MASS +/- PROTEIN MASS TOLERANCE   //Adding Neutral Mass Loss if user know the Loss of Mass during experimentation
                 {
                     var dataforgpushortlistedpeaklist = new gpuprocessedmassandintensity(gpuprocessedpeaklistdatasorted[rowiselistelements].Masses, gpuprocessedpeaklistdatasorted[rowiselistelements].Intensities);
 
@@ -195,11 +195,13 @@ namespace PerceptronLocalService.Engine
             var oldindex = new List<int>();   //CHANGE MY NAME...
             var count = new List<int>();   //CHANGE MY NAME...
             double olddiff = 1, newdiff = 0;
-            //HARD CODE NOW FOR WORKING WILL ADD THIS FEATURE INTO THE FRONTEND FOR USER DEFINED   #FutureWork3a(GPU)/#HARDCODE -             //Add here SliderValue(BELOW)
-            double SliderValueHardCode = 50;
-            double SliderValue = (SliderValueHardCode * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//double SliderValue = 50; //
-            
-            
+
+            double SlidingWindowValue = 50.0;
+            if (parameters.SliderValue != 0)
+                SlidingWindowValue = parameters.SliderValue;
+            SlidingWindowValue = (SlidingWindowValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//20200915 - Value for sliding the window  
+
+
             int gpushortlistedpeaklistindex = gpushortlistedpeaklist.Count - 1;
             while (windowposition < gpushortlistedpeaklist[gpushortlistedpeaklistindex].Masses) //window will run on the gpushortlistedpeaklist ///WHY THIS..?}}}window < gpushortlistedpeaklist[gpushortlistedpeaklistindex].Masses{{{
                 //windowposition ?? Proper def...
@@ -239,7 +241,7 @@ namespace PerceptronLocalService.Engine
                         oldindex = newindex;
                     }
                 }
-                windowposition = windowposition + SliderValue;
+                windowposition = windowposition + SlidingWindowValue;
             }
 
             //FIGURE 5: STEP 5:::: Applying formula [REF: SPCTRUM PAPER]
