@@ -14,6 +14,7 @@ using System.IO;
 using System.IO.Compression;
 //using System.IO.Compression.FileSystem;
 using PerceptronAPI.Engine;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using GraphForm;
 using System.Web.UI.WebControls;
@@ -107,19 +108,26 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.CreationTime = creationTime;
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
 
-                foreach (var file in provider.FileData)
+                List<string> InputFileList = new List<string> { provider.FileData[0].LocalFileName };
+                if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
                 {
+                    InputFileList = ZipFileUnzipping(InputFileList, parametersDto.SearchParameters, provider.FileData); //Unzipping the zipped file.
+                }
+
+                for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
+                {
+                    string file = InputFileList[index];
                     var FileUniqueId = Guid.NewGuid().ToString();
-                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
-                    System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    System.IO.File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
 
                     i++;
                     var x = new SearchFile
                     {
                         FileId = i,
-                        FileName = file.LocalFileName,
+                        FileName = file,
                         UniqueFileName = FileNameWithUniqueID,
-                        FileType = System.IO.Path.GetExtension(file.LocalFileName),
+                        FileType = System.IO.Path.GetExtension(file),
                         QueryId = queryId,
                         FileUniqueId = FileUniqueId
                     };
@@ -137,6 +145,30 @@ namespace PerceptronAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
+        private List<string> ZipFileUnzipping(List<string> InputFileList, SearchParameter parameters, Collection<MultipartFileData> ProviderFileData)
+        {
+            string ZipFilePath = InputFileList[0];
+            var FileName = Path.GetFileNameWithoutExtension(ZipFilePath);
+            string FileDirectory = Path.GetDirectoryName(ZipFilePath) + "\\" + FileName;
+            string ExtractZipFilePath = Path.GetDirectoryName(ZipFilePath) + "\\" + FileName + "\\";
+
+            if (Directory.Exists(FileDirectory))
+                Directory.Delete(FileDirectory, true);
+
+            string ZipFullFileName = ZipFilePath;
+            using (var archieve = ZipFile.Open(ZipFullFileName, ZipArchiveMode.Read)) // Creating Zip File
+            {
+                ZipFile.ExtractToDirectory(ZipFullFileName, ExtractZipFilePath);
+            }
+            //Extracting the names of the file
+
+            var ZipExtractedFiles = Directory.GetFiles(ExtractZipFilePath); //Reading the contents of Unzipped Folder
+            InputFileList = new List<string> ( ZipExtractedFiles );  //Returning the List of Full File Names
+
+            return InputFileList;
+        }
+
 
         //[HttpPost]
         //[Route("api/search/Calling_API")]
@@ -232,8 +264,6 @@ namespace PerceptronAPI.Controllers
         //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
         //    }
         //}
-
-
 
 
         [HttpPost]
