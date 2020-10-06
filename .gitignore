@@ -2,6 +2,7 @@
 *.pdb
 *.jpg
 *.dll
+*.zip
 *.csproj
 *.exe
 *.cs.dll
