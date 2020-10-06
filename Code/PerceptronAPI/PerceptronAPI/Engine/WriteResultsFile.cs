@@ -301,7 +301,7 @@ namespace PerceptronAPI.Engine
                 Truncation = Disabled;
             sw.WriteLine("Truncation = " + Truncation);
 
-            sw.WriteLine("TerminalModification = " + searchParameters.TerminalModification);
+            sw.WriteLine("Terminal Modification = " + searchParameters.TerminalModification);
 
             string PtmAllow;
             if (searchParameters.PtmAllow == "True")
