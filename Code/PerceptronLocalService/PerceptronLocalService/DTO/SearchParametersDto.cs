@@ -40,7 +40,7 @@ namespace PerceptronLocalService.DTO
         public double MwSweight;
         public double PstSweight;
         public double InsilicoSweight;
-        public int NumberOfOutputs;
+        public string NumberOfOutputs;
         public string DenovoAllow;
         public string PtmAllow;
 
