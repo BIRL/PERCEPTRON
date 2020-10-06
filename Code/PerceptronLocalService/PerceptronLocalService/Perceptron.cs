@@ -7,14 +7,14 @@ using System.Net.Mail;
 using PerceptronLocalService.Engine;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
-using PerceptronLocalService.Models;
 using PerceptronLocalService.Repository;
-//using PerceptronLocalService.Testing;
-using PerceptronLocalService.Utility;
-/////For getting GPU version/////
-using Cudafy;
-using Cudafy.Host;
-using Cudafy.Translator;
+//using System.IO.Compression;
+////using PerceptronLocalService.Testing;
+//using PerceptronLocalService.Utility;
+///////For getting GPU version/////
+//using Cudafy;
+//using Cudafy.Host;
+//using Cudafy.Translator;
 
 namespace PerceptronLocalService
 {
