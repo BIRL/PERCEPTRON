@@ -73,6 +73,26 @@ export class ConfigService {
             )
     }
 
+    fdrform(form, file){
+        let formData: FormData = new FormData();
+
+        var json = JSON.stringify(form);
+
+        formData.append('Jsonfile', json);
+        for (let i = 0; i < file.length; i++) {
+            formData.append('uploadFile', file[i], file[i].name);
+        }
+
+        console.log(json);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        return this._http.post(this.baseApiUrl + '/api/search/FDR_Data_upload', formData, { headers: headers })
+            .map(res => res.json())
+            // .subscribe(
+            //     data => console.log('success'),
+            //     error => console.log(error)
+            // )
+    }
 
     postpattern(form) {
 
