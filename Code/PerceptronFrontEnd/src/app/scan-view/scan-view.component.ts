@@ -14,7 +14,7 @@ import * as fileSaver from 'file-saver';
 export class ScanViewComponent implements OnInit {
   //displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'truncation', 'frags', 'mods', 'mix', 'fileId'];
   displayedColumns = ['serial', 'name', 'id', 'score', 'molW', 'fileId'];
-  
+  users: UserData[] = [];
   dataSource: MatTableDataSource<UserData>;
   querryId: any;
 
@@ -43,45 +43,46 @@ export class ScanViewComponent implements OnInit {
     //this._httpService.downloadFile(this.querryId).subscribe(data => this.what(data));
   }
 
- 
-
   what(data: any) {
-    const users: UserData[] = [];
-    for (let i = 1; i <= data.length; i++) { users.push(createNewUser(i, data[i - 1])); }
-    this.dataSource = new MatTableDataSource(users);
+    
+    for (let i = 1; i <= data.length; i++) { this.users.push(createNewUser(i, data[i - 1])); }
+    this.dataSource = new MatTableDataSource(this.users);
+
+    if (this.users.length == 0){  //BatchMode: //Checking if "users" array is empty then, it will be considered (PERCEPTRON will not fetch the data from database) as batch mode or query error but the later one has been addressed in 'history.component.ts' by applying conditions in this function {getRecord(row)} and therefore, now just Batch Mode's condition is required here.
+      alert("Dear User/Guest,\nYour search results are larger. Therefore, please Download your results using 'Results Download Button'.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+    } 
+
+    // let title = <HTMLLabelElement>document.getElementById("SearchTitle");
+    // title.innerHTML = data.Paramters.SearchParameters.Title;
+
+    // let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
+    // pdb.innerHTML = data.Paramters.SearchParameters.ProteinDatabase;
 
 
-    let title = <HTMLLabelElement>document.getElementById("SearchTitle");
-    title.innerHTML = data.Paramters.SearchParameters.Title;
+    // let protTol = <HTMLLabelElement>document.getElementById("protTol");
+    // protTol.innerHTML = data.Paramters.SearchParameters.MwTolerance;
 
-    let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
-    pdb.innerHTML = data.Paramters.SearchParameters.ProteinDatabase;
+    // let autotunee = <HTMLLabelElement>document.getElementById("Tuner");
+    // autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
 
+    // let ppeptol = <HTMLLabelElement>document.getElementById("peptol");
+    // ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;
 
-    let protTol = <HTMLLabelElement>document.getElementById("protTol");
-    protTol.innerHTML = data.Paramters.SearchParameters.MwTolerance;
+    // let fragt = <HTMLLabelElement>document.getElementById("FragType");
+    // fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType;
 
-    let autotunee = <HTMLLabelElement>document.getElementById("Tuner");
-    autotunee.innerHTML = data.Paramters.SearchParameters.Autotune;
+    // let SpecI = <HTMLLabelElement>document.getElementById("SI");
+    // SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons;
 
-    let ppeptol = <HTMLLabelElement>document.getElementById("peptol");
-    ppeptol.innerHTML = data.Paramters.SearchParameters.HopThreshhold;
+    // let DenovAllow = <HTMLLabelElement>document.getElementById("PST");
+    // DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
 
-    let fragt = <HTMLLabelElement>document.getElementById("FragType");
-    fragt.innerHTML = data.Paramters.SearchParameters.InsilicoFragType;
+    // let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");
+    // PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength;
 
-    let SpecI = <HTMLLabelElement>document.getElementById("SI");
-    SpecI.innerHTML = data.Paramters.SearchParameters.HandleIons;
-
-    let DenovAllow = <HTMLLabelElement>document.getElementById("PST");
-    DenovAllow.innerHTML = data.Paramters.SearchParameters.DenovoAllow;
-
-    let PstLength = <HTMLLabelElement>document.getElementById("PSTLen");
-    PstLength.innerHTML = data.Paramters.SearchParameters.MinimumPstLength + " " + data.Paramters.SearchParameters.MaximumPstLength;
-
-    let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
-    let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
-    let SpecCompWeight = <HTMLLabelElement>document.getElementById("Slider3");
+    // let IPMSWeight = <HTMLLabelElement>document.getElementById("Slider1");
+    // let PSTWeight = <HTMLLabelElement>document.getElementById("Slider2");
+    // let SpecCompWeight = <HTMLLabelElement>document.getElementById("Slider3");
     
 
   }
@@ -118,11 +119,13 @@ function createNewUser(id: number, data: any): UserData {
     id: data.ProteinId,
     score: data.Score,
     molW: data.MolW,
-    truncation: data.Truncation,
-    frags: data.Frags,
-    mods: data.Mods,
-    mix: data.Time,
-    fileId: data.FileId
+    fileId: data.FileId,
+    SearchModeMessage: data.SearchModeMessage
+
+    // truncation: data.Truncation,
+    // frags: data.Frags,
+    // mods: data.Mods,
+    // mix: data.Time,    
   };
 }
 
@@ -132,9 +135,11 @@ export interface UserData {
   id: string;
   score: string;
   molW: string;
-  truncation: string;
-  frags: string;
-  mods: string;
   fileId: string;
-  mix: string;
+  SearchModeMessage: string;
+
+  // truncation: string;
+  // frags: string;
+  // mods: string;
+  // mix: string;
 }
