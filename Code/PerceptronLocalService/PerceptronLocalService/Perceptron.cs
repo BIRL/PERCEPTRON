@@ -185,8 +185,10 @@ namespace PerceptronLocalService
 
             //var counter = 0;
             string EmailMsg = "";
+            int ProgressStatus = 100;  // If ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured)
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
+            _dataLayer.Set_Progress(parameters.Queryid, 10);  // Showing Status of Query as Runnning...!!!
             var SQLDataBaseProteins = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
@@ -249,6 +251,7 @@ namespace PerceptronLocalService
                     if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                     {
                         EmailMsg = "ProteinListEmpty"; // -1;
+                        ProgressStatus = -1;
                         //Sending_Email(parameters, EmailMsg);
                         continue;
                     }
@@ -298,6 +301,7 @@ namespace PerceptronLocalService
                     //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                     StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
                     EmailMsg = "";
+                    ProgressStatus = 100;
                 }
                 catch (Exception r)
                 {
@@ -309,6 +313,7 @@ namespace PerceptronLocalService
 
                     string k = r.Message;
                     System.Diagnostics.Debug.WriteLine(r.Message);
+                    ProgressStatus = -1;
                 }
 
                 //Logging.DumpTotalTime(executionTimes);
@@ -329,7 +334,7 @@ namespace PerceptronLocalService
             }
             
 
-            _dataLayer.Set_Progress(parameters.Queryid, 100);
+            _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);
 
         }
 
