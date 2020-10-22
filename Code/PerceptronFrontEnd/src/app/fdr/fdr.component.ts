@@ -19,10 +19,16 @@ import 'rxjs/add/operator/map';
 })
 export class FdrComponent implements OnInit {
 
-  @ViewChild("imgFileInput") imgFileInput;
+  @ViewChild("imgTargetFile") imgTargetFile;
+  @ViewChild("imgDecoyFile") imgDecoyFile;
+
   TextHere: any = '';
   // filename_Model: any;
-  filenameModel: any;
+  NameOfTargetFile: any;
+  NameOfDecoyFile : any;
+  IsWaitSubmit: any;
+  IsWaitDownload: any;
+  UploadedFile: any;
 
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
@@ -38,18 +44,38 @@ export class FdrComponent implements OnInit {
 
 
   ngOnInit() {
+    let a = 1;
+  }
+  
+  keyPress1(event: any) {
+    const pattern = /[0-9\+\-\.\ \a-z\@\A-Z]/;
+
+    let inputChar = String.fromCharCode(event.charCode);
+    if (event.keyCode != 8 && !pattern.test(inputChar)) {
+      confirm("Press submit button to confirm your submission");
+      event.preventDefault();
+    }
   }
 
   onSubmit(form: any): void {
-    let fi = this.imgFileInput.nativeElement;
+    let TargetFile = this.imgTargetFile.nativeElement;
+    let DecoyFile = this.imgDecoyFile.nativeElement;
+
     let stats: any = 'false';
     console.log(form);
-    stats = this._httpService.postJSON(form, fi.files);
+    stats = this._httpService.fdrform(form, TargetFile.files);
     console.log(stats)
   }
 
   onReset(form: any): void {
     console.log("Form has been reset");
   }
+
+  upload(UploadedFile:any){
+    let b = 2;
+
+  }
+
+
 
 }

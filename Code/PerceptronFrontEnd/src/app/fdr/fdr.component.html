@@ -15,7 +15,7 @@
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
         <mat-panel-title style="font-size:23px; font-weight:600;  color:Black;">
-          Ganday Bhaiya
+          False Discovery Rate
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -38,9 +38,9 @@
             <mat-grid-tile></mat-grid-tile>
   
             <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-              <span matTooltip="Browse and upload the Excel file"
+              <span matTooltip="Browse and upload the Target file"
                 matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-                <label class="required" style='display:inline;  font-weight:500;'>Upload Excel File</label>
+                <label class="required" style='display:inline;  font-weight:500;'>Upload Target File</label>
                
                 <br />
                 <label style='display:inline;  font-weight:500; '>Select File * : </label>
@@ -55,7 +55,7 @@
                 <label style="display:inline;">&nbsp;</label>
                 <div style='display:inline;' class="button-row">
                   <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
-                    mat-mini-fab (click)="imgFileInput.click()">
+                    mat-mini-fab (click)="imgTargetFile.click()">
                     <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                   </button>
                   <style>
@@ -74,8 +74,8 @@
                   <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
                     *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
   
-                  <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
-                    name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(Uploaded_File)"
+                  <input #FileInfo type="file" #imgTargetFile (ngModel)="FileInfo" #TargetFileName="ngModel" required
+                    name="TargetFileName" [(ngModel)]="NameOfTargetFile" style="display: none;" id="TargetFileName" 
                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
                   <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                     Please select an Excel file.
@@ -89,9 +89,9 @@
             <mat-grid-tile></mat-grid-tile>
 
             <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-              <span matTooltip="Browse and upload the Excel file"
+              <span matTooltip="Browse and upload the Decoy file"
                 matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-                <label class="required" style='display:inline;  font-weight:500;'>Upload the other Excel File</label>
+                <label class="required" style='display:inline;  font-weight:500;'>Upload the Decoy File</label>
                
                 <br />
                 <label style='display:inline;  font-weight:500; '>Select File * : </label>
@@ -106,7 +106,7 @@
                 <label style="display:inline;">&nbsp;</label>
                 <div style='display:inline;' class="button-row">
                   <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
-                    mat-mini-fab (click)="imgFile_Input.click()">
+                    mat-mini-fab (click)="imgDecoyFile.click()">
                     <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                   </button>
                   <style>
@@ -123,15 +123,15 @@
                   <br />
                   <label style="display:inline;">&nbsp;</label>
                   <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
-                    *ngIf='File_Info.files.length==1'>{{File_Info.files[0].name}}</i></a>
+                    *ngIf='DecoyFileInfo.files.length==1'>{{DecoyFileInfo.files[0].name}}</i></a>
   
-                  <input #File_Info type="file" #imgFile_Input (ngModel)="File_Info" #File_Name="ngModel" required
-                    name="File_Name" [(ngModel)]="filenameModel" style="display: none;" id="File_Name" (change)="upload(Uploaded_File)"
+                  <input #DecoyFileInfo type="file" #imgDecoyFile (ngModel)="DecoyFileInfo" #DecoyFileName="ngModel" required
+                    name="DecoyFileName" [(ngModel)]="NameOfDecoyFile" style="display: none;" id="DecoyFileName" 
                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
-                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length==0">
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="DecoyFileInfo.files.length==0">
                     Please select an Excel file.
                   </mat-error>
-                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length>1">
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="DecoyFileInfo.files.length>1">
                     Please select just one Excel file.
                   </mat-error>
                 </div>
