@@ -54,9 +54,18 @@ export class HistoryComponent implements OnInit {
 
 
   getRecord(row) {
-    
-    let x = this.router;
-    x.navigate(["scans", row.qid]);
+    if (row.progress == "Completed"){
+      let x = this.router;
+      x.navigate(["scans", row.qid]);
+    }
+    else if(row.progress == "In Queue" || row.progress == "Running"){
+      alert("Dear User/Guest,\nPlease wait while we process your query.\n.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+    }
+    else if(row.progress == "Error in Query")  // It means query wasn't able to complete properly, and there would be an issue into query parameters, Peaklist hadn't reasonable amount of data etc.
+    //Therefore, it will not navigate to Scan Results.
+    {
+      alert("Dear User/Guest,\nYour search query could not be completed due to the below possible reasons\nQuery parameters are invalid\n Peaklist has not reasonable amount of peak list information.\n Please address the above issues and if problem still persists then, report a bug using 'Report Bug' tab.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+    }
   }
 }
 
