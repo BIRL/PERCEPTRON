@@ -83,8 +83,9 @@
                   <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
                 </ng-template>
                 <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName"
-                  [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)" accept=".txt, .mgf, .mzXML, .zip"
-                  multiple ngModel />
+                  [(ngModel)]="filenameModel" id="FileName"  accept=".txt, .mgf, .mzXML, .mzML, .zip"
+                  multiple ngModel />  
+                  <!-- (change)="upload(Uploaded_File)" -->
                 <mat-error style="display: inline; font-style: italic;" *ngIf="email.files.length==0">
                   Please select atleast one data file.
                 </mat-error>
