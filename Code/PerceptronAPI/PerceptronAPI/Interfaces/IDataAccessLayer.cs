@@ -14,10 +14,12 @@ namespace PerceptronAPI
         stat stat();
         void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults);
         SearchParameter GetSearchParmeters(string qid);
-        ScanResultsDownloadDataDto ScanResultsDownloadData(string qid);
+        ScanResultsDownloadDataDto ScanResultsDownloadData(string qid, string FileUniqueId);
         string StoreSearchParameters(SearchParametersDto parameters);
         string UpdatingDatabase(string DatabaseName, List<FastaReaderProteinDataDto> FastaProteinInfo);
-        
+
+        ScanInputDataDto ScanInputData(string qid);
+
         //List<string> ScanResultsAgainstFileUniqueId(string qid, string FileId);
         //MassSpectrumImagedetail GetImagePathMassSpectrum(string qid);
     }

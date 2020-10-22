@@ -12,5 +12,6 @@ namespace PerceptronAPI.Models
         public int Frags { get; set; }
         public int Mods { get; set; }
         public string FileUniqueId { get; set; }
+        //public string SearchModeMessage = "BatchMode"; //Initializing with BatchMode Message but it will be updated if query will be the Single Mode Search.
     }
 }

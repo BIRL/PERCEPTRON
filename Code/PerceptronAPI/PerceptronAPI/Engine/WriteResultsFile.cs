@@ -9,32 +9,38 @@ namespace PerceptronAPI.Engine
 {
     public class WriteResultsFile
     {
-        public List<string> ResultFilesWrite(ScanResultsDownloadDataDto ScanData, string filePath)
+        public ResultFileDto ResultFilesWrite(ScanResultsDownloadDataDto ScanData, string filePath, int indexofFile, ScanInputDataDto ScanInputDataInfo)
         {
             List<string> AllResultFilesNames = new List<string>();
-            var TopProteinsOfEachFile = new List<ProteinDto>();
+            var TopProteinOfResultFile = new List<ProteinDto>();
+            
 
 
-            int NoOfFiles = ScanData.FileUniqueIdsList.Count;
+            //int NoOfFiles = ScanData.FileUniqueIdsList.Count;
 
-            for (int i = 0; i < NoOfFiles; i++)
-            {
-                var IndividualFileId = ScanData.FileUniqueIdsList[i];   /// IndividualFileId will direct and/or seggregate the results of different input data files in SearchResults
-                var IndividualNameOfFile = ScanData.FileNamesList[i];
-                var IndividualUniqueFileName = ScanData.UniqueFileNameList[i];
-                AllResultFilesNames.Add(WriteSingleResultsFile(ScanData, filePath, IndividualFileId, IndividualNameOfFile, IndividualUniqueFileName, TopProteinsOfEachFile));
-            }
+            var IndividualFileId = ScanInputDataInfo.FileUniqueIdsList[indexofFile];   /// IndividualFileId will direct and/or seggregate the results of different input data files in SearchResults
+            var IndividualNameOfFile = ScanInputDataInfo.FileNamesList[indexofFile];
+            var IndividualUniqueFileName = ScanInputDataInfo.UniqueFileNameList[indexofFile];
+            var SearchParameters = ScanInputDataInfo.searchParameters;
+            string IndividualResultFileName = (WriteSingleResultsFile(ScanData, SearchParameters, filePath, IndividualFileId, IndividualNameOfFile, IndividualUniqueFileName, TopProteinOfResultFile));
 
-            if (NoOfFiles > 1)
-            {
-                string FileWithPath = filePath + ScanData.searchParameters.Title + ".csv";
-                AllResultFilesNames.Add(WriteBatchResultsFile(FileWithPath, TopProteinsOfEachFile));
-            }
+            //TopProteinOfResultFile: Contains Top Protein(Rank = 1) of File but keeping it into the list and if file is empty (no results found) then,
+            //this list = 0 and in SearchController tackling it to avoid the bug
+            ResultFileDto SingleResultFileInfo = new ResultFileDto(TopProteinOfResultFile, IndividualResultFileName); 
 
-            return AllResultFilesNames;
+            return SingleResultFileInfo;            
+            
+            //if (NoOfFiles > 1)
+            //{
+            //    string FileWithPath = filePath + ScanInputDataInfo.searchParameters.Title + ".csv";
+            //    AllResultFilesNames.Add(WriteBatchResultsFile(FileWithPath, TopProteinOfResultFile));
+            //}
+
+            //return AllResultFilesNames;
+
         }
 
-        public string WriteSingleResultsFile(ScanResultsDownloadDataDto ScanData, string filePath, string IndividualFileId, string IndividualNameOfFile, string IndividualUniqueFileName, 
+        public string WriteSingleResultsFile(ScanResultsDownloadDataDto ScanData, SearchParameter SearchParameters, string filePath, string IndividualFileId, string IndividualNameOfFile, string IndividualUniqueFileName, 
             List<ProteinDto> TopProteinsOfEachFile)
         {
             //var currentdirectory = Directory.GetCurrentDirectory();
@@ -46,7 +52,7 @@ namespace PerceptronAPI.Engine
             //[ON HOLD ENHANCEMENT] To avoiding replacing files because of same name using "IndividualUniqueFileName" (UniqueFileName) for saving the result fiel but User will see the file name of "IndividualNameOfFile"
             // (FileName) {a User selected file name of Input Peak List File}
             string InputPeakListName = Path.GetFileName(IndividualNameOfFile);  /// IndividualNameOfFile   is a a name of input PeakList
-            string FileWithPath = filePath + "\\" + ScanData.searchParameters.Title + "_" + InputPeakListName;
+            string FileWithPath = filePath + "\\" + SearchParameters.Title + "_" + InputPeakListName;
 
             List<SearchResult> AllRawResults = ScanData.ListOfSearchResults;
             AllRawResults = AllRawResults.OrderBy(x => x.ProteinRank).ToList();
@@ -60,8 +66,8 @@ namespace PerceptronAPI.Engine
             for (int j = 0; j < AllRawResults.Count; j++)
             {
 
-                if (AllRawResults[j].FileUniqueId == IndividualFileId)
-                {
+                //if (AllRawResults[j].FileUniqueId == IndividualFileId)
+                //{
                     var ResultsData = AllRawResults[j];
 
                     // Fetching Number of Matches
@@ -95,7 +101,7 @@ namespace PerceptronAPI.Engine
                         }
                     }
 
-                    if (ScanData.searchParameters.PtmAllow == "True")
+                    if (SearchParameters.PtmAllow == "True")
                     {
                         var BlindPtm = new BlindPtmInfo(ResultsData.BlindPtmLocalization);
 
@@ -115,7 +121,7 @@ namespace PerceptronAPI.Engine
 
                 }
 
-            }
+            //}
             if (isEmptyFile == "FileIsEmpty")   //If File does not contain any data...
             {
                 sw.WriteLine("No Result Found Please search with another set of parameters");
@@ -127,8 +133,6 @@ namespace PerceptronAPI.Engine
 
         public string WriteBatchResultsFile(string FileWithPath, List<ProteinDto> TopProteinsOfEachFile)
         {
-
-
 
             //string FileWithPath = filePath + NameofFile;
 
