@@ -89,9 +89,10 @@ namespace PerceptronLocalService.Engine
                     rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();
                 }
 
-                int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
-
-                TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //
+                //int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation) //Updated 20201112
+                
+                //TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
+                TerminalModificationsCPU.TerminalModifications(molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
 
                 //Save Copy for Left Truncation
                 //protein = proteinList[i];
@@ -134,6 +135,7 @@ namespace PerceptronLocalService.Engine
             }
         }
 
+        //ITS HEALTHY.... FindPreTruncationIndex [ORIGINAL]
         public int FindPreTruncationIndex(double proteinExperimentalMw, double MwTolerance, List<double> Ions, int ProteinSequenceLength)
         {
             int preTruncationIndex = ProteinSequenceLength;
@@ -146,6 +148,38 @@ namespace PerceptronLocalService.Engine
             }
             return preTruncationIndex;
         }
+
+
+        public void MergeSort(double proteinExperimentalMw, double MwTolerance, List<double> Ions, int ProteinSequenceLength, ref int start, ref int mid, ref int end, ref int preTruncationIndex) //Updated 20201112
+        {
+            if (Ions[end] - proteinExperimentalMw < MwTolerance)
+            {
+                preTruncationIndex = end;
+                return;
+            }
+            else if (Ions[mid] - proteinExperimentalMw > MwTolerance && Ions[mid - 1] - proteinExperimentalMw <= MwTolerance)
+            {
+                preTruncationIndex = mid;
+                return;
+            }
+            else
+            {
+                if (Ions[mid] - proteinExperimentalMw > MwTolerance && Ions[mid - 1] - proteinExperimentalMw > MwTolerance)
+                {
+                    end = mid;
+                    mid = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(mid + start) / 2));
+                    MergeSort(proteinExperimentalMw, MwTolerance, Ions, ProteinSequenceLength, ref start, ref mid, ref end, ref preTruncationIndex);
+                }
+                else if (Ions[mid] - proteinExperimentalMw < MwTolerance && Ions[mid - 1] - proteinExperimentalMw < MwTolerance)
+                {
+                    start = mid;
+                    mid = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(end + mid) / 2));
+                    MergeSort(proteinExperimentalMw, MwTolerance, Ions, ProteinSequenceLength, ref start, ref mid, ref end, ref preTruncationIndex);
+                }
+            }
+        }
+
+
         public List<double> ElementwiseListOperation(List<double> Ions, double Offset)
         {
             var newList = new List<double>();
