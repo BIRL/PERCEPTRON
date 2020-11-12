@@ -15,7 +15,7 @@ namespace PerceptronLocalService.Engine
 
         public List<ProteinDto> EachProteinTerminalModifications(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
         {
-            int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation)
+            //int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation) //Updated 20201112
 
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
@@ -47,7 +47,8 @@ namespace PerceptronLocalService.Engine
                 double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
                 int tmpSeqLength = sequence.Length;
 
-                TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins);
+                //TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
+                TerminalModifications(molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
 
             }
 
@@ -55,7 +56,8 @@ namespace PerceptronLocalService.Engine
             
         }
 
-        public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins) //#N2RIt!!!
+        //public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
+        public static void TerminalModifications(double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
         {
             double AcetylationWeight = MassAdjustment.AcetylationWeight;
             double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
@@ -90,12 +92,18 @@ namespace PerceptronLocalService.Engine
                         //PstScore = tempprotein.PstScore * tempseq.Length / (tempseq.Length - 1)
                     };
 
-                    if (FlagSet == 1)
+                    /*      //Updated 20201112
+                     * if (FlagSet == 1)
                     {
                         newProtein.PstScore = newProtein.PstScore * tempseq.Length / (tempseq.Length - 1);
                         newProtein.InsilicoDetails.InsilicoMassLeft.RemoveAt(0);
                         newProtein.InsilicoDetails.InsilicoMassRight.RemoveAt(newProtein.InsilicoDetails.InsilicoMassRight.Count - 1);
                     }
+                    */
+
+                    newProtein.PstScore = newProtein.PstScore * tempseq.Length / (tempseq.Length - 1); //Updated 20201112
+                    newProtein.InsilicoDetails.InsilicoMassLeft.RemoveAt(0); //Updated 20201112
+                    newProtein.InsilicoDetails.InsilicoMassRight.RemoveAt(newProtein.InsilicoDetails.InsilicoMassRight.Count - 1); //Updated 20201112
                     tempCandidateProteins.Add(newProtein);
                 }
 
@@ -115,12 +123,19 @@ namespace PerceptronLocalService.Engine
                         Sequence = tempseq.Substring(1, tmpSeqLength - 1), // "-1" Added
                         //PstScore = tempprotein.PstScore * tempseq.Length / (tempseq.Length - 1)
                     };
-                    if (FlagSet == 1)
+                    /*      //Updated 20201112
+                     * if (FlagSet == 1)
                     {
                         newProtein.PstScore = newProtein.PstScore * tempseq.Length / (tempseq.Length - 1);
                         newProtein.InsilicoDetails.InsilicoMassLeft.RemoveAt(0);
                         newProtein.InsilicoDetails.InsilicoMassRight.RemoveAt(newProtein.InsilicoDetails.InsilicoMassRight.Count - 1);
                     }
+                    */
+
+                    newProtein.PstScore = newProtein.PstScore * tempseq.Length / (tempseq.Length - 1); //Updated 20201112
+                    newProtein.InsilicoDetails.InsilicoMassLeft.RemoveAt(0); //Updated 20201112
+                    newProtein.InsilicoDetails.InsilicoMassRight.RemoveAt(newProtein.InsilicoDetails.InsilicoMassRight.Count - 1); //Updated 20201112
+
                     tempCandidateProteins.Add(newProtein);
                 }
                 if (parameters.TerminalModification.Contains("M_Acetylation"))
