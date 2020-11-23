@@ -59,7 +59,7 @@ export class HistoryComponent implements OnInit {
       x.navigate(["scans", row.qid]);
     }
     else if(row.progress == "In Queue" || row.progress == "Running"){
-      alert("Dear User/Guest,\nPlease wait while we process your query.\n.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User/Guest,\nPlease wait while we process your query.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else if(row.progress == "Error in Query")  // It means query wasn't able to complete properly, and there would be an issue into query parameters, Peaklist hadn't reasonable amount of data etc.
     //Therefore, it will not navigate to Scan Results.
