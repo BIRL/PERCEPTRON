@@ -1,32 +1,39 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace PerceptronLocalService.Utility
 {
     public static class Clone
     {
         /// <summary>
-        /// USAGE: Some Object that you want to clone (i.e. X1)
-        /// Object x=new Object(); //create new
-        /// string DeepString = CloneUtility.Clone(X1);
-        /// x= CloneUtility.Decrypt&lt;Object&gt;(DeepString);
+        /// Perform a deep Copy of the object.
         /// </summary>
-        /// <param name="Object"></param>
-        /// <returns></returns>
-        
-        public static string CloneObject(object Object)
+        /// <typeparam name="T">The type of object being copied.</typeparam>
+        /// <param name="source">The object instance to copy.</param>
+        /// <returns>The copied object.</returns>
+        public static T DeepClone<T>(T source)
         {
-            var json = JsonConvert.SerializeObject(Object);
-            return json;
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("The type must be serializable.", nameof(source));
+            }
+
+            // Don't serialize a null object, simply return the default for that object
+            if (Object.ReferenceEquals(source, null))
+            {
+                return default(T);
+            }
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
         }
-
-        public static T Decrypt<T>(string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-
-        }
-
     }
 }

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System; //Updated 20201113
+using System.Collections.Generic;
 
 namespace PerceptronLocalService.DTO
 {
+    [Serializable] //Updated 20201113
     public class PostTranslationModificationsSiteDto
     {
         // Declaring Variables

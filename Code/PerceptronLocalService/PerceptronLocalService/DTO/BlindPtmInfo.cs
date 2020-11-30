@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; //Updated 20201113
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PerceptronLocalService.DTO
 {
+    [Serializable] //Updated 20201113
     public class BlindPtmInfo
     {
         public int Start;
