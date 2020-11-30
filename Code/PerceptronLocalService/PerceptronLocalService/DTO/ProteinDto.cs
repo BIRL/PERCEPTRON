@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PerceptronLocalService.Utility;
 
 namespace PerceptronLocalService.DTO
 {
+    [Serializable]
     public class ProteinDto
     {
         public string Header;
@@ -65,10 +67,14 @@ namespace PerceptronLocalService.DTO
 
         }
 
-        public ProteinDto(ProteinDto protein) 
+
+            
+
+        public ProteinDto(ProteinDto protein)             ///ITS HEALTHY..........!!!!!!!!
         {
-            var proteinInfoClone = Clone.CloneObject(protein); // Lists are referenced based so, therefore...
-            ProteinDto ProteinClone = Clone.Decrypt<ProteinDto>(proteinInfoClone); // Lists are referenced based so, therefore...
+
+            var ProteinClone = Clone.DeepClone<ProteinDto>(protein);
+
 
             Header = ProteinClone.Header;
             OriginalSequence = ProteinClone.OriginalSequence;
@@ -102,7 +108,6 @@ namespace PerceptronLocalService.DTO
 
         }
 
-
         public ProteinDto(string h, string s, double mw, double mwScore)
         {
             Header = h;
@@ -115,8 +120,6 @@ namespace PerceptronLocalService.DTO
             Score = 0;
             Mw = mw;
             //PtmParticulars = new List<Sites>();
-
-            
 
         }
 
