@@ -48,8 +48,10 @@ namespace PerceptronLocalService.Engine
                     }
                 }
 
-                var tempSetLogicalMatchCounterList = Clone.CloneObject(LogicalMatchCounterList); // Lists are referenced based so, therefore...
-                SetLogicalMatchCounterList = Clone.Decrypt<List<bool>>(tempSetLogicalMatchCounterList); // Lists are referenced based so, therefore...
+                //var tempSetLogicalMatchCounterList = Clone.CloneObject(LogicalMatchCounterList); // Lists are referenced based so, therefore...   //Updated 20201113
+                //SetLogicalMatchCounterList = Clone.Decrypt<List<bool>>(tempSetLogicalMatchCounterList); // Lists are referenced based so, therefore...    //Updated 20201113
+                SetLogicalMatchCounterList = Clone.DeepClone<List<bool>>(LogicalMatchCounterList);    //Updated 20201113
+
 
                 List<int> iMinusList = new List<int>();
                 if (i > 0)
