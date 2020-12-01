@@ -20,7 +20,7 @@ namespace PerceptronLocalService.Utility
         public const double H2O = H + H + O;
 
 
-        public const double AcetylationWeight = 42.0106;
+        //public const double AcetylationWeight = 42.0106;
     }
 }
 

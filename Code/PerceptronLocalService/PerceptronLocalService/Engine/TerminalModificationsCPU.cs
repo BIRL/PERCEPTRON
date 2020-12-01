@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PerceptronLocalService.Engine;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.Utility;
@@ -16,6 +12,13 @@ namespace PerceptronLocalService.Engine
         public List<ProteinDto> EachProteinTerminalModifications(SearchParametersDto parameters, List<ProteinDto> candidateProteins)
         {
             //int FlagSet = 1; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation) //Updated 20201112
+
+            /* (Below) Updated 20201130  -- For Time Efficiancy  */
+            ModificationMWShift ModificationTableClass = new ModificationMWShift();
+            double AcetylationWeight = ModificationTableClass.ModificationMWShiftTable("Acetylation");   ///MassAdjustment.AcetylationWeight;  // Updated 20201201
+            double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
+            double SumOfAcetylationMethionineWeight = AcetylationWeight + MethionineWeight;
+            /* (Above) Updated 20201130  -- For Time Efficiancy  */
 
             var tempCandidateProteins = new List<ProteinDto>();
             for (int index = 0; index < candidateProteins.Count; index++)
@@ -48,7 +51,7 @@ namespace PerceptronLocalService.Engine
                 int tmpSeqLength = sequence.Length;
 
                 //TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
-                TerminalModifications(molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
+                TerminalModifications(molW, AcetylationWeight, MethionineWeight, SumOfAcetylationMethionineWeight, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
 
             }
 
@@ -57,14 +60,15 @@ namespace PerceptronLocalService.Engine
         }
 
         //public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
-        public static void TerminalModifications(double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
+        public static void TerminalModifications(double molW, double AcetylationWeight, double MethionineWeight, double SumOfAcetylationMethionineWeight,  List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
         {
-            double AcetylationWeight = MassAdjustment.AcetylationWeight;
-            double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
+            //double AcetylationWeight = MassAdjustment.AcetylationWeight;
+            //double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy
 
             string[] IndividualModifications = parameters.TerminalModification.Split(',');
 
-            var DELMECandiList = new List<ProteinDto>();
+            //var DELMECandiList = new List<ProteinDto>();
 
             if (IndividualModifications.Contains("None"))
             {
@@ -85,7 +89,8 @@ namespace PerceptronLocalService.Engine
                         Mw = molW - MethionineWeight,
                         InsilicoDetails =
                         {
-                            InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight).ToList(),
+                            ////InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight).ToList(),   /// Updated 20201201 Removed Because of its Runtime cost
+                            InsilicoMassLeft = _MassRemove.MassRemoval(leftIons, MethionineWeight),       // Added for Time Efficiency /// Updated 20201201
                             InsilicoMassRight = rightIons.ToList()
                         },
                         Sequence = tempseq.Substring(1, tmpSeqLength - 1), // "-1" Added
@@ -113,11 +118,11 @@ namespace PerceptronLocalService.Engine
                     var newProtein = new ProteinDto(tempprotein)
                     {
                         TerminalModification = "NME_Acetylation",
-                        Mw = molW - MethionineWeight + AcetylationWeight,
+                        Mw = molW - SumOfAcetylationMethionineWeight,    // Updated for Time Efficiency /// Updated 20201201
                         InsilicoDetails =
                         {
-                            InsilicoMassLeft =
-                                leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),
+                            ////InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),   /// Updated 20201201 Removed Because of its Runtime cost
+                            InsilicoMassLeft = _MassRemove.MassRemoval(leftIons, SumOfAcetylationMethionineWeight),    // Updated for Time Efficiency /// Updated 20201201
                             InsilicoMassRight = rightIons.ToList()
                         },
                         Sequence = tempseq.Substring(1, tmpSeqLength - 1), // "-1" Added
@@ -147,7 +152,8 @@ namespace PerceptronLocalService.Engine
                         Mw = molW + AcetylationWeight,
                         InsilicoDetails =
                         {
-                            InsilicoMassLeft = leftIons.Select(x => x + AcetylationWeight).ToList(),
+                            ////InsilicoMassLeft = leftIons.Select(x => x + AcetylationWeight).ToList(),   /// Updated 20201201 Removed Because of its Runtime cost
+                            InsilicoMassLeft = _MassRemove.MassRemoval(leftIons, -AcetylationWeight),// (Simple Algebra) -AcetylationWeight will be - * - = + in MassRemoval method // Added for Time Efficiency /// Updated 20201201
                             InsilicoMassRight = rightIons.ToList()
                         }
                     };

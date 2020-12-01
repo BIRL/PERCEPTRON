@@ -319,6 +319,7 @@ namespace PerceptronLocalService.Engine
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             //var peakDatalist = new List<peakData2Dlist>();
             List<ProteinDto> CandidateProtListOutput = new List<ProteinDto>();
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy
             //for (int row = 0; row < peakData.Mass.Count; row++)
             //{
             //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
@@ -401,7 +402,9 @@ namespace PerceptronLocalService.Engine
                         {
                             protein.Truncation = "Left";
 
-                            protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[Index]).ToList();
+                            ////protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[Index]).ToList();     //Updated 20201201 Removed Because of its Runtime cost
+
+                            protein.InsilicoDetails.InsilicoMassLeft = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassLeft, protein.InsilicoDetails.InsilicoMassLeft[Index]);     // Added for Time Efficiency /// Updated 20201201
 
                             protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(Index + 1, protein.InsilicoDetails.InsilicoMassLeft.Count - Index - 1);
 
@@ -422,8 +425,11 @@ namespace PerceptronLocalService.Engine
                             var truncationIndex = protein.Sequence.Length - Index;
                             protein.Truncation = "Right";
                             protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(0, truncationIndex - 1);
+                            
+                            ////protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.Select(x => x - protein.InsilicoDetails.InsilicoMassRight[Index]).ToList();     //Updated 20201201 Removed Because of its Runtime cost // as this will be the MW of protein - Water
 
-                            protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.Select(x => x - protein.InsilicoDetails.InsilicoMassRight[Index]).ToList(); // as this will be the MW of protein - Water
+                            protein.InsilicoDetails.InsilicoMassRight = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassRight, protein.InsilicoDetails.InsilicoMassRight[Index]);     // Added for Time Efficiency /// Updated 20201201
+
 
                             protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.GetRange(Index + 1, protein.InsilicoDetails.InsilicoMassRight.Count - Index - 1);
 
