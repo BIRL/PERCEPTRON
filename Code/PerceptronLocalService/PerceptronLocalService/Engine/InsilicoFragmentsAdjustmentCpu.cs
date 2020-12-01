@@ -31,13 +31,16 @@ namespace PerceptronLocalService.Engine
         {
             var tempProtein = new List<ProteinDto>();
 
-            var leftString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassLeft);
-            var leftIons = Clone.Decrypt<List<double>>(leftString);
 
-            var rightString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassRight);
-            var rightIons = Clone.Decrypt<List<double>>(rightString);
+            //Updated 20201113
+            //var leftString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassLeft);
+            //var leftIons = Clone.Decrypt<List<double>>(leftString);
 
+            //var rightString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassRight);
+            //var rightIons = Clone.Decrypt<List<double>>(rightString);
 
+            var leftIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassLeft);    //Updated 20201113
+            var rightIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassRight);    //Updated 20201113
 
             var strprotein = prot.Sequence.ToUpper();
             var prtlength = strprotein.Length; //Gives length of Protein
