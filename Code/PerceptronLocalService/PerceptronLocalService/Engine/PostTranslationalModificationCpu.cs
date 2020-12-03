@@ -822,7 +822,9 @@ namespace PerceptronLocalService.Engine
             }
 
             double MolecularWeight = ModifiedProtein.Mw;
-            string LeftIons = Clone.CloneObject(ModifiedProtein.InsilicoDetails.InsilicoMassLeft); // Lists are referenced based so, therefore...
+            //string LeftIons = Clone.CloneObject(ModifiedProtein.InsilicoDetails.InsilicoMassLeft); // Lists are referenced based so, therefore...    //Updated 20201113
+            var LeftIons = ModifiedProtein.InsilicoDetails.InsilicoMassLeft;    //Updated 20201113
+
 
             var ModifiedSite = new PostTranslationModificationsSiteDto();
             for (int index = 0; index < ModificationsList.Count; index++)         //In case variable modification is selected
@@ -831,7 +833,7 @@ namespace PerceptronLocalService.Engine
                 {
                     ProteinDto AnotherModifiedProtein = new ProteinDto(protein);
                     AnotherModifiedProtein.Mw = MolecularWeight;
-                    AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft = Clone.Decrypt<List<double>>(LeftIons); // Lists are referenced based so, therefore...
+                    AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft = Clone.DeepClone<List<double>>(LeftIons); // Lists are referenced based so, therefore...    //Updated 20201113
                     for (int index2 = 0; index2 < ModificationsList[index][index1].Count; index2++)
                     {
                         ModifiedSite = ModificationsList[index][index1][index2];
