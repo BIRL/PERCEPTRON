@@ -568,7 +568,11 @@ export class ProteinSearchComponent implements OnInit {
     //   form.PtmAllow = 0;
     // }
   
-
+    let FileExtension = form.FileName.substr(form.FileName.lastIndexOf('.') + 1);  //Updated 20201207
+    if (FileExtension == 'zip'){
+      form.NoOfOutputResults = '100';
+      alert("Dear User/Guest,\n\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+    }
 
     let fi = this.imgFileInput.nativeElement;
     let stats: any = 'false';
