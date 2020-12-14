@@ -117,29 +117,82 @@ namespace PerceptronLocalService.Engine
 
             //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
             //If 2 or more Tags are same then also keep just one
-
+            /* //Updated 20201214  BELOW */
+            //PST SAME RMSE ALSO, SAME then, we select that PST having more intensity
             var uniquepst = psttaginfolist.Select(test => test.psttags).Distinct().ToList();
-            var UniquePstTagInfoList = new List<Psts>(); //This will store data about Unique Pst Tag Information    ////////IF POSSIBLE ASSIGN THE SIZE OF "uniquepst.Count"
-
-            for (int indexuniquepst = 0; indexuniquepst <= uniquepst.Count - 1; indexuniquepst++)  // This loop will run on the Unique(distinct) PSTTAGS
+            var UniquePstTagInfoList = psttaginfolist; //This will store data about Unique Pst Tag Information
+            if (uniquepst.Count() != psttaginfolist.Count())
             {
-                var uniquepsttag = uniquepst[indexuniquepst]; //Each Unique(distinct) PSTTAG will be taken for selecting all corresponding data against this PSTTAG 
-
-                var UniquePstTagMinError = (from c in psttaginfolist
-                                            group c by c.psttags into g
-                                            where g.Key == uniquepsttag
-                                            select new { psttags = g.Key, MinPstTagErrorSum = g.Select(m => m.PstTagErrorSum).Min() }).ToList(); // PSTTAG SELECTED; Select That list's Row which have Minimum "PST TAG ERROR SUM"
-
-                for (int indexpsttaginfolist = 0; indexpsttaginfolist <= psttaginfolist.Count - 1; indexpsttaginfolist++)
+                int firstIndex = 0;
+                while (true)
                 {
-                    if (psttaginfolist[indexpsttaginfolist].psttags == uniquepsttag && psttaginfolist[indexpsttaginfolist].PstTagErrorSum == UniquePstTagMinError[0].MinPstTagErrorSum)
+                    var firstErrorSum = UniquePstTagInfoList[firstIndex].PstTagErrorSum;
+                    var firstTag = UniquePstTagInfoList[firstIndex].psttags;
+                    int secondIndex = firstIndex + 1;
+                    while (secondIndex < UniquePstTagInfoList.Count())
                     {
-                        var temporaryData = psttaginfolist[indexpsttaginfolist];
-                        UniquePstTagInfoList.Add(psttaginfolist[indexpsttaginfolist]);
-                        break;  //If 2 or more Tags are same then, keep just one AND BREAK THE LOOP...
+                        var secondErrorSum = UniquePstTagInfoList[secondIndex].PstTagErrorSum;
+                        var secondTag = UniquePstTagInfoList[secondIndex].psttags;
+                        if (firstTag == secondTag)
+                        {
+                            if (firstErrorSum < secondErrorSum)
+                            {
+                                UniquePstTagInfoList.RemoveAt(secondIndex);
+                            }
+                            else if (firstErrorSum > secondErrorSum)
+                            {
+                                UniquePstTagInfoList.RemoveAt(firstIndex);
+                            }
+                            else // (firstErrorSum == secondErrorSum)
+                            {
+                                if (UniquePstTagInfoList[firstIndex].PstTagIntensity < UniquePstTagInfoList[secondIndex].PstTagIntensity || UniquePstTagInfoList[firstIndex].PstTagIntensity == UniquePstTagInfoList[secondIndex].PstTagIntensity)
+                                {
+                                    UniquePstTagInfoList[firstIndex] = UniquePstTagInfoList[secondIndex];
+                                    UniquePstTagInfoList.RemoveAt(secondIndex);
+                                }
+                                else
+                                {
+                                    UniquePstTagInfoList.RemoveAt(secondIndex);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            secondIndex++;
+                        }
+                    }
+                    if (firstTag == UniquePstTagInfoList[firstIndex].psttags)
+                        firstIndex++;
+                    if (firstIndex >= UniquePstTagInfoList.Count() - 1)
+                    {
+                        break;
                     }
                 }
             }
+            /* //Updated 20201214  ABOVE */
+
+            //var uniquepst = psttaginfolist.Select(test => test.psttags).Distinct().ToList();
+            //var UniquePstTagInfoList = new List<Psts>(); //This will store data about Unique Pst Tag Information    ////////IF POSSIBLE ASSIGN THE SIZE OF "uniquepst.Count"
+
+            //for (int indexuniquepst = 0; indexuniquepst <= uniquepst.Count - 1; indexuniquepst++)  // This loop will run on the Unique(distinct) PSTTAGS
+            //{
+            //    var uniquepsttag = uniquepst[indexuniquepst]; //Each Unique(distinct) PSTTAG will be taken for selecting all corresponding data against this PSTTAG 
+
+            //    var UniquePstTagMinError = (from c in psttaginfolist
+            //                                group c by c.psttags into g
+            //                                where g.Key == uniquepsttag
+            //                                select new { psttags = g.Key, MinPstTagErrorSum = g.Select(m => m.PstTagErrorSum).Min() }).ToList(); // PSTTAG SELECTED; Select That list's Row which have Minimum "PST TAG ERROR SUM"
+
+            //    for (int indexpsttaginfolist = 0; indexpsttaginfolist <= psttaginfolist.Count - 1; indexpsttaginfolist++)
+            //    {
+            //        if (psttaginfolist[indexpsttaginfolist].psttags == uniquepsttag && psttaginfolist[indexpsttaginfolist].PstTagErrorSum == UniquePstTagMinError[0].MinPstTagErrorSum)
+            //        {
+            //            var temporaryData = psttaginfolist[indexpsttaginfolist];
+            //            UniquePstTagInfoList.Add(psttaginfolist[indexpsttaginfolist]);
+            //            break;  //If 2 or more Tags are same then, keep just one AND BREAK THE LOOP...
+            //        }
+            //    }
+            //}
 
 
             //Filter tags according to fulltag error threshold
