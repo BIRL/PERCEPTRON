@@ -5,6 +5,8 @@ using PerceptronLocalService.DTO;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.Utility;
 
+using System.Diagnostics;
+
 
 namespace PerceptronLocalService.Engine
 {
@@ -14,9 +16,43 @@ namespace PerceptronLocalService.Engine
         ////private const double MethionineWeight = 42.0106;
         //double MethionineWeight = 131.04049; //RECEIVING so for the #TIMEBEING//= AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
 
-        public void PreTruncation(SearchParametersDto parameters, List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
+        public void PreTruncation(double MwTolerance, List<string> IndividualModifications, List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
         {
             var proteinExperimentalMw = peakData2DList[0].Mass;
+
+            /* (Below) Updated 20201130  -- For Time Efficiancy  */
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy 
+            ModificationMWShift ModificationTableClass = new ModificationMWShift();
+            //double MassOfHydrogen = MassAdjustment.H;
+            //double MassOfOxygen = MassAdjustment.O;
+            double MassOfWater = MassAdjustment.H2O;
+            double AcetylationWeight = ModificationTableClass.ModificationMWShiftTable("Acetylation");   ///MassAdjustment.AcetylationWeight;  // Updated 20201201
+            double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
+            double SumOfAcetylationMethionineWeight = AcetylationWeight + MethionineWeight;
+
+            //TerminalModificationsList _TerminalModifications = new TerminalModificationsList();
+            //var IndividualModifications = _TerminalModifications.TerminalModifications(parameters.TerminalModification);
+            /* (Above) Updated 20201130  -- For Time Efficiancy  */
+
+
+            Stopwatch OnlyPreTruncation = Stopwatch.StartNew();    // DELME Execution Time Working
+
+            Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
+            Stopwatch OnlyInMemoryCopyTime = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch OnlyPreTruncationRemain = Stopwatch.StartNew();    // DELME Execution Time Working
+            //OnlyPreTruncationFirstHalf.Start();     // DELME Execution Time Working
+            Stopwatch OnlyTerminalModification = Stopwatch.StartNew();    // DELME Execution Time Working
+
+            Stopwatch TimeUsedBySubstring = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch TimeUsedByGetRange = Stopwatch.StartNew();    // DELME Execution Time Working
+            
+            Stopwatch TimeUsedBySelect = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch TimeUsedByFindPreTruncation = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch AnotherClassCalling = new Stopwatch();    // DELME Execution Time Working
+
+            Stopwatch ProteinSequenceLengthTime = new Stopwatch();    // DELME Execution Time Working
+
+            OnlyPreTruncation.Start();     // DELME Execution Time Working
 
             for (var i = 0; i < proteinList.Count; i++)
             {
@@ -34,21 +70,34 @@ namespace PerceptronLocalService.Engine
                 //{
                 /////////////////////////////////////////////////////////// #J4TDM  ///////////////////////////////////////////////////////////
 
-
+                OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
                 var protein1 = proteinList[i];
-
+                OneCallTime.Start();    // DELME Execution Time Working
                 var protein = new ProteinDto(protein1);
+                OneCallTime.Stop();     // DELME Execution Time Working
+                OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
+                                                 //continue;  //  #HardCode
 
+
+
+                OnlyPreTruncationRemain.Start();        // DELME Execution Time Working
                 var prtLength = protein.Sequence.Length;
                 var preTruncationIndex = prtLength;
-                var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + parameters.MwTolerance) / 168) - 1);
+                var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + MwTolerance) / 168) - 1);
 
                 var leftIons = protein.InsilicoDetails.InsilicoMassLeft;
                 var sequence = protein.Sequence;
                 var rightIons = protein.InsilicoDetails.InsilicoMassRight;
+                OnlyPreTruncationRemain.Stop();          // DELME Execution Time Working
 
 
-                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, leftIons, prtLength);
+
+                TimeUsedByFindPreTruncation.Start();      // DELME Execution Time Working
+                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, MwTolerance, leftIons, prtLength);
+                TimeUsedByFindPreTruncation.Stop();      // DELME Execution Time Working
+
+
+                OnlyPreTruncationRemain.Start();        // DELME Execution Time Working
 
                 // GIVE BELOW CODE IS JUST FOR COMPENSATING ZERO BASED INDEXING
                 int factor = 0; /// factor is just a constant number for Compensating C# ZERO BASED INDEXING AGAINST SPECTRUM
@@ -69,15 +118,29 @@ namespace PerceptronLocalService.Engine
 
 
                 protein.TruncationIndex = preTruncationIndex + minusfactorPreTruncationIndex;
-                var newProtein = new ProteinDto(protein);
+                OnlyPreTruncationRemain.Stop();        // DELME Execution Time Working
 
+
+                OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
+                var newProtein = new ProteinDto(protein);
+                OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
+
+                
+
+                TimeUsedBySubstring.Start();      // DELME Execution Time Working
                 var tmpSeq = sequence.Substring(0, preTruncationIndex + factor);
+                TimeUsedBySubstring.Stop();      // DELME Execution Time Working
+
+
                 var tmpSeqLength = tmpSeq.Length;
                 newProtein.Sequence = tmpSeq;
 
+                TimeUsedByGetRange.Start();      // DELME Execution Time Working
                 leftIons = leftIons.GetRange(0, preTruncationIndex + factor);
+                TimeUsedByGetRange.Stop();      // DELME Execution Time Working
 
-                var molW = leftIons[tmpSeqLength - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;  // newProtein.Mw    //#FreeTimeTesting
+
+                var molW = leftIons[tmpSeqLength - 1] + MassOfWater;   //Updated 20201130  -- For Time Efficiancy 
 
                 // Right Ion Stuff
 
@@ -85,14 +148,25 @@ namespace PerceptronLocalService.Engine
                 if (truncationIndex != 0)
                 {
                     var insilicoTruncationIdxMass = rightIons[truncationIndex - 1];
+
+                    TimeUsedByGetRange.Start();      // DELME Execution Time Working
                     rightIons = rightIons.GetRange(truncationIndex, prtLength - truncationIndex);
-                    rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();
+                    TimeUsedByGetRange.Stop();      // DELME Execution Time Working
+
+
+                    TimeUsedBySelect.Start();      // DELME Execution Time Working
+                    ////rightIons = rightIons.Select(x => x - insilicoTruncationIdxMass).ToList();   /// Updated 20201201 Removed Because of its Runtime cost
+                    rightIons = _MassRemove.MassRemoval(rightIons, insilicoTruncationIdxMass);    // Added for Time Efficiency /// Updated 20201201
+                    TimeUsedBySelect.Stop();      // DELME Execution Time Working
                 }
 
                 //int FlagSet = 0; // FlagSet is a vairable for differentiating the some calculations of Simple Terminal Modification to Terminal Modification(Truncation) //Updated 20201112
-                
+
                 //TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
-                TerminalModificationsCPU.TerminalModifications(molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
+
+                OnlyTerminalModification.Start();     // DELME Execution Time Working
+                TerminalModificationsCPU.TerminalModifications(molW, AcetylationWeight, MethionineWeight, SumOfAcetylationMethionineWeight, leftIons, rightIons, tmpSeq, tmpSeqLength, IndividualModifications, newProtein, proteinListRight); //Updated 20201112
+                OnlyTerminalModification.Stop();     // DELME Execution Time Working
 
                 //Save Copy for Left Truncation
                 //protein = proteinList[i];
@@ -103,50 +177,80 @@ namespace PerceptronLocalService.Engine
                 preTruncationIndex = prtLength;
                 rightIons = protein.InsilicoDetails.InsilicoMassRight;
 
-                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, parameters.MwTolerance, rightIons, prtLength);
+                TimeUsedByFindPreTruncation.Start();      // DELME Execution Time Working
+                preTruncationIndex = FindPreTruncationIndex(proteinExperimentalMw, MwTolerance, rightIons, prtLength);
+                TimeUsedByFindPreTruncation.Stop();      // DELME Execution Time Working
 
                 truncationIndex = prtLength - (preTruncationIndex + 1);
 
                 protein.TruncationIndex = truncationIndex + minusfactorTruncationIndex;
-                newProtein = new ProteinDto(protein);
 
+                OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
+                newProtein = new ProteinDto(protein);
+                OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
 
 
                 if (truncationIndex + minusfactorTruncationIndex > 0) //#TESTING: 3 CONDITIONS 
                 {
                     newProtein.TruncationIndex = truncationIndex;
-                    tmpSeq = sequence.Substring(truncationIndex, prtLength - truncationIndex);
-                    newProtein.Sequence = tmpSeq;
-                    rightIons = rightIons.GetRange(0, preTruncationIndex + 1).ToList();
 
-                    newProtein.Mw = rightIons[rightIons.Count - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
+                    TimeUsedBySubstring.Start();      // DELME Execution Time Working
+                    tmpSeq = sequence.Substring(truncationIndex, prtLength - truncationIndex);
+                    TimeUsedBySubstring.Stop();      // DELME Execution Time Working
+
+                    newProtein.Sequence = tmpSeq;
+
+                    TimeUsedByGetRange.Start();      // DELME Execution Time Working
+                    rightIons = rightIons.GetRange(0, preTruncationIndex + 1).ToList();
+                    TimeUsedByGetRange.Stop();      // DELME Execution Time Working
+                    
+
+                    newProtein.Mw = rightIons[rightIons.Count - 1] + MassOfWater;
                     newProtein.TerminalModification = "None";
                     leftIons = protein.InsilicoDetails.InsilicoMassLeft;
 
                     double insilicoTruncationIdxMass1 = leftIons[truncationIndex - 1];
-                    leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
 
-                    leftIons = leftIons.Select(x => x - insilicoTruncationIdxMass1).ToList();
+                    TimeUsedByGetRange.Start();      // DELME Execution Time Working
+                    leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
+                    TimeUsedByGetRange.Stop();      // DELME Execution Time Working
+                    
+                    TimeUsedBySelect.Start();      // DELME Execution Time Working
+                    ////leftIons = leftIons.Select(x => x - insilicoTruncationIdxMass1).ToList();   /// Updated 20201201 Removed Because of its Runtime cost
+                    leftIons = _MassRemove.MassRemoval(leftIons, insilicoTruncationIdxMass1);    // Added for Time Efficiency /// Updated 20201201
+                    TimeUsedBySelect.Stop();      // DELME Execution Time Working
+
                     newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
                     newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
                     proteinListLeft.Add(newProtein);
                 }
                 //}  //COMMENT ME
+                
             }
+            OnlyPreTruncation.Stop();     // DELME Execution Time Working
         }
 
         //ITS HEALTHY.... FindPreTruncationIndex [ORIGINAL]
         public int FindPreTruncationIndex(double proteinExperimentalMw, double MwTolerance, List<double> Ions, int ProteinSequenceLength)
         {
-            int preTruncationIndex = ProteinSequenceLength;
-            var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + MwTolerance) / 168)) - 1;
-            for (var m = start; m < ProteinSequenceLength; m++)
-            {
-                if (!(Ions[m] - proteinExperimentalMw > MwTolerance)) continue;
-                preTruncationIndex = m;
-                break;
-            }
+            /*  Updated 20201127    Below*/
+            ////int preTruncationIndex = ProteinSequenceLength;
+            ////var start = Convert.ToInt32(Math.Ceiling((proteinExperimentalMw + MwTolerance) / 168)) - 1;
+            ////for (var m = start; m < ProteinSequenceLength; m++)
+            ////{
+            ////    if (!(Ions[m] - proteinExperimentalMw > MwTolerance)) continue;
+            ////    preTruncationIndex = m;
+            ////    break;
+            ////}
+            ////return preTruncationIndex;
+            var preTruncationIndex = ProteinSequenceLength;
+            var start = 0;
+            var mid = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(ProteinSequenceLength) / 2));
+            var end = ProteinSequenceLength - 1;
+
+            MergeSort(proteinExperimentalMw, MwTolerance, Ions, ProteinSequenceLength, ref start, ref mid, ref end, ref preTruncationIndex);
             return preTruncationIndex;
+            /*  Updated 20201127    Above*/
         }
 
 
@@ -179,43 +283,37 @@ namespace PerceptronLocalService.Engine
             }
         }
 
-
-        public List<double> ElementwiseListOperation(List<double> Ions, double Offset)
-        {
-            var newList = new List<double>();
-            for (int iter = 0; iter < Ions.Count; iter++)
-            {
-
-                newList.Add(Ions[iter] + Offset);
-            }
-            return newList;
-
-        }
-
-
-        public void TruncationLeft(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedLeft, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft, List<newMsPeaksDto> peakData2DList)
+        public void TruncationLeft(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft, List<newMsPeaksDto> peakData2DList)
         {
             var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
-            if (parameters.PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
+            if (PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
             {
                 // HERE WHEN BE BLIND PTM...
                 NEEDTOBEDECIDED = 128;
                 factor = 0;
-                subTruncationLeft(parameters, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
+                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
             }
             else
             {
                 NEEDTOBEDECIDED = 256;
                 factor = 1;
-                subTruncationLeft(parameters, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
+                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
             }
 
         }
 
-        public void subTruncationLeft(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedLeft, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft)
+        public void subTruncationLeft(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft)
         {
+            Stopwatch subTruncationLeftTime = new Stopwatch();        // DELME Execution Time Working
+            Stopwatch subTruncationLeftInMemory = new Stopwatch();        // DELME Execution Time Working
+            subTruncationLeftTime.Start();     // DELME Execution Time Working;
+
+            double MassOfHydrogen = MassAdjustment.H;   //Updated 20201130  -- For Time Efficiancy 
+            double MassOfOxygen = MassAdjustment.O;   //Updated 20201130  -- For Time Efficiancy 
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy
+
             var isLeftRightIonEqualTrunLeft = new List<ProteinDto>();  // #J4TDM
             for (var index = 0; index < CandidateProteinListTruncatedLeft.Count; index++)
             {
@@ -223,7 +321,11 @@ namespace PerceptronLocalService.Engine
                 ////if (CandidateProteinListTruncatedLeft[index].Header == "O95298")
                 //{
                 var tempprotein = CandidateProteinListTruncatedLeft[index];
+
+                subTruncationLeftInMemory.Start();         // DELME Execution Time Working
                 var protein = new ProteinDto(tempprotein);
+                subTruncationLeftInMemory.Stop();         // DELME Execution Time Working
+
                 var prtLength = protein.Sequence.Length;
 
 
@@ -248,7 +350,7 @@ namespace PerceptronLocalService.Engine
                     }
                     if (leftIndex == -1)  ////////IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!
                     {
-                        if (parameters.PtmAllow == "True")
+                        if (PtmAllow == "True")
                         {
                             //proteinListRemaining.Add(protein);    //  IN SPECTRUM!!!!    -- IS IT BUG OR NOT....!!!
                             RemainingProteinsLeft.Add(protein);
@@ -258,8 +360,8 @@ namespace PerceptronLocalService.Engine
                     {
                         protein.Truncation = "Left";
 
-                        protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[leftIndex]).ToList();
-
+                        ////protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[leftIndex]).ToList();   /// Updated 20201201 Removed Because of its Runtime cost
+                        protein.InsilicoDetails.InsilicoMassLeft = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassLeft, protein.InsilicoDetails.InsilicoMassLeft[leftIndex]);    // Added for Time Efficiency /// Updated 20201201
                         protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(leftIndex + 1, protein.InsilicoDetails.InsilicoMassLeft.Count - leftIndex - 1);
 
                         protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.GetRange(0, prtLength - leftIndex - 1); // as this will be the MW of protein - Water
@@ -272,7 +374,7 @@ namespace PerceptronLocalService.Engine
                             continue;
 
                         protein.TruncationIndex = protein.TruncationIndex + leftIndex;
-                        protein.Mw = protein.InsilicoDetails.InsilicoMassRight[protein.Sequence.Length - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
+                        protein.Mw = protein.InsilicoDetails.InsilicoMassRight[protein.Sequence.Length - 1] + (2 * MassOfHydrogen) + MassOfOxygen;
 
                         CandidateListTruncationLeftProcessed.Add(protein);
 
@@ -284,28 +386,34 @@ namespace PerceptronLocalService.Engine
                 }
                 //}
             }
+            subTruncationLeftTime.Stop();     // DELME Execution Time Working;
         }
 
-        public void TruncationRight(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedRight, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList)
+        public void TruncationRight(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList)
         {
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy 
             var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
-            if (parameters.PtmAllow == "True") //parameters.PtmAllow  == BlindPtm
+            if (PtmAllow == "True") //parameters.PtmAllow  == BlindPtm
             {
                 // HERE THERE WILL BE BLIND PTM...
                 NEEDTOBEDECIDED = 256; factor = 0;
-                subTruncationRight(parameters, CandidateProteinListTruncatedRight, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationRightProcessed, RemainingProteinsRight);
+                subTruncationRight(PtmAllow, CandidateProteinListTruncatedRight, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationRightProcessed, RemainingProteinsRight);
             }
             else
             {
                 NEEDTOBEDECIDED = 168; factor = -1;
-                subTruncationRight(parameters, CandidateProteinListTruncatedRight, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationRightProcessed, RemainingProteinsRight);
+                subTruncationRight(PtmAllow, CandidateProteinListTruncatedRight, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationRightProcessed, RemainingProteinsRight);
             }
         }
 
-        public void subTruncationRight(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncatedRight, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight)
+        public void subTruncationRight(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight)
         {
+            double MassOfHydrogen = MassAdjustment.H;   //Updated 20201130  -- For Time Efficiancy 
+            double MassOfOxygen = MassAdjustment.O;   //Updated 20201130  -- For Time Efficiancy 
+            RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy 
+
             var isLeftRightIonEqualTrunRight = new List<ProteinDto>();//DELME
 
             for (var index = 0; index < CandidateProteinListTruncatedRight.Count; index++) // 0 //index = 1
@@ -339,10 +447,10 @@ namespace PerceptronLocalService.Engine
                         if (diff > tol)
                             break;
                     }
-                    
+
                     if (rightIndex == -1)////////IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!IS IT BUG OR NOT....!!!
                     {
-                        if (parameters.PtmAllow == "True")
+                        if (PtmAllow == "True")
                         {
                             //proteinListRemaining.Add(protein);    //  IN SPECTRUM!!!!    -- IS IT BUG OR NOT....!!!
                             RemainingProteinsRight.Add(protein);
@@ -358,8 +466,9 @@ namespace PerceptronLocalService.Engine
 
                         protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(0, truncationIndex - 1);
 
-                        protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.Select(x => x - protein.InsilicoDetails.InsilicoMassRight[rightIndex]).ToList(); // as this will be the MW of protein - Water
+                        ////protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.Select(x => x - protein.InsilicoDetails.InsilicoMassRight[rightIndex]).ToList();    /// Updated 20201201 Removed Because of its Runtime cost
 
+                        protein.InsilicoDetails.InsilicoMassRight = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassRight, protein.InsilicoDetails.InsilicoMassRight[rightIndex]);// as this will be the MW of protein - Water    // Added for Time Efficiency /// Updated 20201201
                         protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.GetRange(rightIndex + 1, protein.InsilicoDetails.InsilicoMassRight.Count - rightIndex - 1);
 
                         var sequence = protein.Sequence.Substring(0, truncationIndex - 1);
@@ -372,7 +481,7 @@ namespace PerceptronLocalService.Engine
 
                         protein.TruncationIndex = truncationIndex - 2;  // "-1" is Added for Zero Indexing of C#   #ASK
 
-                        protein.Mw = protein.InsilicoDetails.InsilicoMassRight[protein.Sequence.Length - 1] + MassAdjustment.H + MassAdjustment.H + MassAdjustment.O;
+                        protein.Mw = protein.InsilicoDetails.InsilicoMassRight[protein.Sequence.Length - 1] + (2 * MassOfHydrogen) + MassOfOxygen;
 
                         CandidateListTruncationRightProcessed.Add(protein);
 
@@ -406,7 +515,7 @@ namespace PerceptronLocalService.Engine
 
                     for (int iteration = 0; iteration < PstTags.Count; iteration++)
                     {
-                        
+
                         tag = PstTags[iteration].PstTags;
                         if (protein.Sequence.Contains(tag))// && protein.Header == "A6H8Y1")
                         {
