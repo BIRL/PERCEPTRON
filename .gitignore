@@ -10,6 +10,9 @@
 *.cache
 *.manifest
 *.application
+*.mgf
+*.mzML
+*.mzXML
 *.png
 *.msl
 *.ssdl
