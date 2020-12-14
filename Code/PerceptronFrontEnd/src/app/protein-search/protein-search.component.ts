@@ -62,6 +62,7 @@ export class ProteinSearchComponent implements OnInit {
   state: string = '';
   upload:any;
   Uploaded_File:any;
+  FDR_CutOff: any;
   
   postData: string;
   Mass_Tolerance_Unit: any;
@@ -312,6 +313,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PtmToleranceUnit = 'Da';
     this.VariableModifications = "";
     this.FixedModifications = "";
+    this.FDR_CutOff = 0.0;
 
 
     this.Slider1 = '0'; //Intact Protein Mass Slider
@@ -326,6 +328,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
     this.Slider_Value = 0.0;
+    this.FDR_CutOff = 0.0;
 
     this.Hop_Tolerance_Unit = 'Da';
 
