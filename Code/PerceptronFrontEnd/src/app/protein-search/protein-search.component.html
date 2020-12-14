@@ -136,6 +136,19 @@
           </mat-grid-tile>
 
           <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+            <div style="width: 95%">
+              <mat-form-field style="padding:0px; padding-left:15px; width:100%">
+                <input matInput matTooltip="Compute FDR by adding desired cut off percentage for filtering" (keypress)="keyPress($event)"
+                  matTooltipPosition="before" placeholder="FDR Cut-off" [(ngModel)]="FDR_CutOff" #FDRCutOff='ngModel' name="FDRCutOff" ngModel>
+                  <span matSuffix>%</span>
+              </mat-form-field>
+            </div>
+        </mat-grid-tile>
+
+          
+
+          <mat-grid-tile></mat-grid-tile>
 
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select the number of candidate protein hits you want to receive in results"
