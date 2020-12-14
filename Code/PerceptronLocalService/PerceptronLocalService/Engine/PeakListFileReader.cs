@@ -199,7 +199,7 @@ namespace PerceptronLocalService.Engine
 
                 }
 
-                if (mass.Count > maxCount) //checks new file for max peaklist
+                if (mass.Count > maxCount && Convert.ToDouble(pepMass) > 1.0073) //Checking the file for max number of scans and MS1 should not equal to 1.0073    //Updated 20201211
                 {
                     maxCount = mass.Count;
                     maxFilename = newAddress + name + "_" + i + ".txt";
