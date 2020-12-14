@@ -31,6 +31,7 @@ import { MapsComponent } from './maps/maps.component';
 import { TestformComponent } from './testform/testform.component';
 import { HudiaraComponent } from './hudiara/hudiara.component';
 import { HistoryComponent } from './history/history.component';
+import { ResultsinterpretationComponent } from './resultsinterpretation/resultsinterpretation.component';
 import { HelpComponent } from './help/help.component';
 import { SummaryResultsComponent } from './summary-results/summary-results.component';
 import { DetailedResultsComponent } from './detailed-results/detailed-results.component';
@@ -97,7 +98,8 @@ import { FdrComponent } from './fdr/fdr.component';
     ResultsVisualizationComponent,
     ResultsDownloadComponent,
     AdminPanelComponent,
-    FdrComponent
+    FdrComponent,
+    ResultsinterpretationComponent
   ],
   imports: [
     MatIconModule,
