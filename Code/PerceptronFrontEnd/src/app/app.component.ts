@@ -119,6 +119,12 @@ export class AppComponent {
     };
   };
 
+  ResultsInterpretation() {
+    var user = firebase.auth().currentUser;
+    this.UserEmailID = user.email;
+    this.router.navigate(['/ResultsInterpretation']);
+  };
+
   fdr() {
     var user = firebase.auth().currentUser;
     this.UserEmailID = user.email;
