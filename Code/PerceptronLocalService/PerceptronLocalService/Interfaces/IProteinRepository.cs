@@ -9,7 +9,7 @@ namespace PerceptronLocalService.Interfaces
 {
     interface IProteinRepository
     {
-        List<ProteinDto> FetchingSqlDatabaseProteins(SearchParametersDto parameters);
+        List<List<ProteinDto>> FetchingSqlDatabaseProteins(SearchParametersDto parameters);
         CandidateProteinListsDto ExtractProteins(double mw, SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> SQLDataBaseProteins);
     }
 }
