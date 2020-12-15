@@ -56,7 +56,7 @@ export interface BrowserCompatibilityTable {
 
 const BrowserCompatibilityDataTable: BrowserCompatibilityTable[] = [
   {BrowserName: "Google Chrome", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "Supported"},
-  {BrowserName: "Opera", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "---"},
+  //{BrowserName: "Opera", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "---"},
   {BrowserName: "Firefox", OSWindow: 'Supported', OSLinux: "Supported", OSMac: "Supported"},
   {BrowserName: "Edge", OSWindow: 'Supported', OSLinux: "Not Available", OSMac: "Supported"},
   {BrowserName: "Safari", OSWindow: 'Not Available', OSLinux: "Not Available", OSMac: "Supported"},
