@@ -72,6 +72,7 @@ namespace PerceptronFastaReader
 
                                 tempHeader = FastaFileLine.Substring(FirstVerticalBar + 1, SecondVerticalBar - FirstVerticalBar - 1); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
                                 tempFastaHeader = FastaFileLine.Replace("'", " ");
+                                tempFastaHeader = tempFastaHeader.Replace(",", " ");
                                 ////if (FastaFileLine[10] != '|') //If Accession Number Length is >6    // ITS HEALTHY...
                                 ////{
                                 ////    int LengthofAccessionNumber = FastaFileLine.IndexOf('|', 9) - 4; //4 is due to {>sp|}
@@ -115,7 +116,7 @@ namespace PerceptronFastaReader
 
             try
             {
-                string ConnetionString = "Data Source=*****;Initial Catalog=Ecoli;Integrated Security=True";
+                string ConnetionString = "Data Source=****-II;Initial Catalog=HumanDecoy;Integrated Security=True";
 
                 //ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
                 SqlConnection Connection = new SqlConnection(ConnetionString);
