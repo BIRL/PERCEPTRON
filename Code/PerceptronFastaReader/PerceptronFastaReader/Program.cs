@@ -22,8 +22,10 @@ namespace PerceptronFastaReader
             {
                 Stopwatch Time = Stopwatch.StartNew();
                 var tempD = new List<FastaProteinDataDto>();
-                string Path = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
-                string FileName = "Human";  //Add here fasta File Name
+                string Path = @"C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\Backup\Decoy\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
+
+
+                string FileName = "HumanDecoyDB";  //Add here fasta File Name
                 string FastaFullFileName = Path + FileName + ".fasta";
 
                 var ExcelFileName = Path + FileName + ".xlsx";
@@ -38,6 +40,7 @@ namespace PerceptronFastaReader
                 string NextLine = ReadPeripheralFastaFile.ReadLine();
 
                 string tempHeader;
+                string tempFastaHeader;
                 string tempSequence;
 
                 int FileReadingIteration = 0;
@@ -46,6 +49,7 @@ namespace PerceptronFastaReader
                 while (FileReadingIteration < FastaFileLineCount)// For Reading Full fasta file till end...
                 {
                     tempHeader = "";
+                    tempFastaHeader = "";
                     tempSequence = "";
                     string FastaFileLine;
                     //string NextLine;
@@ -55,7 +59,7 @@ namespace PerceptronFastaReader
                         FileReadingIteration += 1;
                         FastaFileLine = FastaFile.ReadLine();
 
-                        switch (FastaFileLine.Contains(">sp|")) //ReadLine for Reading Lines Line By Line
+                        switch (FastaFileLine.Contains(">")) //Updated 20201215    --- Replaced this ">sp|" to ">"   ---- //ReadLine for Reading Lines Line By Line
                         {
                             case true:
 
@@ -63,12 +67,16 @@ namespace PerceptronFastaReader
                                 /* https://www.uniprot.org/help/accession_numbers  */
                                 //FastaFileLine = ">sp|ABCDEFGHIJKL123|NUD|||||4B"; //I am Just for testing
 
-                                tempHeader = FastaFileLine.Substring(4, 6); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
-                                if (FastaFileLine[10] != '|') //If Accession Number Length is >6
-                                {
-                                    int LengthofAccessionNumber = FastaFileLine.IndexOf('|', 9) - 4; //4 is due to {>sp|}
-                                    tempHeader = FastaFileLine.Substring(4, LengthofAccessionNumber);
-                                }
+                                int FirstVerticalBar = FastaFileLine.IndexOf("|");              //Updated 20201215 
+                                int SecondVerticalBar = FastaFileLine.IndexOf("|", FirstVerticalBar + 1);              //Updated 20201215 
+
+                                tempHeader = FastaFileLine.Substring(FirstVerticalBar + 1, SecondVerticalBar - FirstVerticalBar - 1); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
+                                tempFastaHeader = FastaFileLine.Replace("'", " ");
+                                ////if (FastaFileLine[10] != '|') //If Accession Number Length is >6    // ITS HEALTHY...
+                                ////{
+                                ////    int LengthofAccessionNumber = FastaFileLine.IndexOf('|', 9) - 4; //4 is due to {>sp|}
+                                ////    tempHeader = FastaFileLine.Substring(4, LengthofAccessionNumber);
+                                ////}
                                 break;
 
                             case false:
@@ -78,14 +86,15 @@ namespace PerceptronFastaReader
                         try
                         {
                             NextLine = ReadPeripheralFastaFile.ReadLine();
-                            if (NextLine.Contains(">sp|")) { break; }
+                            if (NextLine.Contains(">"))  //Updated 20201215    --- Replaced this ">sp|" to ">"   ----
+                            { break; }
                         }
                         catch (Exception) //Last Line will be empty. So, NextLine will be null & Exception will break the loop
                         {
                             break;
                         }
                     }
-                    GetSequenceInfoData(tempHeader, Path, FileName, tempSequence, FastaProteinInfo);
+                    GetSequenceInfoData(tempHeader, tempFastaHeader, Path, FileName, tempSequence, FastaProteinInfo);
 
                 }
                 FastaProteinInfo = FastaProteinInfo.OrderByDescending(n => n.MolecularWeight).ToList();  //Sort By Descending Order
@@ -107,6 +116,8 @@ namespace PerceptronFastaReader
             try
             {
                 string ConnetionString = "Data Source=*****;Initial Catalog=Ecoli;Integrated Security=True";
+
+                //ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
                 SqlConnection Connection = new SqlConnection(ConnetionString);
                 Connection.Open();
 
@@ -114,8 +125,9 @@ namespace PerceptronFastaReader
 
                 for (int index = 0; index < FastaProteinInfo.Count; index++)
                 {
-                    QueryInfo = "Insert INTO Ecoli.dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR) Values ('"
-                     + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "')";
+
+                    QueryInfo = "Insert INTO HumanDecoy.dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR, FastaHeader) Values ('"
+                     + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "','" + FastaProteinInfo[index].FastaHeader + "')";
 
                     var Command = new SqlCommand(QueryInfo, Connection);
                     Command.ExecuteNonQuery();
@@ -124,13 +136,13 @@ namespace PerceptronFastaReader
                 Connection.Close();
             }
 
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }
         }
 
-        public static List<FastaProteinDataDto> GetSequenceInfoData(string Header, string Path, string FileName, string Sequence, List<FastaProteinDataDto> FastaProteinInfo)
+        public static List<FastaProteinDataDto> GetSequenceInfoData(string Header, string FastaHeader, string Path, string FileName, string Sequence, List<FastaProteinDataDto> FastaProteinInfo)
         {//This method will calculate Insilico Left & Right Ion Fragments
 
             int SequenceLength = Sequence.Length;
@@ -161,7 +173,7 @@ namespace PerceptronFastaReader
             RightIonString = String.Join(",", RightIonArray);
             double WholeProteinMass = RightIonMass + 2 * (1.0078250321) + 15.9949146221; // RightIonMass + H2O
 
-            var temp = new FastaProteinDataDto(Header, WholeProteinMass, Sequence, LeftIonString, RightIonString);
+            var temp = new FastaProteinDataDto(Header, WholeProteinMass, Sequence, LeftIonString, RightIonString, FastaHeader);
             FastaProteinInfo.Add(temp);
 
 
@@ -208,14 +220,16 @@ namespace PerceptronFastaReader
         public double MolecularWeight;
         public string InsilicoLeft;
         public string InsilicoRight;
+        public string FastaHeader;
 
-        public FastaProteinDataDto(string cID, double cMolecularWeight, string cSequence, string cInsilicoLeft, string cInsilicoRight)
+        public FastaProteinDataDto(string cID, double cMolecularWeight, string cSequence, string cInsilicoLeft, string cInsilicoRight, string cFastaHeader)
         {
             ID = cID;
             MolecularWeight = cMolecularWeight;
             Sequence = cSequence;
             InsilicoLeft = cInsilicoLeft;
             InsilicoRight = cInsilicoRight;
+            FastaHeader = cFastaHeader;
         }
     }
 }
