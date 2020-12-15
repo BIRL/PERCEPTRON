@@ -10,23 +10,23 @@
         <!-- Serial Column -->
         <ng-container matColumnDef="serial">
           <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
-          <mat-cell style="cursor: pointer;" *matCellDef="let row"> {{row.serial}} </mat-cell>
+          <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.serial}} </mat-cell>
         </ng-container>
   
         <!-- Title Column -->
         <ng-container matColumnDef="title">
           <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Search Title </mat-header-cell>
-          <mat-cell style="cursor: pointer;" *matCellDef="let row"> {{row.title}} </mat-cell>
+          <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.title}} </mat-cell>
         </ng-container>
   
         <!-- Time Column -->
         <ng-container matColumnDef="time">
           <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Creation Time</mat-header-cell>
-          <mat-cell style="cursor: pointer;" *matCellDef="let row"> {{row.time}} </mat-cell>
+          <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.time}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="progress">
             <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Status</mat-header-cell>
-            <mat-cell style="cursor: pointer;" *matCellDef="let row"> {{row.progress}} </mat-cell>
+            <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.progress}} </mat-cell>
           </ng-container>
     
   
