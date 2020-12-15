@@ -77,6 +77,21 @@
                 </style>
                 <br />
                 <label style="display:inline;">&nbsp;</label>
+                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length==1'>{{email.files[0].name}}</i></a>
+                <!-- <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
+                <ng-template #onefile>
+                  <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
+                </ng-template> -->
+                
+                <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
+                  accept=".txt, .mgf, .mzXML, .mzML, .zip" multiple ngModel/>
+                <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length==0">
+                  Please select a data file/.zip file .
+                </mat-error>
+                <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length>1">
+                  Please upload a .zip folder for more than 1 files .
+                </mat-error>
+                <!-- <label style="display:inline;">&nbsp;</label>
                 <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
                     *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
                 <ng-template #onefile>
@@ -85,10 +100,10 @@
                 <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName"
                   [(ngModel)]="filenameModel" id="FileName"  accept=".txt, .mgf, .mzXML, .mzML, .zip"
                   multiple ngModel />  
-                  <!-- (change)="upload(Uploaded_File)" -->
+                 
                 <mat-error style="display: inline; font-style: italic;" *ngIf="email.files.length==0">
                   Please select atleast one data file.
-                </mat-error>
+                </mat-error> -->
               </div>
             </span>
           </mat-grid-tile>
@@ -107,7 +122,7 @@
 
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
-        <mat-grid-list cols="8" style="padding:0px;" rowHeight="55px">
+        <mat-grid-list cols="8" style="padding:0px;" rowHeight="125px">
           <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
               <mat-form-field matTooltip="Enter the value of precursor protein/peptide used in MS1" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
                 <input matInput (keypress)="keyPress($event)" [(ngModel)]="GuiMass" placeholder="Intact Protein Mass" name="GuiMass" ngModel>
@@ -138,11 +153,12 @@
           <mat-grid-tile></mat-grid-tile>
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <div style="width: 95%">
-              <mat-form-field style="padding:0px; padding-left:15px; width:100%">
-                <input matInput matTooltip="Compute FDR by adding desired cut off percentage for filtering" (keypress)="keyPress($event)"
+              <mat-form-field style="padding:0px; padding-left:6px; width:100%">
+                <input matInput matTooltip="Enter desired FDR percentage to shortlist identified proteoforms at desired FDR cut off" (keypress)="keyPress($event)"
                   matTooltipPosition="before" placeholder="FDR Cut-off" [(ngModel)]="FDR_CutOff" #FDRCutOff='ngModel' name="FDRCutOff" ngModel>
                   <span matSuffix>%</span>
               </mat-form-field>
+              <label style='display:inline; font-weight:300; font-size:11px; font-style: italic;'>Computing FDR generates decoy database used for filtering proteoforms at user-specified FDR cut off percentage.</label>
             </div>
         </mat-grid-tile>
 
@@ -438,7 +454,8 @@
 
         <mat-grid-tile></mat-grid-tile>
 
-        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+        <!-- Below is with Form validation //Updated 20201215 -->
+        <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
           <mat-form-field style="padding-left:15px; width:100%;">
             <mat-select
               matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected"
@@ -454,6 +471,17 @@
                 Special ion selection is required.
               </div>
             </mat-error>
+          </mat-form-field>
+        </mat-grid-tile> -->
+
+        <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-form-field style="padding-left:15px; width:100%;">
+            <mat-select matTooltip="Select the fragmentation ions i.e. a’, b’, y’, z”, a*, b*,y*, z’ ions depending on the fragmentation method selected" matTooltipPosition="before" [(ngModel)]="SelectedSpecialIons"
+            placeholder="Select Special Ions" [disabled]="InsilicoFragType?.invalid" #HandleIons="ngModel" name="HandleIons" multiple>
+              <mat-option *ngFor="let Special of SpecialIonz" [value]="Special.value">
+                {{ Special.viewValue }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </mat-grid-tile>
       </mat-grid-list>
