@@ -57,7 +57,7 @@ namespace PerceptronLocalService.DTO
         public string CysteineChemicalModification;
         public string MethionineChemicalModification;
         public string EmailId;
-
+        public string FDRCutOff;
 
 
         public bool HasFixedAndVariableModifications()
