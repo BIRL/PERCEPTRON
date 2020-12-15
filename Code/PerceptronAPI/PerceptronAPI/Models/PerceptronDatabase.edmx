@@ -100,7 +100,7 @@
           <Property Name="EmailId" Type="nvarchar(max)" />
           <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ProteinDatabase" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="NumberOfOutputs" Type="int" Nullable="false" />
+          <Property Name="NumberOfOutputs" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MassMode" Type="nvarchar(max)" />
           <Property Name="FilterDb" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MwTolerance" Type="float" Nullable="false" />
@@ -129,6 +129,7 @@
           <Property Name="PstSweight" Type="float" Nullable="false" />
           <Property Name="InsilicoSweight" Type="float" Nullable="false" />
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
+          <Property Name="FDRCutOff" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
@@ -310,7 +311,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProteinDatabase" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NumberOfOutputs" Type="Int32" Nullable="false" />
+          <Property Name="NumberOfOutputs" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MassMode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FilterDb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MwTolerance" Type="Double" Nullable="false" />
@@ -339,6 +340,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <Property Name="PstSweight" Type="Double" Nullable="false" />
           <Property Name="InsilicoSweight" Type="Double" Nullable="false" />
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
+          <Property Name="FDRCutOff" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
@@ -550,6 +552,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
                 <ScalarProperty Name="PstSweight" ColumnName="PstSweight" />
                 <ScalarProperty Name="InsilicoSweight" ColumnName="InsilicoSweight" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
+                <ScalarProperty Name="FDRCutOff" ColumnName="FDRCutOff" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
