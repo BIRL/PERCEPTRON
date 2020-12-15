@@ -370,6 +370,7 @@ namespace PerceptronLocalService.Repository
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
                 EmailId = searchParameters.EmailId,
+                FDRCutOff = searchParameters.FDRCutOff
 
             };
             return searchParametersDto;
