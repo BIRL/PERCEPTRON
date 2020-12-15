@@ -313,7 +313,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PtmToleranceUnit = 'Da';
     this.VariableModifications = "";
     this.FixedModifications = "";
-    this.FDR_CutOff = "0.0";
+    this.FDR_CutOff = "1";
 
 
     this.Slider1 = '0'; //Intact Protein Mass Slider
@@ -328,7 +328,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
     this.Slider_Value = 0.0;
-    this.FDR_CutOff = "0.0";
+    this.FDR_CutOff = "1";
 
     this.Hop_Tolerance_Unit = 'Da';
 
@@ -517,7 +517,7 @@ export class ProteinSearchComponent implements OnInit {
     if(Number(form.MaximumPstLength) < Number(form.MinimumPstLength)){
       form.MaximumPstLength = 6;
       form.MinimumPstLength = 3;
-      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \nMaximum Tag Length should be greater than Minimum Tag Length. \n So, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.")
+      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \nMaximum Tag Length should be greater than Minimum Tag Length. \n So, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.");
     }
 
     // if (form.DeconvAllow == true) {
@@ -575,11 +575,12 @@ export class ProteinSearchComponent implements OnInit {
     if (FileExtension == 'zip'){
       form.NoOfOutputResults = '100';
 
-      alert("Dear User/Guest,\n\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\n\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
-    else if (FileExtension == 'zip' && form.FDR_CutOff != "0.0"){
+    else if (FileExtension != 'zip'){     //Updated 20201215
       form.FDR_CutOff = "0.0";
-      alert("Dear User/Guest,\n\nAs you selected single input file so, we will not proceed your query with False Discovery Rate.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      form.FDRCutOff = "0.0";
+      alert("Dear User,\n\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
     let fi = this.imgFileInput.nativeElement;
