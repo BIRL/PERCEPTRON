@@ -49,7 +49,7 @@ export class ScanViewComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.users);
 
     if (this.users.length == 0){  //BatchMode: //Checking if "users" array is empty then, it will be considered (PERCEPTRON will not fetch the data from database) as batch mode or query error but the later one has been addressed in 'history.component.ts' by applying conditions in this function {getRecord(row)} and therefore, now just Batch Mode's condition is required here.
-      alert("Dear User/Guest,\nYour search results are larger. Therefore, please Download your results using 'Results Download Button'.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\n\nYour search results are larger. Therefore, please Download your results using 'Results Download Button'.\n\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     } 
 
     // let title = <HTMLLabelElement>document.getElementById("SearchTitle");
