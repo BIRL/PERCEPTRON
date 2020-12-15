@@ -48,5 +48,6 @@ namespace PerceptronLocalService.Models
         public double PstSweight { get; set; }
         public double InsilicoSweight { get; set; }
         public int TruncationIndex { get; set; }
+        public string FDRCutOff { get; set; }
     }
 }
