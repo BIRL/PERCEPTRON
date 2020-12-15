@@ -30,7 +30,7 @@ namespace PerceptronAPI.Repository
             return "Ok";
         }
 
-        
+
         public void StoreSearchFiles(SearchParametersDto param)
         {
             using (var db = new PerceptronDatabaseEntities())
@@ -117,69 +117,130 @@ namespace PerceptronAPI.Repository
                     CommandText =
                         //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid +
                         //"' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
-                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + 
-                        "' AND P.ProteinRank = '"+1+"' AND P.FileUniqueId=R.FileUniqueId ",
+                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid +
+                        "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ",
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
                 sqlConnection1.Open();
-                var t = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
-                var FileSpecificData = db.SearchResults.Where(x => x.QueryId == qid).ToList();
+                var SearchFileList = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
+                
                 //var parameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList().First();
+
                 int j = 0;
                 var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+
+
+                if (SearchFileList.Count == 1)   //Checking if no of files more than one then, it will be considered as batch mode and PERCEPTRON will not fetch the data from database.
                 {
-                    var temp = new ScanResults
-                            {
-                                FileId = dataReader["FileId"].ToString(),
-                                FileName = Path.GetFileName(dataReader["FileName"].ToString()),
-                                Frags = 1,
-                                Mods = 1,
-                                MolW = (double)dataReader["Mw"],
-                                Truncation = "No",
-                                ProteinId = dataReader["Header"].ToString(),
-                                Score = (double)dataReader["Score"],
-                                FileUniqueId = dataReader["FileUniqueId"].ToString()
-                            };
-                    scanResults.Add(temp);
+                    var FileSpecificData = db.SearchResults.Where(x => x.QueryId == qid).ToList();
 
-                    
-                    //////if (j == t.Count())
-                    //////    break;
-                    //////int startPos = t[j].FileName.LastIndexOf("C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\") + "C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\".Length;
-                    //////int length = t[j].FileName.Length - startPos;
-                    //////t[j].FileName = t[j].FileName.Substring(startPos, length);
+                    while (dataReader.Read())
+                    {
+                        var temp = new ScanResults
+                        {
+                            FileId = dataReader["FileId"].ToString(),
+                            FileName = Path.GetFileName(dataReader["FileName"].ToString()),
+                            ProteinId = dataReader["Header"].ToString(),
+                            Score = (double)dataReader["Score"],
+                            MolW = (double)dataReader["Mw"],
+                            FileUniqueId = dataReader["FileUniqueId"].ToString(),
+                            //SearchModeMessage = "SingleMode"       // Just for showing whether its Single ode or Batch Mode
 
-                    //////for (int index = 0; index < FileSpecificData.Count; index++)    //Loop & Conditional Statement Required to Filter the files. Only those files will be selected having "Search Results" into the Database.
-                    //////{
-                    //////    if (FileSpecificData[index].FileUniqueId == t[j].FileUniqueId)
-                    //////    {
-                    //////        var temp = new ScanResults
-                    //////        {
-                    //////            FileId = "1",//dataReader["FileId"].ToString(),
-                    //////            FileName = t[j].FileName,
-                    //////            Frags = 1,
-                    //////            Mods = 1,
-                    //////            MolW = (double)dataReader["Mw"],
-                    //////            Truncation = "No",
-                    //////            ProteinId = dataReader["Header"].ToString(),
-                    //////            Score = (double)dataReader["Score"],
-                    //////            FileUniqueId = t[j].FileUniqueId
-                    //////        };
-                    //////        scanResults.Add(temp);
-                    //////        break;
-                    //////    }
-                    //////}
-                    
-                    //////++j;
+                            //Truncation = "No",
+                            //Frags = 1,
+                            //Mods = 1,
+
+                        };
+                        scanResults.Add(temp);
+                    }
                 }
                 dataReader.Close();
                 cmd.Dispose();
                 sqlConnection1.Close();
             }
-
             return scanResults;
+        }
+
+        public ScanInputDataDto ScanInputData(string qid)
+        {
+            var FileUniqueIdsList = new List<string>();
+            var FileNamesList = new List<string>();
+            var UniqueFileNameList = new List<string>();
+            var searchParameters = new SearchParameter();
+
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT FileUniqueId, FileName, UniqueFileName \nFROM SearchFiles\nWHERE QueryId = '" + qid + "'",
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    FileUniqueIdsList.Add(dataReader["FileUniqueId"].ToString());
+                    FileNamesList.Add(dataReader["FileName"].ToString());
+                    UniqueFileNameList.Add(dataReader["UniqueFileName"].ToString());
+                }
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList().First();
+            }
+
+            var ScanInputDataInfo = new ScanInputDataDto(FileUniqueIdsList, FileNamesList, UniqueFileNameList, searchParameters);
+            return ScanInputDataInfo;
+        }
+
+
+
+        public ScanResultsDownloadDataDto ScanResultsDownloadData(string qid, string FileUniqueId)
+        {
+            //var tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto();
+            
+            //var ListOfPeakData = new List<PeakListData>();
+            var ListOfSearchResults = new List<SearchResult>();
+            var PtmSites = new List<ResultPtmSite>();
+            //var ResultIds = new List<string>();
+
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                try
+                {
+                    ListOfSearchResults.AddRange(db.SearchResults.Where(x => x.FileUniqueId == FileUniqueId)); //Fetching Results from PerceptronDatabase based on the Peaklist files using FileUniqueId
+                    var NoOfResultIds = ListOfSearchResults.Select(x => x.ResultId).Distinct().ToList();
+
+                    
+                    for (int i = 0; i < ListOfSearchResults.Count; i++)
+                    {
+                        var ResultId = ListOfSearchResults[i].ResultId;
+                        PtmSites.AddRange(db.ResultPtmSites.Where(x => x.ResultId == ResultId));
+                    }
+                    var PtmVarMod = new List<PtmVariableModification>();
+                    var PtmFixedMod = new List<PtmFixedModification>();
+                }
+                catch (Exception e)
+                {
+                    ListOfSearchResults = new List<SearchResult>();
+                    PtmSites = new List<ResultPtmSite>();
+                }
+                
+            }
+            var tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto(ListOfSearchResults, PtmSites);
+            return tempScanResultsDownloadDataDto;
+
         }
 
         public List<SummaryResults> Summary_results(string qid, string fid)
@@ -304,10 +365,18 @@ namespace PerceptronAPI.Repository
 
             for (int index = 0; index < summaryResults.Count; index++)
             {
-                if (summaryResults[index].progress == "100")
+                if (summaryResults[index].progress == "0")
+                        summaryResults[index].progress = "In Queue";
+
+                else if (summaryResults[index].progress == "10")
+                    summaryResults[index].progress = "Running";
+
+                else if
+                    (summaryResults[index].progress == "100")
                     summaryResults[index].progress = "Completed";
-                else
-                    summaryResults[index].progress = "In Progress";
+
+                else  // WHEN (summaryResults[index].progress == "-1")
+                    summaryResults[index].progress = "Error in Query";
             }
             return summaryResults.OrderByDescending(x => x.time).ToList();
         }
@@ -347,14 +416,14 @@ namespace PerceptronAPI.Repository
                         "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
 
                 var cmd = new SqlCommand
-                    {
-                        CommandText = "Select count( QueryId) as two FROM SearchQueries WHERE Progress = 100",
+                {
+                    CommandText = "Select count( QueryId) as two FROM SearchQueries WHERE Progress = 100",
 
-                        //"Select count( QueryId) as two FROM SearchResults",
+                    //"Select count( QueryId) as two FROM SearchResults",
 
-                        CommandType = CommandType.Text,
-                        Connection = sqlConnection1
-                    };
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
 
 
                 sqlConnection1.Open();
@@ -404,7 +473,7 @@ namespace PerceptronAPI.Repository
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
-                
+
                 //var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
                 //var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
 
@@ -412,7 +481,7 @@ namespace PerceptronAPI.Repository
                 var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
 
-                
+
                 //if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
                 //    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
 
@@ -444,106 +513,26 @@ namespace PerceptronAPI.Repository
             return detiledResults;
         }
         //DownloadAllResults
-        public ScanResultsDownloadDataDto ScanResultsDownloadData(string qid)
-        {
-            var tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto();
-            var FileUniqueIdsList = new List<string>();
-            var FileNamesList = new List<string>();
-            var UniqueFileNameList = new List<string>();
-            var ListOfPeakData = new List<PeakListData>();
-            var ListOfSearchResults = new List<SearchResult>();
-            var ResultIds = new List<string>();
-            using (new PerceptronDatabaseEntities())
-            {
-                var sqlConnection1 =
-                    new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
-                var cmd = new SqlCommand
-                {
-                    CommandText =
-
-                        "SELECT FileUniqueId, FileName, UniqueFileName \nFROM SearchFiles\nWHERE QueryId = '" + qid + "'",
-
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
-                sqlConnection1.Open();
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    FileUniqueIdsList.Add(dataReader["FileUniqueId"].ToString());
-                    FileNamesList.Add(dataReader["FileName"].ToString());
-                    UniqueFileNameList.Add(dataReader["UniqueFileName"].ToString());
-                }
-
-                dataReader.Close();
-                cmd.Dispose();
-                sqlConnection1.Close();
-            }
-            using (var db = new PerceptronDatabaseEntities())
-            {
-                var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
-                
-                ListOfSearchResults.AddRange(db.SearchResults.Where(x => x.QueryId == qid));
-                var NoOfResultIds = ListOfSearchResults.Select(x => x.ResultId).Distinct().ToList();
-
-                ///////Extracting File Unique Ids and FileNames against File Unique Ids
-                //FileUniqueIdsList = ListOfSearchResults.Select(x => x.FileUniqueId).Distinct().ToList();
-                //var tempFiles = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
-                //for (int indexFileUniqueId = 0; indexFileUniqueId < FileUniqueIdsList.Count; indexFileUniqueId++)
-                //{
-                //    for (int index = 0; index < tempFiles.Count; index++)
-                //    {
-                //        if (tempFiles[index].FileUniqueId == FileUniqueIdsList[indexFileUniqueId])
-                //        {
-                //            FileNamesList.Add(tempFiles[index].FileName);
-                //            break;
-                //        }
-                //    }
-                        
-                //}
-
-
-                var PtmSites = new List<ResultPtmSite>();
-                for (int i = 0; i < ListOfSearchResults.Count; i++)
-                {
-                    var ResultId = ListOfSearchResults[i].ResultId;
-                    PtmSites.AddRange(db.ResultPtmSites.Where(x => x.ResultId == ResultId));
-                }
-                var PtmVarMod = new List<PtmVariableModification>();
-                var PtmFixedMod = new List<PtmFixedModification>();
-                
-                //try
-                //{
-                //    PtmVarMod.AddRange(db.PtmVariableModifications.Where(x => x.QueryId == qid));
-                //}
-                //catch
-                //{
-                //    PtmVarMod = new List<PtmVariableModification>();
-                //}
-
-                //try
-                //{
-                //    PtmFixedMod.AddRange(db.PtmFixedModifications.Where(x => x.QueryId == qid));
-                //}
-                //catch
-                //{
-                //    PtmFixedMod = new List<PtmFixedModification>();
-                //}
-
-                //if (PtmVarMod.Count != 0 || PtmFixedMod.Count != 0)  //searchParameters[0].PtmAllow != "False" || 
-                //{
-                    //ListOfSearchResults.Select(x => x.ResultId).Distinct();(x 
-                    
-                
-                tempScanResultsDownloadDataDto = new ScanResultsDownloadDataDto(FileUniqueIdsList, FileNamesList, UniqueFileNameList, ListOfSearchResults, searchParameters.First(), PtmSites);
-            }
-            return tempScanResultsDownloadDataDto;
-        }
-
         
-        
+
+
+        ///////Extracting File Unique Ids and FileNames against File Unique Ids
+        //FileUniqueIdsList = ListOfSearchResults.Select(x => x.FileUniqueId).Distinct().ToList();
+        //var tempFiles = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
+        //for (int indexFileUniqueId = 0; indexFileUniqueId < FileUniqueIdsList.Count; indexFileUniqueId++)
+        //{
+        //    for (int index = 0; index < tempFiles.Count; index++)
+        //    {
+        //        if (tempFiles[index].FileUniqueId == FileUniqueIdsList[indexFileUniqueId])
+        //        {
+        //            FileNamesList.Add(tempFiles[index].FileName);
+        //            break;
+        //        }
+        //    }
+
+        //}
+
+
 
         public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid)
         {
@@ -557,9 +546,9 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                          //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
+                        //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
                         "SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
-                        
+
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -571,11 +560,7 @@ namespace PerceptronAPI.Repository
                     qid = dataReader["QueryId"].ToString();
                     FileId = dataReader["FileUniqueId"].ToString();
                     //GetPeakListData = dataReader["PeakListData"];
-                    
                 }
-                    
-
-
                 dataReader.Close();
                 cmd.Dispose();
                 sqlConnection1.Close();
@@ -585,11 +570,11 @@ namespace PerceptronAPI.Repository
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
                 var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
                 var peakListData = db.PeakListDatas.Where(x => x.FileUniqueId == FileId).ToList();
-               // var FileInfo = db.SearchFiles.Where(x => x.FileUniqueId == FileName).ToList();
+                // var FileInfo = db.SearchFiles.Where(x => x.FileUniqueId == FileName).ToList();
                 //NO NEED 
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                 //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
-                
+
                 /*  WILL USE IT LATER  */
                 var ptmVarmod = db.PtmVariableModifications.Where(x => x.QueryId == qid).ToList();
                 var ptmFixedmod = db.PtmFixedModifications.Where(x => x.QueryId == qid).ToList();
@@ -599,25 +584,20 @@ namespace PerceptronAPI.Repository
                 {
                     DetailedProteinHitViewResults.Results.PtmSitesInfo = ptmSite.First();
                 }
-                
+
 
                 /*  WILL USE IT LATER  */
-                
+
                 DetailedProteinHitViewResults.Results.Results = searchResult.First();
                 DetailedProteinHitViewResults.searchParameters = searchParameters.First();
                 DetailedProteinHitViewResults.PeakListData = peakListData.First();
 
                 //#4TTB
-                
+
 
                 //NO NEED 
                 //var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
                 //var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
-
-
-                
-
-
 
 
                 //if (searchParameters.Count != 0)
@@ -680,7 +660,8 @@ namespace PerceptronAPI.Repository
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
                 EmailId = searchParameters.EmailId,
-                Truncation = searchParameters.Truncation
+                Truncation = searchParameters.Truncation,
+                FDRCutOff = searchParameters.FDRCutOff
 
             };
             return searchParameter;
@@ -830,7 +811,7 @@ namespace PerceptronAPI.Repository
                     sqlConnection1.Close();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw;
             }
@@ -848,6 +829,28 @@ namespace PerceptronAPI.Repository
         //}
     }
 }
+
+//try
+//{
+//    PtmVarMod.AddRange(db.PtmVariableModifications.Where(x => x.QueryId == qid));
+//}
+//catch
+//{
+//    PtmVarMod = new List<PtmVariableModification>();
+//}
+
+//try
+//{
+//    PtmFixedMod.AddRange(db.PtmFixedModifications.Where(x => x.QueryId == qid));
+//}
+//catch
+//{
+//    PtmFixedMod = new List<PtmFixedModification>();
+//}
+
+//if (PtmVarMod.Count != 0 || PtmFixedMod.Count != 0)  //searchParameters[0].PtmAllow != "False" || 
+//{
+//ListOfSearchResults.Select(x => x.ResultId).Distinct();
 
 //public List<string> ScanResultsAgainstFileUniqueId(string qid, string FileId)
 //{
@@ -882,3 +885,35 @@ namespace PerceptronAPI.Repository
 //    }
 //    return FileUniqueIdsList;
 //}
+
+
+
+///////////////PREVIOUSLY, WAS USED IN SCAN RESULTS
+//////if (j == t.Count())
+//////    break;
+//////int startPos = t[j].FileName.LastIndexOf("C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\") + "C:\\inetpub\\wwwroot\\PerceptronAPI\\App_Data\\".Length;
+//////int length = t[j].FileName.Length - startPos;
+//////t[j].FileName = t[j].FileName.Substring(startPos, length);
+
+//////for (int index = 0; index < FileSpecificData.Count; index++)    //Loop & Conditional Statement Required to Filter the files. Only those files will be selected having "Search Results" into the Database.
+//////{
+//////    if (FileSpecificData[index].FileUniqueId == t[j].FileUniqueId)
+//////    {
+//////        var temp = new ScanResults
+//////        {
+//////            FileId = "1",//dataReader["FileId"].ToString(),
+//////            FileName = t[j].FileName,
+//////            Frags = 1,
+//////            Mods = 1,
+//////            MolW = (double)dataReader["Mw"],
+//////            Truncation = "No",
+//////            ProteinId = dataReader["Header"].ToString(),
+//////            Score = (double)dataReader["Score"],
+//////            FileUniqueId = t[j].FileUniqueId
+//////        };
+//////        scanResults.Add(temp);
+//////        break;
+//////    }
+//////}
+
+//////++j;
