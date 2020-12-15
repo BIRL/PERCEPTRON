@@ -54,7 +54,7 @@ namespace PerceptronLocalService
             _peakListFileReader = new PeakListFileReader();
             _Truncation = new TruncationCPU();
             _TerminalModifications = new TerminalModificationsCPU();
-            
+
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////// THAT CODE WILL RUN THE GPU FILES(*Gpu.cs/*GPU.cs) FOR PROCESSING THE JOB/////////////////
@@ -189,7 +189,16 @@ namespace PerceptronLocalService
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
-            var SQLDataBaseProteins = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
+            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
+            var SQLUniProtDataBaseProteins = SqlDatabases[0];  //For Simple Database
+            var SQLDecoyDataBaseProteins = SqlDatabases[1];  //For Decoy Database
+
+            int iterate = 1;
+            if (parameters.FDRCutOff != "0.0")
+            {
+                iterate = 2;
+            }
+
 
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
@@ -227,83 +236,109 @@ namespace PerceptronLocalService
 
                     List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
 
-                    //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
-                    var candidateProteins = new List<ProteinDto>();
-                    var CandidateProteinListTruncated = new List<ProteinDto>();
+                    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+                    //* From Here Simple Database and decoy database work will start  //Updated 20201116 *//
+                    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-
-                    //Fetching Candidate Proteins From User Selected DataBase
-                    ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
-                    var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, SQLDataBaseProteins, executionTimes);
-                    candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
-                    CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
-
-                    //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
-                    ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
-
-                    //Logging.DumpCandidateProteins(candidateProteins);
-
-                    //////UpdatedParse_database.m
-                    candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
-                    if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                    for (int iterations = 0; iterations < iterate; iterations++)
                     {
-                        EmailMsg = "ProteinListEmpty"; // -1;
-                        if (numberOfPeaklistFiles == 1) //If user gives one input file and file has not Candidte Protein list  //Updated 20201118
+                        var SQLDataBaseProteins = new List<ProteinDto>();
+
+                        if (iterations == 0)
                         {
-                            ProgressStatus = -1;
+                            SQLDataBaseProteins = SQLUniProtDataBaseProteins;
                         }
-                        else if (numberOfPeaklistFiles > 1 && ProgressStatus == 10)  // If all files have not Candidte Protein list  //Updated 20201118
+                        else
                         {
-                            ProgressStatus = -1;
+                            SQLDataBaseProteins = SQLDecoyDataBaseProteins;
                         }
-                        
-                        continue;
+
+
+
+
+                        //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
+                        var candidateProteins = new List<ProteinDto>();
+                        var CandidateProteinListTruncated = new List<ProteinDto>();
+
+
+                        //Fetching Candidate Proteins From User Selected DataBase
+                        ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
+                        var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, SQLDataBaseProteins, executionTimes);
+                        candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
+                        CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+
+                        //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
+                        ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
+
+                        //Logging.DumpCandidateProteins(candidateProteins);
+
+                        //////UpdatedParse_database.m
+                        candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
+                        if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
+                        {
+                            EmailMsg = "ProteinListEmpty"; // -1;
+                            if (numberOfPeaklistFiles == 1 && iterations == 0) //If user gives one input file and file has not Candidte Protein list  //Updated 20201216
+                            {
+                                ProgressStatus = -1;
+                            }
+                            else if (numberOfPeaklistFiles > 1 && ProgressStatus == 10 && iterations == 0)  // If all files have not Candidte Protein list  //Updated 20201216
+                            {
+                                ProgressStatus = -1;
+                            }
+
+                            continue;
+                        }
+
+                        candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+
+                        // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
+                        var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
+                        CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
+                        candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
+
+                        //Step 4 - ??? Algorithm - Spectral Comparison
+                        var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+                        CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+
+                        //BlindPTMLocalization: Localizing Unknown mass shift
+                        CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
+
+
+                        //Logging.DumpInsilicoScores(candidateProteins);
+
+                        //Executing Truncation 
+                        var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
+
+                        int FinalCandidateProteinListCapacity = CandidateProteinswithInsilicoScores.Count + CandidateProteinListTrucnatedwithInsilicoScores.Count;
+                        var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>(FinalCandidateProteinListCapacity);    // Updated 20201203 Capacity defined
+                        FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
+                        FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
+
+
+                        //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
+                        FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
+
+                        // Ranking the Candidate Proteins according to their scores
+                        FinalCandidateProteinListforFinalScoring = RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring);
+
+                        //Evalue 
+                        Evalue _Evalue = new Evalue();
+                        _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
+
+                        //Logging.DumpTotalScores(candidateProteins);
+
+
+                        if (iterations == 0)
+                        {
+                            StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
+                            //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
+                            StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+                        }
+
                     }
-
-                    candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
-
-                    // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
-                    var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
-                    CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
-                    candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
-
-                    //Step 4 - ??? Algorithm - Spectral Comparison
-                    var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
-                    CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
-
-                    //BlindPTMLocalization: Localizing Unknown mass shift
-                    CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
-
-
-                    //Logging.DumpInsilicoScores(candidateProteins);
-
-                    //Executing Truncation 
-                    var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
-                    
-                    int FinalCandidateProteinListCapacity = CandidateProteinswithInsilicoScores.Count + CandidateProteinListTrucnatedwithInsilicoScores.Count;
-                    var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>(FinalCandidateProteinListCapacity);    // Updated 20201203 Capacity defined
-                    FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
-                    FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
-                   
-
-                    //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
-                    FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
-
-                    // Ranking the Candidate Proteins according to their scores
-                    FinalCandidateProteinListforFinalScoring = RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring); 
-
-                    //Evalue 
-                    Evalue _Evalue = new Evalue();
-                    _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
-
-                    //Logging.DumpTotalScores(candidateProteins);
 
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
-
-                    StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
-                    //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
-                    StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
                     EmailMsg = "";
                     ProgressStatus = 100;
                 }
@@ -335,7 +370,7 @@ namespace PerceptronLocalService
                     //Sending_Email(parameters, EmailMsg);
                 }
             }
-            
+
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);
 
@@ -372,7 +407,7 @@ namespace PerceptronLocalService
             Stopwatch OnlyTruncationLeft = Stopwatch.StartNew();    // DELME Execution Time Working
             Stopwatch OnlyTruncationRight = Stopwatch.StartNew();    // DELME Execution Time Working
 
-            if (parameters.Truncation == "True" && CandidateProteinListTruncated.Count !=0)   /// #TESTRUN : Additionally, added "" && CandidateProteinListTruncated.Count !=0 ""
+            if (parameters.Truncation == "True" && CandidateProteinListTruncated.Count != 0)   /// #TESTRUN : Additionally, added "" && CandidateProteinListTruncated.Count !=0 ""
             {
 
                 OnlyTruncation.Start();     // DELME Execution Time Working
@@ -523,11 +558,11 @@ namespace PerceptronLocalService
 
             candidateProteins = _TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins);
             UpdatedCandidatedProteinList.AddRange(candidateProteins);
-            
+
             /* WithoutPTM_ParseDatabase.m */
 
             /* Updated_ParseDatabase.m */
-            
+
             if (parameters.CysteineChemicalModification != "None" && parameters.MethionineChemicalModification != "None" && parameters.FixedModifications.Count > 0 && parameters.VariableModifications.Count > 0)
             {
                 // HERE IT WILL BE PTMs_Generator_Insilico_Generator
@@ -580,7 +615,7 @@ namespace PerceptronLocalService
             candidateProteins = candidateProteins.OrderByDescending(x => x.Score).ToList(); // CandidateProteinList in descending order: According to their Score
             for (int iter = 0; iter < candidateProteins.Count; iter++) // Ranking the Candidate Proteins according to their scores
             {
-                candidateProteins[iter].ProteinRank = iter+1;
+                candidateProteins[iter].ProteinRank = iter + 1;
             }
 
             return candidateProteins;
@@ -642,7 +677,7 @@ namespace PerceptronLocalService
 
             if (parameters.NumberOfOutputs != "100+")
             {
-                int NumberOfOutputs=  Convert.ToInt16(parameters.NumberOfOutputs);
+                int NumberOfOutputs = Convert.ToInt16(parameters.NumberOfOutputs);
                 if (candidateProteins.Count > NumberOfOutputs)
                 {
                     candidateProteins = candidateProteins.Take(NumberOfOutputs).ToList<ProteinDto>();
