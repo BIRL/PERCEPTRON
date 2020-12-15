@@ -313,7 +313,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PtmToleranceUnit = 'Da';
     this.VariableModifications = "";
     this.FixedModifications = "";
-    this.FDR_CutOff = 0.0;
+    this.FDR_CutOff = "0.0";
 
 
     this.Slider1 = '0'; //Intact Protein Mass Slider
@@ -328,7 +328,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
     this.Slider_Value = 0.0;
-    this.FDR_CutOff = 0.0;
+    this.FDR_CutOff = "0.0";
 
     this.Hop_Tolerance_Unit = 'Da';
 
@@ -574,7 +574,12 @@ export class ProteinSearchComponent implements OnInit {
     let FileExtension = form.FileName.substr(form.FileName.lastIndexOf('.') + 1);  //Updated 20201207
     if (FileExtension == 'zip'){
       form.NoOfOutputResults = '100';
+
       alert("Dear User/Guest,\n\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+    }
+    else if (FileExtension == 'zip' && form.FDR_CutOff != "0.0"){
+      form.FDR_CutOff = "0.0";
+      alert("Dear User/Guest,\n\nAs you selected single input file so, we will not proceed your query with False Discovery Rate.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
     let fi = this.imgFileInput.nativeElement;
