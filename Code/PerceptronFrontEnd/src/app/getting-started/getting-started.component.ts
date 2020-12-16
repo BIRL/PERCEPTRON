@@ -10,6 +10,15 @@ export class GettingStartedComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
   // clicked1(){
   //   var size= document.getElementById('get1')
   //   if (size.getAttribute('width') == "100%"){
@@ -56,3 +65,4 @@ export class GettingStartedComponent implements OnInit {
       
   
 }
+
