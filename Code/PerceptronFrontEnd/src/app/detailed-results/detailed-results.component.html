@@ -449,14 +449,32 @@
     </mat-grid-list>
   </mat-card>
   <br />
-
   <mat-card>
+    <mat-grid-list cols="11" rowHeight="100px">
+      <mat-grid-tile colspan="9">
+        <label style="font-size:15px;" id="sequence"></label>
+      </mat-grid-tile>
+
+      <!-- <mat-grid-tile></mat-grid-tile> -->
+
+      <mat-grid-tile colspan="2">
+        <button mat-raised-button matTooltip="Click to Visualize Your Results " class="button-sumbit"
+        matTooltipPosition="after" (click)="getResultsView()" style="font-size: 18px; padding: 5px 5px; background-color: #201a93; color:aliceblue"
+        class="ui button">Detailed Visualization</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+   
+   
+  </mat-card>
+  <br />
+
+  <!-- <mat-card>
     <label style="font-size:15px;" id="sequence"></label>
   </mat-card>
   <br />
 
   <button mat-raised-button matTooltip="Click to Visualize Your Results " class="button-sumbit"
     matTooltipPosition="after" (click)="getResultsView()" style="background-color: #201a93; color:aliceblue"
-    class="ui button">Results Visualization</button>
+    class="ui button">Results Visualization</button> -->
 
 </div>
