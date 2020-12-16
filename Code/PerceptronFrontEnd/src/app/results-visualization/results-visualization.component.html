@@ -7,15 +7,6 @@
   <div style="height:10px;font-size:1px;">&nbsp;</div>
 
   <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
-    <div  class='inner'>
-      <img [src]="ImageFilePath">
-    </div>
-  </mat-card>
-
-  <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-  <mat-card>
     <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
     <!-- <div *ngIf="chart"> -->
       <div id="chartContainer" class='inner'>
@@ -23,11 +14,73 @@
       </div>        
     <!-- </div> -->
     <div style="height:400px;font-size:1px;">&nbsp;</div>
-    <div style='text-align:right'><a style='right:0pt; font-size:10px' href ="https://creativecommons.org/licenses/by-nc/3.0/legalcode"> Courtesy By: CanvasJS.com </a></div>
+    <div style='text-align:right'><a style='right:0pt; font-size:15px' href ="https://creativecommons.org/licenses/by-nc/3.0/legalcode"> Courtesy By: CanvasJS.com </a></div>
   </mat-card>
 
-
   <div id="top" style="height:10px;font-size:1px;">&nbsp;</div> 
+
+  <mat-card>
+    <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
+    <mat-grid-list cols="31" rowHeight="550px">
+      <mat-grid-tile colspan="15">
+        <div>
+          <img [src]="ImageFilePath">
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+
+      <mat-grid-tile colspan="15">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            div.example {
+              background-color: lightgrey;
+              padding: 20px;
+            }
+            
+            @media screen and (min-width: 901px) {
+              div.example {
+                text-align:center;
+              }
+            }
+            
+            @media screen and (max-width: 900px) {
+              div.example {
+                text-align:left;
+              }
+            }
+          </style>
+        <div class='example'>
+          <h6 style="text-align:center; font-weight:bold">Legends</h6>
+          <p style='font-size: 16px; line-height:15px;'><span style="color: red">&piv;</span> <span style="color: black">Phosphorylation</span> <span style="padding-left: 20px; color: red"> &omega;</span> <span style="color: black">DiMethylation</span> <span style="padding-left: 42px; color: red;"> &Psi;</span> <span style="color: black; padding-right:105px">Methylation</span> <span style='display:inline-block'><span style="color: red"> &alpha;</span> <span style="color: black; padding-right: 30px;">Acetylation</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&theta;</span> <span style="color: black">Hydroxylation</span> <span style="padding-left: 41px; color: red"> &otimes;</span> <span style="color: black">DiHydroxylation</span> <span style="padding-left: 20px; color: red;"> &oplus;</span> <span style="color: black; padding-right:20px">O-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &Oslash;</span> <span style="color: black; padding-right: 40px;">Sulfoxide</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&nabla;</span> <span style="color: black">Glutathionylation</span> <span style="padding-left: 18px; color: red"> &Delta;</span> <span style="color: black">Methylation<sub>K</sub></span> <span style="padding-left: 50px; color: red;"> &clubs;</span> <span style="color: black; padding-right:82px">S-Nitrosylation</span> <span style='display:inline-block'><span style="color: red;"> &hearts;</span> <span style="color: black; padding-right: 5px;">Palmitoylation</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&spades;</span> <span style="color: black">Formylation</span> <span style="padding-left: 58px; color: red"> &loz;</span> <span style="color: black">Nitration</span> <span style="padding-left: 75px; color: red;"> &real;</span> <span style="color: black; padding-right:23px">N-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &zeta;</span> <span style="color: black; padding-right: 53px;">Sulfone</span></span> </p>
+          <p style='font-size: 16px; line-height:15px'><span style="color: red">&perp;</span> <span style="color: black">Pyruvate</span> <span style="padding-left: 76px; color: red"> &or;</span> <span style="color: black">Pyrrolidone-Aarboxylic-Acid</span> <span style="padding-left: 20px; color: red;"> &omega;</span> <span style="color: black; padding-right: 15px;">Gamma-Carboxyglutamic-Acid</span></p>
+
+          <p style=' line-height:20px'><span style="color: red">*</span> <span style="color: black">Blind PTM Mass</span> <span style="color:blue; padding-left:27px"><b>*</b>Peptide Sequence Tag</span> <span style="color:rgb(220, 105, 224); padding-left:28px"><b>*</b>Amino Acids - Possible Blind PTM Sites</span>
+          
+          <!-- <p style="color:blue;"><b>*</b>     Peptide Sequence Tag</p>
+          <p style="color:rgb(220, 105, 224);"><b>*</b>     Amino Acids - Possible Blind PTM Sites</p> -->
+
+          <p style='line-height:15px'> <span style="color:red;"><b><s>X</s></b>Truncated Amino Acid</span> <span style="color:black; padding-left:72px; padding-right: 195px;"><b>]</b>N-terminal Fragment Match</span></p>
+          <!-- <p style="color:black;"><b>]</b>      N-terminal Fragment Match</p> -->
+          <p> <span style="color:black;"><b>[</b>C-terminal Fragment Match</span> <span style="color:black; padding-left:40px; padding-right: 145px;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>An Amino Acid with its index</span></p>
+          <!-- <p style="color:black;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>      An Amino Acid with its index</p> -->
+
+          <p style="color:rgba(255, 0, 0, 0.787); line-height:15px;"><b>Experimental Mass</b><span style="color:green; height:15px; padding-left: 40px; padding-right:335px"><b>Theoretical Mass</b></span></p>
+
+          <p style="color:black; padding-right: 195px;line-height:15px"><b>Mass Difference between Experimental and Theoretical Peaks</b></p>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <!-- <div  class='inner' style="float:left"> -->
+    
+    
+  </mat-card>
+
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
+
   <mat-card>
     
     <h6 style="text-align:center; font-weight:bold">Matched Fragments</h6>
@@ -85,49 +138,9 @@
 
   <div style="height:10px;font-size:1px;">&nbsp;</div>
 
-  <mat-card>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-          div.example {
-            background-color: lightgrey;
-            padding: 20px;
-          }
-          
-          @media screen and (min-width: 901px) {
-            div.example {
-              text-align:center;
-            }
-          }
-          
-          @media screen and (max-width: 900px) {
-            div.example {
-              text-align:left;
-            }
-          }
-        </style>
-      <div class='example'>
-        <h6 style="text-align:center; font-weight:bold">Legends</h6>
-        <p style='font-size: 16px; line-height:15px;'><span style="color: red">&piv;</span> <span style="color: black">Phosphorylation</span> <span style="padding-left: 20px; color: red"> &omega;</span> <span style="color: black">DiMethylation</span> <span style="padding-left: 42px; color: red;"> &Psi;</span> <span style="color: black; padding-right:105px">Methylation</span> <span style='display:inline-block'><span style="color: red"> &alpha;</span> <span style="color: black; padding-right: 30px;">Acetylation</span></span> </p>
-        <p style='font-size: 16px; line-height:15px'><span style="color: red">&theta;</span> <span style="color: black">Hydroxylation</span> <span style="padding-left: 41px; color: red"> &otimes;</span> <span style="color: black">DiHydroxylation</span> <span style="padding-left: 20px; color: red;"> &oplus;</span> <span style="color: black; padding-right:20px">O-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &Oslash;</span> <span style="color: black; padding-right: 40px;">Sulfoxide</span></span> </p>
-        <p style='font-size: 16px; line-height:15px'><span style="color: red">&nabla;</span> <span style="color: black">Glutathionylation</span> <span style="padding-left: 18px; color: red"> &Delta;</span> <span style="color: black">Methylation<sub>K</sub></span> <span style="padding-left: 50px; color: red;"> &clubs;</span> <span style="color: black; padding-right:82px">S-Nitrosylation</span> <span style='display:inline-block'><span style="color: red;"> &hearts;</span> <span style="color: black; padding-right: 5px;">Palmitoylation</span></span> </p>
-        <p style='font-size: 16px; line-height:15px'><span style="color: red">&spades;</span> <span style="color: black">Formylation</span> <span style="padding-left: 58px; color: red"> &loz;</span> <span style="color: black">Nitration</span> <span style="padding-left: 75px; color: red;"> &real;</span> <span style="color: black; padding-right:23px">N-Linked-Glycosylation</span> <span style='display:inline-block'><span style="color: red;"> &zeta;</span> <span style="color: black; padding-right: 53px;">Sulfone</span></span> </p>
-        <p style='font-size: 16px; line-height:15px'><span style="color: red">&perp;</span> <span style="color: black">Pyruvate</span> <span style="padding-left: 76px; color: red"> &or;</span> <span style="color: black">Pyrrolidone-Aarboxylic-Acid</span> <span style="padding-left: 20px; color: red;"> &omega;</span> <span style="color: black; padding-right: 15px;">Gamma-Carboxyglutamic-Acid</span></p>
-
-        <p style=' line-height:20px'><span style="color: red">*</span> <span style="color: black">Blind PTM Mass</span> <span style="color:blue; padding-left:27px"><b>*</b>Peptide Sequence Tag</span> <span style="color:rgb(220, 105, 224); padding-left:28px"><b>*</b>Amino Acids - Possible Blind PTM Sites</span>
-        
-        <!-- <p style="color:blue;"><b>*</b>     Peptide Sequence Tag</p>
-        <p style="color:rgb(220, 105, 224);"><b>*</b>     Amino Acids - Possible Blind PTM Sites</p> -->
-
-        <p style='line-height:15px'> <span style="color:red;"><b><s>X</s></b>Truncated Amino Acid</span> <span style="color:black; padding-left:72px; padding-right: 195px;"><b>]</b>N-terminal Fragment Match</span></p>
-        <!-- <p style="color:black;"><b>]</b>      N-terminal Fragment Match</p> -->
-        <p> <span style="color:black;"><b>[</b>C-terminal Fragment Match</span> <span style="color:black; padding-left:40px; padding-right: 145px;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>An Amino Acid with its index</span></p>
-        <!-- <p style="color:black;"><b>A<sub>n</sub>]/[A<sub>n</sub></b>      An Amino Acid with its index</p> -->
-
-        <p style="color:rgba(255, 0, 0, 0.787); line-height:15px;"><b>Experimental Mass</b><span style="color:green; height:15px; padding-left: 40px; padding-right:335px"><b>Theoretical Mass</b></span></p>
-
-        <p style="color:black; padding-right: 195px;line-height:15px"><b>Mass Difference between Experimental and Theoretical Peaks</b></p>
-      </div>
-  </mat-card>
+  <!-- <mat-card>
+    
+  </mat-card> -->
 
     <div style="height:10px;font-size:1px;">&nbsp;</div>
 </div>

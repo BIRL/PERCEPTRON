@@ -38,14 +38,14 @@ export class ResultsVisualizationComponent implements OnInit {
     this.route.params.subscribe((params: Params) => this.resultId = params['resultId']);
     this._httpService.GetDetailedProteinHitViewResults(this.resultId).subscribe(data => this.what(data));
   }
-  ngAfterViewInit() { //Added //Updated 20201215 
-    // Scrolls to top of Page after page view initialized
-    let top = document.getElementById('top');
-    if (top !== null) {
-      top.scrollIntoView();
-      top = null;
-    }
-  }
+  // ngAfterViewInit() { //Added //Updated 20201215 
+  //   // Scrolls to top of Page after page view initialized
+  //   let top = document.getElementById('top');
+  //   if (top !== null) {
+  //     top.scrollIntoView();
+  //     top = null;
+  //   }
+  // }
   what(data: any) {
     const users: UserData[] = [];
     for (let i = 0; i < data.InsilicoSpectra.ListIndices.length; i++) {
