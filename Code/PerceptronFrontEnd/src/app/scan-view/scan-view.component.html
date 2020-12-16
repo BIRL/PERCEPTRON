@@ -7,7 +7,7 @@
   <br>
   <div class="example-header">
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      <input matInput style="font-size:30px" (keyup)="applyFilter($event.target.value)" placeholder="Filter" >
     </mat-form-field>
   </div>
 
@@ -15,7 +15,7 @@
 
   <label style="padding-right:15px;"></label>
   <button mat-raised-button matTooltip="Click to Download Results" type="submit"
-    style="background-color: #201a93; color:aliceblue" class="ui button" (click)=download()>Results Download</button>
+    style="background-color: #201a93; margin-right: 50px; color:aliceblue" class="ui button" (click)=download()>Results Download</button>
 
   <div style="height:50px;font-size:1px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
