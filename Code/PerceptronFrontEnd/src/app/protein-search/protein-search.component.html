@@ -1,5 +1,9 @@
 <form #f="ngForm" (ngSubmit)="onSubmit(f.value);" (ngReset)="onReset(f.value); f.reset() ;" class="ui form">
-
+  <!-- <script>
+    function enableResultsViewButton() {
+        document.getElementById("ResultsViewButton").disabled = false;
+    }
+  </script> -->
   <div style="width:90%; min-width: 600px; margin:0 auto;">
 
     <mat-card>
@@ -26,8 +30,8 @@
 
       <mat-card-content>
 
-        <mat-grid-list cols="8" rowHeight="100px">
-          <mat-grid-tile colspan="2" rowspan="1" rowHeight="50px">
+        <mat-grid-list cols="15" rowHeight="100px">
+          <mat-grid-tile colspan="4" rowspan="1" rowHeight="50px">
             <mat-form-field style="padding-left:15px; width:100%">
               <input matInput matTooltip="Enter project title here to label your protein identification query"
                 matTooltipClass="mat-tooltip" (keypress)="keyPress1($event)" matTooltipPosition="before"
@@ -41,15 +45,77 @@
             </mat-form-field>
           </mat-grid-tile>
 
-          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile colspan="2"></mat-grid-tile>
 
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-grid-tile colspan="4" rowspan="1">
+            <mat-form-field style="padding-left:15px; width:100%">
+              <input matInput matTooltip="Enter an email address to receive search results" matTooltipPosition="before"
+                placeholder="Enter your E-mail Address"
+                pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" [disabled]="diableEmail"
+                name="UserId" ngModel>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="2"></mat-grid-tile>
+
+          <mat-grid-tile colspan="3" rowspan="1" style="padding:0px;">
+            <div style="width: 95%">
+              <mat-form-field style="padding:0px; padding-left:5px; width:100%">
+                <input matInput matTooltip="Enter desired FDR percentage to shortlist identified proteoforms at desired FDR cut off. Computing FDR generates decoy database used for filtering proteoforms at user-specified FDR cut off percentage" (keypress)="keyPress($event)"
+                  matTooltipPosition="before" placeholder="FDR Cut-off" [(ngModel)]="FDR_CutOff" #FDRCutOff='ngModel' name="FDRCutOff" ngModel>
+                  <span matSuffix>%</span>
+              </mat-form-field>
+              <div *ngIf="FDR_CutOff > 100">
+                <b style="color: red; font-size:13px; font-weight: 350; font-style: italic; text-align: left; padding-left: 5px;">FDR Cut-off must be less than 100</b>
+              </div>
+              <!-- <label style='display:inline; font-weight:300; font-size:12px; font-style: italic;'>Computing FDR generates decoy database used for filtering proteoforms at user-specified FDR cut off percentage.</label> -->
+            </div>
+          </mat-grid-tile>
+
+          <!-- <mat-grid-tile></mat-grid-tile> -->
+
+          <!-- EMAIL WAS HERE -->
+        </mat-grid-list>
+
+        <div style="height:10px;font-size:1px;">&nbsp;</div>
+
+        <mat-grid-list cols="15" style="padding:0px;" rowHeight="65px">
+          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+              <mat-form-field matTooltip="Enter the value of precursor protein/peptide used in MS1" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
+                <input matInput (keypress)="keyPress($event)" [(ngModel)]="GuiMass" placeholder="Intact Protein Mass" name="GuiMass" ngModel>
+                <span matSuffix>Da</span>
+              </mat-form-field>
+            </mat-grid-tile>
+  
+            <mat-grid-tile></mat-grid-tile> -->
+
+          <mat-grid-tile colspan="4" rowspan="1" style="padding:0px;">
+            <mat-form-field matTooltip="Select protein database from which you want to search protein(s)"
+              matTooltipPosition="before" style="width: 100%; padding-left:15px;">
+              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
+                name="ProteinDatabase">
+                <mat-option *ngFor="let SelectedDatabase of ListOfDatabases" [value]="SelectedDatabase.value">
+                  {{SelectedDatabase.viewValue}}
+                </mat-option>
+              </mat-select>
+              <mat-error style="font-style: italic;"
+                *ngIf="ProteinDatabase?.invalid && (ProteinDatabase.dirty || ProteinDatabase.touched)">
+                <div *ngIf="ProteinDatabase.errors.required">
+                  Please select protein database.
+                </div>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="2"></mat-grid-tile>
+
+          <mat-grid-tile colspan="4" rowspan="1" style="padding:0px;">
             <span
               matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) "
               matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-              <label class="required" style='display:inline;  font-weight:500;'>Upload Mass-Spec Data </label>
-              <br />
-              <label style='display:inline;  font-weight:500; '>Select File(s): </label>
+              <label class="required" style='display:inline;  font-weight:500; '>Upload Mass-Spectrometry Data </label>
+              <!-- <br /> -->
+              <!-- <label style='display:inline;  font-weight:500; '>Select File(s): </label> -->
               <style>
                 .required:after {
                   content: "*";
@@ -78,10 +144,6 @@
                 <br />
                 <label style="display:inline;">&nbsp;</label>
                 <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length==1'>{{email.files[0].name}}</i></a>
-                <!-- <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
-                <ng-template #onefile>
-                  <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
-                </ng-template> -->
                 
                 <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
                   accept=".txt, .mgf, .mzXML, .mzML, .zip" multiple ngModel/>
@@ -91,82 +153,13 @@
                 <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length>1">
                   Please upload a .zip folder for more than 1 files .
                 </mat-error>
-                <!-- <label style="display:inline;">&nbsp;</label>
-                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
-                    *ngIf='email.files.length>1; else onefile'>{{email.files.length}} Files Selected</i></a>
-                <ng-template #onefile>
-                  <i *ngIf='email.files.length==1'>{{email.files[0].name}}</i>
-                </ng-template>
-                <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName"
-                  [(ngModel)]="filenameModel" id="FileName"  accept=".txt, .mgf, .mzXML, .mzML, .zip"
-                  multiple ngModel />  
-                 
-                <mat-error style="display: inline; font-style: italic;" *ngIf="email.files.length==0">
-                  Please select atleast one data file.
-                </mat-error> -->
               </div>
             </span>
           </mat-grid-tile>
 
-          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile colspan="2"></mat-grid-tile>
 
-          <mat-grid-tile colspan="2" rowspan="1">
-            <mat-form-field style="padding-left:15px; width:100%">
-              <input matInput matTooltip="Enter an email address to receive search results" matTooltipPosition="before"
-                placeholder="Enter your E-mail Address"
-                pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" [disabled]="diableEmail"
-                name="UserId" ngModel>
-            </mat-form-field>
-          </mat-grid-tile>
-        </mat-grid-list>
-
-        <div style="height:10px;font-size:1px;">&nbsp;</div>
-
-        <mat-grid-list cols="8" style="padding:0px;" rowHeight="125px">
-          <!-- <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-              <mat-form-field matTooltip="Enter the value of precursor protein/peptide used in MS1" matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
-                <input matInput (keypress)="keyPress($event)" [(ngModel)]="GuiMass" placeholder="Intact Protein Mass" name="GuiMass" ngModel>
-                <span matSuffix>Da</span>
-              </mat-form-field>
-            </mat-grid-tile>
-  
-            <mat-grid-tile></mat-grid-tile> -->
-
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <mat-form-field matTooltip="Select protein database from which you want to search protein(s)"
-              matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
-                name="ProteinDatabase">
-                <mat-option *ngFor="let SelectedDatabase of ListOfDatabases" [value]="SelectedDatabase.value">
-                  {{SelectedDatabase.viewValue}}
-                </mat-option>
-              </mat-select>
-              <mat-error style="font-style: italic;"
-                *ngIf="ProteinDatabase?.invalid && (ProteinDatabase.dirty || ProteinDatabase.touched)">
-                <div *ngIf="ProteinDatabase.errors.required">
-                  Please select protein database.
-                </div>
-              </mat-error>
-            </mat-form-field>
-          </mat-grid-tile>
-
-          <mat-grid-tile></mat-grid-tile>
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-            <div style="width: 95%">
-              <mat-form-field style="padding:0px; padding-left:6px; width:100%">
-                <input matInput matTooltip="Enter desired FDR percentage to shortlist identified proteoforms at desired FDR cut off" (keypress)="keyPress($event)"
-                  matTooltipPosition="before" placeholder="FDR Cut-off" [(ngModel)]="FDR_CutOff" #FDRCutOff='ngModel' name="FDRCutOff" ngModel>
-                  <span matSuffix>%</span>
-              </mat-form-field>
-              <label style='display:inline; font-weight:300; font-size:11px; font-style: italic;'>Computing FDR generates decoy database used for filtering proteoforms at user-specified FDR cut off percentage.</label>
-            </div>
-        </mat-grid-tile>
-
-          
-
-          <mat-grid-tile></mat-grid-tile>
-
-          <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
+          <mat-grid-tile colspan="3" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select the number of candidate protein hits you want to receive in results"
               matTooltipPosition="before" style="padding:0px; padding-left:15px; width:100%">
               <mat-select placeholder="Recieve Top" [(ngModel)]="NoOfOutputResults" name="NumberOfOutputs">
