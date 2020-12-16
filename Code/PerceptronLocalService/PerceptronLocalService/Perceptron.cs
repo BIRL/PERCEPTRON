@@ -188,10 +188,17 @@ namespace PerceptronLocalService
             int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
+            WriteResultsFile _WriteResultsFile = new WriteResultsFile();
+            string Path = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
+
+            List<string> ResultsDownloadFileNames = new List<string>(numberOfPeaklistFiles + 2);  // Used to Collect the names of the files for Zipping (File Zip) Purpose // Just for approximate Capacity of the list.
+            var DecoyTopFinalCandidateProteinList = new List<ProteinDto>(numberOfPeaklistFiles);
+            List<ResultsDownloadToBeWrite> ResultsDownloadToBeWriteList = new List<ResultsDownloadToBeWrite>();   // For storing all individual(single) results files
+            List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
+
+
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
             var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
-            var SQLUniProtDataBaseProteins = SqlDatabases[0];  //For Simple Database
-            var SQLDecoyDataBaseProteins = SqlDatabases[1];  //For Decoy Database
 
             int iterate = 1;
             if (parameters.FDRCutOff != "0.0")
@@ -204,11 +211,14 @@ namespace PerceptronLocalService
             {
                 //Logging.CreatePeakFileDirectory(fileNumber);
                 //EmailMsg = 0;  // EmailMsg == 1 Means All Good & == -1 Means Something Wrong & == -2 Means Invalid Parameters (for Mass Tuner)
+                
+
                 try
                 {
                     var executionTimes = new ExecutionTimeDto();
                     var pipeLineTimer = new Stopwatch();
                     pipeLineTimer.Start();
+
 
                     //Step 0 - Reading the Peaklist File
                     var massSpectrometryData = PeakListFileReaderModuleModule(parameters, fileNumber, executionTimes);
@@ -240,17 +250,17 @@ namespace PerceptronLocalService
                     //* From Here Simple Database and decoy database work will start  //Updated 20201116 *//
                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-                    for (int iterations = 0; iterations < iterate; iterations++)
+                    for (int iterations = 0; iterations < iterate; iterations++)   // This Loop's first iteration is used for Search with UniProtDB and second iteration for  Search with DecoyDB
                     {
                         var SQLDataBaseProteins = new List<ProteinDto>();
 
                         if (iterations == 0)
                         {
-                            SQLDataBaseProteins = SQLUniProtDataBaseProteins;
+                            SQLDataBaseProteins = SqlDatabases[0];  //For Simple Database
                         }
                         else
                         {
-                            SQLDataBaseProteins = SQLDecoyDataBaseProteins;
+                            SQLDataBaseProteins = SqlDatabases[1];  //For Decoy Database;
                         }
 
 
@@ -285,6 +295,14 @@ namespace PerceptronLocalService
                             {
                                 ProgressStatus = -1;
                             }
+
+                            // Results Download Part 1 of 3  BELOW //
+                            if (iterations == 0)
+                            {
+                                var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), candidateProteins);
+                                ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
+                            }
+                            // Results Download Part 1 of 3  ABOVE //
 
                             continue;
                         }
@@ -330,15 +348,55 @@ namespace PerceptronLocalService
 
                         if (iterations == 0)
                         {
+                            // Results Download Part 2 of 3  BELOW //
+                            
+                            var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring);
+                            ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
+
+                            var tempBatchModeFileProteins = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0], pipeLineTimer.Elapsed.ToString());
+                            //Fetching First Protein (having ProteinRank = 1) for making Batch Mode File
+                            BatchModeFileProteins.Add(tempBatchModeFileProteins);
+                            // Results Download Part 2 of 3  ABOVE //
+
                             StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                             StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
                         }
+                        else
+                        {
+                            DecoyTopFinalCandidateProteinList.Add(FinalCandidateProteinListforFinalScoring[0]);
+                        }
 
                     }
 
+                    
+                    
+
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
+
+
+
+
+                    // Results Download Part 3 of 2  BELOW //
+                    ResultsDownloadFileNames.AddRange(_WriteResultsFile.WriteIndividualResultsFile(parameters.Title, ResultsDownloadToBeWriteList, Path));   // For Individual Files
+                    ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
+
+                    if (parameters.FDRCutOff != "0.0")
+                    {
+                        iterate = 2;
+                    }
+
+
+                    if (BatchModeFileProteins.Count > 1)
+                    {
+                        ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, BatchModeFileProteins, Path));
+                    }
+                    _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
+
+
+                    // Results Download Part 3 of 2  ABOVE //
+
                     EmailMsg = "";
                     ProgressStatus = 100;
                 }
@@ -354,6 +412,7 @@ namespace PerceptronLocalService
                     ProgressStatus = -1;
                 }
 
+                
                 //Logging.DumpTotalTime(executionTimes);
                 //Logging.ExitPeakFileDirectory();
             }
