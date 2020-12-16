@@ -328,6 +328,11 @@ export class ProteinSearchComponent implements OnInit {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
     this.Slider_Value = 0.0;
+
+    this.Slider1 = '100'; //Intact Protein Mass Slider
+    this.Slider2 = '100'; //PST Slider
+    this.Slider3 = '100'; //Insilico Slider
+
     this.FDR_CutOff = "1";
 
     this.Hop_Tolerance_Unit = 'Da';
@@ -463,6 +468,7 @@ export class ProteinSearchComponent implements OnInit {
 
     var user = firebase.auth().currentUser;
 
+    let afasdf = form.HandleIons;
     // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
     form.HandleIons= form.HandleIons.toString();
     form.TerminalModification = form.TerminalModification.toString();
@@ -590,10 +596,10 @@ export class ProteinSearchComponent implements OnInit {
     console.log(stats)
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
     {
-      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\n\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else{
-      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear Guest,\n\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     
   }
