@@ -69,6 +69,14 @@ export class EmailComponent implements OnInit {
   ngOnInit() {
     this.myapp.disabled=true;
   }
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
   ngOnDestroy(){
     if (this.myapp.disabled1){
       this.myapp.disabled=false;

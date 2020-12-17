@@ -55,6 +55,16 @@ export class BugComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  
   onSubmit(form: any): void {
     var user = firebase.auth().currentUser;
     var email;

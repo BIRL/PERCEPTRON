@@ -44,6 +44,15 @@ export class AboutComponent implements OnInit {
     this.user=data.user;
     this.search=data.search;
   }
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
 }
 
 
