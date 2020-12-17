@@ -19,7 +19,7 @@ namespace PerceptronLocalService.Engine
             ModificationMWShift ModificationTableClass = new ModificationMWShift();
             double AcetylationWeight = ModificationTableClass.ModificationMWShiftTable("Acetylation");   ///MassAdjustment.AcetylationWeight;  // Updated 20201201
             double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
-            double SumOfAcetylationMethionineWeight = AcetylationWeight + MethionineWeight;
+            double AcetylationMinusMethionine =  AcetylationWeight - MethionineWeight;   //Overall will give -ve value...   // Updated 20201217 
 
             TerminalModificationsList _TerminalModifications = new TerminalModificationsList();
             var IndividualModifications = _TerminalModifications.TerminalModifications(parameters.TerminalModification);
@@ -58,7 +58,7 @@ namespace PerceptronLocalService.Engine
                 int tmpSeqLength = sequence.Length;
 
                 //TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
-                TerminalModifications(molW, AcetylationWeight, MethionineWeight, SumOfAcetylationMethionineWeight, leftIons, rightIons, sequence, tmpSeqLength, IndividualModifications, protein, tempCandidateProteins); //Updated 20201112
+                TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, sequence, tmpSeqLength, IndividualModifications, protein, tempCandidateProteins); //Updated 20201112
 
             }
 
@@ -67,7 +67,7 @@ namespace PerceptronLocalService.Engine
         }
 
         //public static void TerminalModifications(int FlagSet, double molW, List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, SearchParametersDto parameters, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
-        public static void TerminalModifications(double molW, double AcetylationWeight, double MethionineWeight, double SumOfAcetylationMethionineWeight,  List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, List<string> IndividualModifications, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
+        public static void TerminalModifications(double molW, double AcetylationWeight, double MethionineWeight, double AcetylationMinusMethionine,  List<double> leftIons, List<double> rightIons, string tempseq, int tmpSeqLength, List<string> IndividualModifications, ProteinDto tempprotein, List<ProteinDto> tempCandidateProteins)  //Updated 20201112
         {
             //double AcetylationWeight = MassAdjustment.AcetylationWeight;
             //double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
@@ -133,11 +133,11 @@ namespace PerceptronLocalService.Engine
                     var newProtein = new ProteinDto(tempprotein)
                     {
                         TerminalModification = "NME_Acetylation",
-                        Mw = molW - SumOfAcetylationMethionineWeight,    // Updated for Time Efficiency /// Updated 20201201
+                        Mw = molW + AcetylationMinusMethionine,   //Plus Sign (+) is only because we adding AcetylationMinusMethionine i.e. in minus.  Ref SPECTRUM:  ""- AA(double('M')-64) + AcetylationWeight ""    //Updated 20201217
                         InsilicoDetails =
                             {
                                 ////InsilicoMassLeft = leftIons.Select(x => x - MethionineWeight + AcetylationWeight).ToList(),   /// Updated 20201201 Removed Because of its Runtime cost
-                                InsilicoMassLeft = _MassRemove.MassRemoval(leftIons, SumOfAcetylationMethionineWeight),    // Updated for Time Efficiency /// Updated 20201201
+                                InsilicoMassLeft = _MassRemove.MassRemoval(leftIons, - AcetylationMinusMethionine),  // -ve sign is only because we adding AcetylationMinusMethionine i.e. in minus. so minus * minus = plus and in _MassRemove.MassRemoval we already have -ve sign /// Updated 20201217
                                 InsilicoMassRight = rightIons.ToList()
                             },
                         Sequence = tempseq.Substring(1, tmpSeqLength - 1), // "-1" Added

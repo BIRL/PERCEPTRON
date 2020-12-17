@@ -28,7 +28,8 @@ namespace PerceptronLocalService.Engine
             double MassOfWater = MassAdjustment.H2O;
             double AcetylationWeight = ModificationTableClass.ModificationMWShiftTable("Acetylation");   ///MassAdjustment.AcetylationWeight;  // Updated 20201201
             double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
-            double SumOfAcetylationMethionineWeight = AcetylationWeight + MethionineWeight;
+            //double SumOfAcetylationMethionineWeight = AcetylationWeight + MethionineWeight;
+            double AcetylationMinusMethionine = AcetylationWeight - MethionineWeight;   //Overall will give -ve value...   // Updated 20201217 
 
             //TerminalModificationsList _TerminalModifications = new TerminalModificationsList();
             //var IndividualModifications = _TerminalModifications.TerminalModifications(parameters.TerminalModification);
@@ -165,7 +166,7 @@ namespace PerceptronLocalService.Engine
                 //TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
 
                 OnlyTerminalModification.Start();     // DELME Execution Time Working
-                TerminalModificationsCPU.TerminalModifications(molW, AcetylationWeight, MethionineWeight, SumOfAcetylationMethionineWeight, leftIons, rightIons, tmpSeq, tmpSeqLength, IndividualModifications, newProtein, proteinListRight); //Updated 20201112
+                TerminalModificationsCPU.TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, tmpSeq, tmpSeqLength, IndividualModifications, newProtein, proteinListRight); //Updated 20201112
                 OnlyTerminalModification.Stop();     // DELME Execution Time Working
 
                 //Save Copy for Left Truncation
