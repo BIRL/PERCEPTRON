@@ -67,21 +67,21 @@
                     
                     <ng-container matColumnDef="BrowserName">
                       <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.BrowserName}} </mat-cell>
+                      <mat-cell *matCellDef="let element" style="font-size: 16px; font-weight:bold"> {{element.BrowserName}} </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="OSWindow">
-                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 14px; font-weight:normal"> Windows </mat-header-cell>
+                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 16px; font-weight:bold"> Windows </mat-header-cell>
                       <mat-cell *matCellDef="let element"> {{element.OSWindow}} </mat-cell>
                     </ng-container>
                                    
                     <ng-container matColumnDef="OSLinux">
-                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 14px; font-weight:normal"> Linux(Ubuntu) </mat-header-cell>
+                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 16px; font-weight:bold"> Linux(Ubuntu) </mat-header-cell>
                       <mat-cell *matCellDef="let element"> {{element.OSLinux}} </mat-cell>
                     </ng-container> 
                     
                     <ng-container matColumnDef="OSMac">
-                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 14px; font-weight:normal"> Mac </mat-header-cell>
+                      <mat-header-cell *matHeaderCellDef style="color: rgb(20, 20, 20); font-size: 16px; font-weight:bold"> Mac </mat-header-cell>
                       <mat-cell *matCellDef="let element"> {{element.OSMac}} </mat-cell>
                     </ng-container>
                   
