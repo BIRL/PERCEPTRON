@@ -20,6 +20,14 @@ export class ResultsDownloadComponent implements OnInit {
     this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this._httpService.GetResultsDownload(this.querryId).subscribe(ResultsData => this.what(ResultsData));
   }
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
 
   what(ResultsData: any) {
 
@@ -40,7 +48,10 @@ export class ResultsDownloadComponent implements OnInit {
       this.blob = new Blob([byteArray], { type: "application/zip;charset=utf-8" })//"text/plain;charset=utf-8" });
 
       fileSaver.saveAs(this.blob, FileName);
+
+
       console.log(FileName + "Successfully Downloaded!!!");
+
     }
     //alert("Dear User Your Result File(s) Downloaded. \nPlease See Your Download Folder.");
 
