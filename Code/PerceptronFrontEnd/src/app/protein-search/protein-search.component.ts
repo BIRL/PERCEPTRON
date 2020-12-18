@@ -525,13 +525,13 @@ export class ProteinSearchComponent implements OnInit {
     }
 
     if(form.MwSweight == "0" && form.PstSweight == "0" && form.InsilicoSweight == "0"){
-      alert("Dear User! You did not select any weightage from 'Set Scoring Components Weight'. \nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
+      alert("Dear User,\nYou did not select any weightage from 'Set Scoring Components Weight'.\nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
       form.InsilicoSweight = 100;
     }
     if(Number(form.MaximumPstLength) < Number(form.MinimumPstLength)){
       form.MaximumPstLength = 6;
       form.MinimumPstLength = 3;
-      alert("Dear User! \nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate. \nMaximum Tag Length should be greater than Minimum Tag Length. \n So, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.");
+      alert("Dear User,\nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate.\nMaximum Tag Length should be greater than Minimum Tag Length.\nSo, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.");
     }
 
     // if (form.DeconvAllow == true) {
@@ -589,12 +589,12 @@ export class ProteinSearchComponent implements OnInit {
     if (FileExtension == 'zip'){
       form.NoOfOutputResults = '100';
 
-      alert("Dear User,\n\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nAs your input files are more than one so we will show only top 100 results only.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else if (FileExtension != 'zip'){     //Updated 20201215
       form.FDR_CutOff = "0.0";
       form.FDRCutOff = "0.0";
-      alert("Dear User,\n\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
     let fi = this.imgFileInput.nativeElement;
@@ -604,10 +604,10 @@ export class ProteinSearchComponent implements OnInit {
     console.log(stats)
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
     {
-      alert("Dear User,\n\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else{
-      alert("Dear Guest,\n\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     
   }
