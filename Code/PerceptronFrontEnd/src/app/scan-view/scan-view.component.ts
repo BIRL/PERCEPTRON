@@ -17,6 +17,7 @@ export class ScanViewComponent implements OnInit {
   users: UserData[] = [];
   dataSource: MatTableDataSource<UserData>;
   querryId: any;
+  blob: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -55,8 +56,12 @@ export class ScanViewComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.users);
 
     if (this.users.length == 0){  //BatchMode: //Checking if "users" array is empty then, it will be considered (PERCEPTRON will not fetch the data from database) as batch mode or query error but the later one has been addressed in 'history.component.ts' by applying conditions in this function {getRecord(row)} and therefore, now just Batch Mode's condition is required here.
-      alert("Dear User,\n\nYour search results are larger. Therefore, please Download your results using 'Results Download Button'.\n\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nSearch Results file is too large and will be downloaded. Please click Results Download to proceed.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     } 
+
+
+   
+
 
     // let title = <HTMLLabelElement>document.getElementById("SearchTitle");
     // title.innerHTML = data.Paramters.SearchParameters.Title;
@@ -99,8 +104,41 @@ export class ScanViewComponent implements OnInit {
     x.navigate(["summaryresults", this.querryId, row.fileId]);
   }
   download(){
-    let x = this.router;
-    x.navigate(["resultsdownload", this.querryId]);
+    this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
+    this._httpService.GetResultsDownload(this.querryId).subscribe(ResultsData => this.whatResults(ResultsData));
+
+    
+    // let x = this.router;
+    // x.navigate(["resultsdownload", this.querryId]);
+  }
+
+  whatResults(ResultsData: any) {
+
+    //See it later just for #Know
+    //var Data = this.sanitizer.bypassSecurityTrustUrl('data:text/plain;base64,' + filedata);
+
+    for (let i = 0; i < ResultsData.ListOfFileBlobs.length; i++) {  //#ENNT: Can be Removed...
+      let FileName = ResultsData.ZipFileWithPath;
+      let CheckFileType = FileName.split('.').pop();
+      let IndividualResultsFile = ResultsData.ListOfFileBlobs[i];
+
+      const byteCharacters = atob(IndividualResultsFile);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      this.blob = new Blob([byteArray], { type: "application/zip;charset=utf-8" })//"text/plain;charset=utf-8" });
+
+      fileSaver.saveAs(this.blob, FileName);
+
+
+      console.log(FileName + "Successfully Downloaded!!!");
+
+    }
+    //alert("Dear User Your Result File(s) Downloaded. \nPlease See Your Download Folder.");
+
+
   }
 
   //Resutls Download Working...
