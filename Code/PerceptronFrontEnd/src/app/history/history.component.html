@@ -9,30 +9,30 @@
   
         <!-- Serial Column -->
         <ng-container matColumnDef="serial">
-          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Sr. # </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bold; font-size:16px; color: rgb(20, 20, 20);"> Sr. # </mat-header-cell>
           <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.serial}} </mat-cell>
         </ng-container>
   
         <!-- Title Column -->
         <ng-container matColumnDef="title">
-          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Search Title </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bold; font-size:16px; color: rgb(20, 20, 20);"> Search Title </mat-header-cell>
           <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.title}} </mat-cell>
         </ng-container>
   
         <!-- Time Column -->
         <ng-container matColumnDef="time">
-          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Creation Time</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bold; font-size:16px; color: rgb(20, 20, 20);"> Creation Time</mat-header-cell>
           <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.time}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="progress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Status</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bold; font-size:16px; color: rgb(20, 20, 20);"> Status</mat-header-cell>
             <mat-cell style="cursor: pointer;" *matCellDef="let row" matTooltip="Click to proceed!"> {{row.progress}} </mat-cell>
           </ng-container>
     
   
         <!-- Qid Column -->
         <ng-container matColumnDef="qid">
-          <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;">
+          <mat-header-cell [style.display]="'none'" *matHeaderCellDef mat-sort-header style="font-weight: bold; font-size:16px; color: rgb(20, 20, 20);">
             Querry ID </mat-header-cell>
           <mat-cell [style.display]="'none'" *matCellDef="let row"> {{row.qid}} </mat-cell>
         </ng-container>
