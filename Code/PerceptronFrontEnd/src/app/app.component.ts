@@ -204,7 +204,7 @@ export class AppComponent {
     if (user.email == "farhan.khalid@lums.edu.pk") {
       this.router.navigate(['/adminpanel']);
     } else {
-      alert("Dear User! You have restricted access.")
+      alert("Dear User,\nYou have restricted access.")
       // this.router.navigate(['/login']);
 
     };
