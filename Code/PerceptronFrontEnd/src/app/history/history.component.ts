@@ -59,17 +59,25 @@ export class HistoryComponent implements OnInit {
 
 
   getRecord(row) {
+    var user = firebase.auth().currentUser;
+    if (user.emailVerified==true){
+      this._httpService.getUserHistory(user).subscribe(data => this.what(data));
+    }
+    else{ //For Guest's Search Results & History
+      this._httpService.getUserHistory(user).subscribe(data => this.what(data));
+    }
+    
     if (row.progress == "Completed"){
       let x = this.router;
       x.navigate(["scans", row.qid]);
     }
     else if(row.progress == "In Queue" || row.progress == "Running"){
-      alert("Dear User,\n\nPlease wait while we process your query.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nPlease wait while we process your query.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else if(row.progress == "Error in Query")  // It means query wasn't able to complete properly, and there would be an issue into query parameters, Peaklist hadn't reasonable amount of data etc.
     //Therefore, it will not navigate to Scan Results.
     {
-      alert("Dear User,\n\nYour search query could not be completed due to the below possible reasons\nQuery parameters are invalid\n Peaklist has not reasonable amount of peak list information.\n Please address the above issues and if problem still persists then, report a bug using 'Report Bug' tab.\n \n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nYour search query could not be completed due to the below possible reasons.\nQuery parameters are invalid\nPeaklist has not reasonable amount of peak list information.\nPlease address the above issues and if problem still persists then, report a bug using 'Report Bug' tab.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
   }
 }
