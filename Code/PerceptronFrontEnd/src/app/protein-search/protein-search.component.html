@@ -61,7 +61,7 @@
           <mat-grid-tile colspan="3" rowspan="1" style="padding:0px;">
             <div style="width: 95%">
               <mat-form-field style="padding:0px; padding-left:5px; width:100%">
-                <input matInput matTooltip="Enter desired FDR percentage to shortlist identified proteoforms at desired FDR cut off. Computing FDR generates decoy database used for filtering proteoforms at user-specified FDR cut off percentage" (keypress)="keyPress($event)"
+                <input matInput matTooltip="Enter desired FDR percentage to shortlist identified proteoforms at desired FDR cut off"  (keypress)="keyPress($event)"
                   matTooltipPosition="before" placeholder="FDR Cut-off" [(ngModel)]="FDR_CutOff" #FDRCutOff='ngModel' name="FDRCutOff" ngModel>
                   <span matSuffix>%</span>
               </mat-form-field>

@@ -589,12 +589,12 @@ export class ProteinSearchComponent implements OnInit {
     if (FileExtension == 'zip'){
       form.NoOfOutputResults = '100';
 
-      alert("Dear User,\nAs your input files are more than one so we will show only top 100 results only.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else if (FileExtension != 'zip'){     //Updated 20201215
       form.FDR_CutOff = "0.0";
       form.FDRCutOff = "0.0";
-      alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
     let fi = this.imgFileInput.nativeElement;
@@ -604,10 +604,10 @@ export class ProteinSearchComponent implements OnInit {
     console.log(stats)
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
     {
-      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided. \nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else{
-      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     
   }

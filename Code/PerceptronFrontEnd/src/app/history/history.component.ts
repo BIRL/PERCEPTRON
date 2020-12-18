@@ -72,12 +72,20 @@ export class HistoryComponent implements OnInit {
       x.navigate(["scans", row.qid]);
     }
     else if(row.progress == "In Queue" || row.progress == "Running"){
-      alert("Dear User,\nPlease wait while we process your query.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nYour query is being processed. Please wait, the search may take several minutes to complete. We appreciate your patience!\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+
+
+
     }
     else if(row.progress == "Error in Query")  // It means query wasn't able to complete properly, and there would be an issue into query parameters, Peaklist hadn't reasonable amount of data etc.
     //Therefore, it will not navigate to Scan Results.
     {
-      alert("Dear User,\nYour search query could not be completed due to the below possible reasons.\nQuery parameters are invalid\nPeaklist has not reasonable amount of peak list information.\nPlease address the above issues and if problem still persists then, report a bug using 'Report Bug' tab.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert();
+
+      if (window.confirm("Dear User,\nWe're sorry, your search query could not be processed because of the reasons indicated below:\nOne or more input parameters are invalid\nMissing information in the data file added\nPlease address these issues to proceed.\n\nIf problem persists, please report your problem here or contact us.\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team"))
+      {
+        window.location.href='https://github.com/BIRL/PERCEPTRON/issues';
+      };
     }
   }
 }
