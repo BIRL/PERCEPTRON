@@ -42,6 +42,21 @@ namespace PerceptronLocalService.Repository
 
         }
 
+        public void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId)
+        {
+            var ResultsDownloadInfo = new ZipResultsDownloadInfo
+            {
+                QueryId = Queryid,
+                ZipFileName = ZipFileName,
+                ZipFileWithQueryId = ZipFileWithQueryId
+            };
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                db.ZipResultsDownloadInfoes.Add(ResultsDownloadInfo);
+                db.SaveChanges();
+            }
+        }
+
         public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
