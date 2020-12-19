@@ -116,11 +116,12 @@ namespace PerceptronLocalService.Utility
         public List<string> WriteIndividualResultsFile(string ProteinSearchTitle, List<ResultsDownloadToBeWrite> ResultsDownloadToBeWriteList, string filePath)
         {
             var ListFileName = new List<string>(ResultsDownloadToBeWriteList.Count);
+            var _NoOfMatchedFragments = new NoOfMatchedFragments();
 
             string FileWithPath = "";
             var CandidateList = new List<ProteinDto>();
             
-            int Matches = 0;
+            
 
             for (int iter = 0; iter < ResultsDownloadToBeWriteList.Count; iter++)
             {
@@ -145,7 +146,7 @@ namespace PerceptronLocalService.Utility
 
 
                         
-                        Matches = NoOfMatchedFragments(Matches, Protein.LeftMatchedIndex, Protein.RightMatchedIndex);
+                        var Matches = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0
 
                         sw.WriteLine("> " + Protein.Header + " | Score: " + Math.Round(Protein.Score, 6) + " | Molweight: " + Math.Round(Protein.Mw, 4)
                             + " | # Matched Fragments: " + Matches + " | Terminal Modification: " + Protein.TerminalModification + " | E-Value: " + Protein.Evalue);
@@ -184,24 +185,27 @@ namespace PerceptronLocalService.Utility
             return ListFileName;
         }
 
-        private int NoOfMatchedFragments(int Matches, List<int> LeftMatchedIndex, List<int> RightMatchedIndex)
-        {
-            Matches = 0;
-            if (LeftMatchedIndex.Count != 0)
-            {
-                Matches = LeftMatchedIndex.Count;
-            }
-            else if (RightMatchedIndex.Count != 0)
-            {
-                Matches = Matches + RightMatchedIndex.Count;
-            }
-            return Matches;
-        }
+        //private int NoOfMatchedFragments(int Matches, List<int> LeftMatchedIndex, List<int> RightMatchedIndex)
+        //{
+        //    Matches = 0;
+        //    if (LeftMatchedIndex.Count != 0)
+        //    {
+        //        Matches = LeftMatchedIndex.Count;
+        //    }
+        //    else if (RightMatchedIndex.Count != 0)
+        //    {
+        //        Matches = Matches + RightMatchedIndex.Count;
+        //    }
+        //    return Matches;
+        //}
 
-        public string WriteBatchResultsFile(string ProteinSearchTitle, List<ResultsDownloadToBeWrite> BatchModeFileProteins, string filePath)
+
+
+        public string WriteBatchResultsFile(string ProteinSearchTitle, List<FalseDiscoveryRateDto> BatchModeFileProteins, string filePath)
         {
             string FileWithPath = filePath + ProteinSearchTitle + "_Results.csv";
-
+            var _NoOfMatchedFragments = new NoOfMatchedFragments();
+            var _NoOfPtmModifications = new NoOfPtmModifications();
 
             if (File.Exists(FileWithPath))
                 File.Delete(FileWithPath); //Deleted Pre-existing file
@@ -209,15 +213,15 @@ namespace PerceptronLocalService.Utility
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
 
-            int NoOfPtmModifications;
-            int Matches =  0;
+            
+            
             //MAKING COLUMN NAMES
             string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
             sw.WriteLine(HeaderOfCsv);
 
             for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
             {
-                var Protein = BatchModeFileProteins[i].Protein;
+                var Protein = BatchModeFileProteins[i];
 
                 var Truncation_Message = "";
                 if (Protein.Truncation == "Left")
@@ -233,26 +237,21 @@ namespace PerceptronLocalService.Utility
                     Truncation_Message = "No Truncation";
                 }
 
-                NoOfPtmModifications = 0;
-                if (Protein.PtmParticulars.Count != 0)
-                {
-                    NoOfPtmModifications = Protein.PtmParticulars.Count;
-                }
-
-                Matches = NoOfMatchedFragments(Matches, Protein.LeftMatchedIndex, Protein.RightMatchedIndex);
+                //var Matches = Protein.MatchedFragments;//_NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0
+                //var NoOfPtmModifications = Protein.NumOfModifications;//_NoOfPtmModifications.NoOfPtmModificationsCount(0, Protein.PtmParticulars);
 
                 //Writing in file
                 sw.WriteLine(BatchModeFileProteins[i].FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
                     "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
                     Math.Round(Protein.Mw, 4) + "," +
-                    NoOfPtmModifications + "," + Matches + "," + BatchModeFileProteins[i].Time + "," + Protein.Evalue);
+                    Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue);
 
             }
             sw.Close();
             return FileWithPath;
         }
 
-        public void ZippingOutputFiles(string Title, string QueryId, List<string> ResultsDownloadFileNames, string filePath)
+        public string ZippingOutputFiles(string Title, string QueryId, List<string> ResultsDownloadFileNames, string filePath)
         {
             string ZipFullFileName = filePath + Title + "_" + QueryId + ".zip";
             if (File.Exists(ZipFullFileName))
@@ -264,8 +263,10 @@ namespace PerceptronLocalService.Utility
                 {
                     
                     archieve.CreateEntryFromFile(ResultsDownloadFileNames[i], Path.GetFileName(ResultsDownloadFileNames[i]));   // Adding all results files into the zip file
+                    File.Delete(ResultsDownloadFileNames[i]); //Deleted Pre-existing file
                 }
             }
+            return ZipFullFileName;
         }
     }
 }
