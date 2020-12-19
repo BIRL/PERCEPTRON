@@ -7,7 +7,7 @@
   <div style="height:10px;font-size:1px;">&nbsp;</div>
 
   <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Mass Spectrum Visualization</h6>
+    <h6 style="text-align:center; font-weight:bold; font-size:13pt">Mass Spectrum Visualization</h6>
     <!-- <div *ngIf="chart"> -->
       <div id="chartContainer" class='inner'>
         <!-- <canvas id="canvas"></canvas> -->
@@ -20,9 +20,9 @@
   <div id="top" style="height:10px;font-size:1px;">&nbsp;</div> 
 
   <mat-card>
-    <h6 style="text-align:center; font-weight:bold">Detailed Protein View Hit</h6>
-    <mat-grid-list cols="31" rowHeight="550px">
-      <mat-grid-tile colspan="15">
+    <h6 style="text-align:center; font-weight:bold; font-size:13pt">Detailed Protein Hit View</h6>
+    <mat-grid-list cols="31" rowHeight="65px">
+      <mat-grid-tile colspan="18" rowspan="10">
         <div>
           <img [src]="ImageFilePath">
         </div>
@@ -30,20 +30,17 @@
 
       <mat-grid-tile></mat-grid-tile>
 
-      <mat-grid-tile colspan="15">
-        <img src="assets/images/Legends.PNG" style="width:40vw;height:20vw;">
+      <mat-grid-tile colspan="12" rowspan="9">
+        <img src="assets/images/Legends.PNG" style="width:45vw;height:25vw;">
       </mat-grid-tile>
     </mat-grid-list>
-    <!-- <div  class='inner' style="float:left"> -->
-    
-    
   </mat-card>
 
   <div style="height:10px;font-size:1px;">&nbsp;</div>
 
   <mat-card>
     
-    <h6 style="text-align:center; font-weight:bold">Matched Fragments</h6>
+    <h6 style="text-align:center; font-weight:bold; font-size:13pt">Matched Fragments</h6>
     <div class="example-container mat-elevation-z8"></div>
 
     <mat-table [dataSource]="dataSource" matSort>
@@ -57,7 +54,7 @@
 
       <!-- FragmentID Column -->
       <ng-container matColumnDef="FragmentID">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Fragment ID
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Residue Number
         </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.FragmentID}} </mat-cell>
       </ng-container>
@@ -71,14 +68,14 @@
 
       <!-- ExperimentalMZ Column -->
       <ng-container matColumnDef="ExperimentalMZ">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Experimental MZ
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Experimental Mass
         </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.ExperimentalMZ}} </mat-cell>
       </ng-container>
 
       <!-- TheoreticalMZ Column -->
       <ng-container matColumnDef="TheoreticalMZ">
-        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Theoretical MZ
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="font-weight: bolder; font-size:15px;"> Theoretical Mass
         </mat-header-cell>
         <mat-cell style=" font-size:15px;" *matCellDef="let row"> {{row.TheoreticalMZ}} </mat-cell>
       </ng-container>
