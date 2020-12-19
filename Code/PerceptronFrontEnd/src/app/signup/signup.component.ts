@@ -50,9 +50,12 @@ export class SignupComponent implements OnInit {
           this.myapp.disabled1=false;
           this.myapp.disabled=true;
           this.myapp.logged_in_user = user_name;
-          localStorage.setItem('login','1');
-          localStorage.setItem('logged_in_user', user_name);
-          x.navigate(['/search'])
+          localStorage.removeItem('login');
+          localStorage.removeItem('logged_in_user');
+          // localStorage.setItem('login','1');   //Updated 20201219
+          // localStorage.setItem('logged_in_user', user_name);   //Updated 20201219
+          x.navigate(['/login'])    //Updated 20201219
+          alert("Dear User,\nA verification email will be sent to your email address shortly. Please verify your email address before you login.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team")
         }).catch((err) => {
           var errorCode = err.code;
           var errorMessage = err.message;
