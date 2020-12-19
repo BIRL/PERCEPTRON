@@ -191,6 +191,14 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Path" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="ZipResultsDownloadInfo">
+          <Key>
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ZipFileWithQueryId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ZipFileName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
@@ -204,6 +212,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResults" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ZipResultsDownloadInfo" EntityType="Self.ZipResultsDownloadInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Test" EntityType="Self.Test" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Test].[QueryId] AS [QueryId], 
@@ -393,6 +402,14 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <Property Name="BlindPtmLocalization" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProteinRank" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="ZipResultsDownloadInfo">
+          <Key>
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipFileWithQueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
         <EntityType Name="Test">
           <Key>
             <PropertyRef Name="QueryId" />
@@ -413,6 +430,7 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
           <EntitySet Name="SearchParameters" EntityType="Self.SearchParameter" />
           <EntitySet Name="SearchQueries" EntityType="Self.SearchQuery" />
           <EntitySet Name="SearchResults" EntityType="Self.SearchResult" />
+          <EntitySet Name="ZipResultsDownloadInfoes" EntityType="Self.ZipResultsDownloadInfo" />
           <EntitySet Name="Tests" EntityType="Self.Test" />
         </EntityContainer>
       </Schema>
@@ -605,6 +623,15 @@ warning 6002: The table/view 'PerceptronDatabase.dbo.Test' does not have a prima
                 <ScalarProperty Name="Evalue" ColumnName="Evalue" />
                 <ScalarProperty Name="BlindPtmLocalization" ColumnName="BlindPtmLocalization" />
                 <ScalarProperty Name="ProteinRank" ColumnName="ProteinRank" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ZipResultsDownloadInfoes">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.ZipResultsDownloadInfo">
+              <MappingFragment StoreEntitySet="ZipResultsDownloadInfo">
+                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+                <ScalarProperty Name="ZipFileWithQueryId" ColumnName="ZipFileWithQueryId" />
+                <ScalarProperty Name="ZipFileName" ColumnName="ZipFileName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
