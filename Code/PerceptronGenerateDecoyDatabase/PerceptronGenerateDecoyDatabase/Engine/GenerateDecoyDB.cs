@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PerceptronGenerateDecoyDatabase.DTO;
+using PerceptronGenerateDecoyDatabase.Utility;
 
 namespace PerceptronGenerateDecoyDatabase.Engine
 {
@@ -16,7 +17,9 @@ namespace PerceptronGenerateDecoyDatabase.Engine
             string AminoAcidAlphbets = "ABCDEFGHIKLMNOPQRSTUVWYZ";
             int AminoAcidAlphbetsLength = AminoAcidAlphbets.Length;
             int SequenceLength = 0;
-            Random rand = new Random();
+            RandomNumberGeneratorList _RandomNumberGeneratorList = new RandomNumberGeneratorList();
+
+
             int RandomNumer;
 
             for (int iter = 0; iter < ProteinList.Count; iter+=3)
@@ -28,10 +31,10 @@ namespace PerceptronGenerateDecoyDatabase.Engine
                 ProteinList[iter + 2].Header = ProteinList[iter + 2].Header.Replace(">", ">ZZZ_");
 
 
-                    /*  UPDATE HERE  */
-                    RandomNumer = rand.Next(1, SequenceLength);
+                /*  UPDATE HERE  */
+                _RandomNumberGeneratorList.RandomNoGenerate(0, SequenceLength - 1, AminoAcidAlphbetsLength);
 
-                    ProteinList[iter].Sequence = ProteinList[iter].Sequence;
+                 ProteinList[iter].Sequence = ProteinList[iter].Sequence;
 
                 /*  UPDATE HERE  */
 
