@@ -373,20 +373,22 @@ namespace PerceptronLocalService
                                 var tempDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
                         FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
                         FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
-                        FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, executionTimes.TotalTime,
+                        FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, pipeLineTimer.Elapsed.ToString(),
                         FinalCandidateProteinListforFinalScoring[0].Evalue);
                                 DataForBatchFileAndFdr.Add(tempDataForBatchFileAndFdr);
 
                             }
 
                             // Results Download Part 2 of 3  ABOVE //
-
+                            pipeLineTimer.Stop();
+                            executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
                             StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                             StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
                         }
                         else
                         {
+                            pipeLineTimer.Stop();
                             var _NoOfMatchedFragments = new NoOfMatchedFragments();
                             var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
 
@@ -396,7 +398,7 @@ namespace PerceptronLocalService
                             var tempDecoyDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
                     FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
                     FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
-                    FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, executionTimes.TotalTime,
+                    FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, pipeLineTimer.Elapsed.ToString(),
                     FinalCandidateProteinListforFinalScoring[0].Evalue);
                             DecoyDataForBatchFileAndFdr.Add(tempDecoyDataForBatchFileAndFdr);
 
@@ -405,10 +407,9 @@ namespace PerceptronLocalService
 
                     }
 
-                    pipeLineTimer.Stop();
-                    executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
-                    EmailMsg = "";
-                    ProgressStatus = 100;
+                    
+                    
+                    
                 }
                 catch (Exception r)
                 {
@@ -427,36 +428,45 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
-
-            // Results Download Part 3 of 2  BELOW //
-            ResultsDownloadFileNames.AddRange(_WriteResultsFile.WriteIndividualResultsFile(parameters.Title, ResultsDownloadToBeWriteList, Path));   // For Individual Files
-            ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
-
-            
-            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")  // Will Work for FDR - Decoy Side
+            try
             {
-                double OutDouble;
-                FalseDiscoveryRate _FalseDiscoveryRate = new FalseDiscoveryRate();
-                double.TryParse(parameters.FDRCutOff, out OutDouble);
-                //DataForBatchFileAndFdr = _FalseDiscoveryRate.FDR(OutDouble, DataForBatchFileAndFdr, DecoyDataForBatchFileAndFdr);
+                // Results Download Part 3 of 2  BELOW //
+                ResultsDownloadFileNames.AddRange(_WriteResultsFile.WriteIndividualResultsFile(parameters.Title, ResultsDownloadToBeWriteList, Path));   // For Individual Files
+                ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
+
+                var ResultsOfFDR = new List<FalseDiscoveryRateDto>(DataForBatchFileAndFdr.Count);
+                if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")  // Will Work for FDR - Decoy Side
+                {
+                    DataForBatchFileAndFdr = DataForBatchFileAndFdr.OrderByDescending(x => x.Score).ToList();
+                    DecoyDataForBatchFileAndFdr = DecoyDataForBatchFileAndFdr.OrderByDescending(x => x.Score).ToList();
+
+                    double OutDouble;
+                    FalseDiscoveryRate _FalseDiscoveryRate = new FalseDiscoveryRate();
+                    double.TryParse(parameters.FDRCutOff, out OutDouble);
+                    var tempResultsOfFDR = _FalseDiscoveryRate.FDR(OutDouble, DataForBatchFileAndFdr, DecoyDataForBatchFileAndFdr);
+                    ResultsOfFDR.AddRange(tempResultsOfFDR);
+                    ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, parameters.FDRCutOff, ResultsOfFDR, Path));
+                }
+                else if (numberOfPeaklistFiles > 1)
+                {
+                    ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, parameters.FDRCutOff, DataForBatchFileAndFdr, Path));
+                }
+
+
+
+                var ZipFileWithQueryId = _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
+                string ZipFileName = parameters.Title + ".zip";   //This Name will show to the User.
+                _dataLayer.StoreZipResultsForDownload(parameters.Queryid, ZipFileName, ZipFileWithQueryId);
+                // Results Download Part 3 of 2  ABOVE //
+                EmailMsg = "";
+                ProgressStatus = 100;
+
             }
-
-
-            if (numberOfPeaklistFiles > 1)
+            catch(Exception e)
             {
-                ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, DataForBatchFileAndFdr, Path));
+                EmailMsg = "Exception";
+                ProgressStatus = -1;
             }
-            
-
-            
-            var ZipFileWithQueryId = _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
-            string ZipFileName = Path + parameters.Title + ".zip";   //This Name will show to the User.
-            _dataLayer.StoreZipResultsForDownload(parameters.Queryid, ZipFileName, ZipFileWithQueryId);
-            // Results Download Part 3 of 2  ABOVE //
-
-
-
-
 
             if (parameters.EmailId != "")
             {
@@ -471,11 +481,8 @@ namespace PerceptronLocalService
                 }
             }
 
-
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);
-
         }
-        
 
         private void ScoringByMolecularWeight(SearchParametersDto parameters, double IntactProteinMass, List<ProteinDto> CandidateProteinsList)
         {
