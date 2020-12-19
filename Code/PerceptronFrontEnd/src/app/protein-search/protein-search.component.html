@@ -109,19 +109,26 @@
 
           <mat-grid-tile colspan="2"></mat-grid-tile>
 
-          <mat-grid-tile colspan="4" rowspan="1" style="padding:0px;">
+          <mat-grid-tile colspan="4" rowspan="1" style="padding:0px; align-items: flex;">
             <span
               matTooltip="Browse and upload experimental data (peak-list ‘txt’ file for single mode; ‘mzxml’, ‘mgf’ or peak-list ‘txt’ files for batch mode) "
               matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-              <label class="required" style='display:inline;  font-weight:500; '>Upload Mass-Spectrometry Data </label>
-              <!-- <br /> -->
-              <!-- <label style='display:inline;  font-weight:500; '>Select File(s): </label> -->
+              <label class="largeScreen">Upload Mass-Spectrometry Data *</label>
+              <label class="smallScreen" >Upload Mass-Spec Data *</label>
               <style>
-                .required:after {
-                  content: "*";
-                  margin: auto;
-                  padding: 5px;
-                  color: rgb(43, 39, 39);
+                .smallScreen {
+                  display: none;
+                }
+                .largeScreen {
+                  display: inline; 
+                  font-weight:450;
+                }
+                @media (max-width: 1400px) {
+                  .smallScreen { display: inline; font-weight:450;}
+                  .largeScreen { display: none; }
+                }
+                @media (max-width: 1200px) {
+                  .smallerScreen { display: none; }
                 }
               </style>
               <label style="display:inline;">&nbsp;</label>
@@ -141,7 +148,7 @@
                     margin-top: -4px;
                   }
                 </style>
-                <br />
+                <a  class="smallerScreen"><br /></a>
                 <label style="display:inline;">&nbsp;</label>
                 <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length==1'>{{email.files[0].name}}</i></a>
                 
