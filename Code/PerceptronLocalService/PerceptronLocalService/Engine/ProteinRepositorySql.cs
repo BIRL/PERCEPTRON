@@ -189,7 +189,7 @@ namespace PerceptronLocalService.Engine
         {
             ConvertStringListToDoubleList _ConvertStringListToDoubleList = new ConvertStringListToDoubleList();
 
-            List<List<ProteinDto>> SqlDatabases = new List<List<ProteinDto>>();
+            List<List<ProteinDto>> SqlDatabases = new List<List<ProteinDto>>(2) { new List<ProteinDto>(), new List<ProteinDto>() };
 
 
             Stopwatch ProteinFetchingTime = new Stopwatch();         // DELME Execution Time Working
@@ -197,7 +197,7 @@ namespace PerceptronLocalService.Engine
             ProteinFetchingTime.Start();              // DELME Execution Time Working
 
             int iterate = 1;
-            if (parameters.FDRCutOff != "0.0")
+            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")
             {
                 iterate = 2;
             }
@@ -208,7 +208,7 @@ namespace PerceptronLocalService.Engine
             for (int iterations = 0; iterations < iterate; iterations++)
             {
 
-                if (parameters.FDRCutOff == "0.0")
+                if (iterations == 0)
                 {
                     query = GetQuery(parameters.ProtDb);
                     connectionString = GetConnectionString(parameters.ProtDb);
@@ -256,7 +256,7 @@ namespace PerceptronLocalService.Engine
 
                     SqlDatabaseProteins.Add(protein);   //  MyNotes - Assign Capacity of SqlDatabaseProteins
                 }
-                SqlDatabases.Add(SqlDatabaseProteins);
+                SqlDatabases[iterations] = SqlDatabaseProteins;
             }
             ProteinFetchingTime.Stop();       // DELME Execution Time Working
             return SqlDatabases;
