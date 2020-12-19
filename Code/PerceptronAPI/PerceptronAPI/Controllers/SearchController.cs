@@ -179,100 +179,108 @@ namespace PerceptronAPI.Controllers
             return "ABC";
         }
 
-        //[HttpPost]
-        //[Route("api/search/Calling_API")]
-        //public async Task<HttpResponseMessage> Calling_API_Processing()
-        //{
-        //    var queryId = Guid.NewGuid().ToString();
+        [HttpPost]
+        [Route("api/search/Calling_API")]
+        public async Task<HttpResponseMessage> Calling_API()
+        {
+            AddSuffixInName _AddSuffixInName = new AddSuffixInName();
+            var queryId = Guid.NewGuid().ToString();
 
-            //    var a = HttpContext.Current.Response.Cookies.Count;
+            var a = HttpContext.Current.Response.Cookies.Count;
 
-            //    DateTime time = DateTime.Now;             // Fetching Current Time
-            //    string format = "yyyy/MM/dd HH:mm:ss";
-            //    var creationTime = time.ToString(format); // Formating creationTime and assigning
-            //    const string progress = "0";
-
-
-            //    var parametersDto = new SearchParametersDto
-            //    {
-            //        SearchFiles = new List<SearchFile>(),
-            //        SearchQuerry = new SearchQuery(),
-            //        FixedMods = new PtmFixedModification(),
-            //        VarMods = new PtmVariableModification()
-            //    };
-            //    // Check if the request contains multipart/form-data.
-            //    if (!Request.Content.IsMimeMultipartContent())
-            //    {
-            //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            //    }
-
-            //    var root = HttpContext.Current.Server.MapPath("~/App_Data");
-            //    var provider = new CustomMultipartFormDataStreamProvider(root);
-
-            //    try
-            //    {
-            //        var i = 0;
-            //        await Request.Content.ReadAsMultipartAsync(provider);
-
-            //        var jsonData = provider.FormData.GetValues("Jsonfile");
-
-            //        if (jsonData != null)
-            //        {
-            //            parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
-            //            parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
-            //            parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
-            //            parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
-            //        }
+            DateTime time = DateTime.Now;             // Fetching Current Time
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var creationTime = time.ToString(format); // Formating creationTime and assigning
+            const string progress = "0";
 
 
-            //        if (parametersDto.FixedMods.FixedModifications != "")
-            //        {
-            //            parametersDto.FixedMods.QueryId = queryId;
-            //            parametersDto.FixedMods.ModificationId = 1;
-            //        }
+            var parametersDto = new SearchParametersDto
+            {
+                SearchFiles = new List<SearchFile>(),
+                SearchQuerry = new SearchQuery(),
+                FixedMods = new PtmFixedModification(),
+                VarMods = new PtmVariableModification()
+            };
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
 
-            //        if (parametersDto.VarMods.VariableModifications != "")
-            //        {
-            //            parametersDto.VarMods.QueryId = queryId;
-            //            parametersDto.VarMods.ModificationId = 1;
-            //        }
+            var root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new CustomMultipartFormDataStreamProvider(root);
 
-            //        parametersDto.SearchParameters.QueryId = queryId;
-            //        parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
-            //        parametersDto.SearchQuerry.Progress = progress;
-            //        parametersDto.SearchQuerry.CreationTime = creationTime;
-            //        parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+            try
+            {
+                var i = 0;
+                //await Request.Content.ReadAsMultipartAsync(provider);
 
-            //        foreach (var file in provider.FileData)
-            //        {
-            //            var FileUniqueId = Guid.NewGuid().ToString();
-            //            string FileNameWithUniqueID = AddSuffix(file.LocalFileName, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
-            //            System.IO.File.Move(file.LocalFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+                var jsonData = provider.FormData.GetValues("Jsonfile");
 
-            //            i++;
-            //            var x = new SearchFile
-            //            {
-            //                FileId = i,
-            //                FileName = file.LocalFileName,
-            //                UniqueFileName = FileNameWithUniqueID,
-            //                FileType = System.IO.Path.GetExtension(file.LocalFileName),
-            //                QueryId = queryId,
-            //                FileUniqueId = FileUniqueId
-            //            };
-            //            parametersDto.SearchFiles.Add(x);
-            //        }
-            //        var response = Search.ProteinSearch(parametersDto);
-            //        return Request.CreateResponse(HttpStatusCode.OK, response);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        if (parametersDto.SearchParameters.EmailId != "")
-            //        {
-            //            Sending_Email(parametersDto, creationTime);
-            //        }
-            //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            //    }
-            //}
+                if (jsonData != null)
+                {
+                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
+                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
+                    parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
+                    parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
+                }
+
+
+                if (parametersDto.FixedMods.FixedModifications != "")
+                {
+                    parametersDto.FixedMods.QueryId = queryId;
+                    parametersDto.FixedMods.ModificationId = 1;
+                }
+
+                if (parametersDto.VarMods.VariableModifications != "")
+                {
+                    parametersDto.VarMods.QueryId = queryId;
+                    parametersDto.VarMods.ModificationId = 1;
+                }
+
+                parametersDto.SearchParameters.QueryId = queryId;
+                parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
+                parametersDto.SearchQuerry.Progress = progress;
+                parametersDto.SearchQuerry.CreationTime = creationTime;
+                parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
+
+                List<string> InputFileList = new List<string> { provider.FileData[0].LocalFileName };
+                if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
+                {
+                    InputFileList = ZipFileUnzipping(InputFileList, parametersDto.SearchParameters, provider.FileData); //Unzipping the zipped file.
+                }
+
+                for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
+                {
+                    string file = InputFileList[index];
+                    var FileUniqueId = Guid.NewGuid().ToString();
+                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    System.IO.File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+
+                    i++;
+                    var x = new SearchFile
+                    {
+                        FileId = i,
+                        FileName = file,
+                        UniqueFileName = FileNameWithUniqueID,
+                        FileType = System.IO.Path.GetExtension(file),
+                        QueryId = queryId,
+                        FileUniqueId = FileUniqueId
+                    };
+                    parametersDto.SearchFiles.Add(x);
+                }
+                var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception e)
+            {
+                if (parametersDto.SearchParameters.EmailId != "")
+                {
+                    Sending_Email(parametersDto, creationTime);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
 
 
         [HttpPost]
@@ -282,61 +290,12 @@ namespace PerceptronAPI.Controllers
             var TotalTime = new Stopwatch();
             TotalTime.Start();
 
+
+            var ZipResultFileInfo = _dataLayer.ScanResultFile(input);
             List<byte[]> ListOfFileBlobs = new List<byte[]>();
-            var ScanInputDataInfo = _dataLayer.ScanInputData(input);
-            var AllResultFilesNames = new List<string>();
-            var TopProteinsOfEachFile = new List<ProteinDto>();
+            string ZipFullFileName = ZipResultFileInfo.ZipFileWithQueryId;
+            string ZipFileName = ZipResultFileInfo.ZipFileName;
 
-            
-            string filePath = @"C:\\PerceptronApi-tempResultsFolder\\";
-            string ZipFileName = "Results_" + input + ".zip";
-            string ZipFullFileName = filePath + ZipFileName;
-
-            WriteResultsFile _WriteResultsFile = new WriteResultsFile();
-
-            //Loop here
-            //for (int NoOfFiles=0; NoOfFiles< ScanInputDataInfo.FileUniqueIdsList.Count; NoOfFiles++)
-            //{
-
-
-            for (int indexofFile = 0; indexofFile < ScanInputDataInfo.FileUniqueIdsList.Count; indexofFile++)
-            {
-                string FileUniqueId = ScanInputDataInfo.FileUniqueIdsList[indexofFile];
-                var ScanData = _dataLayer.ScanResultsDownloadData(input, FileUniqueId);    //Scanning File Unique Ids from SearchFiles Table
-
-                var SingleResultFileInfo = _WriteResultsFile.ResultFilesWrite(ScanData, filePath, indexofFile, ScanInputDataInfo);   // Writing: All Results files
-
-                AllResultFilesNames.Add(SingleResultFileInfo.ResultFileName);
-                if (SingleResultFileInfo.TopProteinOfResultFile.Count != 0)
-                {
-                    TopProteinsOfEachFile.Add(SingleResultFileInfo.TopProteinOfResultFile[0]);
-                }
-            }
-
-
-            if (TopProteinsOfEachFile.Count > 1)
-            {
-                string FileWithPath = filePath + ScanInputDataInfo.searchParameters.Title + ".csv";
-                string BatchFileName = _WriteResultsFile.WriteBatchResultsFile(FileWithPath, TopProteinsOfEachFile);
-                AllResultFilesNames.Add(BatchFileName);
-            }
-
-            var WriteSearchParametersFile = _WriteResultsFile.WriteParametersInTXTFile(ScanInputDataInfo.searchParameters, filePath);
-            AllResultFilesNames.Add(WriteSearchParametersFile);
-
-            string fullfilename = "";
-
-            if (File.Exists(ZipFullFileName))
-                File.Delete(ZipFullFileName); //Deleted Pre-existing file
-
-            using (var archieve = ZipFile.Open(ZipFullFileName, ZipArchiveMode.Create)) // Creating Zip File
-            {
-                for (int i = 0; i < AllResultFilesNames.Count; i++)
-                {
-                    fullfilename = filePath + AllResultFilesNames[i];
-                    archieve.CreateEntryFromFile(fullfilename, Path.GetFileName(fullfilename));   // Adding all results files into the zip file
-                }
-            }
 
             using (FileStream fileStream = File.OpenRead(ZipFullFileName))
             {
@@ -349,6 +308,78 @@ namespace PerceptronAPI.Controllers
             TotalTime.Stop();
             string time = TotalTime.Elapsed.ToString();
             return ResultsDownloadData;
+
+
+
+            /////////GIVEN BELOW --- // ITS HEALTHY WAS IN USED WHEN API COMPILE THE RESUTLS 20201219
+            //List<byte[]> ListOfFileBlobs = new List<byte[]>();
+            //var ScanInputDataInfo = _dataLayer.ScanInputData(input);
+            //var AllResultFilesNames = new List<string>();
+            //var TopProteinsOfEachFile = new List<ProteinDto>();
+
+
+            //string filePath = @"C:\\PerceptronApi-tempResultsFolder\\";
+            //string ZipFileName = "Results_" + input + ".zip";
+            //string ZipFullFileName = filePath + ZipFileName;
+
+            //WriteResultsFile _WriteResultsFile = new WriteResultsFile();
+
+            ////Loop here
+            ////for (int NoOfFiles=0; NoOfFiles< ScanInputDataInfo.FileUniqueIdsList.Count; NoOfFiles++)
+            ////{
+
+
+            //for (int indexofFile = 0; indexofFile < ScanInputDataInfo.FileUniqueIdsList.Count; indexofFile++)
+            //{
+            //    string FileUniqueId = ScanInputDataInfo.FileUniqueIdsList[indexofFile];
+            //    var ScanData = _dataLayer.ScanResultsDownloadData(input, FileUniqueId);    //Scanning File Unique Ids from SearchFiles Table
+
+            //    var SingleResultFileInfo = _WriteResultsFile.ResultFilesWrite(ScanData, filePath, indexofFile, ScanInputDataInfo);   // Writing: All Results files
+
+            //    AllResultFilesNames.Add(SingleResultFileInfo.ResultFileName);
+            //    if (SingleResultFileInfo.TopProteinOfResultFile.Count != 0)
+            //    {
+            //        TopProteinsOfEachFile.Add(SingleResultFileInfo.TopProteinOfResultFile[0]);
+            //    }
+            //}
+
+
+            //if (TopProteinsOfEachFile.Count > 1)
+            //{
+            //    string FileWithPath = filePath + ScanInputDataInfo.searchParameters.Title + ".csv";
+            //    string BatchFileName = _WriteResultsFile.WriteBatchResultsFile(FileWithPath, TopProteinsOfEachFile);
+            //    AllResultFilesNames.Add(BatchFileName);
+            //}
+
+            //var WriteSearchParametersFile = _WriteResultsFile.WriteParametersInTXTFile(ScanInputDataInfo.searchParameters, filePath);
+            //AllResultFilesNames.Add(WriteSearchParametersFile);
+
+            //string fullfilename = "";
+
+            //if (File.Exists(ZipFullFileName))
+            //    File.Delete(ZipFullFileName); //Deleted Pre-existing file
+
+            //using (var archieve = ZipFile.Open(ZipFullFileName, ZipArchiveMode.Create)) // Creating Zip File
+            //{
+            //    for (int i = 0; i < AllResultFilesNames.Count; i++)
+            //    {
+            //        fullfilename = filePath + AllResultFilesNames[i];
+            //        archieve.CreateEntryFromFile(fullfilename, Path.GetFileName(fullfilename));   // Adding all results files into the zip file
+            //    }
+            //}
+
+            //using (FileStream fileStream = File.OpenRead(ZipFullFileName))
+            //{
+            //    byte[] blob = new byte[fileStream.Length];
+            //    fileStream.Read(blob, 0, (int)fileStream.Length);
+            //    ListOfFileBlobs.Add(blob);
+            //}
+
+            //var ResultsDownloadData = new ResultsDownloadDto(ZipFileName, ListOfFileBlobs);
+            //TotalTime.Stop();
+            //string time = TotalTime.Elapsed.ToString();
+            //return ResultsDownloadData;
+            /////////GIVEN ABOVE --- // ITS HEALTHY WAS IN USED WHEN API COMPILE THE RESUTLS 20201219
         }
 
 
@@ -464,9 +495,16 @@ namespace PerceptronAPI.Controllers
             return temp;
         }
 
-        //[HttpPost]
-        //[Route("api/search/FASTA_File_upload")]  //    
-        //public async Task<HttpResponseMessage> FASTA_File_upload()
+        [HttpGet]      //DEL ME //DEL ME  //DEL ME //DEL ME //DEL ME //DEL ME 
+        [Route("api/search/statGet")]
+        public stat statGet([FromBody] string input)
+        {
+
+            var temp = _dataLayer.stat();
+            return temp;
+        }
+
+
 
         [HttpPost]
         [Route("api/search/Database_Update")]
