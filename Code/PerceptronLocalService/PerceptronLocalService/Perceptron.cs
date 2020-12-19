@@ -192,20 +192,25 @@ namespace PerceptronLocalService
             string Path = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
 
             List<string> ResultsDownloadFileNames = new List<string>(numberOfPeaklistFiles + 2);  // Used to Collect the names of the files for Zipping (File Zip) Purpose // Just for approximate Capacity of the list.
-            var DecoyTopFinalCandidateProteinList = new List<ProteinDto>(numberOfPeaklistFiles);
+            //var DecoyTopFinalCandidateProteinList = new List<ProteinDto>(numberOfPeaklistFiles);
             List<ResultsDownloadToBeWrite> ResultsDownloadToBeWriteList = new List<ResultsDownloadToBeWrite>();   // For storing all individual(single) results files
-            List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
+            
+            
+            //List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
 
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
             var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
-            if (parameters.FDRCutOff != "0.0")
+            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")
             {
                 iterate = 2;
             }
-
+            
+            
+            var DataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
+            var DecoyDataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
 
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
@@ -353,9 +358,27 @@ namespace PerceptronLocalService
                             var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring);
                             ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
 
-                            var tempBatchModeFileProteins = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0], pipeLineTimer.Elapsed.ToString());
-                            //Fetching First Protein (having ProteinRank = 1) for making Batch Mode File
-                            BatchModeFileProteins.Add(tempBatchModeFileProteins);
+                            if (numberOfPeaklistFiles > 1) // For Batch Mode
+                            {
+                                //////~~~~~~~~~~~~~~~~~~~~~~~~~~    ON HOLD NOT FECTHING DATA FOR WRITING EXCEL FILE...
+                                ////var tempBatchModeFileProteins = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0], pipeLineTimer.Elapsed.ToString());
+                                //////Fetching First Protein (having ProteinRank = 1) for making Batch Mode File
+                                ////BatchModeFileProteins.Add(tempBatchModeFileProteins);
+                                var _NoOfMatchedFragments = new NoOfMatchedFragments();
+                                var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
+
+                                var _NoOfPtmModifications = new NoOfPtmModifications();
+                                var NoOfPtmModifications = _NoOfPtmModifications.NoOfPtmModificationsCount(0, FinalCandidateProteinListforFinalScoring[0].PtmParticulars);  // NoOfPtmModifications is Initialized from 0
+                                
+                                var tempDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
+                        FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
+                        FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
+                        FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, executionTimes.TotalTime,
+                        FinalCandidateProteinListforFinalScoring[0].Evalue);
+                                DataForBatchFileAndFdr.Add(tempDataForBatchFileAndFdr);
+
+                            }
+
                             // Results Download Part 2 of 3  ABOVE //
 
                             StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
@@ -364,39 +387,26 @@ namespace PerceptronLocalService
                         }
                         else
                         {
-                            DecoyTopFinalCandidateProteinList.Add(FinalCandidateProteinListforFinalScoring[0]);
+                            var _NoOfMatchedFragments = new NoOfMatchedFragments();
+                            var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
+
+                            var _NoOfPtmModifications = new NoOfPtmModifications();
+                            var NoOfPtmModifications = _NoOfPtmModifications.NoOfPtmModificationsCount(0, FinalCandidateProteinListforFinalScoring[0].PtmParticulars);  // NoOfPtmModifications is Initialized from 0
+
+                            var tempDecoyDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
+                    FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
+                    FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
+                    FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, executionTimes.TotalTime,
+                    FinalCandidateProteinListforFinalScoring[0].Evalue);
+                            DecoyDataForBatchFileAndFdr.Add(tempDecoyDataForBatchFileAndFdr);
+
+                            //DecoyTopFinalCandidateProteinList.Add(FinalCandidateProteinListforFinalScoring[0]);
                         }
 
                     }
 
-                    
-                    
-
                     pipeLineTimer.Stop();
                     executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
-
-
-
-
-                    // Results Download Part 3 of 2  BELOW //
-                    ResultsDownloadFileNames.AddRange(_WriteResultsFile.WriteIndividualResultsFile(parameters.Title, ResultsDownloadToBeWriteList, Path));   // For Individual Files
-                    ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
-
-                    if (parameters.FDRCutOff != "0.0")
-                    {
-                        iterate = 2;
-                    }
-
-
-                    if (BatchModeFileProteins.Count > 1)
-                    {
-                        ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, BatchModeFileProteins, Path));
-                    }
-                    _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
-
-
-                    // Results Download Part 3 of 2  ABOVE //
-
                     EmailMsg = "";
                     ProgressStatus = 100;
                 }
@@ -417,6 +427,37 @@ namespace PerceptronLocalService
                 //Logging.ExitPeakFileDirectory();
             }
 
+
+            // Results Download Part 3 of 2  BELOW //
+            ResultsDownloadFileNames.AddRange(_WriteResultsFile.WriteIndividualResultsFile(parameters.Title, ResultsDownloadToBeWriteList, Path));   // For Individual Files
+            ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
+
+            
+            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")  // Will Work for FDR - Decoy Side
+            {
+                double OutDouble;
+                FalseDiscoveryRate _FalseDiscoveryRate = new FalseDiscoveryRate();
+                double.TryParse(parameters.FDRCutOff, out OutDouble);
+                //DataForBatchFileAndFdr = _FalseDiscoveryRate.FDR(OutDouble, DataForBatchFileAndFdr, DecoyDataForBatchFileAndFdr);
+            }
+
+
+            if (numberOfPeaklistFiles > 1)
+            {
+                ResultsDownloadFileNames.Add(_WriteResultsFile.WriteBatchResultsFile(parameters.Title, DataForBatchFileAndFdr, Path));
+            }
+            
+
+            
+            var ZipFileWithQueryId = _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
+            string ZipFileName = Path + parameters.Title + ".zip";   //This Name will show to the User.
+            _dataLayer.StoreZipResultsForDownload(parameters.Queryid, ZipFileName, ZipFileWithQueryId);
+            // Results Download Part 3 of 2  ABOVE //
+
+
+
+
+
             if (parameters.EmailId != "")
             {
                 if (numberOfPeaklistFiles >= 1 && EmailMsg != "ProteinListEmpty" && EmailMsg != "Exception") // Email Sent: Single or Batch Mode Results are Ready
@@ -434,6 +475,7 @@ namespace PerceptronLocalService
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);
 
         }
+        
 
         private void ScoringByMolecularWeight(SearchParametersDto parameters, double IntactProteinMass, List<ProteinDto> CandidateProteinsList)
         {
@@ -676,7 +718,7 @@ namespace PerceptronLocalService
             {
                 candidateProteins[iter].ProteinRank = iter + 1;
             }
-
+            
             return candidateProteins;
         }
         //SPECTRAL COMPARISON ALGORITHM: 
