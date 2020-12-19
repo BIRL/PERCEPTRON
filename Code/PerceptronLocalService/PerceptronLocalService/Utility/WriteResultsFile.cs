@@ -201,7 +201,7 @@ namespace PerceptronLocalService.Utility
 
 
 
-        public string WriteBatchResultsFile(string ProteinSearchTitle, List<FalseDiscoveryRateDto> BatchModeFileProteins, string filePath)
+        public string WriteBatchResultsFile(string ProteinSearchTitle, string FDRCutOff, List<FalseDiscoveryRateDto> BatchModeFileProteins, string filePath)
         {
             string FileWithPath = filePath + ProteinSearchTitle + "_Results.csv";
             var _NoOfMatchedFragments = new NoOfMatchedFragments();
@@ -213,41 +213,56 @@ namespace PerceptronLocalService.Utility
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
 
-            
-            
+
+
             //MAKING COLUMN NAMES
-            string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
-            sw.WriteLine(HeaderOfCsv);
 
-            for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
+            var _TruncationMessage = new TruncationMessage();
+            string Truncation_Message = "";
+            if (FDRCutOff == "0.0" && FDRCutOff == "0")  // Will Work for Simple File
             {
-                var Protein = BatchModeFileProteins[i];
+                string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
+                sw.WriteLine(HeaderOfCsv);
 
-                var Truncation_Message = "";
-                if (Protein.Truncation == "Left")
+                for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
                 {
-                    Truncation_Message = "Truncation at N-Terminal Side";
-                }
-                else if (Protein.Truncation == "Right")
-                {
-                    Truncation_Message = "Truncation at C-Terminal Side";
-                }
-                else
-                {
-                    Truncation_Message = "No Truncation";
-                }
+                    var Protein = BatchModeFileProteins[i];
 
-                //var Matches = Protein.MatchedFragments;//_NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0
-                //var NoOfPtmModifications = Protein.NumOfModifications;//_NoOfPtmModifications.NoOfPtmModificationsCount(0, Protein.PtmParticulars);
+                    Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
 
-                //Writing in file
-                sw.WriteLine(BatchModeFileProteins[i].FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
+                    sw.WriteLine(BatchModeFileProteins[i].FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
                     "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
                     Math.Round(Protein.Mw, 4) + "," +
                     Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue);
-
+                }
             }
-            sw.Close();
+
+
+            else  // Will Work for FDR - Decoy Side
+            {
+                string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value,FDR";
+
+                sw.WriteLine(HeaderOfCsv);
+
+                for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
+                {
+                    var Protein = BatchModeFileProteins[0].BatchTargetList[i];
+                    Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
+                    
+                    sw.WriteLine(Protein.FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
+                    "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
+                    Math.Round(Protein.Mw, 4) + "," +
+                    Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue + "," + BatchModeFileProteins[0].FdrValue[i]);
+                }
+                sw.WriteLine();
+                int TotalProteins = BatchModeFileProteins[0].BatchTargetList.Count + 1;
+                sw.WriteLine("Total protein count reported by experiment: " + TotalProteins);  //+1 is for because we remove the last entry in FalseDiscoveryRate.cs
+                sw.WriteLine("Total protein count reported by experiment with E-value greater than 1E-10: " + BatchModeFileProteins[0].EvalueCount); // EvalueCount is different to the evalue i.e. the evalue of protein (Evalue)
+                sw.WriteLine("Total protein reported with " + FDRCutOff + "% FDR: " + BatchModeFileProteins[0].NoOfProteins);
+                sw.WriteLine("Unique proteins count reported with " + FDRCutOff + "% FDR: " + BatchModeFileProteins[0].NoOfUniqueProteins);
+            }
+
+                sw.Close();
             return FileWithPath;
         }
 
