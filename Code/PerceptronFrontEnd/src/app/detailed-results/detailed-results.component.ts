@@ -75,6 +75,7 @@ export class DetailedResultsComponent implements OnInit {
     let TruncationModule = <HTMLLabelElement>document.getElementById("TruncationModule");
     let massmode = <HTMLLabelElement>document.getElementById("MassMode");
     let BPTMS = <HTMLLabelElement>document.getElementById("BPTMs");
+    let FdrCutOff = <HTMLLabelElement>document.getElementById("FdrCutOff");
 
     massmode.innerHTML = data.Paramters.SearchParameters.MassMode;//"MH+";
     BPTMS.innerHTML = data.Paramters.SearchParameters.PtmAllow;  // "No";
@@ -85,6 +86,7 @@ export class DetailedResultsComponent implements OnInit {
 
     let pdb = <HTMLLabelElement>document.getElementById("ProteinDB");
     pdb.innerHTML = data.Paramters.SearchParameters.ProteinDatabase;
+
 
 
     let protTol = <HTMLLabelElement>document.getElementById("protTol");
@@ -116,6 +118,9 @@ export class DetailedResultsComponent implements OnInit {
     PSTWeight.innerHTML = data.Paramters.SearchParameters.PstSweight;//.toFixed(4);
     SpecCompWeight.innerHTML = data.Paramters.SearchParameters.InsilicoSweight;//.toFixed(4);
 
+    let FdrCutoff = <HTMLLabelElement>document.getElementById("FdrCutOff");
+    FdrCutoff.innerHTML = data.Paramters.SearchParameters.FDRCutOff;
+
 
     ProteinRank.innerHTML = this.rank;
     ProteinID.innerHTML = data.Results.Results.Header;
@@ -143,22 +148,26 @@ export class DetailedResultsComponent implements OnInit {
     let text = sequenceText[0];
     let a = 1;
 
-    for (let i = 1; i < sequenceText.length; i++) {
+    // for (let i = 1; i < sequenceText.length; i++) {
 
 
-      if (i % 10 == 0) {
-        ++a;
-        text = text + "\xa0\xa0\xa0\xa0\xa0" + a + ". " + sequenceText[i];
-      }
-      else {
-        if (i == 1) {
-          text = "1. " + text + "" + sequenceText[i];
-        } else {
-          text = text + "" + sequenceText[i];
-        }
-      }
-    }
-    sequence.innerHTML = text;
+    //   if (i % 10 == 0) {
+    //     ++a;
+    //     text = text + "\xa0\xa0\xa0\xa0\xa0" + a + ". " + sequenceText[i];
+    //   }
+    //   else {
+    //     if (i == 1) {
+    //       text = "1. " + text + "" + sequenceText[i];
+    //     } else {
+    //       text = text + "" + sequenceText[i];
+    //     }
+    //   }
+    // }
+    // sequence.innerHTML = text;
+
+    
+
+    sequence.innerHTML = sequenceText;
 
   }
 

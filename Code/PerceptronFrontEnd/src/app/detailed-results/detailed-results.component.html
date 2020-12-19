@@ -2,7 +2,7 @@
 
   <mat-card>
     <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Detailed
-      Result View</h4>
+      Protein Hit View</h4>
   </mat-card>
   <br>
 
@@ -211,6 +211,19 @@
           <label style="font-size:15px;" id="Slider3"></label>
         </div>
       </mat-grid-tile>
+      
+    </mat-grid-list>
+    <mat-grid-list cols="8" rowHeight="60px">
+        <mat-grid-tile colspan="1" rowspan="1">
+            <div style="padding-left:5px; width:100%">
+              <label style="font-weight:bold;">FDR Cut-off %: </label>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <div style="padding-left:5px; width:100%">
+              <label style="font-size:15px;" id="FdrCutOff"></label>
+            </div>
+          </mat-grid-tile>
     </mat-grid-list>
 
 
@@ -343,6 +356,7 @@
       </mat-grid-tile>
 
     </mat-grid-list>
+    
   </mat-card>
 
   <br />
@@ -360,7 +374,7 @@
     <mat-grid-list cols="8" rowHeight="60px">
       <mat-grid-tile colspan="1" rowspan="1">
         <div style="padding-left:5px; width:100%">
-          <label style="font-weight:bold;">Total: </label>
+          <label style="font-weight:bold;">Total Time: </label>
         </div>
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
@@ -451,8 +465,11 @@
   <br />
   <mat-card>
     <mat-grid-list cols="11" rowHeight="100px">
+        <div style="padding-left:5px; width:100%">
+            <label style="font-weight:bold; font-size:18px;">Protein Sequence </label>
+          </div>
       <mat-grid-tile colspan="9">
-        <label style="font-size:15px;" id="sequence"></label>
+        <label style="font-size:15px; word-wrap: break-word" id="sequence"></label>
       </mat-grid-tile>
 
       <!-- <mat-grid-tile></mat-grid-tile> -->
