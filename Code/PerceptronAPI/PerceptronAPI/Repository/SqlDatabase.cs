@@ -162,7 +162,39 @@ namespace PerceptronAPI.Repository
             return scanResults;
         }
 
-        public ScanInputDataDto ScanInputData(string qid)
+        public ZipResultsDownloadInfo ScanResultFile(string QueryId)
+        {
+            var ZipResultFileInfo = new ZipResultsDownloadInfo();
+            using (new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT QueryId, ZipFileWithQueryId, ZipFileName \nFROM ZipResultsDownloadInfo\nWHERE QueryId = '" + QueryId + "'",
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    ZipResultFileInfo.QueryId = QueryId;
+                    ZipResultFileInfo.ZipFileWithQueryId = dataReader["ZipFileWithQueryId"].ToString();
+                    ZipResultFileInfo.ZipFileName = dataReader["ZipFileName"].ToString();
+                }
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            return ZipResultFileInfo;
+        }
+
+        public ScanInputDataDto ScanInputData(string qid)   // ITS HEALTHY WAS IN USED WHEN API COMPILE THE RESUTLS
         {
             var FileUniqueIdsList = new List<string>();
             var FileNamesList = new List<string>();
