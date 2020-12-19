@@ -9,8 +9,7 @@ namespace PerceptronLocalService.Interfaces
         //void InsertLeftInsilicoMasses(string pid, double mw, string ions);
         //void InsertRightIsilicoMasses(string pid, double mw, string ions);
 
-
-
+        void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId);
         void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString);
         //string GetCreationTime(string qid);   // HOLD FOR KNOW..
         string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId);
