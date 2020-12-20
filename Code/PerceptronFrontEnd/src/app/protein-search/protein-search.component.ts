@@ -228,14 +228,17 @@ export class ProteinSearchComponent implements OnInit {
 
     this.SpecialIonz = this.EmptyArray;
     if (this.selectedFrag == 'CID' || this.selectedFrag == 'IMD' || this.selectedFrag == 'BIRD' || this.selectedFrag == 'SID' || this.selectedFrag == 'HCD') {
+      this.SelectedSpecialIons = '';
       this.SpecialIonz = this.Special1;
     }
 
     if (this.selectedFrag == 'ECD' || this.selectedFrag == 'ETD') {
+      this.SelectedSpecialIons = '';
       this.SpecialIonz = this.Special2;
     }
 
     if (this.selectedFrag == 'NETD' || this.selectedFrag == 'EDD') {
+      this.SelectedSpecialIons = '';
       this.SpecialIonz = this.Special3;
     }
   }
@@ -478,7 +481,7 @@ export class ProteinSearchComponent implements OnInit {
 
     let afasdf = form.HandleIons;
     // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
-    form.HandleIons= form.HandleIons.toString();
+    form.HandleIons= this.SelectedSpecialIons.toString();
     form.TerminalModification = form.TerminalModification.toString();
 
     if (form.MassMode == "1"){
@@ -616,5 +619,3 @@ export class ProteinSearchComponent implements OnInit {
     console.log("Form has been reset");
   }
 }
-
-
