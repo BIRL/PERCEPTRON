@@ -14,7 +14,7 @@ namespace PerceptronLocalService.Utility
             {
                 Matches = LeftMatchedIndex.Count;
             }
-            else if (RightMatchedIndex.Count != 0)
+            if (RightMatchedIndex.Count != 0)
             {
                 Matches = Matches + RightMatchedIndex.Count;
             }
