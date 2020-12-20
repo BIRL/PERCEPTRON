@@ -377,7 +377,7 @@
       <mat-grid-list cols="8" rowHeight="55px">
 
         <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
-          <mat-form-field matTooltip="Incorporate slider value" matTooltipPosition="before"
+          <mat-form-field matTooltip="Select the ‘slider value’ to provide a range for tuning MS1 using ‘Tune Intact Protein Mass’ option" matTooltipPosition="before"
             style="padding:0px; padding-left:15px; width:100%">
             <input matInput (keypress)="keyPress($event)" #SliderValue="ngModel" [(ngModel)]="Slider_Value"
               [disabled]="!Autotune" required placeholder="Slider Value" name="SliderValue" ngModel>
