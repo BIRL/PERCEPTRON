@@ -101,7 +101,7 @@ export class AppComponent {
       this.router.navigate(['/search']);
       // this.disabled=false;
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
       // this.disabled=false;
     };
@@ -114,7 +114,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/history']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   };
@@ -138,7 +138,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/repository']);
     } else {
-      alert("Kindly login or use as a guest!");
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     }
   };
@@ -149,7 +149,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/help']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
 
     };
@@ -161,7 +161,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/youtube']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   };
@@ -173,7 +173,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/bug-report']);
     } else {
-      alert("Kindly login or use as a guest!");
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     }
   };
@@ -183,7 +183,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/team']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   };
@@ -194,7 +194,7 @@ export class AppComponent {
       this.UserEmailID = user.email;
       this.router.navigate(['/contact']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   }
@@ -229,7 +229,7 @@ export class AppComponent {
     if (user) {
       this.router.navigate(['/update-password']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   };
@@ -289,7 +289,7 @@ export class AppComponent {
     if (user) {
       this.router.navigate(['/settings']);
     } else {
-      alert("Kindly login or use as a guest!");
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     }
 
@@ -312,7 +312,7 @@ export class AppComponent {
     if (user) {
       this.router.navigate(['/hudiara']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
 
@@ -322,7 +322,7 @@ export class AppComponent {
     if (user) {
       this.router.navigate(['/maps']);
     } else {
-      alert("Kindly login or use as a guest!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   };
@@ -332,7 +332,7 @@ export class AppComponent {
     if (user) {
       this.router.navigate(['/patterngenerator']);
     } else {
-      alert("Kindly login first!")
+      alert("Dear User,\nPlease login via PERCEPTRON user account for performing protein search or click \"Login as Guest\" to proceed without creating PERCEPTRON user account.\n\nThank you for your interest in PERCEPTRON!\nThe PERCEPTRON Team.")
       this.router.navigate(['/login']);
     };
   }
