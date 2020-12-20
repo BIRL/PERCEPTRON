@@ -5,15 +5,55 @@
                 <div style="height:10px;font-size:1px;">&nbsp;</div>
                 
                 <mat-card>
-                    <p style="font-size:20px; font-weight:600">Results Interpretation</p>
-                    <p>Text will come here.</p>
-                </mat-card>
+                    <p style="font-size:20px; font-weight:600">Interpretating Search Results</p>
+                    <div style="text-align:center"><img src="assets/images/Fig 1.jpg"></div>
+                    <ol>
+                        <li style="margin-top:20px; margin-bottom:20px">‘User Search History’ in ‘Search Results and History’ tab shows search results with ‘Search Title.’ User can go to ‘Protein Spectral Matches’ by clicking the ‘Search Title.’</li>
+                        <div style="text-align:center"><img src="assets/images/Fig 2.jpg"></div>
+                        <li style="margin-top:20px">In ‘Protein Spectral Matches,’ user can download results by clicking ‘Results Download’ option provided on top right. The results along with search parameters will be downloaded as a .zip folder.</li>
+                        <li style="margin-top:20px; margin-bottom: 20px;">File name indicates the data file used for performing protein search. User can view the top-ranked proteoform identified (Protein ID) along with its protein score and molecular weight. By clicking the ‘Protein ID,’ user can go to ‘Summary Results View.’</li>
+                        <a style="margin-top:20px; font-weight:700; color: red">Note:</a> <a style="color:red">'Detailed Visualization’ feature is not provided for proteoform search in batch mode. For batch mode, users can only download results as a .zip folder using the ‘Results Download’ option.</a>
+                        <div style="text-align:center"><img style="margin-top:20px" src="assets/images/Fig 3.jpg"></div>
+                        <li style="margin-top:20px; margin-bottom:20px">‘Summary Results View’ shows the list of proteoforms identified from the data file provided by the user. Clicking the ‘Protein ID’ leads user to ‘Detailed Protein Hit View.’ </li>
+                        <div style="text-align:center"><img src="assets/images/Fig 4.jpg"></div>
+                        <li style="margin-top:20px">‘Detailed Protein Hit View’ has ‘User Search Parameters’ on top. </li>
+                        <li style="margin-top:20px; margin-bottom:20px">Below search parameters panel is ‘General Results’ which gives user details of the selected proteoform.</li>
+                        <div style="text-align:center"><img src="assets/images/Fig 5.jpg"></div>
+                        <li style="margin-top:20px">User can scroll down to see ‘Protein Search Time’ panel below ‘General Results’ indicating total time taken for processing protein query. Additionally, these runtimes have been split for highlighting time taken by each algorithmic component. </li>
+                        <li style="margin-top:20px">‘Protein Sequence’ panel shows the sequence of the selected proteoform.</li>
+                        <li style="margin-top:20px; margin-bottom:20px">User can visualize search results in detail by clicking ‘Detailed Visualization’ button provided on bottom right.</li>
+                        <div style="text-align:center"><img src="assets/images/Fig 6.jpg"></div>
+                        <li style="margin-top:20px; margin-bottom:20px">‘Mass Spectrum Visualization’ on ‘Results Visualization’ page shows Experimental Spectrum superimposed with Theoretical Spectrum highlighting peaks matched during spectral comparison. User can hover the cursor over to find peak list masses. </li>
+                        <div style="text-align:center"><img src="assets/images/Fig 7.jpg"></div>
+                        <li style="margin-top:20px;">User can scroll down to find detailed results. Left panel in ‘Detailed Protein Hit View’ shows complete information of the selected proteoform. These details include:
+                            <ul>
+                                <li>Sequence of the proteoform containing one-letter symbols for amino acid residues along with the number at bottom right indication the position of the respective residue within the proteoform sequence </li>
+                                <li>Molecular weight of the proteoform selected from the list of identified proteoforms</li>
+                                <li>Rank of the respective proteoform in the list of proteoforms identified</li>
+                                <li>Proteoform score computed by PERCEPTRON</li>
+                                <li>Matched fragments along with experimental (in red) and theoretical (in green) fragment masses</li>
+                                <li>Post-translational modifications as well as other modifications (e. g. truncation) </li>
+                            </ul>
+                        </li>
+                        <li style="margin-top:20px; margin-bottom:20px">‘Legends’ is a key to help user understand ‘Detailed Protein Hit View.’</li>
+                        <div style="text-align:center"><img src="assets/images/Fig 8.jpg"></div>
+                        <li style="margin-top:20px">‘Matched Fragments’ shows a list of theoretical fragments generated by PERCEPTRON’s algorithmic pipeline matched with experimental fragments which are originating from data file provided as an input during protein search. 
+                            <ul>
+                                <li>‘Protein Rank’ indicates the rank of the protein within the list of identified proteoforms </li>
+                                <li>‘Residue Number’ is the location of residue within proteoform sequence at which the match for ‘fragment ion’ was obtained</li>
+                                <li>‘Fragment Ion’ indicates the type of fragment ion matched</li>
+                                <li>‘Experimental Mass’ is the mass of experimental fragment from data file</li>
+                                <li>‘Theoretical Mass’ is the mass of in silico fragment generated by PERCEPTRON </li>
+                                <li>‘Mass Difference’ is the difference between the masses of experimental and theoretical fragments</li>
+                            </ul>
+                        </li>
+                        </ol>
+
+                    </mat-card>
                 <div style="height:10px; font-size:1px;">&nbsp;</div>
                 <mat-card>
                     <!-- <div style="height:10px;font-size:1px;">&nbsp;</div> -->
-                    <p style="font-size:16px;">For more information on using PERCEPTRON, please refer to our <u><a style="font-style:italic" href="https://github.com/BIRL/PERCEPTRON/tree/master/Documentation">video tutorials</a></u> or visit
-                        <u><a style="font-style:italic" href="https://perceptron.lums.edu.pk/index.html#/youtube">here</a></u> to download user manual and step by step guide.</p>
+                    <p style="font-size:16px;">For more information on using PERCEPTRON, please refer to our <u><a style="font-style:italic" href="https://perceptron.lums.edu.pk/index.html#/youtube">video tutorials</a></u> or visit
+                        <u><a style="font-style:italic" href="https://github.com/BIRL/PERCEPTRON/tree/master/Documentation">here</a></u> to download user manual and step by step guide.</p>
                 </mat-card>
             </div>
-
-
