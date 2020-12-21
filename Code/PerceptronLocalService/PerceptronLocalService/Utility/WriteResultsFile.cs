@@ -116,7 +116,7 @@ namespace PerceptronLocalService.Utility
         public List<string> WriteIndividualResultsFile(string ProteinSearchTitle, List<ResultsDownloadToBeWrite> ResultsDownloadToBeWriteList, string filePath)
         {
             var ListFileName = new List<string>(ResultsDownloadToBeWriteList.Count);
-            var _NoOfMatchedFragments = new NoOfMatchedFragments();
+            //var _NoOfMatchedFragments = new NoOfMatchedFragments();
 
             string FileWithPath = "";
             var CandidateList = new List<ProteinDto>();
@@ -146,10 +146,10 @@ namespace PerceptronLocalService.Utility
 
 
                         
-                        var Matches = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0
+                        //var Matches = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0   //Updated 20201221 - Commented as we already have a MatchCounter so no need to recalculate 
 
                         sw.WriteLine("> " + Protein.Header + " | Score: " + Math.Round(Protein.Score, 6) + " | Molweight: " + Math.Round(Protein.Mw, 4)
-                            + " | # Matched Fragments: " + Matches + " | Terminal Modification: " + Protein.TerminalModification + " | E-Value: " + Protein.Evalue);
+                            + " | # Matched Fragments: " + Protein.MatchCounter + " | Terminal Modification: " + Protein.TerminalModification + " | E-Value: " + Protein.Evalue);  // Updated 20201221  Bug Fix
                         sw.WriteLine(Protein.Sequence);
 
                         if (Protein.PtmParticulars.Count != 0)
@@ -204,7 +204,7 @@ namespace PerceptronLocalService.Utility
         public string WriteBatchResultsFile(string ProteinSearchTitle, string FDRCutOff, List<FalseDiscoveryRateDto> BatchModeFileProteins, string filePath)
         {
             string FileWithPath = filePath + ProteinSearchTitle + "_Results.csv";
-            var _NoOfMatchedFragments = new NoOfMatchedFragments();
+            //var _NoOfMatchedFragments = new NoOfMatchedFragments();
             var _NoOfPtmModifications = new NoOfPtmModifications();
 
             if (File.Exists(FileWithPath))
