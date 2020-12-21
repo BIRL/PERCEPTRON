@@ -364,8 +364,8 @@ namespace PerceptronLocalService
                                 ////var tempBatchModeFileProteins = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0], pipeLineTimer.Elapsed.ToString());
                                 //////Fetching First Protein (having ProteinRank = 1) for making Batch Mode File
                                 ////BatchModeFileProteins.Add(tempBatchModeFileProteins);
-                                var _NoOfMatchedFragments = new NoOfMatchedFragments();
-                                var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
+                                //var _NoOfMatchedFragments = new NoOfMatchedFragments();
+                                //var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
 
                                 var _NoOfPtmModifications = new NoOfPtmModifications();
                                 var NoOfPtmModifications = _NoOfPtmModifications.NoOfPtmModificationsCount(0, FinalCandidateProteinListforFinalScoring[0].PtmParticulars);  // NoOfPtmModifications is Initialized from 0
@@ -373,7 +373,7 @@ namespace PerceptronLocalService
                                 var tempDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
                         FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
                         FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
-                        FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, pipeLineTimer.Elapsed.ToString(),
+                        FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, FinalCandidateProteinListforFinalScoring[0].MatchCounter, pipeLineTimer.Elapsed.ToString(),
                         FinalCandidateProteinListforFinalScoring[0].Evalue);
                                 DataForBatchFileAndFdr.Add(tempDataForBatchFileAndFdr);
 
@@ -389,8 +389,8 @@ namespace PerceptronLocalService
                         else
                         {
                             pipeLineTimer.Stop();
-                            var _NoOfMatchedFragments = new NoOfMatchedFragments();
-                            var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
+                            //var _NoOfMatchedFragments = new NoOfMatchedFragments();
+                            //var NoOfMatchedFragments = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, FinalCandidateProteinListforFinalScoring[0].LeftMatchedIndex, FinalCandidateProteinListforFinalScoring[0].RightMatchedIndex);
 
                             var _NoOfPtmModifications = new NoOfPtmModifications();
                             var NoOfPtmModifications = _NoOfPtmModifications.NoOfPtmModificationsCount(0, FinalCandidateProteinListforFinalScoring[0].PtmParticulars);  // NoOfPtmModifications is Initialized from 0
@@ -398,7 +398,7 @@ namespace PerceptronLocalService
                             var tempDecoyDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
                     FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
                     FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
-                    FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, NoOfMatchedFragments, pipeLineTimer.Elapsed.ToString(),
+                    FinalCandidateProteinListforFinalScoring[0].Score, FinalCandidateProteinListforFinalScoring[0].Mw, NoOfPtmModifications, FinalCandidateProteinListforFinalScoring[0].MatchCounter, pipeLineTimer.Elapsed.ToString(),
                     FinalCandidateProteinListforFinalScoring[0].Evalue);
                             DecoyDataForBatchFileAndFdr.Add(tempDecoyDataForBatchFileAndFdr);
 
