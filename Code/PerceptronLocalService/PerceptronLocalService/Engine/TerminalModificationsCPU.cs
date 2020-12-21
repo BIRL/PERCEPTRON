@@ -58,7 +58,7 @@ namespace PerceptronLocalService.Engine
                 int tmpSeqLength = sequence.Length;
 
                 //TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
-                TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, sequence, tmpSeqLength, IndividualModifications, protein, tempCandidateProteins); //Updated 20201112
+                TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, sequence, tmpSeqLength, IndividualModifications, tempprotein, tempCandidateProteins); //Updated 20201221 Bug Fix
 
             }
 
