@@ -487,9 +487,13 @@ export class ProteinSearchComponent implements OnInit {
     if (form.MassMode == "1"){
       form.MassMode = "MH+";
     }
-    else{
+    else if(form.MassMode == "2"){   //Updated 20201221  Bug Fix
       form.MassMode = "M(Neutral)";
     }
+    // else{
+    //   form.MassMode = "M(Neutral)";
+    // }
+
     
     //Adding Variable Modifications into form
     if (<HTMLSelectElement>document.getElementById("Variable_Modifications") != null){
