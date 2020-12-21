@@ -9,39 +9,44 @@
         <div style="height:10px;font-size:1px;">&nbsp;</div>
         <h5 style="padding-left:0px; font-size:21px; font-weight:bold; font-family: roboto, arial, sans-serif;">Implementation Steps
         </h5>
-        <h5 class="header">Step 1 – Basic Parameters</h5><a href="assets/images/Screenshots/1.PNG" class="to_right"
+        <p>Login PERCEPTRON as a guest (without user account) or register for PERCETRON user account to login using an existing email account.</p>
+        <h5 class="header">Step 1 – Basic Parameters</h5><a href="assets/images/step_1a.jpg" class="to_right"
             download="step1"><i class="material-icons" style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
-            <li>Enter the ‘Protein Search Title’. Browse and upload Data file(s) to search in single or batch modes
+            <li>Go to the ‘Protein Search Query’ in the menu on left and enter ‘Protein Search Title’ to start proteoform search
             </li>
-            <li>Enter intact protein mass (MS1)</li>
+            <li>Browse and upload Data file(s). Upload one file (.mzXML/ .mzML/ .MGF/ .txt/) to perform single file search or add a zipped folder with multiple peak-lists (zipped .txt files) to search in batch mode</li>
             <li>Browse for the folder containing database(s) </li>
-            <li>Select Database File (e.g. Human) </li>
-            <li>Select the number of candidate protein hits to be received in results</li>
+            <li>Select a Database to search from (e. g. Human)</li>
+            <li>Enter a False Discovery Rate (FDR) percentage to shortlist identified proteoforms at desired FDR cut off</li>
+            <li>Select the number of proteoforms identified to be received via email</li>
+            <a style="margin-top:20px; font-size:14px; font-weight:700; color: red">Note:</a> <a style="font-size:14px; color:red">Users logging in via Guest Account can provide email address to receive results on Email ID upon search completion</a>
         </ul>
-        <img id="get1" src="assets/images/step_1a.png" width="100%" class="center">
+        <img id="get1" src="assets/images/step_1a.jpg" width="100%" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
         <img id="get1" src="assets/images/down.png" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
-        <img id="get1" src="assets/images/step_1b.png" width="100%" class="center">
+        <img id="get1" src="assets/images/step_1b.jpg" width="100%" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
         <hr>
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
 
         <h5 class="header">Step 2 – Set Experimental Parameters</h5>
-        <a href="assets/images/step_2.png" class="to_right" download="step2"><i class="material-icons"
+        <a href="assets/images/step_2.jpg" class="to_right" download="step2"><i class="material-icons"
                 style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
-            <li>Select Mass Mode</li>
-            <li>Click ‘Filter Database using MS1’ to filter protein database on the basis of MS1 and ‘Handle Truncated
-                Proteoforms’ to allow search for truncated proteoforms</li>
-            <li>Enter intact mass and peptide tolerances and select ‘Tune Intact Protein Mass’ to allow for tuning of
-                MS1 using MS2 data</li>
-            <li>Select fragmentation type and corresponding special ions</li>
-            <li>Incorporate masses of neutral loss, if any</li>
+            <li>Select the Mass Mode. MS data can only be provided in either m/z form with z = 1 (MH+) or neutral masses (M(Neutral))</li>
+            <li>Click ‘Filter Database using MS1’ to filter protein database on the basis of precursor ion mass (MS1)</li>
+            <li>Enter the desired ‘Intact Mass Tolerance’ and select its unit (Da or ppm)</li>
+            <li>Enter your desired ‘Peptide Tolerance’ and select its unit (Da or ppm)</li>
+            <li>Select ‘Tune Intact Protein Mass’ to allow for tuning of MS1 using MS2 data</li>
+            <li>Select the ‘slider value’ to provide a range for tuning MS1 while using ‘Tune Intact Protein Mass’ option</li>
+            <li>Select the fragmentation type from the drop-down menu</li>
+            <li>Choose the corresponding special ions for the type of fragmentation method selected (i. e. a’, b’, y’, z”, a*, b*, y*, z’ ions)</li>
+            <li>Provide the value of Neutral loss, if any</li>
         </ul>
-        <img id="get2" src="assets/images/step_2.png" width="100%;" class="center">
+        <img id="get2" src="assets/images/step_2.jpg" width="100%;" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
         <hr>
@@ -49,13 +54,17 @@
 
 
         <h5 class="header">Step 3 – Set <i>De Novo</i> Sequencing Parameters</h5>
-        <a href="assets/images/step_3.png" class="to_right" download="step3"><i class="material-icons"
+        <a href="assets/images/step_3.jpg" class="to_right" download="step3"><i class="material-icons"
                 style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
-            <li>Select ‘Enable PST Filtering’ to allow for peptide sequence tag-based search</li>
-            <li>Select for PST length and tolerance</li>
+            <li>Select ‘Enable PST Filtering’ to allow for peptide sequence tag (PST)-based search</li>
+            <li>Select your desired minimum PST tag length from the drop-down menu</li>
+            <a style="margin-top:20px; font-size:14px; font-weight:700; color: red">Note:</a> <a style="font-size:14px; color:red">Input value for Minimum and Maximum Tag length should be different. Minimum Tag Length should be smaller than Maximum Tag Length.</a>
+            <li>Select your desired maximum PST tag length from the drop-down menu</li>
+            <li>Set the desired tolerance for each PST hop</li>
+            <li>Set the overall mass error tolerance for the entire PST</li>
         </ul>
-        <img id="get3" src="assets/images/step_3.png" width="100%;" class="center">
+        <img id="get3" src="assets/images/step_3.jpg" width="100%;" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
         <hr>
@@ -63,14 +72,19 @@
 
 
         <h5 class="header">Step 4 – Set Protein Modifications Parameters</h5>
-        <a href="assets/images/step_4.png" class="to_right" download="step4"><i class="material-icons"
+        <a href="assets/images/step_4.jpg" class="to_right" download="step4"><i class="material-icons"
                 style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
+            <li>Check ‘Handle Truncated Proteoforms’ to allow search for truncated proteoforms</li>
             <li>Select ‘Terminal modifications’ to be included in the search</li>
-            <li>Select ‘Fixed’ and ‘Variable’ post-translational modifications or click ‘Blind-PTM Search’ to allow
-                search for unknown post-translational modifications</li>
+            <li>To allow search for unknown post-translational modifications (PTMs), search for Blind PTMs instead of variable or fixed modifications</li>
+            <li>Set the ‘PTM tolerance’</li>
+            <a style="margin-top:20px; font-size:14px; font-weight:700; color: red">Note:</a> <a style="font-size:14px; color:red">If ‘Blind-PTM Search’ is selected, there is no need to set PTM tolerance.</a>
+            <li>Select ‘Fixed’ or ‘Variable’ post-translational modifications (PTMs) from the List of Modifications</li>
+            <li>Select the ‘Methionine Chemical Modifications’ from the drop-down menu</li>
+            <li>Select the ‘Cysteine Chemical Modifications’ from the drop-down menu</li>
         </ul>
-        <img id="get4" src="assets/images/step_4.png" width="100%;" class="center">
+        <img id="get4" src="assets/images/step_4.jpg" width="100%;" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
         <hr>
@@ -78,28 +92,40 @@
 
 
         <h5 class="header">Step 5 – Set Scoring Components Weight</h5>
-        <a href="assets/images/step_5.png" class="to_right" download="step5"><i class="material-icons"
+        <a href="assets/images/step_5.jpg" class="to_right" download="step5"><i class="material-icons"
                 style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
-            <li>Set ‘Scoring Components Weightage’ and click ‘Submit’</li>
-            <li>Check email for results or go to ‘Search Results & History’ page to view results</li>
+            <li>Set the weights of the scoring components by moving the sliders</li>
+            <li>Submit the Protein Query Search by clicking on ‘Submit’</li>
         </ul>
-        <img id="get5" src="assets/images/step_5.png" width="100%;" class="center">
+        <img id="get5" src="assets/images/step_5.jpg" width="100%;" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
 
 
-        <h5 class="header">Step 6 – Summary and Detailed Results </h5> <a href="assets/images/step_6a.png"
+        <!--<h5 class="header">Step 6 – Proteoform Search Results </h5> <a href="assets/images/step_6a.png"
             class="to_right" download="step6"><i class="material-icons"
                 style="vertical-align: text-bottom;">save_alt</i></a>
         <ul>
             <li>Go to ‘Search Results & History’ page to view summary results</li>
             <li>Select the protein to see detailed results or check email for results</li>
         </ul>
+
         <img id="get5" src="assets/images/step_6a.png" width="100%;" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
         <img id="get5" src="assets/images/down.png" class="center">
         <div style="height:10px;font-size:1px;">&nbsp;</div>
         <img id="get5" src="assets/images/step_6b.png" width="100%;" class="center">
-        <div style="height:10px;font-size:1px;">&nbsp;</div>
-    </mat-card>
+        <div style="height:10px;font-size:1px;">&nbsp;</div> -->
+
+        <h5 class="header">Step 6 – Proteoform Search Results </h5> <a href="assets/images/step_6.png"
+        class="to_right" download="step6"><i class="material-icons"
+            style="vertical-align: text-bottom;">save_alt</i></a>
+        <ul>
+            <li style="margin-bottom: 20px;">Click on ‘Search Results & History’ to see the search results</li>
+        </ul>
+        <img id="get5" src="assets/images/step_6.jpg" width="100%;" class="center">
+            <div style="height:10px;font-size:1px;">&nbsp;</div> 
+        <p style="color:black">For help with interpreting proteoform search results, please visit <u><a style="font-style:italic" href="https://perceptron.lums.edu.pk/index.html#/help">here</a></u>.</p>
+           
+</mat-card>
 </div>
