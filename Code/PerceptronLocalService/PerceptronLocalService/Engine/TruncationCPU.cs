@@ -166,7 +166,7 @@ namespace PerceptronLocalService.Engine
                 //TerminalModificationsCPU.TerminalModifications(FlagSet, molW, leftIons, rightIons, tmpSeq, tmpSeqLength, parameters, newProtein, proteinListRight); //Updated 20201112
 
                 OnlyTerminalModification.Start();     // DELME Execution Time Working
-                TerminalModificationsCPU.TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, tmpSeq, tmpSeqLength, IndividualModifications, newProtein, proteinListRight); //Updated 20201112
+                TerminalModificationsCPU.TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, tmpSeq, tmpSeqLength, IndividualModifications, newProtein, proteinListRight); //Updated 20201112   //#EnhancementOfCode In PreTruncation: newProtein should contains all information irrespective to individual molW, leftIons, rightIons, tmpSeq, tmpSeqLength etc.
                 OnlyTerminalModification.Stop();     // DELME Execution Time Working
 
                 //Save Copy for Left Truncation
