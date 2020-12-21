@@ -331,6 +331,9 @@ export class ProteinSearchComponent implements OnInit {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
     this.Slider_Value = 0.0;
+    this.PtmAllow = false;
+    this.Autotune = false;
+    this.PeptideToleranceUnit = 'ppm';
 
     this.Slider1 = '100'; //Intact Protein Mass Slider
     this.Slider2 = '100'; //PST Slider
