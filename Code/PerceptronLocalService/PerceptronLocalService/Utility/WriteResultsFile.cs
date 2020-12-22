@@ -244,7 +244,7 @@ namespace PerceptronLocalService.Utility
 
                 sw.WriteLine(HeaderOfCsv);
 
-                for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
+                for (int i = 0; i < BatchModeFileProteins[0].BatchTargetList.Count; i++) //is this correct alternate for directorycontents   //Updated 20201222  Bug Fix
                 {
                     var Protein = BatchModeFileProteins[0].BatchTargetList[i];
                     Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
