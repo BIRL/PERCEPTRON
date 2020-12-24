@@ -158,7 +158,10 @@
                   Please select a data file/.zip file .
                 </mat-error>
                 <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length>1">
-                  Please upload a .zip folder for more than 1 files .
+                  Please upload a .zip file for more than 1 files.
+                </mat-error>
+                <mat-error style="display: inline; font-size:0.75vw; font-style: italic;" *ngIf ="filenameModel">
+                  File Size is greater than 40 MB.
                 </mat-error>
               </div>
             </span>

@@ -60,8 +60,9 @@ export class ProteinSearchComponent implements OnInit {
   Units_mass4:any;
   animal: string;
   state: string = '';
-  upload:any;
-  Uploaded_File:any;
+  // upload:any;
+  // Uploaded_File:any;
+  filenameModel:boolean;
   FDR_CutOff: any;
   
   postData: string;
@@ -111,7 +112,6 @@ export class ProteinSearchComponent implements OnInit {
   PST_Tolerance: any;
   Maximum_PstLength:any;
   Hop_Threshhold:any;
-  filenameModel:any
   ////
 
   stateCtrl: FormControl;
@@ -334,6 +334,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PtmAllow = false;
     this.Autotune = false;
     this.PeptideToleranceUnit = 'ppm';
+    this.NoOfOutputResults = '10';
 
     this.Slider1 = '100'; //Intact Protein Mass Slider
     this.Slider2 = '100'; //PST Slider
@@ -482,8 +483,6 @@ export class ProteinSearchComponent implements OnInit {
 
     var user = firebase.auth().currentUser;
 
-    let afasdf = form.HandleIons;
-    // #JUSTNEEDED: MAY HAVE BETTER SOLUTION: Converting string Array into string...!!!
     form.HandleIons= this.SelectedSpecialIons.toString();
     form.TerminalModification = form.TerminalModification.toString();
 
@@ -524,6 +523,10 @@ export class ProteinSearchComponent implements OnInit {
       }
     }
 
+    form.MwSweight = this.Slider1; 
+    form.PstSweight = this.Slider2;
+    form.InsilicoSweight = this.Slider3;
+
     if(form.MwSweight == ""){
       form.MwSweight = 0;
     } 
@@ -544,57 +547,6 @@ export class ProteinSearchComponent implements OnInit {
       alert("Dear User,\nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate.\nMaximum Tag Length should be greater than Minimum Tag Length.\nSo, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.");
     }
 
-    // if (form.DeconvAllow == true) {
-    //   form.DeconvAllow = 1;
-    // }
-    // else {
-    // form.DeconvAllow = 0;
-    // }
-
-    // if (form.FilterDb == true) {
-    //   form.FilterDb = 1;
-    // }
-    // else {
-    //   form.FilterDb = 0;
-    // }
-
-    // if (form.Truncation == true) {  // Trunc REPLACED WITH Truncation
-    //   form.Truncation = 1;
-    // }
-    // else {
-    //   form.Truncation = 0;
-    // }
-
-
-    // if (form.Autotune == true) {
-    //   form.Autotune = 1;
-    // }
-    // else {
-    //   form.Autotune = 0;
-    // }
-
-    // if (form.DenovoAllow == true) {
-    //   form.DenovoAllow = 1;
-    // }
-    // else {
-    //   form.DenovoAllow = 0;
-    // }
-
-    // if(<HTMLSelectElement>document.getElementById("Variable_Modifications") != null || <HTMLSelectElement>document.getElementById("Fixed_Modifications") != null || form.PtmAllow == true){
-
-    //   //form.PtmAllow = 1;
-
-    //   if(form.Methionine_ChemicalModification == ""){
-    //     form.Methionine_ChemicalModification = "None";
-    //   }
-    //   if(form.Cysteine_ChemicalModification == ""){
-    //     form.Cysteine_ChemicalModification = "None";
-    //   }
-    // }
-    // else{
-    //   form.PtmAllow = 0;
-    // }
-  
     let FileExtension = form.FileName.substr(form.FileName.lastIndexOf('.') + 1);  //Updated 20201207
     if (FileExtension == 'zip'){
       form.NoOfOutputResults = '100';
@@ -621,6 +573,19 @@ export class ProteinSearchComponent implements OnInit {
     }
     
   }
+
+  // upload(Uploaded_File) {
+  //   let fi = this.imgFileInput.nativeElement;
+  //   if (fi.files.length > 0) {
+  //     const fsize = fi.files.item(0).size;
+  //     const file = Math.round((fsize / 1024));  // bytes to MBs
+  //     if (file >= 40000) {    //size limit = 40 MB
+  //       this.filenameModel = true;
+  //     } else if (file < 40000) {
+  //       this.filenameModel = false;
+  //     }
+  //   }
+  // }
 
   onReset(form: any): void {
     console.log("Form has been reset");
