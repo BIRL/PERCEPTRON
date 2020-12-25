@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.IO;
 using PerceptronLocalService.Engine;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
@@ -82,8 +83,14 @@ namespace PerceptronLocalService
 
                 var pendingJobs = _dataLayer.ServerStatus();
                 var pendingJobsParameters = pendingJobs.Select(element => _dataLayer.GetParameters(element.QueryId));
+
+
+                //MoveResultFilesToResultsToBeDeletedFolder();  //COMMENTED FOR THE TIME BEING...!!!  //20201224
+
+
                 foreach (var searchParameters in pendingJobsParameters)
                 {
+
                     //Send_Results_Link(searchParameters);
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     var TotalTime = new Stopwatch();
@@ -101,6 +108,45 @@ namespace PerceptronLocalService
         public void Stop()
         {
             //ignored
+        }
+
+        public void MoveResultFilesToResultsToBeDeletedFolder()   //For moving Result Files from ResultsReadilyAvailable to ResultsToBeDeleted
+        {
+            string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable";
+            string NewPath = @"C:\PerceptronResultsDownload\ResultsToBeDeleted\";
+
+            DateTime startDate = DateTime.Now.AddYears(-1);  //Start from last year
+            DateTime endDate = DateTime.Now.AddDays(-2);     //Till last 2days
+
+            DirectoryInfo di = new DirectoryInfo(OldPath);
+            FileInfo[] files = di.GetFiles();
+            List<string> FilesToMove = files.Where(fi => fi.CreationTime >= startDate && fi.CreationTime <= endDate).Select(fi => fi.FullName).ToList();   //#Enhancement Don't use {{ Select }}
+
+            int TotalFilesToMove = FilesToMove.Count;
+            var QueryIdList = new List<string>(FilesToMove.Count);   //#FUTUREWORK   --- Will use to make a list of QueryIds for updating the Progress Status of multiple queries at a time.
+            string QueryId = "";
+            int index;
+            string newFileName = "";
+            try
+            {
+
+                for (int iter = 0; iter < TotalFilesToMove; iter++)
+                {
+                    newFileName = Path.GetFileName(FilesToMove[iter]);
+
+                    index = FilesToMove[iter].LastIndexOf('_') + 1;
+
+
+                    File.Move(FilesToMove[iter], NewPath + newFileName);
+                    QueryIdList.Add(FilesToMove[iter].Substring(index, 36));//#FUTUREWORK
+                    _dataLayer.Set_Progress(QueryIdList[iter], -100);   //#FUTUREWORK   - SHOULD NOT BE IN LOOP...!!!  Write Query to update the multiple enteries (Progress - Status) in SearchQueries table. 
+                }
+            }
+            catch (Exception e)
+            {
+                int wat = 0;
+            }
+
         }
 
         public static void Sending_Email(SearchParametersDto p, string EmailMsg)
