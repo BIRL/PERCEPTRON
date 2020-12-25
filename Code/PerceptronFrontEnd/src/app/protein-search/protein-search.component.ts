@@ -554,8 +554,8 @@ export class ProteinSearchComponent implements OnInit {
       alert("Dear User,\nAs your input files are more than one so we will show only top 100 results only.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
     else if (FileExtension != 'zip'){     //Updated 20201215
-      form.FDR_CutOff = "0.0";
-      form.FDRCutOff = "0.0";
+      form.FDR_CutOff = "0";
+      form.FDRCutOff = "0";
       alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
