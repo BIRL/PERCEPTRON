@@ -398,17 +398,31 @@ namespace PerceptronAPI.Repository
             for (int index = 0; index < summaryResults.Count; index++)
             {
                 if (summaryResults[index].progress == "0")
-                        summaryResults[index].progress = "In Queue";
+                {
+                    summaryResults[index].progress = "In Queue";
+                }
+
 
                 else if (summaryResults[index].progress == "10")
+                {
                     summaryResults[index].progress = "Running";
+                }
 
-                else if
-                    (summaryResults[index].progress == "100")
+
+                else if (summaryResults[index].progress == "100")
+                {
                     summaryResults[index].progress = "Completed";
+                }
+
+                else if (summaryResults[index].progress == "-100")
+                {
+                    summaryResults[index].progress = "Result Expired";
+                }
 
                 else  // WHEN (summaryResults[index].progress == "-1")
+                {
                     summaryResults[index].progress = "Error in Query";
+                }
             }
             return summaryResults.OrderByDescending(x => x.time).ToList();
         }
