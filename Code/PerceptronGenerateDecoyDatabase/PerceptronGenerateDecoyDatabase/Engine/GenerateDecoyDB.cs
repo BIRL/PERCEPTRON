@@ -17,11 +17,9 @@ namespace PerceptronGenerateDecoyDatabase.Engine
             string AminoAcidAlphbets = "ABCDEFGHIKLMNOPQRSTUVWYZ";
             int AminoAcidAlphbetsLength = AminoAcidAlphbets.Length;
             int SequenceLength = 0;
-            RandomNumberGeneratorList _RandomNumberGeneratorList = new RandomNumberGeneratorList();
-
 
             int RandomNumer;
-
+            Random RandomNoGenrate = new Random();
             for (int iter = 0; iter < ProteinList.Count; iter+=3)
             {
                 SequenceLength = ProteinList[iter].Sequence.Length;
@@ -32,7 +30,7 @@ namespace PerceptronGenerateDecoyDatabase.Engine
 
 
                 /*  UPDATE HERE  */
-                _RandomNumberGeneratorList.RandomNoGenerate(0, SequenceLength - 1, AminoAcidAlphbetsLength);
+                RandomNoGenerate(RandomNoGenrate, 0, SequenceLength - 1, AminoAcidAlphbetsLength);
 
                  ProteinList[iter].Sequence = ProteinList[iter].Sequence;
 
@@ -46,6 +44,24 @@ namespace PerceptronGenerateDecoyDatabase.Engine
 
             return ProteinDecoyList;
 
+        }
+
+        public void RandomNoGenerate(Random RandomNoGenrate, int min, int max, int AminoAcidAlphbetsLength)
+        {
+            
+            //Program obj = new Program();
+            int ProteinLength = 50;
+            List<double> RandomDecimals = new List<double>();
+            for (int i = 0; i < ProteinLength - 1; i++)
+            {
+                double randNumber = NextDouble(RandomNoGenrate, 0.00, 1.00, 4);
+                RandomDecimals.Add(randNumber);
+            }
+        }
+        private double NextDouble(Random rand, double minValue, double maxValue, int decimalPlaces)
+        {
+            double randNumber = rand.NextDouble() * (maxValue - minValue) + minValue;
+            return Convert.ToDouble(randNumber.ToString("f" + decimalPlaces));
         }
     }
 }
