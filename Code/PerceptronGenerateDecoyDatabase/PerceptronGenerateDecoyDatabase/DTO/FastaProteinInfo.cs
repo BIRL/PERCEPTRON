@@ -18,19 +18,10 @@ namespace PerceptronGenerateDecoyDatabase.DTO
             Sequence = "";
         }
 
-
         public FastaProteinInfo(string cHeader, string cSequence)
         {
             Header = cHeader;
             Sequence = cSequence;
         }
-
-        public FastaProteinInfo(FastaProteinInfo temp)
-        {
-            var ProteinClone = Clone.DeepClone<FastaProteinInfo>(temp);
-            Header = ProteinClone.Header;
-            Sequence = ProteinClone.Sequence;
-        }
-
     }
 }

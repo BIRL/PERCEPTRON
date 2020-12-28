@@ -21,20 +21,16 @@ namespace PerceptronGenerateDecoyDatabase.Engine
             try
             {
                 Stopwatch Time = Stopwatch.StartNew();
-                var tempD = new List<FastaProteinDataDto>();
 
                 var ProteinList = new List<FastaProteinInfo>();
-
 
                 string FastaFullFileName = FastaFilePath + InputFileName + ".fasta";
 
                 //var ExcelFileName = FastaFilePath + FileName + ".xlsx";
 
-
                 var FastaFile = new StreamReader(FastaFullFileName);
                 var ReadPeripheralFastaFile = new StreamReader(FastaFullFileName); // Reading same file but for using ReadLine() method separately...!
-
-                var FastaProteinInfo = new List<FastaProteinDataDto>();
+                
                 int FastaFileLineCount = File.ReadLines(FastaFullFileName).Count();  //ReadLines is more computationally efficient than ReadAllLines  &  ReadLines() creates an enumerator on the file, reading it line-by-line (actually using StreamReader. ReadLine() ).
 
                 string NextLine = ReadPeripheralFastaFile.ReadLine();
