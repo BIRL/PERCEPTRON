@@ -24,7 +24,7 @@ namespace PerceptronLocalService.Engine
             peaks.Add(0);
             for (int row = 0; row <= ExperimentalSpectrum.Count - 2; row++)     // "-1" is for Excluding Intact Mass & other "-1" is for Zero Indexing
             {
-                peaks.Add(ExperimentalSpectrum[row].Mass);                          
+                peaks.Add(ExperimentalSpectrum[row].Mass);
             }
             for (int row = 0; row <= ExperimentalSpectrum.Count - 2; row++)     /// *R  peakData.Mass.Count   *W   peakData2DList.Count
             {
@@ -34,9 +34,9 @@ namespace PerceptronLocalService.Engine
             peaks = peaks.OrderBy(n => n).ToList(); // Sorting of peaks
 
             // InfoTable data
-            double[] InfoModMass = { 70.0055000000000, 99.0321000000000, 111.032100000000, 113.047700000000, 113.047700000000, 117.024800000000, 129.042600000000, 129.042600000000, 131.999400000000, 139.063400000000, 142.074200000000, 142.110600000000, 143.058300000000, 144.089900000000, 147.035400000000, 156.126300000000, 159.035400000000, 160.084800000000, 163.030300000000, 166.998300000000, 170.105600000000, 170.116700000000, 173.014700000000, 173.032400000000, 173.051100000000, 181.014000000000, 184.132400000000, 194.993200000000, 198.111700000000, 208.048400000000, 217.025200000000, 243.029600000000, 290.111400000000, 304.127100000000, 341.239200000000, 408.077200000000, 431.164900000000 };
-            char[] InfoModAminoAcids = { 'S', 'G', 'Q', 'A', 'P', 'C', 'S', 'P', 'C', 'P', 'G', 'K', 'T', 'K', 'M', 'K', 'M', 'K', 'M', 'S', 'K', 'R', 'C', 'E', 'M', 'T', 'R', 'D', 'R', 'Y', 'H', 'Y', 'S', 'T', 'C', 'C', 'N' };
-            string[] InfoModName = { "Pyruvate-S", "Acetylation", "Pyrrolidone-Aarboxylic-Acid", "Acetylation", "Hydroxylation", "Methylation", "Acetylation", "DiHydroxylation", "S-Nitrosylation", "Acetylation", "Methylation", "Methylation", "Acetylation", "Hydroxylation", "Sulfoxide", "DiMethylation", "Formylation", "DiHydroxylation", "Sulfone", "Phosphorylation", "Acetylation", "Methylation", "Pyruvate-C", "Gamma-Carboxyglutamic-Acid", "Acetylation", "Phosphorylation", "DiMethylation", "Phosphorylation", "Acetylation", "Nitration", "Phosphorylation", "Phosphorylation", "O-linked-Glycosylation", "O-linked-Glycosylation", "Palmitoylation", "Glutathionylation", "N-linked-Glycosylation" };
+            //double[] InfoModMass = { 70.0055000000000, 99.0321000000000, 111.032100000000, 113.047700000000, 113.047700000000, 117.024800000000, 129.042600000000, 129.042600000000, 131.999400000000, 139.063400000000, 142.074200000000, 142.110600000000, 143.058300000000, 144.089900000000, 147.035400000000, 156.126300000000, 159.035400000000, 160.084800000000, 163.030300000000, 166.998300000000, 170.105600000000, 170.116700000000, 173.014700000000, 173.032400000000, 173.051100000000, 181.014000000000, 184.132400000000, 194.993200000000, 198.111700000000, 208.048400000000, 217.025200000000, 243.029600000000, 290.111400000000, 304.127100000000, 341.239200000000, 408.077200000000, 431.164900000000 };
+            //char[] InfoModAminoAcids = { 'S', 'G', 'Q', 'A', 'P', 'C', 'S', 'P', 'C', 'P', 'G', 'K', 'T', 'K', 'M', 'K', 'M', 'K', 'M', 'S', 'K', 'R', 'C', 'E', 'M', 'T', 'R', 'D', 'R', 'Y', 'H', 'Y', 'S', 'T', 'C', 'C', 'N' };
+            //string[] InfoModName = { "Pyruvate-S", "Acetylation", "Pyrrolidone-Aarboxylic-Acid", "Acetylation", "Hydroxylation", "Methylation", "Acetylation", "DiHydroxylation", "S-Nitrosylation", "Acetylation", "Methylation", "Methylation", "Acetylation", "Hydroxylation", "Sulfoxide", "DiMethylation", "Formylation", "DiHydroxylation", "Sulfone", "Phosphorylation", "Acetylation", "Methylation", "Pyruvate-C", "Gamma-Carboxyglutamic-Acid", "Acetylation", "Phosphorylation", "DiMethylation", "Phosphorylation", "Acetylation", "Nitration", "Phosphorylation", "Phosphorylation", "O-linked-Glycosylation", "O-linked-Glycosylation", "Palmitoylation", "Glutathionylation", "N-linked-Glycosylation" };
 
             // Initialization
             var HopInfoName = new List<string>();
@@ -51,15 +51,15 @@ namespace PerceptronLocalService.Engine
                 for (int ExpJ = ExpI + 1; ExpJ <= peaks.Count - 1; ExpJ++)
                 {
                     double PeakDiff = peaks[ExpJ] - peaks[ExpI];
-                    for (int AAIndex = 0; AAIndex <= InfoModMass.Length - 1; AAIndex++)
+                    for (int AAIndex = 0; AAIndex <= BlindPtmUtility.ReturnModificationMass().Length - 1; AAIndex++)
                     {
-                        double Error = PeakDiff - InfoModMass[AAIndex];
+                        double Error = PeakDiff - BlindPtmUtility.ReturnModificationMass()[AAIndex];
                         double Abs_Error = Math.Abs(Error);
                         if (Abs_Error <= UserHopThreshold)
                         {
                             LadderIndex = LadderIndex + 1;
-                            HopInfoName.Add(InfoModName[AAIndex]);
-                            HopInfoAA.Add(InfoModAminoAcids[AAIndex]);
+                            HopInfoName.Add(BlindPtmUtility.ReturnModificationNames()[AAIndex]);
+                            HopInfoAA.Add(BlindPtmUtility.ReturnModificationTags()[AAIndex]);
                             HopInfoStart.Add(peaks[ExpI]);
                             HopInfoEnd.Add(peaks[ExpJ]);
                         }
@@ -231,7 +231,7 @@ namespace PerceptronLocalService.Engine
                     {
                         int index = 0;
                         // Updating the protein
-                        
+
                         if (TypeOfFunction == "BlindPTM_Truncation_Left")
                             index = sequence.Length - ShortlistedHops[HopIndex].ThrI;
                         else
@@ -239,7 +239,7 @@ namespace PerceptronLocalService.Engine
 
                         protein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(index, ShortlistedHops[HopIndex].ModName,
                                                                                         Convert.ToChar(ShortlistedHops[HopIndex].AminoAcidName)));
-                        
+
                     }
                     // Protein molar weight scoring
                     if (TypeOfFunction == "BlindPTM")
@@ -334,7 +334,7 @@ namespace PerceptronLocalService.Engine
             // if size of peakData is 1, then tolConv is equal to that one mass value, else it is the second-last mass value from the sorted peakData list
             if (peakData2DList.Count == 1)
             {
-                tolConv = peakData2DList[peakData2DList.Count -1 ].Mass;
+                tolConv = peakData2DList[peakData2DList.Count - 1].Mass;
             }
             else
             {
@@ -401,11 +401,8 @@ namespace PerceptronLocalService.Engine
                         if (FunctionType == "Truncation_Left_Modification")
                         {
                             protein.Truncation = "Left";
-
-                            ////protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[Index]).ToList();     //Updated 20201201 Removed Because of its Runtime cost
-
+                            //protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.Select(x => x - protein.InsilicoDetails.InsilicoMassLeft[Index]).ToList(); //Updated 20201201 Removed Because of its Runtime cost
                             protein.InsilicoDetails.InsilicoMassLeft = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassLeft, protein.InsilicoDetails.InsilicoMassLeft[Index]);     // Added for Time Efficiency /// Updated 20201201
-
                             protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(Index + 1, protein.InsilicoDetails.InsilicoMassLeft.Count - Index - 1);
 
                             protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.GetRange(0, protein.Sequence.Length - Index - 1); // as this will be the MW of protein - Water
@@ -425,11 +422,10 @@ namespace PerceptronLocalService.Engine
                             var truncationIndex = protein.Sequence.Length - Index;
                             protein.Truncation = "Right";
                             protein.InsilicoDetails.InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft.GetRange(0, truncationIndex - 1);
-                            
+
                             ////protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.Select(x => x - protein.InsilicoDetails.InsilicoMassRight[Index]).ToList();     //Updated 20201201 Removed Because of its Runtime cost // as this will be the MW of protein - Water
 
                             protein.InsilicoDetails.InsilicoMassRight = _MassRemove.MassRemoval(protein.InsilicoDetails.InsilicoMassRight, protein.InsilicoDetails.InsilicoMassRight[Index]);     // Added for Time Efficiency /// Updated 20201201
-
 
                             protein.InsilicoDetails.InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight.GetRange(Index + 1, protein.InsilicoDetails.InsilicoMassRight.Count - Index - 1);
 
