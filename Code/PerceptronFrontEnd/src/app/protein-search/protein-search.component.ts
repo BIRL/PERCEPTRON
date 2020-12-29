@@ -259,13 +259,21 @@ export class ProteinSearchComponent implements OnInit {
 
   }
 
+  // SetMaxTagLength() {
+  //   this.MaxTagLength = this.EmptyArray;
+  //   var start = parseInt(this.MinimumPstLength) + 1;
+  //   for (var i = start; i < 9; i++) {
+  //     this.MaxTagLength.push({ value: i, viewValue: i });
+  //   }
+  // }
   SetMaxTagLength() {
-    this.MaxTagLength = this.EmptyArray;
+    this.MaxTagLength = [];
     var start = parseInt(this.MinimumPstLength) + 1;
     for (var i = start; i < 9; i++) {
       this.MaxTagLength.push({ value: i, viewValue: i });
     }
   }
+
 
   keyPress(event: any) {
     const pattern = /[0-9\.\ ]/;
@@ -574,18 +582,18 @@ export class ProteinSearchComponent implements OnInit {
     
   }
 
-  // upload(Uploaded_File) {
-  //   let fi = this.imgFileInput.nativeElement;
-  //   if (fi.files.length > 0) {
-  //     const fsize = fi.files.item(0).size;
-  //     const file = Math.round((fsize / 1024));  // bytes to MBs
-  //     if (file >= 40000) {    //size limit = 40 MB
-  //       this.filenameModel = true;
-  //     } else if (file < 40000) {
-  //       this.filenameModel = false;
-  //     }
-  //   }
-  // }
+  upload(Uploaded_File) {
+    let fi = this.imgFileInput.nativeElement;
+    if (fi.files.length > 0) {
+      const fsize = fi.files.item(0).size;
+      const file = Math.round((fsize / 1024));  // bytes to MBs
+      if (file >= 60000) {    //size limit = 60 MB
+        this.filenameModel = true;
+      } else if (file < 60000) {
+        this.filenameModel = false;
+      }
+    }
+  }
 
   onReset(form: any): void {
     console.log("Form has been reset");
