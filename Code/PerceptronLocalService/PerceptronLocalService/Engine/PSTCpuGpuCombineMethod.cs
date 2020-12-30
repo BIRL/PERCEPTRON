@@ -12,12 +12,26 @@ namespace PerceptronLocalService.Engine
     {
         public static List<List<PstTagsDto>> TrimPstTags(List<List<PstTagsDto>> multipleLenghtTagList, SearchParametersDto parameters)
         {
+            ///////////////DELME  /// POINT-0
+            var Tag = new List<string>();
+            for (int i = 0; i < multipleLenghtTagList.Count; i++)
+            {
+                string tag = "";
+                for (int j = 0; j < multipleLenghtTagList[i].Count; j++)
+                {
+                    tag = String.Concat(tag, multipleLenghtTagList[i][j].AminoAcidSymbol);
+                }
+                Tag.Add(tag);
+
+            }
+            ///////////////DELME
+
 
             //Break the larger Tags into all possible smaller tags
             //E.g. larger tag (SDTI)         divided into smaller tags         S,SD,SDT,SDTI
             //Break the larger Tags into all possible smaller tags
             // This breakage of PST is for Filtering the Tags according to Minimum-Maximum Range Length of PST
-            
+
             List<List<PstTagsDto>> breakmultipleLenghtTags = new List<List<PstTagsDto>>();
             for (int outerindex = 0; outerindex <= multipleLenghtTagList.Count - 1; outerindex++)  // outer index is the index of big list in list of lists
             {
@@ -40,6 +54,20 @@ namespace PerceptronLocalService.Engine
                 }
             }
 
+            ///////////////DELME  /// POINT-1
+            var Tag2 = new List<string>();
+            for (int i = 0; i < breakmultipleLenghtTags.Count; i++)
+            {
+                string tag = "";
+                for (int j = 0; j < breakmultipleLenghtTags[i].Count; j++)
+                {
+                    tag = String.Concat(tag, breakmultipleLenghtTags[i][j].AminoAcidSymbol);
+                }
+                Tag2.Add(tag);
+
+            }
+            ///////////////DELME
+
             //Filtering the PST Tags:
             List<List<PstTagsDto>> filteredmultipleLenghtTags = new List<List<PstTagsDto>>(); //Filtering the Tags according to Minimum-Maximum Range Length of PST
             for (int i = 0; i <= breakmultipleLenghtTags.Count - 1; i++)
@@ -49,6 +77,22 @@ namespace PerceptronLocalService.Engine
                     filteredmultipleLenghtTags.Add(breakmultipleLenghtTags[i]);
                 }
             }
+
+
+            ///////////////DELME  /// POINT-3
+            var Tag3 = new List<string>();
+            for (int i = 0; i < filteredmultipleLenghtTags.Count; i++)
+            {
+                string tag = "";
+                for (int j = 0; j < filteredmultipleLenghtTags[i].Count; j++)
+                {
+                    tag = String.Concat(tag, filteredmultipleLenghtTags[i][j].AminoAcidSymbol);
+                }
+                Tag3.Add(tag);
+
+            }
+            ///////////////DELME
+            ///
             return filteredmultipleLenghtTags;
         }
 
@@ -115,61 +159,189 @@ namespace PerceptronLocalService.Engine
 
             }
 
+            ///////////////DELME  /// POINT-3
+            var Tag4 = new List<string>();
+            for (int i = 0; i < psttaginfolist.Count; i++)
+            {
+                //string tag = "";
+                //for (int j = 0; j < psttaginfolist[i].Count; j++)
+                //{
+                //    tag = String.Concat(tag, psttaginfolist[i][j].AminoAcidSymbol);
+                //}
+                //tag = String.Concat(tag, psttaginfolist[i].psttags);
+                Tag4.Add(psttaginfolist[i].psttags);
+
+            }
+            ///////////////DELME 
+
+
             //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
             //If 2 or more Tags are same then also keep just one
-            /* //Updated 20201214  BELOW */
+
+            /* //Updated 20201228  BELOW */
             //PST SAME RMSE ALSO, SAME then, we select that PST having more intensity
-            var uniquepst = psttaginfolist.Select(test => test.psttags).Distinct().ToList();
-            var UniquePstTagInfoList = psttaginfolist; //This will store data about Unique Pst Tag Information
-            if (uniquepst.Count() != psttaginfolist.Count())
+            var uniquepst = psttaginfolist.Select(checktag => checktag.psttags).Distinct().ToList();
+            uniquepst.Sort();  //Sorting based on alphabetic order just for simplicity  //Updated 20201228
+            psttaginfolist = psttaginfolist.OrderBy(x=>x.psttags).ToList(); //Sorting based on alphabetic order just for simplicity // Updated 20201228 //This will store data about Unique Pst Tag Information
+
+            var UniquePstTagInfoList = new List<Psts>(uniquepst.Count);
+            try
             {
-                int firstIndex = 0;
-                while (true)
+
+
+                if (uniquepst.Count != psttaginfolist.Count)
                 {
-                    var firstErrorSum = UniquePstTagInfoList[firstIndex].PstTagErrorSum;
-                    var firstTag = UniquePstTagInfoList[firstIndex].psttags;
-                    int secondIndex = firstIndex + 1;
-                    while (secondIndex < UniquePstTagInfoList.Count())
+                    //int firstIndex = 0;
+                    int secondIndexForBreakLoop = -1;  //-1 is just for initlization because psttaginfolist.Count cannot be -1 
+                                                       //while (true)
+                    string LastTag = "";
+                    for (int firstIndex = 0; firstIndex < psttaginfolist.Count - 1; firstIndex++)
                     {
-                        var secondErrorSum = UniquePstTagInfoList[secondIndex].PstTagErrorSum;
-                        var secondTag = UniquePstTagInfoList[secondIndex].psttags;
-                        if (firstTag == secondTag)
+                        var firstErrorSum = psttaginfolist[firstIndex].PstTagErrorSum;
+                        var firstTag = psttaginfolist[firstIndex].psttags;
+
+                        if (LastTag == firstTag)  // Used to avoid same tag comparison in firstIndex loop
                         {
-                            if (firstErrorSum < secondErrorSum)
-                            {
-                                UniquePstTagInfoList.RemoveAt(secondIndex);
-                            }
-                            else if (firstErrorSum > secondErrorSum)
-                            {
-                                UniquePstTagInfoList.RemoveAt(firstIndex);
-                            }
-                            else // (firstErrorSum == secondErrorSum)
-                            {
-                                if (UniquePstTagInfoList[firstIndex].PstTagIntensity < UniquePstTagInfoList[secondIndex].PstTagIntensity || UniquePstTagInfoList[firstIndex].PstTagIntensity == UniquePstTagInfoList[secondIndex].PstTagIntensity)
-                                {
-                                    UniquePstTagInfoList[firstIndex] = UniquePstTagInfoList[secondIndex];
-                                    UniquePstTagInfoList.RemoveAt(secondIndex);
-                                }
-                                else
-                                {
-                                    UniquePstTagInfoList.RemoveAt(secondIndex);
-                                }
-                            }
+                            continue;
                         }
-                        else
+                        //int secondIndex = firstIndex + 1;
+                        LastTag = firstTag;
+                         
+                        bool AddEntry = true;  //We want to add just one Tag Info into the UniquePstTagInfoList therefore, applying filter in form of this...
+                        bool ErrorSumChecked = false; //This boolean value will be used if firstErrorSum < secondErrorSum  OR  firstErrorSum > secondErrorSum already checked then, intensity will not be checked in next iterations 
+                        for (int secondIndex = firstIndex + 1; secondIndex < psttaginfolist.Count; secondIndex++)
                         {
-                            secondIndex++;
+                            secondIndexForBreakLoop = secondIndex;
+                            var secondErrorSum = psttaginfolist[secondIndex].PstTagErrorSum;
+                            var secondTag = psttaginfolist[secondIndex].psttags;
+
+                            if (AddEntry == true)
+                            {
+                                UniquePstTagInfoList.Add(psttaginfolist[firstIndex]);
+                                AddEntry = false;
+                            }
+
+                            if (firstTag == secondTag)
+                            {
+                                if (firstErrorSum < secondErrorSum)
+                                {
+                                    UniquePstTagInfoList[UniquePstTagInfoList.Count-1] = psttaginfolist[firstIndex];
+                                    ErrorSumChecked = true;
+                                    //psttaginfolist.RemoveAt(secondIndex);
+                                }
+                                else if (firstErrorSum > secondErrorSum)
+                                {
+                                    UniquePstTagInfoList[UniquePstTagInfoList.Count - 1] = psttaginfolist[secondIndex];
+                                    ErrorSumChecked = true;
+                                    //psttaginfolist.RemoveAt(firstIndex);
+                                }
+                                else // (firstErrorSum == secondErrorSum)
+                                {
+                                    if (psttaginfolist[firstIndex].PstTagIntensity <= psttaginfolist[secondIndex].PstTagIntensity && ErrorSumChecked == false)// || psttaginfolist[firstIndex].PstTagIntensity == psttaginfolist[secondIndex].PstTagIntensity)
+                                    {
+                                        UniquePstTagInfoList[UniquePstTagInfoList.Count - 1] = psttaginfolist[firstIndex];
+                                        
+                                        //psttaginfolist[firstIndex] = psttaginfolist[secondIndex];
+                                        //psttaginfolist.RemoveAt(secondIndex);
+                                    }
+                                    else if (psttaginfolist[firstIndex].PstTagIntensity > psttaginfolist[secondIndex].PstTagIntensity && ErrorSumChecked == false)
+                                    {
+                                        UniquePstTagInfoList[UniquePstTagInfoList.Count - 1] = psttaginfolist[secondIndex];
+                                        
+                                    }
+                                }
+                            }
+                            else  //WHEN TAG HAS NOT REPETITION THEN, ADD IT INTO      UniquePstTagInfoList    AS IT IS...
+                            {
+                                //if(UpdateEntry == true)
+                                //{
+                                //    UniquePstTagInfoList.Add(psttaginfolist[firstIndex]);
+                                //}
+                                firstIndex = secondIndex - 1;
+                                break;
+                            }
+
                         }
-                    }
-                    if (firstTag == UniquePstTagInfoList[firstIndex].psttags)
-                        firstIndex++;
-                    if (firstIndex >= UniquePstTagInfoList.Count() - 1)
-                    {
-                        break;
+                        if (secondIndexForBreakLoop == psttaginfolist.Count)
+                        {
+                            break;
+                        }
                     }
                 }
             }
-            /* //Updated 20201214  ABOVE */
+            catch (Exception e)
+            {
+                int fsadf = 1;
+            }
+            /* //Updated 20201228  ABOVE */
+
+            /////////* //Updated 20201214  BELOW */
+            //////////PST SAME RMSE ALSO, SAME then, we select that PST having more intensity
+            ////////var uniquepst = psttaginfolist.Select(test => test.psttags).Distinct().ToList();
+            ////////var UniquePstTagInfoList = psttaginfolist; //This will store data about Unique Pst Tag Information
+            ////////if (uniquepst.Count() != psttaginfolist.Count())
+            ////////{
+            ////////    int firstIndex = 0;
+            ////////    while (true)
+            ////////    {
+            ////////        var firstErrorSum = UniquePstTagInfoList[firstIndex].PstTagErrorSum;
+            ////////        var firstTag = UniquePstTagInfoList[firstIndex].psttags;
+            ////////        int secondIndex = firstIndex + 1;
+            ////////        while (secondIndex < UniquePstTagInfoList.Count())
+            ////////        {
+            ////////            var secondErrorSum = UniquePstTagInfoList[secondIndex].PstTagErrorSum;
+            ////////            var secondTag = UniquePstTagInfoList[secondIndex].psttags;
+
+            ////////            /////DELME 
+            ////////            if (firstTag == "GLE")
+            ////////            {
+            ////////                int eas = 1;
+            ////////            }
+            ////////            if (secondTag == "GLE")
+            ////////            {
+            ////////                int waithere = 0;
+
+            ////////            }
+            ////////            /////DELME 
+
+
+            ////////            if (firstTag == secondTag)
+            ////////            {
+            ////////                if (firstErrorSum < secondErrorSum)
+            ////////                {
+            ////////                    UniquePstTagInfoList.RemoveAt(secondIndex);
+            ////////                }
+            ////////                else if (firstErrorSum > secondErrorSum)
+            ////////                {
+            ////////                    UniquePstTagInfoList.RemoveAt(firstIndex);
+            ////////                }
+            ////////                else // (firstErrorSum == secondErrorSum)
+            ////////                {
+            ////////                    if (UniquePstTagInfoList[firstIndex].PstTagIntensity < UniquePstTagInfoList[secondIndex].PstTagIntensity || UniquePstTagInfoList[firstIndex].PstTagIntensity == UniquePstTagInfoList[secondIndex].PstTagIntensity)
+            ////////                    {
+            ////////                        UniquePstTagInfoList[firstIndex] = UniquePstTagInfoList[secondIndex];
+            ////////                        UniquePstTagInfoList.RemoveAt(secondIndex);
+            ////////                    }
+            ////////                    else
+            ////////                    {
+            ////////                        UniquePstTagInfoList.RemoveAt(secondIndex);
+            ////////                    }
+            ////////                }
+            ////////            }
+            ////////            else
+            ////////            {
+            ////////                secondIndex++;
+            ////////            }
+            ////////        }
+            ////////        if (firstTag == UniquePstTagInfoList[firstIndex].psttags)
+            ////////            firstIndex++;
+            ////////        if (firstIndex >= UniquePstTagInfoList.Count() - 1)
+            ////////        {
+            ////////            break;
+            ////////        }
+            ////////    }
+            ////////}
+            /////////* //Updated 20201214  ABOVE */
 
             //var uniquepst = psttaginfolist.Select(test => test.psttags).Distinct().ToList();
             //var UniquePstTagInfoList = new List<Psts>(); //This will store data about Unique Pst Tag Information    ////////IF POSSIBLE ASSIGN THE SIZE OF "uniquepst.Count"
@@ -194,6 +366,17 @@ namespace PerceptronLocalService.Engine
             //    }
             //}
 
+
+            /////////////DEL ME POINT-6
+            ///
+            var TagName = new List<string>(UniquePstTagInfoList.Count);
+            for (int i = 0; i < UniquePstTagInfoList.Count; i++)
+            {
+                TagName.Add(UniquePstTagInfoList[i].psttags);
+            }
+
+            /// 
+            /////////////DEL ME 
 
             //Filter tags according to fulltag error threshold
             var FilteredTagList = new List<Psts>();
