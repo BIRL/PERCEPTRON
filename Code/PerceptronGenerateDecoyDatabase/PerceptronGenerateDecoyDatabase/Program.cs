@@ -12,8 +12,7 @@ namespace PerceptronGenerateDecoyDatabase
     {
         static void Main(string[] args)
         {
-            //   P:\02_PERCEPTRON\FARHAN's_DATA_ZDrive\SPECTRUM_v1.0.0.0_UseMeOnServers\ToolBox\Databases
-            string Path = @"P:\02_PERCEPTRON\FARHAN's_DATA_ZDrive\SPECTRUM_v1.0.0.0_UseMeOnServers\ToolBox\Databases\";
+            string Path = @"P:\02_PERCEPTRON\FARHAN's_DATA_ZDrive\SPECTRUM_20201219\ToolBox\Databases\GenerateDB\"; //Add here the path
             string InputFileName = "EColi5Proteins";
             string OutputFileName = "Decoy_" + InputFileName;
             ReadFastaFile _ReadFastaFile = new ReadFastaFile();
