@@ -21,7 +21,7 @@ using System.Web.UI.WebControls;
 using PerceptronAPI.Models;
 using PerceptronAPI.Repository;
 using PerceptronAPI.Utility;
-
+using System.Data.Entity.Validation;
 
 namespace PerceptronAPI.Controllers
 {
@@ -189,21 +189,24 @@ namespace PerceptronAPI.Controllers
         [Route("api/search/Calling_API")]
         public async Task<HttpResponseMessage> Calling_API(HttpRequestMessage request)
         {
-
+            var parametersDto = new SearchParametersDto
+            {
+                SearchFiles = new List<SearchFile>(),
+                SearchQuerry = new SearchQuery(),
+                FixedMods = new PtmFixedModification(),
+                VarMods = new PtmVariableModification()
+            };
+            DateTime time = DateTime.Now;             // Fetching Current Time
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var creationTime = time.ToString(format); // Formating creationTime and assigning
+            parametersDto.SearchQuerry.CreationTime = creationTime;
+            parametersDto.SearchQuerry.Progress = "0";
+            
+            var queryId = Guid.NewGuid().ToString();
             try
             {
                 AddSuffixInName _AddSuffixInName = new AddSuffixInName();
-                var queryId = Guid.NewGuid().ToString();
-
-                var parametersDto = new SearchParametersDto
-                {
-                    SearchFiles = new List<SearchFile>(),
-                    SearchQuerry = new SearchQuery(),
-                    FixedMods = new PtmFixedModification(),
-                    VarMods = new PtmVariableModification()
-                };
-
-
+                
                 
                 var result = await request.Content.ReadAsStringAsync();
                 
@@ -211,9 +214,14 @@ namespace PerceptronAPI.Controllers
 
                 ParametersProcessing(queryId, ParameterValues, parametersDto);
 
-                string fileName = "";
+                string FullFileName = @"D:\10_PERCEPTRON_Live\ftproot\" + ParameterValues[30];
+                string NewPath = @"D:\10_PERCEPTRON_Live\InputFilesByFtp\";
+
+                File.Move(FullFileName, NewPath + ParameterValues[30]);  // Moving Input file from ftproot folder to InputFilesByFtp folder
+                string NewFullFileName = @"D:\10_PERCEPTRON_Live\InputFilesByFtp\" + ParameterValues[30];
+
                 var i = 0;
-                List<string> InputFileList = new List<string> { fileName };
+                List<string> InputFileList = new List<string> { NewFullFileName };
                 if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
                 {
                     InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
@@ -239,21 +247,35 @@ namespace PerceptronAPI.Controllers
                     parametersDto.SearchFiles.Add(x);
                 }
 
-
-
+                var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
+                return Request.CreateResponse(HttpStatusCode.OK, response);
             }
-            catch (Exception e)
-            { 
-                int fsadsa = 1;
+            catch (DbEntityValidationException e)
+            {
+                if (parametersDto.SearchParameters.EmailId != "")
+                {
+                    //Sending_Email(parametersDto, creationTime);
+                }
+                foreach (var eve in e.EntityValidationErrors)  //Courtesy by https://www.codeproject.com/Questions/1012001/VALIDATION-FAILED-FOR-ONE-OR-MORE-ENTITIES-SEE-ENT
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-
-            var response = "";
-            return Request.CreateResponse(HttpStatusCode.OK, response);
 
         }
         public void ParametersProcessing(string queryId, string[] ParameterValues, SearchParametersDto parametersDto)
-        { 
-
+        {
+            parametersDto.SearchQuerry.QueryId = queryId;
+            parametersDto.SearchQuerry.UserId = ParameterValues[29];
+            parametersDto.SearchParameters.NumberOfOutputs = "100";   //In CallingPerceptronApi User cannot decide the Number of output resutls.
             parametersDto.SearchParameters.QueryId = queryId;
             parametersDto.SearchParameters.Title = ParameterValues[0];
             parametersDto.SearchParameters.FDRCutOff = ParameterValues[1];
@@ -290,7 +312,6 @@ namespace PerceptronAPI.Controllers
             parametersDto.SearchParameters.EmailId = ParameterValues[28];
             parametersDto.SearchParameters.UserId = ParameterValues[29];
 
-
             if (ParameterValues[21] != "")
             {
                 parametersDto.FixedMods.QueryId = queryId;
@@ -307,111 +328,6 @@ namespace PerceptronAPI.Controllers
 
             }
 
-        }
-
-
-
-        [HttpPost]
-        [Route("api/search/Calling_API2")]
-        public async Task<HttpResponseMessage> Calling_API2()
-        {
-            AddSuffixInName _AddSuffixInName = new AddSuffixInName();
-            var queryId = Guid.NewGuid().ToString();
-
-            var a = HttpContext.Current.Response.Cookies.Count;
-
-            DateTime time = DateTime.Now;             // Fetching Current Time
-            string format = "yyyy/MM/dd HH:mm:ss";
-            var creationTime = time.ToString(format); // Formating creationTime and assigning
-            const string progress = "0";
-
-
-            var parametersDto = new SearchParametersDto
-            {
-                SearchFiles = new List<SearchFile>(),
-                SearchQuerry = new SearchQuery(),
-                FixedMods = new PtmFixedModification(),
-                VarMods = new PtmVariableModification()
-            };
-            // Check if the request contains multipart/form-data.
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
-
-            var root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new CustomMultipartFormDataStreamProvider(root);
-
-            try
-            {
-                var i = 0;
-                //await Request.Content.ReadAsMultipartAsync(provider);
-
-                var jsonData = provider.FormData.GetValues("Jsonfile");
-
-                if (jsonData != null)
-                {
-                    parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
-                    parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
-                    parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
-                    parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
-                }
-
-
-                if (parametersDto.FixedMods.FixedModifications != "")
-                {
-                    parametersDto.FixedMods.QueryId = queryId;
-                    parametersDto.FixedMods.ModificationId = 1;
-                }
-
-                if (parametersDto.VarMods.VariableModifications != "")
-                {
-                    parametersDto.VarMods.QueryId = queryId;
-                    parametersDto.VarMods.ModificationId = 1;
-                }
-
-                parametersDto.SearchParameters.QueryId = queryId;
-                parametersDto.SearchQuerry.QueryId = parametersDto.SearchParameters.QueryId;
-                parametersDto.SearchQuerry.Progress = progress;
-                parametersDto.SearchQuerry.CreationTime = creationTime;
-                parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
-
-                List<string> InputFileList = new List<string> { provider.FileData[0].LocalFileName };
-                if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
-                {
-                    InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
-                }
-
-                for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
-                {
-                    string file = InputFileList[index];
-                    var FileUniqueId = Guid.NewGuid().ToString();
-                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
-                    System.IO.File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
-
-                    i++;
-                    var x = new SearchFile
-                    {
-                        FileId = i,
-                        FileName = file,
-                        UniqueFileName = FileNameWithUniqueID,
-                        FileType = System.IO.Path.GetExtension(file),
-                        QueryId = queryId,
-                        FileUniqueId = FileUniqueId
-                    };
-                    parametersDto.SearchFiles.Add(x);
-                }
-                var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
-                return Request.CreateResponse(HttpStatusCode.OK, response);
-            }
-            catch (Exception e)
-            {
-                if (parametersDto.SearchParameters.EmailId != "")
-                {
-                    Sending_Email(parametersDto, creationTime);
-                }
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
         }
 
 
@@ -607,6 +523,29 @@ namespace PerceptronAPI.Controllers
         //    //return "This is a testing string...";
         //}
 
+        [HttpPost]
+        [Route("api/search/CallingPerceptronApiHistory")]
+        public async Task<List<UserHistory>> CallingPerceptronApiHistory(HttpRequestMessage request)
+        {
+            var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
+            string input = RequestInput.Result.ToString();
+            Debug.WriteLine(input);
+            var temp = _dataLayer.GetUserHistory(input);
+            return temp;
+        }
+
+
+        [HttpPost]
+        [Route("api/search/CallingPerceptronApiResultsDownload")]
+        public async Task<string> CallingPerceptronApiResultsDownload(HttpRequestMessage request)
+        {
+            var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
+            string input = RequestInput.Result.ToString();
+
+
+            string FullFileName = "";
+            return FullFileName;
+        }
 
 
         [HttpPost]
@@ -621,15 +560,6 @@ namespace PerceptronAPI.Controllers
         [HttpPost]
         [Route("api/search/stat")]
         public stat stat([FromBody] string input)
-        {
-
-            var temp = _dataLayer.stat();
-            return temp;
-        }
-
-        [HttpGet]      //DEL ME //DEL ME  //DEL ME //DEL ME //DEL ME //DEL ME 
-        [Route("api/search/statGet")]
-        public stat statGet([FromBody] string input)
         {
 
             var temp = _dataLayer.stat();
