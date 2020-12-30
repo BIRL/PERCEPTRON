@@ -268,6 +268,10 @@ namespace PerceptronLocalService.Engine
                         }
                     }
                 }
+                else
+                {
+                    UniquePstTagInfoList = psttaginfolist; //Updated 20201230
+                }
             }
             catch (Exception e)
             {
