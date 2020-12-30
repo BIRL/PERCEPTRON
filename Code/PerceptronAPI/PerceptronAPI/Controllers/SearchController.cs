@@ -34,6 +34,11 @@ namespace PerceptronAPI.Controllers
         {
             _dataLayer = new SqlDatabase();
 
+            // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
+
+
+            // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
+
             //var blob = Database_Download();
             //var Message = Database_Update();
             //Server.MapPath("~");
@@ -111,7 +116,7 @@ namespace PerceptronAPI.Controllers
                 List<string> InputFileList = new List<string> { provider.FileData[0].LocalFileName };
                 if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
                 {
-                    InputFileList = ZipFileUnzipping(InputFileList, parametersDto.SearchParameters, provider.FileData); //Unzipping the zipped file.
+                    InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
                 }
 
                 for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
@@ -146,7 +151,7 @@ namespace PerceptronAPI.Controllers
             }
         }
 
-        private List<string> ZipFileUnzipping(List<string> InputFileList, SearchParameter parameters, Collection<MultipartFileData> ProviderFileData)
+        private List<string> ZipFileUnzipping(List<string> InputFileList)
         {
             string ZipFilePath = InputFileList[0];
             var FileName = Path.GetFileNameWithoutExtension(ZipFilePath);
@@ -187,13 +192,53 @@ namespace PerceptronAPI.Controllers
 
             try
             {
+                AddSuffixInName _AddSuffixInName = new AddSuffixInName();
                 var queryId = Guid.NewGuid().ToString();
+
+                var parametersDto = new SearchParametersDto
+                {
+                    SearchFiles = new List<SearchFile>(),
+                    SearchQuerry = new SearchQuery(),
+                    FixedMods = new PtmFixedModification(),
+                    VarMods = new PtmVariableModification()
+                };
+
+
+                
                 var result = await request.Content.ReadAsStringAsync();
                 
                 string[] ParameterValues = result.Split(":".ToCharArray());
 
-                ParametersProcessing(queryId, ParameterValues);
-                
+                ParametersProcessing(queryId, ParameterValues, parametersDto);
+
+                string fileName = "";
+                var i = 0;
+                List<string> InputFileList = new List<string> { fileName };
+                if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
+                {
+                    InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
+                }
+
+                for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
+                {
+                    string file = InputFileList[index];
+                    var FileUniqueId = Guid.NewGuid().ToString();
+                    string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
+                    System.IO.File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+
+                    i++;
+                    var x = new SearchFile
+                    {
+                        FileId = i,
+                        FileName = file,
+                        UniqueFileName = FileNameWithUniqueID,
+                        FileType = System.IO.Path.GetExtension(file),
+                        QueryId = queryId,
+                        FileUniqueId = FileUniqueId
+                    };
+                    parametersDto.SearchFiles.Add(x);
+                }
+
 
 
             }
@@ -206,15 +251,8 @@ namespace PerceptronAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, response);
 
         }
-        public void ParametersProcessing(string queryId, string[] ParameterValues)
-        {
-            var parametersDto = new SearchParametersDto
-            {
-                SearchFiles = new List<SearchFile>(),
-                SearchQuerry = new SearchQuery(),
-                FixedMods = new PtmFixedModification(),
-                VarMods = new PtmVariableModification()
-            };
+        public void ParametersProcessing(string queryId, string[] ParameterValues, SearchParametersDto parametersDto)
+        { 
 
             parametersDto.SearchParameters.QueryId = queryId;
             parametersDto.SearchParameters.Title = ParameterValues[0];
@@ -235,7 +273,7 @@ namespace PerceptronAPI.Controllers
             parametersDto.SearchParameters.MinimumPstLength = Convert.ToInt16(ParameterValues[12]);
             parametersDto.SearchParameters.MaximumPstLength = Convert.ToInt16(ParameterValues[13]);
             parametersDto.SearchParameters.HopThreshhold = Convert.ToDouble(ParameterValues[14]);
-
+            parametersDto.SearchParameters.HopTolUnit = ParameterValues[15];
             parametersDto.SearchParameters.PSTTolerance = Convert.ToDouble(ParameterValues[16]);
             parametersDto.SearchParameters.Truncation = ParameterValues[17];
             parametersDto.SearchParameters.TerminalModification = ParameterValues[18];
@@ -341,7 +379,7 @@ namespace PerceptronAPI.Controllers
                 List<string> InputFileList = new List<string> { provider.FileData[0].LocalFileName };
                 if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
                 {
-                    InputFileList = ZipFileUnzipping(InputFileList, parametersDto.SearchParameters, provider.FileData); //Unzipping the zipped file.
+                    InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
                 }
 
                 for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
