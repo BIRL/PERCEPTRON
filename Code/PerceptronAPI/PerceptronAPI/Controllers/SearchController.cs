@@ -214,11 +214,11 @@ namespace PerceptronAPI.Controllers
 
                 ParametersProcessing(queryId, ParameterValues, parametersDto);
 
-                string FullFileName = @"D:\10_PERCEPTRON_Live\ftproot\" + ParameterValues[30];
-                string NewPath = @"D:\10_PERCEPTRON_Live\InputFilesByFtp\";
-
-                File.Move(FullFileName, NewPath + ParameterValues[30]);  // Moving Input file from ftproot folder to InputFilesByFtp folder
-                string NewFullFileName = @"D:\10_PERCEPTRON_Live\InputFilesByFtp\" + ParameterValues[30];
+                string OldFullFileName = @"D:\10_PERCEPTRON_Live\ftproot\ComingInputFilesByFtp\" + ParameterValues[30];
+                string NewPath = @"D:\10_PERCEPTRON_Live\ftproot\InputFilesWithUniqueIdsByFtp\";
+                string NewFullFileName = NewPath + ParameterValues[30];
+                File.Move(OldFullFileName, NewFullFileName);  // Moving Input file from ftproot folder to InputFilesByFtp folder
+                
 
                 var i = 0;
                 List<string> InputFileList = new List<string> { NewFullFileName };
@@ -524,14 +524,35 @@ namespace PerceptronAPI.Controllers
         //}
 
         [HttpPost]
-        [Route("api/search/CallingPerceptronApiHistory")]
-        public async Task<List<UserHistory>> CallingPerceptronApiHistory(HttpRequestMessage request)
+        [Route("api/search/CallingPerceptronApiResults")]
+        public async Task<string> CallingPerceptronApiHistory(HttpRequestMessage request)
         {
             var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
             string input = RequestInput.Result.ToString();
             Debug.WriteLine(input);
             var temp = _dataLayer.GetUserHistory(input);
-            return temp;
+            string JobStatus = temp[0].progress;
+            if (JobStatus == "Completed")
+            {
+                var ZipResultFileInfo = _dataLayer.ScanResultFile(input);
+
+                string OldFullFileName = ZipResultFileInfo.ZipFileWithQueryId;
+                string NewPath = @"D:\10_PERCEPTRON_Live\ftproot\ResultsReadilyAvailableByFtp\";
+                string FileName = Path.GetFileName(OldFullFileName);
+                string NewFullFileName = NewPath + FileName;                
+
+                File.Move(OldFullFileName, NewFullFileName);  // Moving Input file from ftproot folder to InputFilesByFtp folder
+
+                string FtpPath = @"\ftproot\ResultsReadilyAvailableByFtp\";
+
+                return FtpPath+FileName;
+            }
+            else
+            {
+                return JobStatus;
+            }
+
+
         }
 
 
@@ -541,7 +562,7 @@ namespace PerceptronAPI.Controllers
         {
             var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
             string input = RequestInput.Result.ToString();
-
+            var ZipResultFileInfo = _dataLayer.ScanResultFile(input);
 
             string FullFileName = "";
             return FullFileName;
