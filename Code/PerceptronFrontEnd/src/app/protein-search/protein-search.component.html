@@ -150,7 +150,7 @@
                 </style>
                 <a  class="smallerScreen"><br /></a>
                 <label style="display:inline;">&nbsp;</label>
-                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length==1'>{{email.files[0].name}}</i></a>
+                <a style="color: rgb(81, 81, 252);" style='display:inline;'><i *ngIf='email.files.length==1 && !filenameModel'>{{email.files[0].name}}</i></a>
                 
                 <input #email type="file" #imgFileInput (ngModel)="email" #FileName="ngModel" required name="FileName" [(ngModel)]="filenameModel" id="FileName" (change)="upload(Uploaded_File)"
                   accept=".txt, .mgf, .mzXML, .mzML, .zip" multiple ngModel/>
@@ -160,8 +160,8 @@
                 <mat-error style="display: inline; font-style: italic;" *ngIf ="email.files.length>1">
                   Please upload a .zip file for more than 1 files.
                 </mat-error>
-                <mat-error style="display: inline; font-size:0.75vw; font-style: italic;" *ngIf ="filenameModel">
-                  File Size is greater than 40 MB.
+                <mat-error style="display: inline; font-style: italic;" *ngIf ="filenameModel">
+                  File Size must be less than 60 MB.
                 </mat-error>
               </div>
             </span>

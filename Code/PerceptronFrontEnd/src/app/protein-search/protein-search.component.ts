@@ -61,7 +61,7 @@ export class ProteinSearchComponent implements OnInit {
   animal: string;
   state: string = '';
   // upload:any;
-  // Uploaded_File:any;
+  Uploaded_File:any;
   filenameModel:boolean;
   FDR_CutOff: any;
   
