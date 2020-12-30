@@ -106,11 +106,12 @@ namespace PerceptronLocalService.Engine
             {
                 tolConv = ExperimentalSpectrum[ExperimentalSpectrum.Count - 2].Mass;
             }
-            List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>();
+            //List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>(); //Commented here // Updated 20201230
             if (sizeHopInfo > 0)
             {
                 for (int row = 0; row < CandidateProtList.Count; row++)
                 {
+                    List<PTMDataDto> ShortlistedHops = new List<PTMDataDto>();   //Added here  // Updated 20201230
                     ProteinDto protein = new ProteinDto(CandidateProtList[row]); //Protein at index row is being processed
                     var sequence = protein.Sequence;
                     //If the function is BlindPTM_Truncation_Left, the protein sequence is flipped, otherwise the original sequence is processed
@@ -282,17 +283,18 @@ namespace PerceptronLocalService.Engine
                         }
                         else
                         {
-                            left = 1;
+                            left = 0;   // Updated 20201230
                         }
                         if (protein.RightMatchedIndex.Count > 0)
                         {
-                            right = protein.InsilicoDetails.InsilicoMassLeft.Count - protein.RightMatchedIndex[protein.RightMatchedIndex.Count - 1] + 1; //Num of LeftIons - last LeftMatchedIndex + 1 gives the end site of modification
+                            //right = protein.InsilicoDetails.InsilicoMassLeft.Count - protein.RightMatchedIndex[protein.RightMatchedIndex.Count - 1] + 1; //Num of LeftIons - last LeftMatchedIndex + 1 gives the end site of modification    //Commented here // Updated 20201230
+                            right = (protein.InsilicoDetails.InsilicoMassLeft.Count - 1) - protein.RightMatchedIndex[protein.RightMatchedIndex.Count - 1];   // Updated 20201230
                         }
                         else
                         {
-                            right = protein.InsilicoDetails.InsilicoMassLeft.Count; //Num of LeftIons (i.e. the index right next to where LeftIons end) gives the end site of modification
+                            right = protein.InsilicoDetails.InsilicoMassLeft.Count - 1; // Updated 20201230 //Num of LeftIons (i.e. the index right next to where LeftIons end) gives the end site of modification
                         }
-                        if (left < right && left > 1 && right < protein.InsilicoDetails.InsilicoMassLeft.Count)
+                        if (left < right && left > 0 && right < protein.InsilicoDetails.InsilicoMassLeft.Count - 1)   // Updated 20201230
                         {
                             // Blind PTM Localization Information are beig updated
                             protein.BlindPtmLocalizationInfo = new BlindPtmInfo(left, right, MassDiff);

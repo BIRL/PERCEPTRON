@@ -97,7 +97,7 @@
             aminoAcids[1] = 'G';
             aminoAcids[2] = 'Q';
             aminoAcids[3] = 'A';
-            aminoAcids[4] = 'T';
+            aminoAcids[4] = 'P';    // Updated 20201230
             aminoAcids[5] = 'C';
             aminoAcids[6] = 'S';
             aminoAcids[7] = 'P';
