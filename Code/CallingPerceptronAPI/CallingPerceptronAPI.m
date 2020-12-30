@@ -57,26 +57,29 @@ Response = SendParameters.send(PerceptronApiJobSubmissionUrl, Options);
 try
 if (Response.StatusCode == "OK")
     java.lang.Thread.sleep(600);  %in sec
-    PerceptronApiJobStatusUrl = strcat(BaseApiUrl,'api/search/CallingPerceptronApiHistory');
+    PerceptronApiJobStatusUrl = strcat(BaseApiUrl,'api/search/CallingPerceptronApiResults');
     JobStatusResquest = RequestMessage('POST',[]);
     JobStatusResquest.Body = UniqueUserID;
     JobStatusReponse = JobStatusResquest.send(PerceptronApiJobStatusUrl, Options);
     
     if (JobStatusReponse.Body.Data.progress == "In Queue" || JobStatusReponse.Body.Data.progress == "Running")
         Wait = true;
+        if (JobStatusReponse.Body.Data.progress == "Completed")
+            DownloadResults();
+            Wait = false;
+        end
         while(Wait)
             java.lang.Thread.sleep(600);  %in sec
             JobStatusReponse = JobStatusResquest.send(PerceptronApiJobStatusUrl, Options);
             if (JobStatusReponse.Body.Data.progress == "Completed" || JobStatusReponse.Body.Data.progress == "Error in Query" || JobStatusReponse.Body.Data.progress == "Result Expired")
+                DownloadResults();
                 Wait = false;
             end
         end
     end
     
-    if (JobStatusReponse.Body.Data.progress == "Completed")
-        
-        
-    elseif (JobStatusReponse.Body.Data.progress == "Error in Query")
+    
+    if (JobStatusReponse.Body.Data.progress == "Error in Query")
         msgbox('Dear User, there is an error in your query.','CallingPerceptronApi','Modal');
         throw;
     elseif (JobStatusReponse.Body.Data.progress == "Result Expired")
@@ -100,7 +103,9 @@ end
 % Message = char(strcat('Dear User, please save this ID:', UniqueUserID, ' to access your results upto 48hrs.'));
 % msgbox(Message,'CallingPerceptronApi','Modal');
 
-fdsf = 23;
+function [] = DownloadResults()
+
+end
 
 
 
