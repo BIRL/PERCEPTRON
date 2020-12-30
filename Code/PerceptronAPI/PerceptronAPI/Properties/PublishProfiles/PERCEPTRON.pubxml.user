@@ -21,10 +21,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/23/2019 12:16:03</publishTime>
     </File>
     <File Include="bin/PerceptronAPI.dll">
-      <publishTime>07/15/2020 09:35:49</publishTime>
+      <publishTime>08/31/2020 06:00:26</publishTime>
     </File>
     <File Include="bin/PerceptronAPI.pdb">
-      <publishTime>07/15/2020 09:35:49</publishTime>
+      <publishTime>08/31/2020 06:00:26</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>12/23/2019 12:16:03</publishTime>
@@ -53,6 +53,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/System.Web.Webpages.Razor.dll">
       <publishTime>12/23/2019 12:16:03</publishTime>
     </File>
+    <File Include="Content/Site.css">
+      <publishTime>07/18/2020 20:32:52</publishTime>
+    </File>
     <File Include="Global.asax">
       <publishTime>12/23/2019 12:16:02</publishTime>
     </File>
@@ -60,19 +63,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 11:30:13</publishTime>
     </File>
     <File Include="Models/PerceptronDatabase.edmx.diagram">
-      <publishTime>07/12/2020 01:41:56</publishTime>
+      <publishTime>08/06/2020 17:11:07</publishTime>
     </File>
     <File Include="Models/PerceptronSessionInfo.edmx.diagram">
       <publishTime>02/13/2020 15:01:58</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>12/23/2019 12:16:02</publishTime>
+      <publishTime>07/18/2020 14:20:32</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>07/18/2020 23:00:29</publishTime>
+    </File>
+    <File Include="Views/View/Details.cshtml">
+      <publishTime>07/18/2020 22:21:20</publishTime>
     </File>
     <File Include="Views/web.config">
       <publishTime>12/23/2019 12:16:02</publishTime>
     </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>07/18/2020 20:32:52</publishTime>
+    </File>
     <File Include="Web.config">
-      <publishTime>07/15/2020 09:35:55</publishTime>
+      <publishTime>08/31/2020 06:00:34</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -13,12 +13,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PerceptronAPI</RootNamespace>
     <AssemblyName>PerceptronAPI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +54,9 @@
       <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -60,18 +66,16 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Razor">
@@ -132,23 +136,30 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ViewController.cs" />
+    <Compile Include="Engine\ExtractInsilicoMass.cs" />
+    <Compile Include="Engine\FastaReader.cs" />
+    <Compile Include="Engine\FastaWriter.cs" />
+    <Compile Include="Engine\FDR.cs" />
     <Compile Include="Engine\ResultsDownload.cs" />
+    <Compile Include="Engine\WriteResultsFile.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IDataAccessLayer.cs" />
     <Compile Include="Models\AssembleInsilicoSpectra.cs" />
+    <Compile Include="Models\BlindPtmInfo.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Models\DetailedProteinHitView.cs" />
     <Compile Include="Models\DetailedResults.cs" />
     <Compile Include="Models\ExecutionTime.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FastaReaderProteinDataDto.cs" />
+    <Compile Include="Models\FastaWriterProteinDataDto.cs" />
     <Compile Include="Models\InsilicoMassIons.cs" />
     <Compile Include="Models\InsilicoObj.cs" />
     <Compile Include="Models\Job.cs" />
-    <Compile Include="Models\MassSpectrumImagedetail.cs" />
-    <Compile Include="Models\MassVisualizationImageFileCreated.cs" />
+    <Compile Include="Models\MsPeaksDto.cs" />
     <Compile Include="Models\PeakListData.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -167,7 +178,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Proteins.cs" />
+    <Compile Include="Models\PostTranslationModificationsSiteDto.cs" />
+    <Compile Include="Models\ProteinDto.cs" />
     <Compile Include="Models\PtmFixedModification.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -175,6 +187,7 @@
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuerryParameters.cs" />
+    <Compile Include="Models\ResultFileDto.cs" />
     <Compile Include="Models\ResultInsilicoMatchLeft.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -189,11 +202,14 @@
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ResultsDownloadDataCompile.cs" />
+    <Compile Include="Models\ResultsDownloadDto.cs" />
     <Compile Include="Models\ResultsDownloadFileNames.cs" />
     <Compile Include="Models\ResultsDto.cs" />
     <Compile Include="Models\ResultsVisualizeData.cs" />
     <Compile Include="Models\ResultViewDto.cs" />
+    <Compile Include="Models\ScanInputDataDto.cs" />
     <Compile Include="Models\ScanResults.cs" />
+    <Compile Include="Models\ScanResultsDownloadDataDto.cs" />
     <Compile Include="Models\SearchFile.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -218,6 +234,9 @@
     </Compile>
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\UserHistory.cs" />
+    <Compile Include="Models\ZipResultsDownloadInfo.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Repository\SqlDatabase.cs" />
     <Compile Include="Repository\MySqlDatabase.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
@@ -232,6 +251,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Engine\DetailedProteinView.Designer.cs" />
+    <Compile Include="Utility\AddSuffixInName.cs" />
+    <Compile Include="Utility\AminoAcids.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />

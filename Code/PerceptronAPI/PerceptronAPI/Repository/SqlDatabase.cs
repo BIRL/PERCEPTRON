@@ -513,50 +513,61 @@ namespace PerceptronAPI.Repository
             ////    cmd.Dispose();
             ////    sqlConnection1.Close();
             ////}
-            using (var db = new PerceptronDatabaseEntities())
+            ///
+
+            try
             {
-                var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
-                var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
-                //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
-                //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
+                using (var db = new PerceptronDatabaseEntities())
+                {
+                    var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
+                    var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+                    //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
+                    //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
 
-                //var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
-                //var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
+                    //var ptmVarmod = db.PtmVariableModifications.First(x => x.QueryId == qid);
+                    //var ptmFixedmod = db.PtmFixedModifications.First(x => x.QueryId == qid);
 
-                var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
-                var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
-                var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
-
-
-                //if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
-                //    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
+                    var ptmSite = db.ResultPtmSites.Where(x => x.ResultId == rid).ToList();
+                    var execTime = db.ExecutionTimes.Where(x => x.QueryId == qid).ToList();
+                    var searchQuery = db.SearchQueries.Where(x => x.QueryId == qid).ToList();
 
 
-                if (searchParameters.Count != 0)
-                    detiledResults.Paramters.SearchParameters = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
-
-                //detiledResults.Paramters.FixedMods = ptmFixedmod;
-                //detiledResults.Paramters.VarMods = ptmVarmod;
-
-                if (searchQuery.Count != 0)
-                    detiledResults.Paramters.SearchQuerry = searchQuery.First();
-
-                //detiledResults.Results.InsilicioLeft = resultInsilicoLeft;
-                //detiledResults.Results.InsilicoRight = resultInsilicoRight;
+                    //if (db.ResultPtmSites.Where(x => x.ResultId == rid).Count() != 0)
+                    //    NoOfPtmSites = db.ResultPtmSites.Where(x => x.ResultId == rid).First().Index.Split(',').Select(int.Parse).ToList().Count;  // Just wanted to get Number of Ptm 
 
 
-                detiledResults.Results.NoOfPtmSites = NoOfPTMMods(rid, db);    //Updated 20200821
-                detiledResults.Results.NoOfMatchedFragments = NoOfMatchedFrags(searchResult.First());   //Updated 20200821
+                    if (searchParameters.Count != 0)
+                        detiledResults.Paramters.SearchParameters = searchParameters.Any() ? GetSearchParametersDtoModel(searchParameters.First()) : new SearchParameter();
 
-                if (searchResult.Count != 0)    //Why if for Safe...?
-                    detiledResults.Results.Results = searchResult.First();
-                if (execTime.Count != 0)
-                    detiledResults.ExecutionTime = execTime.First();
+                    //detiledResults.Paramters.FixedMods = ptmFixedmod;
+                    //detiledResults.Paramters.VarMods = ptmVarmod;
+
+                    if (searchQuery.Count != 0)
+                        detiledResults.Paramters.SearchQuerry = searchQuery.First();
+
+                    //detiledResults.Results.InsilicioLeft = resultInsilicoLeft;
+                    //detiledResults.Results.InsilicoRight = resultInsilicoRight;
+
+
+                    detiledResults.Results.NoOfPtmSites = NoOfPTMMods(rid, db);    //Updated 20200821
+                    detiledResults.Results.NoOfMatchedFragments = NoOfMatchedFrags(searchResult.First());   //Updated 20200821
+
+                    if (searchResult.Count != 0)    //Why if for Safe...?
+                        detiledResults.Results.Results = searchResult.First();
+                    if (execTime.Count != 0)
+                        detiledResults.ExecutionTime = execTime.First();
 
 
 
+                }
+                
+            }
+            catch(Exception e)
+            {
+                int fsdfs = 1;
             }
             return detiledResults;
+
         }
         //DownloadAllResults
         

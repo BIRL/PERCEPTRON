@@ -179,9 +179,103 @@ namespace PerceptronAPI.Controllers
             return "ABC";
         }
 
+
         [HttpPost]
         [Route("api/search/Calling_API")]
-        public async Task<HttpResponseMessage> Calling_API()
+        public async Task<HttpResponseMessage> Calling_API(HttpRequestMessage request)
+        {
+
+            try
+            {
+                var queryId = Guid.NewGuid().ToString();
+                var result = await request.Content.ReadAsStringAsync();
+                
+                string[] ParameterValues = result.Split(":".ToCharArray());
+
+                ParametersProcessing(queryId, ParameterValues);
+                
+
+
+            }
+            catch (Exception e)
+            { 
+                int fsadsa = 1;
+            }
+
+            var response = "";
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+
+        }
+        public void ParametersProcessing(string queryId, string[] ParameterValues)
+        {
+            var parametersDto = new SearchParametersDto
+            {
+                SearchFiles = new List<SearchFile>(),
+                SearchQuerry = new SearchQuery(),
+                FixedMods = new PtmFixedModification(),
+                VarMods = new PtmVariableModification()
+            };
+
+            parametersDto.SearchParameters.QueryId = queryId;
+            parametersDto.SearchParameters.Title = ParameterValues[0];
+            parametersDto.SearchParameters.FDRCutOff = ParameterValues[1];
+            parametersDto.SearchParameters.ProteinDatabase = ParameterValues[2];
+            parametersDto.SearchParameters.MassMode = ParameterValues[3];
+
+
+            parametersDto.SearchParameters.FilterDb = ParameterValues[4];
+            parametersDto.SearchParameters.MwTolerance = Convert.ToDouble(ParameterValues[5]);
+            parametersDto.SearchParameters.PeptideTolerance = Convert.ToDouble(ParameterValues[6]);
+            parametersDto.SearchParameters.PeptideToleranceUnit = ParameterValues[7];
+            parametersDto.SearchParameters.Autotune = ParameterValues[8];
+            parametersDto.SearchParameters.InsilicoFragType = ParameterValues[9];
+            parametersDto.SearchParameters.HandleIons = ParameterValues[10];
+            parametersDto.SearchParameters.DenovoAllow = ParameterValues[11];
+
+            parametersDto.SearchParameters.MinimumPstLength = Convert.ToInt16(ParameterValues[12]);
+            parametersDto.SearchParameters.MaximumPstLength = Convert.ToInt16(ParameterValues[13]);
+            parametersDto.SearchParameters.HopThreshhold = Convert.ToDouble(ParameterValues[14]);
+
+            parametersDto.SearchParameters.PSTTolerance = Convert.ToDouble(ParameterValues[16]);
+            parametersDto.SearchParameters.Truncation = ParameterValues[17];
+            parametersDto.SearchParameters.TerminalModification = ParameterValues[18];
+            parametersDto.SearchParameters.PtmAllow = ParameterValues[19];
+
+
+            parametersDto.SearchParameters.PtmTolerance = Convert.ToDouble(ParameterValues[20]);
+            parametersDto.SearchParameters.MethionineChemicalModification = ParameterValues[23];
+            parametersDto.SearchParameters.CysteineChemicalModification = ParameterValues[24];
+            parametersDto.SearchParameters.MwSweight = Convert.ToDouble(ParameterValues[25]);
+
+            parametersDto.SearchParameters.PstSweight = Convert.ToDouble(ParameterValues[26]);
+            parametersDto.SearchParameters.InsilicoSweight = Convert.ToDouble(ParameterValues[27]);
+            parametersDto.SearchParameters.EmailId = ParameterValues[28];
+            parametersDto.SearchParameters.UserId = ParameterValues[29];
+
+
+            if (ParameterValues[21] != "")
+            {
+                parametersDto.FixedMods.QueryId = queryId;
+                parametersDto.FixedMods.ModificationId = 1;
+                parametersDto.FixedMods.FixedModifications = ParameterValues[21];
+
+            }
+
+            if (ParameterValues[22] != "")
+            {
+                parametersDto.VarMods.QueryId = queryId;
+                parametersDto.VarMods.ModificationId = 1;
+                parametersDto.VarMods.VariableModifications = ParameterValues[22];
+
+            }
+
+        }
+
+
+
+        [HttpPost]
+        [Route("api/search/Calling_API2")]
+        public async Task<HttpResponseMessage> Calling_API2()
         {
             AddSuffixInName _AddSuffixInName = new AddSuffixInName();
             var queryId = Guid.NewGuid().ToString();
