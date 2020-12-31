@@ -256,17 +256,8 @@ namespace PerceptronAPI.Controllers
                 {
                     //Sending_Email(parametersDto, creationTime);
                 }
-                foreach (var eve in e.EntityValidationErrors)  //Courtesy by https://www.codeproject.com/Questions/1012001/VALIDATION-FAILED-FOR-ONE-OR-MORE-ENTITIES-SEE-ENT
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                
+
+                DbEntitiyError(e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
@@ -590,24 +581,54 @@ namespace PerceptronAPI.Controllers
 
 
         [HttpPost]
-        [Route("api/search/Database_Update")]
-        public string Database_Update()
+        [Route("api/search/DatabaseUpdate")]
+        public async Task<HttpResponseMessage> DatabaseUpdateAsync()
         {
-            FastaReader _FastaReader = new FastaReader();
-            string DatabaseName = "Ecoli";  //Add here fasta File Name
-            string FastaFilePath = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
-            string Message = _FastaReader.MainFastaReader(DatabaseName, FastaFilePath);
-            return Message;
+            string StatusMessage = "";
+            try
+            {
+
+                if (!Request.Content.IsMimeMultipartContent())
+                {
+                    throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                }
+
+                var root = HttpContext.Current.Server.MapPath("~/App_Data");
+                var provider = new CustomMultipartFormDataStreamProvider(root);
+
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var jsonData = provider.FormData.GetValues("Jsonfile");
+                var DbUpdateInfo = JsonConvert.DeserializeObject<AdminPanelDto>(jsonData[0].Trim('"'));
+                
+                FastaReader _FastaReader = new FastaReader();
+                string DatabaseName = DbUpdateInfo.UpdateDatabase;  // + "Ecoli2";  //Add here fasta File Name
+                string FastaFilePath = provider.FileData[0].LocalFileName;   // @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
+                StatusMessage = _FastaReader.MainFastaReader(DatabaseName, FastaFilePath);
+
+            }
+            catch(DbEntityValidationException e)
+            {
+                DbEntitiyError(e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+
+
+
+            string response = StatusMessage;
+            return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
         [HttpPost]
-        [Route("api/search/Database_Download")]
-        public byte[] Database_Download()
+        [Route("api/search/DatabaseDownload")]
+        public ResultsDownloadDto DatabaseDownload(string DatabaseName)
         {
-            string DatabaseName = "Ecoli";  //Add here fasta File Name
-            string FastaFilePath = @"C:\PerceptronApi-tempResultsFolder\";  // Add here fasta file location
+
+            var ListOfFileBlobs = new List<byte[]>();
+            //string DatabaseName = "Ecoli";  //Add here fasta File Name
+            string FastaFilePath = @"D:\10_PERCEPTRON_Live\ftproot\DownloadDatabase\";  // Add here fasta file location
             FastaWriter _FastaWriter = new FastaWriter();
-            string FullFileName = FastaFilePath + "Download_" + DatabaseName + ".fasta";
+            string FullFileName = FastaFilePath + "Downloaded_" + DatabaseName + ".fasta";
             _FastaWriter.MainFastaWriter(DatabaseName, FullFileName);
 
             using (FileStream fileStream = File.OpenRead(FullFileName))
@@ -615,16 +636,12 @@ namespace PerceptronAPI.Controllers
                 byte[] blob = new byte[fileStream.Length];
                 fileStream.Read(blob, 0, (int)fileStream.Length);
 
-                return blob;
+                //return blob;
+                ListOfFileBlobs.Add(blob);
             }
+            var DbDownloadData = new ResultsDownloadDto(FullFileName, ListOfFileBlobs);
+            return DbDownloadData;
         }
-
-
-
-
-
-
-
 
         [HttpPost]
         [Route("api/search/bug_form")]
@@ -700,6 +717,20 @@ namespace PerceptronAPI.Controllers
                     if (e is System.Net.Mail.SmtpException)
                         emailaddress = "das bad";
 
+                }
+            }
+        }
+
+        public void DbEntitiyError(DbEntityValidationException e)
+        {
+            foreach (var eve in e.EntityValidationErrors)  //Courtesy by https://www.codeproject.com/Questions/1012001/VALIDATION-FAILED-FOR-ONE-OR-MORE-ENTITIES-SEE-ENT
+            {
+                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                    eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                foreach (var ve in eve.ValidationErrors)
+                {
+                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                        ve.PropertyName, ve.ErrorMessage);
                 }
             }
         }
