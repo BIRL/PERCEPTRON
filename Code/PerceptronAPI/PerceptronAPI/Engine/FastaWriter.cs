@@ -31,9 +31,7 @@ namespace PerceptronAPI.Engine
                 {
                     sw.WriteLine(FastaWriterProteinInfo[index].ProteinDescription);
                     sw.WriteLine(FastaWriterProteinInfo[index].Sequence);
-
                 }
-
                 sw.Close();
             }
         }
