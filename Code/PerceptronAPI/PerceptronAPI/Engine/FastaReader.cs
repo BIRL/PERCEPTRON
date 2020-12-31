@@ -16,7 +16,7 @@ namespace PerceptronAPI.Engine
 
         AminoAcids _AminoAcids = new AminoAcids();
 
-        public string MainFastaReader(string DatabaseName, string FastaFilePath)
+        public string MainFastaReader(string DatabaseName, string FastaFullFileName)
         {
 
             try
@@ -25,9 +25,8 @@ namespace PerceptronAPI.Engine
                 var tempD = new List<FastaReaderProteinDataDto>();
                 //FastaFilePath = @"C:\Users\Administrator\Desktop\";  // Add here fasta file location
                 //DatabaseName = "Human";  //Add here fasta File Name
-                string FastaFullFileName = FastaFilePath + DatabaseName + ".fasta";
-
-                var ExcelFileName = FastaFilePath + DatabaseName + ".xlsx";
+                //string FastaFullFileName = FastaFilePath + DatabaseName + ".fasta";
+                //var ExcelFileName = FastaFilePath + DatabaseName + ".xlsx";
 
 
                 var FastaFile = new StreamReader(FastaFullFileName);
@@ -39,6 +38,7 @@ namespace PerceptronAPI.Engine
                 string NextLine = ReadPeripheralFastaFile.ReadLine();
 
                 string tempHeader;
+                string tempFastaHeader;
                 string tempSequence;
 
                 int FileReadingIteration = 0;
@@ -47,6 +47,7 @@ namespace PerceptronAPI.Engine
                 while (FileReadingIteration < FastaFileLineCount)// For Reading Full fasta file till end...
                 {
                     tempHeader = "";
+                    tempFastaHeader = "";
                     tempSequence = "";
                     string FastaFileLine;
                     string ProteinDescription = "";
@@ -57,22 +58,25 @@ namespace PerceptronAPI.Engine
                         FileReadingIteration += 1;
                         FastaFileLine = FastaFile.ReadLine();
 
-                        switch (FastaFileLine.Contains(">sp|")) //ReadLine for Reading Lines Line By Line
+                        switch (FastaFileLine.Contains(">")) //Updated 20201215    --- Replaced this ">sp|" to ">"   ---- //ReadLine for Reading Lines Line By Line
                         {
                             case true:
 
                                 /*Uniprot Accession Number have 6 to 10 alphanumrical characters...*/
                                 /* https://www.uniprot.org/help/accession_numbers  */
                                 //FastaFileLine = ">sp|ABCDEFGHIJKL123|NUD|||||4B"; //I am Just for testing
-                                ProteinDescription = FastaFileLine;
-                                ProteinDescription = ProteinDescription.Replace("'", "''");
 
-                                tempHeader = FastaFileLine.Substring(4, 6); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
-                                if (FastaFileLine[10] != '|') //If Accession Number Length is >6
-                                {
-                                    int LengthofAccessionNumber = FastaFileLine.IndexOf('|', 9) - 4; //4 is due to {>sp|}
-                                    tempHeader = FastaFileLine.Substring(4, LengthofAccessionNumber);
-                                }
+                                int FirstVerticalBar = FastaFileLine.IndexOf("|");              //Updated 20201215 
+                                int SecondVerticalBar = FastaFileLine.IndexOf("|", FirstVerticalBar + 1);              //Updated 20201215 
+
+                                tempHeader = FastaFileLine.Substring(FirstVerticalBar + 1, SecondVerticalBar - FirstVerticalBar - 1); //4: is starting Position(BUT NOT INCLUDED) & 6 is number of characters should be extracted
+                                tempFastaHeader = FastaFileLine.Replace("'", " ");   //Removing Single Quote sign to avoid issues while implementing SQL Query 
+                                tempFastaHeader = tempFastaHeader.Replace(",", " ");   //Removing Single Quote sign to avoid issues while implementing SQL Query 
+                                ////if (FastaFileLine[10] != '|') //If Accession Number Length is >6    // ITS HEALTHY...
+                                ////{
+                                ////    int LengthofAccessionNumber = FastaFileLine.IndexOf('|', 9) - 4; //4 is due to {>sp|}
+                                ////    tempHeader = FastaFileLine.Substring(4, LengthofAccessionNumber);
+                                ////}
                                 break;
 
                             case false:
@@ -82,14 +86,15 @@ namespace PerceptronAPI.Engine
                         try
                         {
                             NextLine = ReadPeripheralFastaFile.ReadLine();
-                            if (NextLine.Contains(">sp|")) { break; }
+                            if (NextLine.Contains(">"))  //Updated 20201215    --- Replaced this ">sp|" to ">"   ----
+                            { break; }
                         }
                         catch (Exception) //Last Line will be empty. So, NextLine will be null & Exception will break the loop
                         {
                             break;
                         }
                     }
-                    GetSequenceInfoData(tempHeader, ProteinDescription, FastaFilePath, DatabaseName, tempSequence, FastaProteinInfo);
+                    GetSequenceInfoData(tempHeader, tempFastaHeader, DatabaseName, tempSequence, FastaProteinInfo);
 
                 }
                 FastaProteinInfo = FastaProteinInfo.OrderByDescending(n => n.MolecularWeight).ToList();  //Sort By Descending Order
@@ -106,7 +111,7 @@ namespace PerceptronAPI.Engine
             }
         }
 
-        public List<FastaReaderProteinDataDto> GetSequenceInfoData(string Header, string ProteinDescription, string Path, string FileName, string Sequence, List<FastaReaderProteinDataDto> FastaProteinInfo)
+        public List<FastaReaderProteinDataDto> GetSequenceInfoData(string Header, string ProteinDescription, string FileName, string Sequence, List<FastaReaderProteinDataDto> FastaProteinInfo)
         {//This method will calculate Insilico Left & Right Ion Fragments
 
             int SequenceLength = Sequence.Length;
