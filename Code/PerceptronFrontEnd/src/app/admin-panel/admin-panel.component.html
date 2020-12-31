@@ -80,7 +80,7 @@
                   *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
 
                 <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
-                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(UploadedFile)"
+                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" 
                   accept=".fasta" multiple ngModel />
                 <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                   Please select FASTA file.
@@ -140,7 +140,7 @@
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select protein database from which you want to search protein(s)"
               matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
+              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabaseToBeDownloaded" #ProteinDatabase='ngModel' required
                 name="ProteinDatabase">
                 <mat-option *ngFor="let SelectDatabaseToDownload of ListOfDatabasesForDownload" [value]="SelectDatabaseToDownload.value">
                   {{SelectDatabaseToDownload.viewValue}}
