@@ -16,7 +16,9 @@ import { HttpResponse } from '@angular/common/http';
 export class ConfigService {
     resultant: any;
     baseApiUrl = "http://localhost:52340/";
-    
+    // "https://perceptron.lums.edu.pk/PerceptronAPI"
+    //http://localhost:52340/ //"http://203.135.63.99/PerceptronAPI"
+
     constructor(private _http: Http) { }
 
     getJSON() {
@@ -72,6 +74,29 @@ export class ConfigService {
                 error => console.log(error)
             )
     }
+
+    postDatabase(form, file) {
+
+        let formData: FormData = new FormData();
+
+        var json = JSON.stringify(form);
+
+        formData.append('Jsonfile', json);
+
+        for (let i = 0; i < file.length; i++) {
+            formData.append('uploadFile', file[i], file[i].name);
+        }
+        console.log(json);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        return this._http.post(this.baseApiUrl + '/api/search/DatabaseUpdate', formData, { headers: headers })
+            .map(res => res.json())
+            .subscribe(
+                data => console.log('success'),
+                error => console.log(error)
+            )
+    }
+
 
     fdrform(form, file){
         let formData: FormData = new FormData();
@@ -133,6 +158,16 @@ export class ConfigService {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         return this._http.post(this.baseApiUrl + '/api/search/ResultsDownload', '=' + qid, { headers: headers })
+            .map(res => {
+                return res.json()
+            });
+    }
+
+    GetDatabaseDownload(NameOfDataBase): Observable<any> {
+
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        return this._http.post(this.baseApiUrl + '/api/search/DatabaseDownload', '=' + NameOfDataBase, { headers: headers })
             .map(res => {
                 return res.json()
             });
