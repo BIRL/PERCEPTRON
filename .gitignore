@@ -2,6 +2,7 @@
 *.pdb
 *.jpg
 *.fasta
+*.asv
 *.suo
 *.dll
 *.csv
