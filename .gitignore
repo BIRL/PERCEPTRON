@@ -1,6 +1,8 @@
 
 *.pdb
 *.jpg
+*.fasta
+*.suo
 *.dll
 *.csv
 *.zip
