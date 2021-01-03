@@ -621,14 +621,16 @@ namespace PerceptronAPI.Controllers
 
         [HttpPost]
         [Route("api/search/DatabaseDownload")]
-        public ResultsDownloadDto DatabaseDownload(string DatabaseName)
+        public ResultsDownloadDto DatabaseDownload([FromBody] string DatabaseName)
         {
 
             var ListOfFileBlobs = new List<byte[]>();
             //string DatabaseName = "Ecoli";  //Add here fasta File Name
             string FastaFilePath = @"D:\10_PERCEPTRON_Live\ftproot\DownloadDatabase\";  // Add here fasta file location
             FastaWriter _FastaWriter = new FastaWriter();
-            string FullFileName = FastaFilePath + "Downloaded_" + DatabaseName + ".fasta";
+            string PartialName = "DownloadedDatabase_";
+            string FullFileName = FastaFilePath + PartialName + DatabaseName + ".fasta";
+            string FileName = PartialName + DatabaseName + ".fasta";
             _FastaWriter.MainFastaWriter(DatabaseName, FullFileName);
 
             using (FileStream fileStream = File.OpenRead(FullFileName))
@@ -639,7 +641,7 @@ namespace PerceptronAPI.Controllers
                 //return blob;
                 ListOfFileBlobs.Add(blob);
             }
-            var DbDownloadData = new ResultsDownloadDto(FullFileName, ListOfFileBlobs);
+            var DbDownloadData = new ResultsDownloadDto(FileName, ListOfFileBlobs);
             return DbDownloadData;
         }
 
