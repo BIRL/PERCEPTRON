@@ -18,7 +18,7 @@ export class AdminPanelComponent implements OnInit {
 
   NameOfDatabaseToBeDownloaded: any;
   filenameModel: boolean = false;
-  NameOfDatabaseToBeUpdated: any;
+  NameOfDatabaseToBeUpdated: string;
   UploadedFile: any;
   blob : any;
 
@@ -65,11 +65,10 @@ export class AdminPanelComponent implements OnInit {
     { name: 'Ecoli', viewValue: 'Ecoli' }
   ];
 
-  onSubmit(form: any): void {
-    
-    if (this.filenameModel) {
-
-      let fi = this.imgFileInput.nativeElement;
+  onSubmit(buttonType, form): void {
+    if(buttonType==="Upload") {
+        var a = 1;
+        let fi = this.imgFileInput.nativeElement;
       let stats: any = 'false';
       console.log(form);
       stats = this._httpService.postDatabase(form, fi.files);
@@ -78,24 +77,18 @@ export class AdminPanelComponent implements OnInit {
       }
       console.log(stats)
     }
-  }
-  
-  onDownload(form: any): void {
-
-    let daf = 1;
-    if (form.NameOfDatabaseToBeDownloaded) {
-
-      this.route.params.subscribe((params: Params) => this.NameOfDatabaseToBeDownloaded = params['NameOfDatabaseToBeDownloaded']);
-    this._httpService.GetResultsDownload(this.NameOfDatabaseToBeDownloaded).subscribe(ResultsData => this.whatResults(ResultsData));
-
+    if(buttonType==="Download"){
       this.IsWaitDownload = 1;
+      this.NameOfDatabaseToBeDownloaded = form.ProteinDatabase;
+      // this.route.params.subscribe((params: Params) => this.NameOfDatabaseToBeDownloaded = params['NameOfDatabaseToBeDownloaded']);
+    this._httpService.GetDatabaseDownload(this.NameOfDatabaseToBeDownloaded).subscribe(ResultsData => this.whatResults(ResultsData));
+
+      
       alert("Dear! User your database is successfully downloaded.");
       this.IsWaitDownload = 0;
     }
-
-    
-    
   }
+  
 
   whatResults(ResultsData: any) {
 

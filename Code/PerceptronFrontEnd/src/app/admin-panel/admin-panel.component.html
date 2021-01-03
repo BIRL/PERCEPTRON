@@ -1,4 +1,4 @@
-<form #formSubmit="ngForm" (ngSubmit)="onSubmit(formSubmit.value);" class="ui form">
+<form #formSubmit="ngForm" (ngSubmit)="onSubmit(buttonType, formSubmit.value);" class="ui form">
   <div id="top" style="width:90%; min-width: 600px; margin:0 auto;">
     <mat-card>
       <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">Admin
@@ -80,7 +80,7 @@
                   *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
 
                 <input #FileInfo type="file" #imgFileInput (ngModel)="FileInfo" #FileName="ngModel" required
-                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" 
+                  name="FileName" [(ngModel)]="filenameModel" style="display: none;" id="FileName" (change)="upload(UploadedFile)"
                   accept=".fasta" multiple ngModel />
                 <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                   Please select FASTA file.
@@ -106,7 +106,7 @@
           <mat-grid-tile colspan="1" rowspan="1">
             <label style="padding-left:15px;"></label>
             <button mat-raised-button matTooltip="Click to submit FASTA file" class="button-sumbit"
-              [disabled]="!formSubmit.valid || this.IsWaitDownload == 1 || FileInfo.files.length>1" matTooltipPosition="after" type="submit"
+              [disabled]="!UpdateDatabase.valid || FileInfo.files.length==0 || this.IsWaitDownload == 1 || FileInfo.files.length>1" matTooltipPosition="after" type="submit" (click)="onSubmit('Upload', formSubmit.value)"
               style="background-color: #201a93; color:aliceblue" class="ui button">Update</button>
           </mat-grid-tile>
 
@@ -115,13 +115,9 @@
       </mat-card-content>
     </mat-expansion-panel>
   </div>
-</form>
 
+  <div style="height:10px;font-size:1px;">&nbsp;</div>
 
-<div style="height:10px;font-size:1px;">&nbsp;</div>
-
-
-<form #formDownload="ngForm" (ngDownload)="onDownload(formDownload.value);" class="ui form">
   <div style="width:90%; min-width: 600px; margin:0 auto;">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header style="background-color:#dddddd; color:Black; ">
@@ -140,7 +136,7 @@
           <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
             <mat-form-field matTooltip="Select protein database from which you want to search protein(s)"
               matTooltipPosition="before" style="width: 100%; padding-left:15px;">
-              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabaseToBeDownloaded" #ProteinDatabase='ngModel' required
+              <mat-select placeholder="Select Database" [(ngModel)]="NameOfDatabase" #ProteinDatabase='ngModel' required
                 name="ProteinDatabase">
                 <mat-option *ngFor="let SelectDatabaseToDownload of ListOfDatabasesForDownload" [value]="SelectDatabaseToDownload.value">
                   {{SelectDatabaseToDownload.viewValue}}
@@ -170,7 +166,7 @@
           <mat-grid-tile colspan="1.5" rowspan="1">
             <label style="padding-left:15px;"></label>
             <button mat-raised-button matTooltip="Click to download FASTA file" class="button-sumbit"
-              [disabled]="!formDownload.valid  || this.IsWaitSubmit == 1" matTooltipPosition="after" type="submit"
+              [disabled]="!ProteinDatabase.valid  || this.IsWaitSubmit == 1" matTooltipPosition="after" type="submit" (click)="onSubmit('Download', formSubmit.value)"
               style="background-color: #201a93; color:aliceblue" class="ui button">Download</button>
           </mat-grid-tile>
 
