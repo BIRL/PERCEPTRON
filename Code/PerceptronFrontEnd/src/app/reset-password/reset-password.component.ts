@@ -37,7 +37,7 @@ export class ResetPasswordComponent implements OnInit {
   resetPassword(email: string, x: any) {
     this.af.auth.sendPasswordResetEmail(email).then((success) => {
       alert('An email with password reset instructions has been sent.');
-      x.navigate(['/search']);
+      x.navigate(['/login']);
     }).catch((err) => {
       var errorCode = err.code;
       var errorMessage = err.message;
