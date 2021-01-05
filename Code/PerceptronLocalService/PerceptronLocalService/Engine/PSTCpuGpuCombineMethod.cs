@@ -258,6 +258,11 @@ namespace PerceptronLocalService.Engine
                                 //    UniquePstTagInfoList.Add(psttaginfolist[firstIndex]);
                                 //}
                                 firstIndex = secondIndex - 1;
+
+                                if (firstIndex == psttaginfolist.Count - 2 && firstTag != secondTag) //Updated 20210105 Bug Fix
+                                {
+                                    UniquePstTagInfoList.Add(psttaginfolist[secondIndex]);
+                                }
                                 break;
                             }
 
