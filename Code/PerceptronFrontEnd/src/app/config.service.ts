@@ -75,29 +75,6 @@ export class ConfigService {
             )
     }
 
-    postDatabase(form, file) {
-
-        let formData: FormData = new FormData();
-
-        var json = JSON.stringify(form);
-
-        formData.append('Jsonfile', json);
-
-        for (let i = 0; i < file.length; i++) {
-            formData.append('uploadFile', file[i], file[i].name);
-        }
-        console.log(json);
-        let headers = new Headers();
-        headers.append('Accept', 'application/json');
-        return this._http.post(this.baseApiUrl + '/api/search/DatabaseUpdate', formData, { headers: headers })
-            .map(res => res.json())
-            .subscribe(
-                data => console.log('success'),
-                error => console.log(error)
-            )
-    }
-
-
     fdrform(form, file){
         let formData: FormData = new FormData();
 
@@ -163,7 +140,36 @@ export class ConfigService {
             });
     }
 
+
+    postDatabase(form, file) {
+
+        let formData: FormData = new FormData();
+
+        var json = JSON.stringify(form);
+
+        formData.append('Jsonfile', json);
+
+        for (let i = 0; i < file.length; i++) {
+            formData.append('uploadFile', file[i], file[i].name);
+        }
+        console.log(json);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        return this._http.post(this.baseApiUrl + '/api/search/DatabaseUpdate', formData, { headers: headers })
+            .map(res => res.json())
+            .subscribe(
+                data => console.log('success'),
+                error => console.log(error)
+            )
+    }
+
     GetDatabaseDownload(NameOfDataBase): Observable<any> {
+
+        // let formData: FormData = new FormData();
+
+        // var json = JSON.stringify(form);
+
+        // formData.append('Jsonfile', json);
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
