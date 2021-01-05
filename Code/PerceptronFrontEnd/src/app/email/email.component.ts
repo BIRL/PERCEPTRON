@@ -56,7 +56,7 @@ export class EmailComponent implements OnInit {
         var errorCode = err.code;
         var errorMessage = err.message;
         if (errorCode === 'auth/wrong-password') {
-          alert('Wrong password.');
+          alert("Dear User,\nYour email address or password is incorrect please try again.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
         } else {
           alert(errorMessage);
         }
