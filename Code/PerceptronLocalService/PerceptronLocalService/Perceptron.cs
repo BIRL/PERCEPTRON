@@ -178,6 +178,7 @@ namespace PerceptronLocalService
                             p.Title + "\" Please check your search parameters and data file.";
                     //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
                     body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
+                    body += "</br> Results are kept on the server for two days. Please download your results. There is no way to retrieve the data older than 48 hours.";
 
                     body += "</br></br>Thank You for using Perceptron.";
                     body += "</br><b>The PERCEPTRON Team</b>";
@@ -291,6 +292,7 @@ namespace PerceptronLocalService
                     var PstTags = new List<PstTagList>();
                     PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
 
+                    /////////////DEL ME 
 
 
                     //Logging.DumpModifiedProteins(candidateProteins);
@@ -360,10 +362,28 @@ namespace PerceptronLocalService
 
                         candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
 
+
+                        //DEL ME 
+                        var candidateProteinsListTOBEDEL = new List<string>(candidateProteins.Count);
+                        for (int i = 0; i < candidateProteins.Count; i++)
+                        {
+                            candidateProteinsListTOBEDEL.Add(candidateProteins[i].Header);
+                        }
+                        //DEL ME
+
                         // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
                         var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
                         CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
+
+                        //DEL ME 
+                        var CandidateProteinListBlindPtmModifiedListTOBEDEL = new List<string>(CandidateProteinListBlindPtmModified.Count);
+                        for (int i2 = 0; i2 < CandidateProteinListBlindPtmModified.Count; i2++)
+                        {
+                            CandidateProteinListBlindPtmModifiedListTOBEDEL.Add(CandidateProteinListBlindPtmModified[i2].Header);
+                        }
+                        //DEL ME
+
 
                         //Step 4 - ??? Algorithm - Spectral Comparison
                         var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
@@ -371,6 +391,16 @@ namespace PerceptronLocalService
 
                         //BlindPTMLocalization: Localizing Unknown mass shift
                         CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
+
+
+
+                        //DEL ME    -----    _BlindPostTranslationalModificationModule
+                        var CandidateProteinswithInsilicoScoresListTOBEDEL = new List<string>(CandidateProteinswithInsilicoScores.Count);
+                        for (int i3 = 0; i3 < CandidateProteinswithInsilicoScores.Count; i3++)
+                        {
+                            CandidateProteinswithInsilicoScoresListTOBEDEL.Add(CandidateProteinswithInsilicoScores[i3].Header);
+                        }
+                        //DEL ME
 
 
                         //Logging.DumpInsilicoScores(candidateProteins);
@@ -400,7 +430,7 @@ namespace PerceptronLocalService
                         if (iterations == 0)
                         {
                             // Results Download Part 2 of 3  BELOW //
-                            
+
                             var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring);
                             ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
 
@@ -415,7 +445,7 @@ namespace PerceptronLocalService
 
                                 var _NoOfPtmModifications = new NoOfPtmModifications();
                                 var NoOfPtmModifications = _NoOfPtmModifications.NoOfPtmModificationsCount(0, FinalCandidateProteinListforFinalScoring[0].PtmParticulars);  // NoOfPtmModifications is Initialized from 0
-                                
+
                                 var tempDataForBatchFileAndFdr = new FalseDiscoveryRateDto(System.IO.Path.GetFileName(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring[0].Header,
                         FinalCandidateProteinListforFinalScoring[0].TerminalModification, FinalCandidateProteinListforFinalScoring[0].Sequence,
                         FinalCandidateProteinListforFinalScoring[0].Truncation, FinalCandidateProteinListforFinalScoring[0].TruncationIndex,
@@ -451,11 +481,24 @@ namespace PerceptronLocalService
                             //DecoyTopFinalCandidateProteinList.Add(FinalCandidateProteinListforFinalScoring[0]);
                         }
 
+
+
+
+                        //DEL ME 
+                        var stringList = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
+                        for (int i = 0; i < FinalCandidateProteinListforFinalScoring.Count; i++)
+                        {
+                            stringList.Add(FinalCandidateProteinListforFinalScoring[i].Header);
+                        }
+                        //DEL ME
                     }
 
-                    
-                    
-                    
+
+
+
+
+
+
                 }
                 catch (Exception r)
                 {
@@ -469,7 +512,7 @@ namespace PerceptronLocalService
                     ProgressStatus = -1;
                 }
 
-                
+
                 //Logging.DumpTotalTime(executionTimes);
                 //Logging.ExitPeakFileDirectory();
             }
@@ -508,7 +551,7 @@ namespace PerceptronLocalService
                 ProgressStatus = 100;
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 EmailMsg = "Exception";
                 ProgressStatus = -1;
@@ -771,7 +814,7 @@ namespace PerceptronLocalService
             {
                 candidateProteins[iter].ProteinRank = iter + 1;
             }
-            
+
             return candidateProteins;
         }
         //SPECTRAL COMPARISON ALGORITHM: 
