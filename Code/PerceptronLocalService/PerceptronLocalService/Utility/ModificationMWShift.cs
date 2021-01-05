@@ -31,6 +31,7 @@ namespace PerceptronLocalService.Utility
                 case "Hydroxylation":         //Site = 'P'    //#UP
                     return ModWeight = 15.9949;
                 case "Sulfoxide":
+                    return ModWeight = 15.9949;    //Updated 20210105 Bug Fix
                 case "MSO":                   //Site = 'M'    //#UP
                     return ModWeight = 147.0354;
                 case "Formylation":
