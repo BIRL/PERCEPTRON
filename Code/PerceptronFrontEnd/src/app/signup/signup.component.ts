@@ -41,32 +41,69 @@ export class SignupComponent implements OnInit {
       var password = formData.value.password;
       var user_name = formData.value.name;
       var x = this.router;
-      this.af.auth.createUserWithEmailAndPassword(email, password).
-        then((success) => {
-          this.af.authState.subscribe(user => {user.updateProfile({
-            displayName: user_name,
-            photoURL: ""
-          })})
-          this.myapp.disabled1=false;
-          this.myapp.disabled=true;
-          this.myapp.logged_in_user = user_name;
-          localStorage.removeItem('login');
-          localStorage.removeItem('logged_in_user');
-          // localStorage.setItem('login','1');   //Updated 20201219
-          // localStorage.setItem('logged_in_user', user_name);   //Updated 20201219
-          x.navigate(['/login'])    //Updated 20201219
-          alert("Dear User,\nA verification email will be sent to your email address shortly. Please verify your email address before you login.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team")
-        }).catch((err) => {
-          var errorCode = err.code;
-          var errorMessage = err.message;
-          if (errorCode == 'auth/weak-password') {
-            alert('The password is too weak.');
-          } else {
-            // alert(errorMessage);
-          }
-          console.log(err);
-          this.error = err;
-        });
+
+      this.af.auth.createUserWithEmailAndPassword(email, password) //Register User
+      .then((user) => {
+        //console.log("user registered");
+
+        return this.af.auth.currentUser;
+      })
+      .then((user) => {
+        //console.log("get user");
+        return user.updateProfile({ displayName: this.name, photoURL: "" });
+      })
+      .then(() => {
+        //console.log("Profile Updated");
+        var user = this.af.auth.currentUser;
+        console.log(user);
+        return user.sendEmailVerification();
+      })
+      .then(() => {
+        //console.log("Email sent");
+        return this.af.auth.signOut();
+      })
+      .then(() => {
+        console.log("signed out");
+        alert("Dear User,\nA verification email will be sent to your email address shortly. Please verify your email address before you login.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+        x.navigate(['/login']) 
+        // .push({
+        //   name: "registered",
+        //   params: { userName: this.name, email: this.email },
+        // });
+      })
+      .catch((errors) => {
+        
+        console.log(errors);
+        // ..
+      });
+
+
+      // this.af.auth.createUserWithEmailAndPassword(email, password).
+      //   then((success) => {
+      //     this.af.authState.subscribe(user => {user.updateProfile({
+      //       displayName: user_name,
+      //       photoURL: ""
+      //     })})
+      //     this.myapp.disabled1=false;
+      //     this.myapp.disabled=true;
+      //     this.myapp.logged_in_user = user_name;
+      //     localStorage.removeItem('login');
+      //     localStorage.removeItem('logged_in_user');
+      //     // localStorage.setItem('login','1');   //Updated 20201219
+      //     // localStorage.setItem('logged_in_user', user_name);   //Updated 20201219
+      //     x.navigate(['/login'])    //Updated 20201219
+      //     alert("Dear User,\nA verification email will be sent to your email address shortly. Please verify your email address before you login.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team")
+      //   }).catch((err) => {
+      //     var errorCode = err.code;
+      //     var errorMessage = err.message;
+      //     if (errorCode == 'auth/weak-password') {
+      //       alert('The password is too weak.');
+      //     } else {
+      //       // alert(errorMessage);
+      //     }
+      //     console.log(err);
+      //     this.error = err;
+      //   });
     } }
     else{
       alert("Passwords must match");
