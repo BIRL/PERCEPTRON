@@ -17,6 +17,7 @@ export class ConfigService {
     resultant: any;
     baseApiUrl = "http://localhost:52340/";
     
+    
 
     constructor(private _http: Http) { }
 
