@@ -555,13 +555,7 @@ export class ProteinSearchComponent implements OnInit {
       alert("Dear User,\nYour selected value for Minimum Tag Length and Maximum Tag Length is not appropriate.\nMaximum Tag Length should be greater than Minimum Tag Length.\nSo, PERCEPTRON will select Minimum Tag Length as 3 and Maximum Tag Length as 6 by default.");
     }
 
-    
-
     let fi = this.imgFileInput.nativeElement;
-    let stats: any = 'false';
-    console.log(form);
-    stats = this._httpService.postJSON(form, fi.files);
-    console.log(stats)
 
     let FileName = fi.files[0].name;
     let FileExtension = FileName. substr(FileName.lastIndexOf('.') + 1);  //Updated 20210102
@@ -583,6 +577,10 @@ export class ProteinSearchComponent implements OnInit {
     else{
       alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
+    let stats: any = 'false';
+    console.log(form);
+    stats = this._httpService.postJSON(form, fi.files);
+    console.log(stats)
     
   }
 
