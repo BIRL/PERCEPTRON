@@ -16,7 +16,9 @@ import { HttpResponse } from '@angular/common/http';
 export class ConfigService {
     resultant: any;
     baseApiUrl = "http://localhost:52340/";
-    
+    // "https://perceptron.lums.edu.pk/PerceptronAPI"
+    //http://localhost:52340/
+
     
 
     constructor(private _http: Http) { }
