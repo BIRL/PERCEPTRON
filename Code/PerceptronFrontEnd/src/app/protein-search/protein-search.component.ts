@@ -545,10 +545,7 @@ export class ProteinSearchComponent implements OnInit {
       form.InsilicoSweight = 0;
     }
 
-    if(form.MwSweight == "0" && form.PstSweight == "0" && form.InsilicoSweight == "0"){
-      alert("Dear User,\nYou did not select any weightage from 'Set Scoring Components Weight'.\nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
-      form.InsilicoSweight = 100;
-    }
+    
     if(Number(form.MaximumPstLength) < Number(form.MinimumPstLength)){
       form.MaximumPstLength = 6;
       form.MinimumPstLength = 3;
@@ -570,6 +567,14 @@ export class ProteinSearchComponent implements OnInit {
       alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
+    
+    let stats: any = 'false';
+    console.log(form);
+    stats = this._httpService.postJSON(form, fi.files);
+    console.log(stats);
+
+
+    
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID 
     {
       alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
@@ -577,10 +582,12 @@ export class ProteinSearchComponent implements OnInit {
     else{
       alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
-    let stats: any = 'false';
-    console.log(form);
-    stats = this._httpService.postJSON(form, fi.files);
-    console.log(stats)
+
+
+    if(form.MwSweight == "0" && form.PstSweight == "0" && form.InsilicoSweight == "0"){
+      alert("Dear User,\nYou did not select any weightage from 'Set Scoring Components Weight'.\nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
+      form.InsilicoSweight = 100;
+    }
     
   }
 
