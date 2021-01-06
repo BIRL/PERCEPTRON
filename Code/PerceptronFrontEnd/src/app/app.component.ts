@@ -262,14 +262,16 @@ export class AppComponent {
   account() {
     var user = firebase.auth().currentUser;
 
-    if (user === null || (confirm("Warning:\nYou are logged in as a Guest. Closing this window or logging out will result in the loss of your search results."))) {
-      this.af.auth.signOut();
-      this.disabled = false;
-      this.disabled1 = true;
-      localStorage.removeItem('login');
-      localStorage.removeItem('logged_in_user');
-      this.UserEmailID = "";
-      this.router.navigateByUrl('/home');
+    if (user === null || user.emailVerified == false) {   //Updated 20200106
+      if (confirm("Warning:\nYou are logged in as a Guest. Closing this window or logging out will result in the loss of your search results.")) {   //Updated 20200106
+        this.af.auth.signOut();
+        this.disabled = false;
+        this.disabled1 = true;
+        localStorage.removeItem('login');
+        localStorage.removeItem('logged_in_user');
+        this.UserEmailID = "";
+        this.router.navigateByUrl('/home');
+      }
     }
     else if (user.emailVerified == true) {
       if (confirm("Do you want to logout?")) {
@@ -283,7 +285,7 @@ export class AppComponent {
       }
     }
 
-    
+
   };
 
   setting() {
