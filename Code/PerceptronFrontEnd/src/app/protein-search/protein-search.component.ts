@@ -344,9 +344,9 @@ export class ProteinSearchComponent implements OnInit {
     this.PeptideToleranceUnit = 'ppm';
     this.NoOfOutputResults = '10';
 
-    this.Slider1 = '100'; //Intact Protein Mass Slider
-    this.Slider2 = '100'; //PST Slider
-    this.Slider3 = '100'; //Insilico Slider
+    this.Slider1 = '1'; //Intact Protein Mass Slider
+    this.Slider2 = '1'; //PST Slider
+    this.Slider3 = '1'; //Insilico Slider
 
     this.FDR_CutOff = "1";
 
