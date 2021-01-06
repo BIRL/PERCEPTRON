@@ -21,6 +21,8 @@ export class AdminPanelComponent implements OnInit {
   NameOfDatabaseToBeUpdated: string;
   UploadedFile: any;
   blob : any;
+  NameOfDatabase: any;
+  buttonType: any;
 
   IsWaitSubmit = 0;
   IsWaitDownload = 0;
