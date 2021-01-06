@@ -58,14 +58,22 @@ export class SignupComponent implements OnInit {
         console.log(user);
         return user.sendEmailVerification();
       })
-      .then(() => {
+      .then((user) => {
         //console.log("Email sent");
+        //BELOW
+        // this.af.auth.signOut();
+        // this.disabled = false;
+        // this.disabled1 = true;
+        localStorage.removeItem('login');
+        localStorage.removeItem('logged_in_user');
+        // this.user = "";
+        //above
         return this.af.auth.signOut();
       })
       .then(() => {
         console.log("signed out");
         alert("Dear User,\nA verification email will be sent to your email address shortly. Please verify your email address before you login.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
-        x.navigate(['/login']) 
+        x.navigate(['/home']) 
         // .push({
         //   name: "registered",
         //   params: { userName: this.name, email: this.email },
