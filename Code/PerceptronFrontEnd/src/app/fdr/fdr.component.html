@@ -1,7 +1,7 @@
 <form #formSubmit="ngForm" (ngSubmit)="onSubmit(formSubmit.value);" class="ui form">
-  <div style="width:90%; min-width: 600px; margin:0 auto;">
+  <div id="top" style="width:90%; min-width: 600px; margin:0 auto;">
     <mat-card>
-      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">False Discovery Rate</h4>
+      <h4 style="text-align:center; font-family: Roboto, Arial, sans-serif; font-weight:bold; margin:0 auto;">FDR</h4>
     </mat-card>
 
     <div style="height:10px;font-size:1px;">&nbsp;</div>
@@ -24,13 +24,13 @@
   
               <mat-grid-tile colspan="2" rowspan="1" rowHeight="50px">
                   <mat-form-field style="padding-left:15px; width:100%">
-                    <input matInput matTooltip="I don't know whta to write here so..."
+                    <input matInput matTooltip="Compute FDR by adding desired cut off percentage for filtering"
                       matTooltipClass="mat-tooltip" (keypress)="keyPress1($event)" matTooltipPosition="before"
-                      placeholder="Some Text Here" class="asterisk" required #textHere='ngModel' name='TextHere'
+                      placeholder="FDR Cutoff (%)" class="asterisk" required #textHere='ngModel' name='TextHere'
                       [(ngModel)]='TextHere' ngModel>
                     <mat-error style="font-style: italic;" *ngIf="textHere?.invalid && (textHere.dirty || textHere.touched)">
                       <div *ngIf="textHere.errors.required">
-                        Something is required here.
+                        FDR Cutoff is required.
                       </div>
                     </mat-error>
                   </mat-form-field>
@@ -40,7 +40,7 @@
             <mat-grid-tile colspan="2" rowspan="1" style="padding:0px;">
               <span matTooltip="Browse and upload the Target file"
                 matTooltipPosition="left" style="padding:0px; padding-left:15px; width:100%;">
-                <label class="required" style='display:inline;  font-weight:500;'>Upload Target File</label>
+                <label class="required" style='display:inline;  font-weight:500;'>Upload the Target File</label>
                
                 <br />
                 <label style='display:inline;  font-weight:500; '>Select File * : </label>
@@ -54,7 +54,7 @@
                 </style>
                 <label style="display:inline;">&nbsp;</label>
                 <div style='display:inline;' class="button-row">
-                  <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
+                  <button mat-button class='buttonclass' type='button' style='display:inline; background-color:#212121 '
                     mat-mini-fab (click)="imgTargetFile.click()">
                     <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                   </button>
@@ -74,8 +74,8 @@
                   <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
                     *ngIf='FileInfo.files.length==1'>{{FileInfo.files[0].name}}</i></a>
   
-                  <input #FileInfo type="file" #imgTargetFile (ngModel)="FileInfo" #TargetFileName="ngModel" required
-                    name="TargetFileName" [(ngModel)]="NameOfTargetFile" style="display: none;" id="TargetFileName" 
+                  <input #FileInfo type="file" #imgTargetFile (ngModel)="FileInfo" #FileName="ngModel" required
+                    name="FileName" style="display: none;" id="imgTargetFile" (change)="upload(Uploaded_File)"
                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
                   <mat-error style="display: inline; font-style: italic;" *ngIf="FileInfo.files.length==0">
                     Please select an Excel file.
@@ -105,7 +105,7 @@
                 </style>
                 <label style="display:inline;">&nbsp;</label>
                 <div style='display:inline;' class="button-row">
-                  <button mat-button class='buttonclass' type='file' style='display:inline; background-color:#212121 '
+                  <button mat-button class='buttonclass' type='button' style='display:inline; background-color:#212121 '
                     mat-mini-fab (click)="imgDecoyFile.click()">
                     <mat-icon class='iconclass'>insert_drive_file</mat-icon>
                   </button>
@@ -123,15 +123,15 @@
                   <br />
                   <label style="display:inline;">&nbsp;</label>
                   <a style="color: rgb(81, 81, 252);" style='display:inline;'><i
-                    *ngIf='DecoyFileInfo.files.length==1'>{{DecoyFileInfo.files[0].name}}</i></a>
+                    *ngIf='File_Info.files.length==1'>{{File_Info.files[0].name}}</i></a>
   
-                  <input #DecoyFileInfo type="file" #imgDecoyFile (ngModel)="DecoyFileInfo" #DecoyFileName="ngModel" required
-                    name="DecoyFileName" [(ngModel)]="NameOfDecoyFile" style="display: none;" id="DecoyFileName" 
+                  <input #File_Info type="file" #imgDecoyFile (ngModel)="File_Info" #File_Name="ngModel" required
+                    name="File_Name" style="display: none;" id="imgDecoyFile" (change)="upload(Uploaded_File)"
                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" multiple ngModel />
-                  <mat-error style="display: inline; font-style: italic;" *ngIf="DecoyFileInfo.files.length==0">
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length==0">
                     Please select an Excel file.
                   </mat-error>
-                  <mat-error style="display: inline; font-style: italic;" *ngIf="DecoyFileInfo.files.length>1">
+                  <mat-error style="display: inline; font-style: italic;" *ngIf="File_Info.files.length>1">
                     Please select just one Excel file.
                   </mat-error>
                 </div>
@@ -159,7 +159,7 @@
 
       <mat-grid-tile colspan="1" rowspan="1">
       <label style="padding-left:15px;"></label>
-      <button mat-raised-button matTooltip="Click to submit FASTA file" class="button-sumbit"
+      <button mat-raised-button matTooltip="Click submit to update FDR in target file" class="button-sumbit"
           [disabled]="!formSubmit.valid || this.IsWaitDownload == 1 || FileInfo.files.length>1 || File_Info.files.length>1" matTooltipPosition="after" type="submit"
           style="background-color: #201a93; color:aliceblue" class="ui button">Submit</button>
       </mat-grid-tile>

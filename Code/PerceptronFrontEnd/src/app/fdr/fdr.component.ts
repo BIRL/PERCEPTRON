@@ -29,6 +29,7 @@ export class FdrComponent implements OnInit {
   IsWaitSubmit: any;
   IsWaitDownload: any;
   UploadedFile: any;
+  Uploaded_File: any;
 
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
@@ -46,9 +47,17 @@ export class FdrComponent implements OnInit {
   ngOnInit() {
     let a = 1;
   }
+  ngAfterViewInit() { //Added //Updated 20201215 
+    // Scrolls to top of Page after page view initialized
+    let top = document.getElementById('top');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
   
   keyPress1(event: any) {
-    const pattern = /[0-9\+\-\.\ \a-z\@\A-Z]/;
+    const pattern = /[0-9\.]/; ///     \ \a-z\@\A-Z
 
     let inputChar = String.fromCharCode(event.charCode);
     if (event.keyCode != 8 && !pattern.test(inputChar)) {
