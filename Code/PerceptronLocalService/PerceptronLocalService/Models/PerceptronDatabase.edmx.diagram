@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="070d2d539d7449309ae2046d485473f4" Name="Diagram1">
+      <Diagram DiagramId="5a77f74b9b114094a68f3c9d4601428d" Name="Diagram1">
         <EntityTypeShape EntityType="PerceptronDatabaseModel.ExecutionTime" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.PeakListData" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.PtmFixedModification" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
@@ -17,8 +17,8 @@
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchParameter" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchQuery" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PerceptronDatabaseModel.SearchResult" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.ZipResultsDownloadInfo" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PerceptronDatabaseModel.Test" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.sysdiagram" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PerceptronDatabaseModel.ZipResultsDownloadInfo" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
