@@ -138,6 +138,10 @@ namespace PerceptronAPI.Controllers
                     };
                     parametersDto.SearchFiles.Add(x);
                 }
+                if (parametersDto.SearchFiles.Count == 1)
+                {
+                    parametersDto.SearchParameters.FDRCutOff = "0";
+                }
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
