@@ -146,6 +146,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IDataAccessLayer.cs" />
+    <Compile Include="Models\AdminPanelDto.cs" />
     <Compile Include="Models\AssembleInsilicoSpectra.cs" />
     <Compile Include="Models\BlindPtmInfo.cs" />
     <Compile Include="Models\CustomMultipartFormDataStreamProvider.cs" />
