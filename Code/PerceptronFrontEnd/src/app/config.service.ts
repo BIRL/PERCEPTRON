@@ -59,6 +59,7 @@ export class ConfigService {
 
         let formData: FormData = new FormData();
 
+        form.FileName = file[0].name;  //Updated 20210108
         var json = JSON.stringify(form);
 
         formData.append('Jsonfile', json);
