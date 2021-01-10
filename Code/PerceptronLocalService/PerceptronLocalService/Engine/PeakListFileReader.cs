@@ -199,7 +199,7 @@ namespace PerceptronLocalService.Engine
 
                 }
 
-                if (mass.Count > maxCount && Convert.ToDouble(pepMass) > 1.0073) //Checking the file for max number of scans and MS1 should not equal to 1.0073    //Updated 20201211
+                if (mass.Count > maxCount && Convert.ToDouble(pepMass) > 113) //Checking the file for max number of scans and MS1 should be greater than 113. Although no mass of protein is equal to this but we are considering as GG but still its a peptide    //Updated 20210108
                 {
                     maxCount = mass.Count;
                     maxFilename = newAddress + name + "_" + i + ".txt";
@@ -255,24 +255,28 @@ namespace PerceptronLocalService.Engine
             var OpenMSPath = Path.GetFullPath(Path.Combine(navigatepath, ".\\PerceptronLocalService\\Tools\\OpenMS"));  // Navigated to the path where OpenMS folder is exists
 
 
+            try
+            {
+                var addressmzXMLFile = addressFile; //file name for mzXML
+                addressmzXMLFile = Path.ChangeExtension(addressmzXMLFile, ".mzXML");  //newfilename = newfilename.Replace(".mzML", ".mzXML");
 
-            var addressmzXMLFile = addressFile; //file name for mzXML
-            addressmzXMLFile = Path.ChangeExtension(addressmzXMLFile, ".mzXML");  //newfilename = newfilename.Replace(".mzML", ".mzXML");
+                System.Environment.SetEnvironmentVariable("OPENMS_DATA_PATH", OpenMSPath + "\\share"); //setting environment variable
 
-            System.Environment.SetEnvironmentVariable("OPENMS_DATA_PATH", OpenMSPath + "\\share"); //setting environment variable
-            
-            bool check = false;
+                bool check = false;
 
-            System.Diagnostics.Process mzmlToMzxml = new Process();
-            mzmlToMzxml.StartInfo.FileName = OpenMSPath + "\\FileConverter.exe";
-            mzmlToMzxml.StartInfo.Arguments = " -in " + addressFile + " -out " + addressmzXMLFile;
+                System.Diagnostics.Process mzmlToMzxml = new Process();
+                mzmlToMzxml.StartInfo.FileName = OpenMSPath + "\\FileConverter.exe";
+                mzmlToMzxml.StartInfo.Arguments = " -in " + addressFile + " -out " + addressmzXMLFile;
 
-            check = mzmlToMzxml.Start();
-            mzmlToMzxml.WaitForExit();
-            int code1 = mzmlToMzxml.ExitCode;
-
-            addressFile = addressmzXMLFile;
-
+                check = mzmlToMzxml.Start();
+                mzmlToMzxml.WaitForExit();
+                int code1 = mzmlToMzxml.ExitCode;
+                addressFile = addressmzXMLFile;
+            }
+            catch (Exception e)
+            {
+                addressFile = "";
+            }
         }
 
         public MsPeaksDto PeakListReader(SearchParametersDto parameters, int fileNumber)//EXTRACTING MASS & INTENSITY FROM FILE(s)
