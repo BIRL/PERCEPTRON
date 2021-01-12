@@ -243,7 +243,7 @@ export class AppComponent {
         this.logged_in_user = localStorage.getItem('logged_in_user');
       }
       else {
-        this.logged_in_user = 'user';
+        this.logged_in_user = 'User';
       }
       this.disabled1 = false;
     } else {
