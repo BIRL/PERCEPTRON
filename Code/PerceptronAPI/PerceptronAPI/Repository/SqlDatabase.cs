@@ -107,58 +107,72 @@ namespace PerceptronAPI.Repository
         {
             qid = qid.Trim('"');
             var scanResults = new List<ScanResults>();
-            using (var db = new PerceptronDatabaseEntities())
+            try
             {
-                var sqlConnection1 =
-                    new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
-                var cmd = new SqlCommand
+                using (var db = new PerceptronDatabaseEntities())
                 {
-                    CommandText =
-                        //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid +
-                        //"' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
-                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid +
-                        "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ",
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
-                sqlConnection1.Open();
-                var SearchFileList = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
-                
-                //var parameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList().First();
-
-                int j = 0;
-                var dataReader = cmd.ExecuteReader();
-
-
-                if (SearchFileList.Count == 1)   //Checking if no of files more than one then, it will be considered as batch mode and PERCEPTRON will not fetch the data from database.
-                {
-                    var FileSpecificData = db.SearchResults.Where(x => x.QueryId == qid).ToList();
-
-                    while (dataReader.Read())
+                    var sqlConnection1 =
+                        new SqlConnection(
+                            "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                    var cmd = new SqlCommand
                     {
-                        var temp = new ScanResults
+                        CommandText =
+                    //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
+
+
+                    /// ITS HEALTHY BELOW
+                    "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid +
+                        "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ORDER BY P.Queryid Desc ",
+                        ////// ITS HEALTHY ABOVE
+                        CommandType = CommandType.Text,
+                        Connection = sqlConnection1
+                    };
+                    sqlConnection1.Open();
+                    var SearchFileList = db.SearchFiles.Where(x => x.QueryId == qid).ToList();
+
+                    //var parameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList().First();
+
+                    int j = 0;
+                    var dataReader = cmd.ExecuteReader();
+
+
+                    if (SearchFileList.Count == 1)   //Checking if no of files more than one then, it will be considered as batch mode and PERCEPTRON will not fetch the data from database.
+                    {
+                        var FileSpecificData = db.SearchResults.Where(x => x.QueryId == qid).ToList();
+
+                        while (dataReader.Read())
                         {
-                            FileId = dataReader["FileId"].ToString(),
-                            FileName = Path.GetFileName(dataReader["FileName"].ToString()),
-                            ProteinId = dataReader["Header"].ToString(),
-                            Score = (double)dataReader["Score"],
-                            MolW = (double)dataReader["Mw"],
-                            FileUniqueId = dataReader["FileUniqueId"].ToString(),
-                            //SearchModeMessage = "SingleMode"       // Just for showing whether its Single ode or Batch Mode
+                            var temp = new ScanResults
+                            {
+                                FileId = dataReader["FileId"].ToString(),
+                                FileName = Path.GetFileName(dataReader["FileName"].ToString()),
+                                ProteinId = dataReader["Header"].ToString(),
+                                Score = (double)dataReader["Score"],
+                                MolW = (double)dataReader["Mw"],
+                                FileUniqueId = dataReader["FileUniqueId"].ToString(),
+                                //SearchModeMessage = "SingleMode"       // Just for showing whether its Single ode or Batch Mode
 
-                            //Truncation = "No",
-                            //Frags = 1,
-                            //Mods = 1,
+                                //Truncation = "No",
+                                //Frags = 1,
+                                //Mods = 1,
 
-                        };
-                        scanResults.Add(temp);
+                            };
+                            scanResults.Add(temp);
+                        }
                     }
+                    dataReader.Close();
+                    cmd.Dispose();
+                    sqlConnection1.Close();
                 }
-                dataReader.Close();
-                cmd.Dispose();
-                sqlConnection1.Close();
             }
+
+            catch (DbEntityValidationException e)
+            {
+                int asd = 1;
+
+            }
+
+
             return scanResults;
         }
 
@@ -169,7 +183,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -205,7 +219,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -284,7 +298,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -368,7 +382,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -435,7 +449,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -459,7 +473,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
 
                 var cmd = new SqlCommand
                 {
@@ -495,7 +509,7 @@ namespace PerceptronAPI.Repository
             ////{
             ////    var sqlConnection1 =
             ////        new SqlConnection(
-            ////            "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+            ////            "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
             ////    var cmd = new SqlCommand
             ////    {
             ////        CommandText =
@@ -599,7 +613,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -735,7 +749,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -773,7 +787,7 @@ namespace PerceptronAPI.Repository
             {
                 var sqlConnection1 =
                     new SqlConnection(
-                        "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
                 var cmd = new SqlCommand
                 {
                     CommandText =
@@ -803,7 +817,7 @@ namespace PerceptronAPI.Repository
 
             try
             {
-                string ConnetionString = "Data Source=CHIRAGH-II;Initial Catalog=" + DatabaseName + ";Integrated Security=True";
+                string ConnetionString = "Data Source=CHIRAGH-I;Initial Catalog=" + DatabaseName + ";Integrated Security=True";
                 SqlConnection Connection = new SqlConnection(ConnetionString);
                 Connection.Open();
 
@@ -842,7 +856,7 @@ namespace PerceptronAPI.Repository
                 {
                     var sqlConnection1 =
                         new SqlConnection(
-                            "Server= CHIRAGH-II; Database= " + DatabaseName + "; Integrated Security=SSPI;");
+                            "Server= CHIRAGH-I; Database= " + DatabaseName + "; Integrated Security=SSPI;");
                     var cmd = new SqlCommand
                     {
                         CommandText =
@@ -917,7 +931,7 @@ namespace PerceptronAPI.Repository
 //    {
 //        var sqlConnection1 =
 //            new SqlConnection(
-//                "Server= CHIRAGH-II; Database= PerceptronDatabase; Integrated Security=SSPI;");
+//                "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
 //        var cmd = new SqlCommand
 //        {
 //            CommandText =
