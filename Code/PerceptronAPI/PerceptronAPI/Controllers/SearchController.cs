@@ -149,7 +149,7 @@ namespace PerceptronAPI.Controllers
             {
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    Sending_Email(parametersDto, creationTime);
+                    //Sending_Email(parametersDto, creationTime);
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
@@ -264,8 +264,8 @@ namespace PerceptronAPI.Controllers
                 {
                     //Sending_Email(parametersDto, creationTime);
                 }
-
-                DbEntitiyError(e);
+                var _DBErrorException = new DBErrorException();
+                _DBErrorException.DbEntitiyError(e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
@@ -615,9 +615,10 @@ namespace PerceptronAPI.Controllers
                 StatusMessage = _FastaReader.MainFastaReader(DatabaseName, FastaFilePath);
 
             }
-            catch(DbEntityValidationException e)
+            catch(Exception e)   //DbEntityValidationException
             {
-                DbEntitiyError(e);
+                //var _DBErrorException = new DBErrorException();
+                //_DBErrorException.DbEntitiyError(e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
@@ -727,20 +728,6 @@ namespace PerceptronAPI.Controllers
                     if (e is System.Net.Mail.SmtpException)
                         emailaddress = "das bad";
 
-                }
-            }
-        }
-
-        public void DbEntitiyError(DbEntityValidationException e)
-        {
-            foreach (var eve in e.EntityValidationErrors)  //Courtesy by https://www.codeproject.com/Questions/1012001/VALIDATION-FAILED-FOR-ONE-OR-MORE-ENTITIES-SEE-ENT
-            {
-                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                    eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                foreach (var ve in eve.ValidationErrors)
-                {
-                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                        ve.PropertyName, ve.ErrorMessage);
                 }
             }
         }
