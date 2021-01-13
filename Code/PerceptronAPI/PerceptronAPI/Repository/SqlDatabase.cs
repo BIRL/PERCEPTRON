@@ -732,7 +732,8 @@ namespace PerceptronAPI.Repository
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
                 EmailId = searchParameters.EmailId,
                 Truncation = searchParameters.Truncation,
-                FDRCutOff = searchParameters.FDRCutOff
+                FDRCutOff = searchParameters.FDRCutOff,
+                JobSubmission = searchParameters.JobSubmission
 
             };
             return searchParameter;
@@ -776,39 +777,6 @@ namespace PerceptronAPI.Repository
 
             }
             return SearchParameter;
-        }
-
-
-        public Test GetImagePathMassSpectrum(string qid)
-        {
-            var InfoPath = new Test();
-            string Path = "";
-            using (new PerceptronDatabaseEntities())
-            {
-                var sqlConnection1 =
-                    new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
-                var cmd = new SqlCommand
-                {
-                    CommandText =
-                        "SELECT Path \nFROM Test \nWHERE QueryId = '" + qid + "'",
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
-                sqlConnection1.Open();
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                    Path = dataReader["Path"].ToString();
-
-                dataReader.Close();
-                cmd.Dispose();
-                sqlConnection1.Close();
-            }
-            InfoPath.Path = Path;
-            InfoPath.QueryId = qid;
-            return InfoPath;
-
         }
 
         public string UpdatingDatabase(string DatabaseName, List<FastaReaderProteinDataDto> FastaReaderProteinInfo)  //For Updating Database Enteries by FastaReader (.fasta to SQL query)
