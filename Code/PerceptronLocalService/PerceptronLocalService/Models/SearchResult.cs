@@ -50,5 +50,6 @@ namespace PerceptronLocalService.Models
         public double Evalue { get; set; }
         public string BlindPtmLocalization { get; set; }
         public int ProteinRank { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

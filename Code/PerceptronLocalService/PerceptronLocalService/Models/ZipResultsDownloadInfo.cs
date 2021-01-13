@@ -17,5 +17,6 @@ namespace PerceptronLocalService.Models
         public string QueryId { get; set; }
         public string ZipFileWithQueryId { get; set; }
         public string ZipFileName { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

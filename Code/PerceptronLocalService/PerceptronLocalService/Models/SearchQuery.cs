@@ -14,6 +14,7 @@ namespace PerceptronLocalService.Models
     
     public partial class SearchQuery
     {
+        public Nullable<System.DateTime> JobSubmission { get; set; }
         public string QueryId { get; set; }
         public string UserId { get; set; }
         public string Progress { get; set; }
