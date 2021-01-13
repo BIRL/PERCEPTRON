@@ -17,5 +17,6 @@ namespace PerceptronAPI.Models
         public int ModificationId { get; set; }
         public string QueryId { get; set; }
         public string FixedModifications { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

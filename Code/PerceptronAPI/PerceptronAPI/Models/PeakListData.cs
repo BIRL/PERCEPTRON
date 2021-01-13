@@ -17,5 +17,6 @@ namespace PerceptronAPI.Models
         public string FileUniqueId { get; set; }
         public string PeakListMasses { get; set; }
         public string PeakListIntensities { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

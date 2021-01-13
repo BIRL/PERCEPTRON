@@ -23,5 +23,6 @@ namespace PerceptronAPI.Models
         public string QueryId { get; set; }
         public string FileName { get; set; }
         public string TruncationEngineTime { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

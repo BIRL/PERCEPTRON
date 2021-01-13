@@ -49,5 +49,6 @@ namespace PerceptronAPI.Models
         public double InsilicoSweight { get; set; }
         public int TruncationIndex { get; set; }
         public string FDRCutOff { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

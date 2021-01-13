@@ -90,6 +90,8 @@ namespace PerceptronAPI.Controllers
                 {
                     parametersDto.SearchParameters = JsonConvert.DeserializeObject<SearchParameter>(jsonData[0].Trim('"'));
                     parametersDto.SearchQuerry = JsonConvert.DeserializeObject<SearchQuery>(jsonData[0].Trim('"'));
+                    parametersDto.SearchQuerry.JobSubmission = time;
+                    parametersDto.SearchParameters.JobSubmission = time;
                     parametersDto.FixedMods = JsonConvert.DeserializeObject<PtmFixedModification>(jsonData[0].Trim('"'));
                     parametersDto.VarMods = JsonConvert.DeserializeObject<PtmVariableModification>(jsonData[0].Trim('"'));
                 }
@@ -98,12 +100,14 @@ namespace PerceptronAPI.Controllers
                 if (parametersDto.FixedMods.FixedModifications != "")
                 {
                     parametersDto.FixedMods.QueryId = queryId;
+                    parametersDto.FixedMods.JobSubmission = time;
                     parametersDto.FixedMods.ModificationId = 1;
                 }
 
                 if (parametersDto.VarMods.VariableModifications != "")
                 {
                     parametersDto.VarMods.QueryId = queryId;
+                    parametersDto.VarMods.JobSubmission = time;
                     parametersDto.VarMods.ModificationId = 1;
                 }
 
@@ -134,7 +138,8 @@ namespace PerceptronAPI.Controllers
                         UniqueFileName = FileNameWithUniqueID,
                         FileType = System.IO.Path.GetExtension(file),
                         QueryId = queryId,
-                        FileUniqueId = FileUniqueId
+                        FileUniqueId = FileUniqueId,
+                        JobSubmission = time
                     };
                     parametersDto.SearchFiles.Add(x);
                 }

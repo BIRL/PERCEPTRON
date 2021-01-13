@@ -19,5 +19,6 @@ namespace PerceptronAPI.Models
         public string MassSpectrumImageFilePath { get; set; }
         public string JsonExpThrTableFilePath { get; set; }
         public string CompleteDetailedResultsFilePath { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }
