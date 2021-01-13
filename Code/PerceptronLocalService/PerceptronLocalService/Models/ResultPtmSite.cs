@@ -19,5 +19,6 @@ namespace PerceptronLocalService.Models
         public string Index { get; set; }
         public string ModName { get; set; }
         public string Site { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

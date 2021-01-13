@@ -58,6 +58,7 @@ namespace PerceptronLocalService.DTO
         public string MethionineChemicalModification;
         public string EmailId;
         public string FDRCutOff;
+        public DateTime JobSubmission;
 
 
         public bool HasFixedAndVariableModifications()

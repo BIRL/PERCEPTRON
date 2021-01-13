@@ -20,5 +20,6 @@ namespace PerceptronLocalService.Models
         public string FileType { get; set; }
         public string UniqueFileName { get; set; }
         public string FileUniqueId { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }
