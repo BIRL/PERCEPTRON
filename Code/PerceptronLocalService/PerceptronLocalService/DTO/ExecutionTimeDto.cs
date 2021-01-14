@@ -1,4 +1,6 @@
-﻿namespace PerceptronLocalService.DTO
+﻿using System;
+
+namespace PerceptronLocalService.DTO
 {
     public class ExecutionTimeDto
     {
@@ -15,5 +17,6 @@
         public string TotalTime;
         
         public string TruncationEngineTime;
+        public DateTime? JobSubmission;
     }
 }

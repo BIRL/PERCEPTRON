@@ -10,6 +10,7 @@ using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Repository;
 using PerceptronLocalService.Utility;
+using System.Globalization;
 //using System.IO.Compression;
 ////using PerceptronLocalService.Testing;
 ///////For getting GPU version/////
@@ -458,9 +459,10 @@ namespace PerceptronLocalService
                             // Results Download Part 2 of 3  ABOVE //
                             pipeLineTimer.Stop();
                             executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
+                            executionTimes.JobSubmission = parameters.JobSubmission;
                             StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
-                            StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList);
+                            StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList, parameters.JobSubmission);
                         }
                         else
                         {
@@ -485,11 +487,24 @@ namespace PerceptronLocalService
 
 
                         //DEL ME 
+
+                        string FileWithPath = @"C:\PerceptronResultsDownload\StringList.txt";
+                        if (File.Exists(FileWithPath))
+                            File.Delete(FileWithPath); //Deleted Pre-existing file
+
+                        var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+                        var sw = new StreamWriter(fout);
+
+
                         var stringList = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
                         for (int i = 0; i < FinalCandidateProteinListforFinalScoring.Count; i++)
                         {
                             stringList.Add(FinalCandidateProteinListforFinalScoring[i].Header);
+                            sw.WriteLine(FinalCandidateProteinListforFinalScoring[i].Header);
                         }
+
+                        sw.Close();
+
                         //DEL ME
                     }
 
@@ -545,7 +560,7 @@ namespace PerceptronLocalService
 
                 var ZipFileWithQueryId = _WriteResultsFile.ZippingOutputFiles(parameters.Title, parameters.Queryid, ResultsDownloadFileNames, Path);
                 string ZipFileName = parameters.Title + ".zip";   //This Name will show to the User.
-                _dataLayer.StoreZipResultsForDownload(parameters.Queryid, ZipFileName, ZipFileWithQueryId);
+                _dataLayer.StoreZipResultsForDownload(parameters.Queryid, ZipFileName, ZipFileWithQueryId, parameters.JobSubmission);
                 // Results Download Part 3 of 2  ABOVE //
                 EmailMsg = "";
                 ProgressStatus = 100;
@@ -880,13 +895,12 @@ namespace PerceptronLocalService
                     candidateProteins = candidateProteins.Take(NumberOfOutputs).ToList<ProteinDto>();
                 }
             }
-
-
+            
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
-            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber);
+            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
         }
 
-        private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList)
+        private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime? JobSubmission)
         {
             var peakDataMasses = new List<double>();
             var peakDataIntensities = new List<double>();
@@ -900,7 +914,7 @@ namespace PerceptronLocalService
             string peakDataMassesString = string.Join(",", peakDataMasses);
             string peakDataIntensitiesString = string.Join(",", peakDataIntensities);
 
-            _dataLayer.StorePeakList(FileUniqueId, peakDataMassesString, peakDataIntensitiesString);
+            _dataLayer.StorePeakList(FileUniqueId, peakDataMassesString, peakDataIntensitiesString, JobSubmission);
         }
 
 
