@@ -859,9 +859,9 @@
 
       <mat-grid-tile colspan="1" rowspan="1">
         <label style="padding-left:15px;"></label>
-        <button mat-raised-button matTooltip="Click to submit job " class="button-sumbit" [disabled]="!f.valid"
-          matTooltipPosition="after" type="submit" style="background-color: #201a93; color:aliceblue"
-          class="ui button">Submit</button>
+          <button mat-raised-button matTooltip="Click to submit job " class="button-sumbit" [disabled]="!f.valid || filenameModel || email.files.length>1"
+            matTooltipPosition="after" type="submit" style="background-color: #201a93; color:aliceblue"
+            class="ui button">Submit</button>
       </mat-grid-tile>
     </mat-grid-list>
 
