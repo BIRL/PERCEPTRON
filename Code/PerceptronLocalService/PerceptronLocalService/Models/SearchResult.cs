@@ -14,6 +14,7 @@ namespace PerceptronLocalService.Models
     
     public partial class SearchResult
     {
+        public System.DateTime JobSubmission { get; set; }
         public string QueryId { get; set; }
         public string ResultId { get; set; }
         public string Header { get; set; }
@@ -50,6 +51,5 @@ namespace PerceptronLocalService.Models
         public double Evalue { get; set; }
         public string BlindPtmLocalization { get; set; }
         public int ProteinRank { get; set; }
-        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }
