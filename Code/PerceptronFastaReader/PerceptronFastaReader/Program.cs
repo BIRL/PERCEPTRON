@@ -22,11 +22,12 @@ namespace PerceptronFastaReader
             {
                 Stopwatch Time = Stopwatch.StartNew();
                 var tempD = new List<FastaProteinDataDto>();
-                string Path = @"C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\Backup\Decoy\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
+                string Path = @"E:\01_PERCEPTRON\Databases\Decoy\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
 
 
                 string FileName = "HumanDecoyDB";  //Add here fasta File Name
                 string FastaFullFileName = Path + FileName + ".fasta";
+                string DatabaseToBeUpdated = "HumanDecoy";
 
                 var ExcelFileName = Path + FileName + ".xlsx";
 
@@ -100,18 +101,18 @@ namespace PerceptronFastaReader
                 }
                 FastaProteinInfo = FastaProteinInfo.OrderByDescending(n => n.MolecularWeight).ToList();  //Sort By Descending Order
 
-                GetConnectionString(FastaProteinInfo);
+                GetConnectionString(FastaProteinInfo, DatabaseToBeUpdated);
 
                 FastaFile.Close();
                 Time.Stop();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }
         }
 
-        private static void GetConnectionString(List<FastaProteinDataDto> FastaProteinInfo)
+        private static void GetConnectionString(List<FastaProteinDataDto> FastaProteinInfo, string DatabaseToBeUpdated)
         {
 
             try
@@ -127,12 +128,13 @@ namespace PerceptronFastaReader
                 for (int index = 0; index < FastaProteinInfo.Count; index++)
                 {
 
-                    QueryInfo = "Insert INTO HumanDecoy.dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR, FastaHeader) Values ('"
+                    QueryInfo = "Insert INTO " + DatabaseToBeUpdated + ".dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR, FastaHeader) Values ('"
                      + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "','" + FastaProteinInfo[index].FastaHeader + "')";
 
                     var Command = new SqlCommand(QueryInfo, Connection);
                     Command.ExecuteNonQuery();
                 }
+                //db.SaveChanges();
 
                 Connection.Close();
             }
