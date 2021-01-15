@@ -15,7 +15,7 @@ namespace PerceptronLocalService.Utility
     {
         public string WriteParametersInTxtFile(SearchParametersDto SearchParameters, string filePath)
         {
-            
+
             string FileWithPath = filePath + SearchParameters.Title + "_SearchParameters" + ".txt";
             if (File.Exists(FileWithPath))
                 File.Delete(FileWithPath); //Deleted Pre-existing file
@@ -120,8 +120,8 @@ namespace PerceptronLocalService.Utility
 
             string FileWithPath = "";
             var CandidateList = new List<ProteinDto>();
-            
-            
+
+
 
             for (int iter = 0; iter < ResultsDownloadToBeWriteList.Count; iter++)
             {
@@ -131,7 +131,7 @@ namespace PerceptronLocalService.Utility
 
                 if (CandidateList.Count != 0)
                 {
-                    
+
 
                     if (File.Exists(FileWithPath))
                         File.Delete(FileWithPath); //Deleted Pre-existing file
@@ -145,7 +145,7 @@ namespace PerceptronLocalService.Utility
                         var Protein = CandidateList[index];
 
 
-                        
+
                         //var Matches = _NoOfMatchedFragments.NoOfMatchedFragmentsCount(0, Protein.LeftMatchedIndex, Protein.RightMatchedIndex); //Initial value of Matches = 0   //Updated 20201221 - Commented as we already have a MatchCounter so no need to recalculate 
 
                         sw.WriteLine("> " + Protein.Header + " | Score: " + Math.Round(Protein.Score, 6) + " | Molweight: " + Math.Round(Protein.Mw, 4)
@@ -248,21 +248,21 @@ namespace PerceptronLocalService.Utility
                 {
                     var Protein = BatchModeFileProteins[0].BatchTargetList[i];
                     Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
-                    
+
                     sw.WriteLine(Protein.FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
                     "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
                     Math.Round(Protein.Mw, 4) + "," +
                     Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue + "," + BatchModeFileProteins[0].FdrValue[i]);
                 }
                 sw.WriteLine();
-                int TotalProteins = BatchModeFileProteins[0].BatchTargetList.Count + 1;
+                int TotalProteins = BatchModeFileProteins[0].TargetListCount;   // Updated 20210213
                 sw.WriteLine("Total protein count reported by experiment: " + TotalProteins);  //+1 is for because we remove the last entry in FalseDiscoveryRate.cs
                 sw.WriteLine("Total protein count reported by experiment with E-value greater than 1E-10: " + BatchModeFileProteins[0].EvalueCount); // EvalueCount is different to the evalue i.e. the evalue of protein (Evalue)
                 sw.WriteLine("Total protein reported with " + FDRCutOff + "% FDR: " + BatchModeFileProteins[0].NoOfProteins);
                 sw.WriteLine("Unique proteins count reported with " + FDRCutOff + "% FDR: " + BatchModeFileProteins[0].NoOfUniqueProteins);
             }
 
-                sw.Close();
+            sw.Close();
             return FileWithPath;
         }
 
@@ -276,7 +276,7 @@ namespace PerceptronLocalService.Utility
             {
                 for (int i = 0; i < ResultsDownloadFileNames.Count; i++)
                 {
-                    
+
                     archieve.CreateEntryFromFile(ResultsDownloadFileNames[i], Path.GetFileName(ResultsDownloadFileNames[i]));   // Adding all results files into the zip file
                     File.Delete(ResultsDownloadFileNames[i]); //Deleted Pre-existing file
                 }

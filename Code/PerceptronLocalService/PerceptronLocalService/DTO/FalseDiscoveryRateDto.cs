@@ -20,11 +20,12 @@ namespace PerceptronLocalService.DTO
         public int MatchedFragments;
         public string RunTime;
         public double Evalue;
-        public List<double> FdrValue = new List<double>();
+        public List<decimal> FdrValue = new List<decimal>();    // Updated 20210213
         public List<FalseDiscoveryRateDto> BatchTargetList = new List<FalseDiscoveryRateDto>();
         public int EvalueCount;  // EvalueCount is different to the evalue i.e. the evalue of protein (Evalue)
         public int NoOfProteins;
         public int NoOfUniqueProteins;
+        public int TargetListCount;   // Updated 20210213
 
         public FalseDiscoveryRateDto(string cFileName, string cHeader, string cTerminalModification, string cSequence, string cTruncation, int cTruncationIndex, double cScore, double cMw, int cNumOfModifications, int cMatchedFragments, string cRunTime, double cEvalue)
         {
@@ -42,8 +43,9 @@ namespace PerceptronLocalService.DTO
             Evalue = cEvalue;
         }
 
-        public FalseDiscoveryRateDto(List<FalseDiscoveryRateDto> cBatchTargetList, List<double> cFdrValue, int cNoOfProteins, int cNoOfUniqueProteins, int cEvalueCount)
+        public FalseDiscoveryRateDto(int cTargetListCount, List<FalseDiscoveryRateDto> cBatchTargetList, List<decimal> cFdrValue, int cNoOfProteins, int cNoOfUniqueProteins, int cEvalueCount)   // Updated 20210213
         {
+            TargetListCount = cTargetListCount;   // Updated 20210213
             BatchTargetList = cBatchTargetList;
             FdrValue = cFdrValue;
             NoOfProteins = cNoOfProteins;

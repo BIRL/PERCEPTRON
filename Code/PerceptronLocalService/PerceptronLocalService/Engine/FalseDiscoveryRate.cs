@@ -13,6 +13,7 @@ namespace PerceptronLocalService.Engine
     {
         public List<FalseDiscoveryRateDto> FDR(double FDRCutOff, List<FalseDiscoveryRateDto> TargetList, List<FalseDiscoveryRateDto> DecoyList)
         {
+            int TargetListCount = TargetList.Count();   // Updated 20210213
             var ResultsOfFDR = new List<FalseDiscoveryRateDto>(TargetList.Count);
             List<Tuple<string, double>> Decoy = new List<Tuple<string, double>>(); //this was a bug that i am not removing for now. it should be DecoyData.Rows.Count
             double[] Threshold = new double[TargetList.Count];
@@ -45,7 +46,7 @@ namespace PerceptronLocalService.Engine
             Target.Sort((a, b) => a.Item2.CompareTo(b.Item2));
 
             FDRCutOff = FDRCutOff / 100;
-            List<double> FDR_Estimation = new List<double>();
+            List<decimal> FDR_Estimation = new List<decimal>(); // Updated 20210213
 
             for (int i = 0; i < TargetList.Count; i++)
             {
@@ -116,9 +117,9 @@ namespace PerceptronLocalService.Engine
                         }
                     }
                 }
-                double FDRValue = (2 * DecoyCount + NumOfDecoy) / (NumOfTarget + TargetCount + DecoyCount);
+                decimal FDRValue = (Convert.ToDecimal((2 * DecoyCount) + NumOfDecoy) / Convert.ToDecimal(NumOfTarget + TargetCount + DecoyCount));  // Updated 20210213
                 FDR_Estimation.Add(FDRValue);
-                if (FDRValue > FDRCutOff)
+                if (FDRValue > Convert.ToDecimal(FDRCutOff))    // Updated 20210213
                     break;
             }
 
@@ -127,7 +128,7 @@ namespace PerceptronLocalService.Engine
             FDR_Estimation.RemoveAt(FDR_Estimation.Count - 1);
             int NoOfUniqueProteins = TargetList.Select(x => x.Header).Distinct().ToList().Count;
             //SKIPPING HERE THIS {{ protein = TargetDataWithFDR.ProteinHeader; }} FROM SPECTRUM WILL Just Return No of Proteins
-            var tempResultsOfFDR = new FalseDiscoveryRateDto(TargetList, FDR_Estimation, TargetList.Count, NoOfUniqueProteins, eValCount);
+            var tempResultsOfFDR = new FalseDiscoveryRateDto(TargetListCount, TargetList, FDR_Estimation, TargetList.Count, NoOfUniqueProteins, eValCount);   // Updated 20210213
             ResultsOfFDR.Add(tempResultsOfFDR);
             return ResultsOfFDR;
         }
@@ -136,67 +137,65 @@ namespace PerceptronLocalService.Engine
 
 
 
-            //List<object> unique_protein = protein.Distinct().ToList();
-            //int protein_count = unique_protein.Count;
+//List<object> unique_protein = protein.Distinct().ToList();
+//int protein_count = unique_protein.Count;
 
-            //var complete_targetfile_with_fdr = target_filepath.Replace(".csv", "_FDR.csv");
+//var complete_targetfile_with_fdr = target_filepath.Replace(".csv", "_FDR.csv");
 
-            //StreamWriter sw = new StreamWriter(complete_targetfile_with_fdr, false);
-            ////CREATING CSV FILE
-            //try
-            //{
-            //    int columnCount = TargetDataWithFDR.Columns.Count;
+//StreamWriter sw = new StreamWriter(complete_targetfile_with_fdr, false);
+////CREATING CSV FILE
+//try
+//{
+//    int columnCount = TargetDataWithFDR.Columns.Count;
 
-            //    for (int i = 0; i < columnCount; i++)
-            //    {
-            //        sw.Write(TargetDataWithFDR.Columns[i]);
+//    for (int i = 0; i < columnCount; i++)
+//    {
+//        sw.Write(TargetDataWithFDR.Columns[i]);
 
-            //        if (i < columnCount - 1)
-            //        {
-            //            sw.Write(",");
-            //        }
-            //    }
+//        if (i < columnCount - 1)
+//        {
+//            sw.Write(",");
+//        }
+//    }
 
-            //    sw.Write(sw.NewLine);
+//    sw.Write(sw.NewLine);
 
-            //    foreach (DataRow dr in TargetDataWithFDR.Rows)
-            //    {
-            //        for (int i = 0; i < columnCount; i++)
-            //        {
-            //            if (!Convert.IsDBNull(dr[i]))
-            //            {
-            //                sw.Write(dr[i].ToString());
-            //            }
+//    foreach (DataRow dr in TargetDataWithFDR.Rows)
+//    {
+//        for (int i = 0; i < columnCount; i++)
+//        {
+//            if (!Convert.IsDBNull(dr[i]))
+//            {
+//                sw.Write(dr[i].ToString());
+//            }
 
-            //            if (i < columnCount - 1)
-            //            {
-            //                sw.Write(",");
-            //            }
-            //        }
+//            if (i < columnCount - 1)
+//            {
+//                sw.Write(",");
+//            }
+//        }
 
-            //        sw.Write(sw.NewLine);
-            //    }
-
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-
-            //var expProteinString = @"Total protein count reported by Experiment: " + Convert.ToString(sorted_target.Rows.Count);
-            //var evalProteinString = @"Total protein count reported by Experiment with E-value greater than 1E-10: " + Convert.ToString(evalue_count);
-            //var TotalProteinString = @"Total protein reported with: " + Convert.ToString(cutoff_actual) + @"% FDR: " + Convert.ToString(protein.Count);
-            //var ProteinString = @"Unique proteins count reported with " + Convert.ToString(cutoff_actual) + @"% FDR: " + Convert.ToString(protein_count);
-
-            //sw.WriteLine();
-            //sw.WriteLine(expProteinString);
-            //sw.WriteLine(evalProteinString);
-            //sw.WriteLine(TotalProteinString);
-            //sw.WriteLine(ProteinString);
-            //sw.Close();
+//        sw.Write(sw.NewLine);
+//    }
 
 
+//}
+//catch (Exception ex)
+//{
+//    throw ex;
+//}
+
+//var expProteinString = @"Total protein count reported by Experiment: " + Convert.ToString(sorted_target.Rows.Count);
+//var evalProteinString = @"Total protein count reported by Experiment with E-value greater than 1E-10: " + Convert.ToString(evalue_count);
+//var TotalProteinString = @"Total protein reported with: " + Convert.ToString(cutoff_actual) + @"% FDR: " + Convert.ToString(protein.Count);
+//var ProteinString = @"Unique proteins count reported with " + Convert.ToString(cutoff_actual) + @"% FDR: " + Convert.ToString(protein_count);
+
+//sw.WriteLine();
+//sw.WriteLine(expProteinString);
+//sw.WriteLine(evalProteinString);
+//sw.WriteLine(TotalProteinString);
+//sw.WriteLine(ProteinString);
+//sw.Close();
 
 
 
@@ -218,8 +217,10 @@ namespace PerceptronLocalService.Engine
 
 
 
-            //var ListOFDRPoteins = new List<ProteinDto>();
-            //return ListOFDRPoteins;
+
+
+//var ListOFDRPoteins = new List<ProteinDto>();
+//return ListOFDRPoteins;
 
 
 
