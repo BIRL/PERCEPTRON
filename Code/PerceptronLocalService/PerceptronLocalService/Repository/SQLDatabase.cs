@@ -26,13 +26,15 @@ namespace PerceptronLocalService.Repository
         //    return email;
         //}
 
-        public void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString)
+        public void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString, DateTime JobSubmission)
         {
             var peakList = new PeakListData
             {
                 FileUniqueId = FileUniqueId,
                 PeakListMasses = peakDataMassesString,
-                PeakListIntensities = peakDataIntensitiesString
+                PeakListIntensities = peakDataIntensitiesString,
+                JobSubmission = JobSubmission
+
             };
             using (var db = new PerceptronDatabaseEntities())
             {
@@ -42,13 +44,14 @@ namespace PerceptronLocalService.Repository
 
         }
 
-        public void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId)
+        public void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId, DateTime JobSubmission)
         {
             var ResultsDownloadInfo = new ZipResultsDownloadInfo
             {
                 QueryId = Queryid,
                 ZipFileName = ZipFileName,
-                ZipFileWithQueryId = ZipFileWithQueryId
+                ZipFileWithQueryId = ZipFileWithQueryId,
+                JobSubmission = JobSubmission
             };
             using (var db = new PerceptronDatabaseEntities())
             {
@@ -57,7 +60,7 @@ namespace PerceptronLocalService.Repository
             }
         }
 
-        public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId)
+        public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
             using (var db = new PerceptronDatabaseEntities())
@@ -71,14 +74,14 @@ namespace PerceptronLocalService.Repository
                 {
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
-                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, FileUniqueId);
+                    var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, FileUniqueId, JobSubmission);
                     db.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
                     if (protein.PtmParticulars.Count != 0)
                     {
                         ResultPtmSitesId = ResultPtmSitesId + 1;
-                        var resultPtmSites = GetResultPtmSitesModel(ResultPtmSitesId, resId, protein.PtmParticulars);
+                        var resultPtmSites = GetResultPtmSitesModel(ResultPtmSitesId, resId, protein.PtmParticulars, JobSubmission);
                         db.ResultPtmSites.Add(resultPtmSites);
                         //db.SaveChanges();
                     }
@@ -204,7 +207,7 @@ namespace PerceptronLocalService.Repository
             return resultInsilicoMatch;
         }
 
-        private ResultPtmSite GetResultPtmSitesModel(int ResultPtmSitesId, Guid resId, List<PostTranslationModificationsSiteDto> ptmSite) //ResultPtmSites
+        private ResultPtmSite GetResultPtmSitesModel(int ResultPtmSitesId, Guid resId, List<PostTranslationModificationsSiteDto> ptmSite, DateTime JobSubmission) //ResultPtmSites
         {
             // Data Preparation Below// Its not needed if data stored already in this form...
             var ListofIndex = new List<string>();
@@ -233,7 +236,8 @@ namespace PerceptronLocalService.Repository
                 ResultId = resId.ToString(),
                 Index = string.Join(",", ListofIndex),
                 ModName = string.Join(",", ListofModName),
-                Site = string.Join(",", ListofSite)
+                Site = string.Join(",", ListofSite),
+                JobSubmission = JobSubmission
                 //AminoAcid = string.Join("", ListAminoAcid),  //Will add if needed
                 //ModWeight = string.Join(",", ListofModWeight),
                 //Score = string.Join(",", ListofScore),
@@ -255,7 +259,7 @@ namespace PerceptronLocalService.Repository
             return headerTag;
         }
 
-        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId, string FileUniqueId)
+        private SearchResult GetSearchResultModel(string queryTd, int fileId, string headerTag, ProteinDto protein, Guid resId, string FileUniqueId, DateTime JobSubmission)
         {
             var searchResult = new SearchResult
             {
@@ -302,7 +306,8 @@ namespace PerceptronLocalService.Repository
                 FileUniqueId = FileUniqueId,
                 BlindPtmLocalization = (protein.BlindPtmLocalizationInfo.Start +","+ protein.BlindPtmLocalizationInfo.Mass +","+ protein.BlindPtmLocalizationInfo.End).ToString(),
                 Evalue = protein.Evalue,
-                ProteinRank = protein.ProteinRank
+                ProteinRank = protein.ProteinRank,
+                JobSubmission = JobSubmission
 
 
             };
@@ -321,7 +326,8 @@ namespace PerceptronLocalService.Repository
                 PtmTime = res.Times.PtmTime,
                 TotalTime = res.Times.TotalTime,
                 TunerTime = res.Times.TunerTime,
-                TruncationEngineTime = res.Times.TruncationEngineTime
+                TruncationEngineTime = res.Times.TruncationEngineTime,
+                JobSubmission = res.Times.JobSubmission
 
             };
 
@@ -343,6 +349,20 @@ namespace PerceptronLocalService.Repository
         private SearchParametersDto GetSearchParametersDtoModel(SearchParameter searchParameters, string ptmVariable,
           string ptmFixed, string[] fileType, string[] fileName, string[] fileUniqueName, string[] FileUniqueIdArray)
         {
+
+            //string format = "yyyy-MM-dd HH:mm:ss.fffffff";
+            //DateTime? creationTime = searchParameters.JobSubmission;
+
+            //var sql = creationTime.Value.ToString(format);
+            //DateTime Time = Convert.ToDateTime(sql);
+
+
+            //DateTime value = DateTime.ParseExact(sql, format, CultureInfo.InvariantCulture);
+            //DateTime result = new DateTime();   ////    TryParse(string s, out DateTime result);
+            //var valueTry = DateTime.TryParse(sql, out result);
+
+            int dfsdf = 1;
+
             var searchParametersDto = new SearchParametersDto
             {
                 Queryid = searchParameters.QueryId,
@@ -385,7 +405,8 @@ namespace PerceptronLocalService.Repository
                 CysteineChemicalModification = searchParameters.CysteineChemicalModification,
                 MethionineChemicalModification = searchParameters.MethionineChemicalModification,
                 EmailId = searchParameters.EmailId,
-                FDRCutOff = searchParameters.FDRCutOff
+                FDRCutOff = searchParameters.FDRCutOff,
+                JobSubmission = searchParameters.JobSubmission
 
             };
             return searchParametersDto;
