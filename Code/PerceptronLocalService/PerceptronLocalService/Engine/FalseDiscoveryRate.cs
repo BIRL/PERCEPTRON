@@ -124,8 +124,7 @@ namespace PerceptronLocalService.Engine
             }
 
 
-            TargetList.RemoveAt(TargetList.Count - 1);  // Removing Last entry means ---- Ref in SPECTRUM: {{  numel(FDR_estimation)-1  }}
-            FDR_Estimation.RemoveAt(FDR_Estimation.Count - 1);
+            TargetList.RemoveAll(x => TargetList.IndexOf(x) > FDR_Estimation.Count - 2);   // Updated 20210214
             int NoOfUniqueProteins = TargetList.Select(x => x.Header).Distinct().ToList().Count;
             //SKIPPING HERE THIS {{ protein = TargetDataWithFDR.ProteinHeader; }} FROM SPECTRUM WILL Just Return No of Proteins
             var tempResultsOfFDR = new FalseDiscoveryRateDto(TargetListCount, TargetList, FDR_Estimation, TargetList.Count, NoOfUniqueProteins, eValCount);   // Updated 20210213
