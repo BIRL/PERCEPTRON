@@ -91,7 +91,6 @@ namespace PerceptronLocalService
 
                 foreach (var searchParameters in pendingJobsParameters)
                 {
-
                     //Send_Results_Link(searchParameters);
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     var TotalTime = new Stopwatch();
@@ -414,6 +413,28 @@ namespace PerceptronLocalService
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
 
+                        if (FinalCandidateProteinListforFinalScoring.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)   //Updated 20200114
+                        {
+                            EmailMsg = "ProteinListEmpty"; // -1;
+                            if (numberOfPeaklistFiles > 1 && ProgressStatus == 10 && iterations == 0)  // If all files have not Candidte Protein list  //Updated 20200114
+                            {
+                                ProgressStatus = -1;
+                            }
+
+                            // Results Download Part 1 of 3  BELOW //
+                            if (iterations == 0) //For simple protein database: If file have not any Candidate Protein List
+                            {
+                                var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), candidateProteins);
+                                ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
+                            }
+                            else if (iterations == 1) //For decoy protein database: If file have not any Candidate Protein List   //Updated 20200114    //
+                            {
+
+                            }
+                            // Results Download Part 1 of 3  ABOVE //
+
+                            continue;
+                        }
 
                         //CandidateProteinswithInsilicoScores = ExecuteProteoformScoringModule(parameters, CandidateProteinswithInsilicoScores); Its Healthy Just List Name Changed
                         FinalCandidateProteinListforFinalScoring = ExecuteProteoformScoringModule(parameters, FinalCandidateProteinListforFinalScoring);
@@ -486,26 +507,26 @@ namespace PerceptronLocalService
 
 
 
-                        //DEL ME 
+                        //////////DEL ME   // Dummy Code for Testing FileFormats
 
-                        string FileWithPath = @"C:\PerceptronResultsDownload\StringList.txt";
-                        if (File.Exists(FileWithPath))
-                            File.Delete(FileWithPath); //Deleted Pre-existing file
+                        ////////string FileWithPath = @"C:\PerceptronResultsDownload\StringList.txt";
+                        ////////if (File.Exists(FileWithPath))
+                        ////////    File.Delete(FileWithPath); //Deleted Pre-existing file
 
-                        var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
-                        var sw = new StreamWriter(fout);
+                        ////////var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+                        ////////var sw = new StreamWriter(fout);
 
 
-                        var stringList = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
-                        for (int i = 0; i < FinalCandidateProteinListforFinalScoring.Count; i++)
-                        {
-                            stringList.Add(FinalCandidateProteinListforFinalScoring[i].Header);
-                            sw.WriteLine(FinalCandidateProteinListforFinalScoring[i].Header);
-                        }
+                        ////////var stringList = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
+                        ////////for (int i = 0; i < FinalCandidateProteinListforFinalScoring.Count; i++)
+                        ////////{
+                        ////////    stringList.Add(FinalCandidateProteinListforFinalScoring[i].Header);
+                        ////////    sw.WriteLine(FinalCandidateProteinListforFinalScoring[i].Header);
+                        ////////}
 
-                        sw.Close();
+                        ////////sw.Close();
 
-                        //DEL ME
+                        //////////DEL ME
                     }
 
 
@@ -900,7 +921,7 @@ namespace PerceptronLocalService
             _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
         }
 
-        private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime? JobSubmission)
+        private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime JobSubmission)
         {
             var peakDataMasses = new List<double>();
             var peakDataIntensities = new List<double>();
