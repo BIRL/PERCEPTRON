@@ -14,11 +14,11 @@ namespace PerceptronLocalService.Models
     
     public partial class ResultsDownloadable
     {
-        public string QueryId { get; set; }
+        public System.DateTime JobSubmission { get; set; }
         public string ResultId { get; set; }
+        public string QueryId { get; set; }
         public string MassSpectrumImageFilePath { get; set; }
         public string JsonExpThrTableFilePath { get; set; }
         public string CompleteDetailedResultsFilePath { get; set; }
-        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

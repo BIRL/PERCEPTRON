@@ -17,6 +17,6 @@ namespace PerceptronLocalService.DTO
         public string TotalTime;
         
         public string TruncationEngineTime;
-        public DateTime? JobSubmission;
+        public DateTime JobSubmission;
     }
 }

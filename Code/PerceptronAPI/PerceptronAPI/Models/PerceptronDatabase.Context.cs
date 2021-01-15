@@ -37,7 +37,6 @@ namespace PerceptronAPI.Models
         public virtual DbSet<SearchParameter> SearchParameters { get; set; }
         public virtual DbSet<SearchQuery> SearchQueries { get; set; }
         public virtual DbSet<SearchResult> SearchResults { get; set; }
-        public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<ZipResultsDownloadInfo> ZipResultsDownloadInfoes { get; set; }
     }
 }

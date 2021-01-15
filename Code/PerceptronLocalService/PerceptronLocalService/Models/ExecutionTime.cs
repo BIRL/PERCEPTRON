@@ -14,6 +14,7 @@ namespace PerceptronLocalService.Models
     
     public partial class ExecutionTime
     {
+        public System.DateTime JobSubmission { get; set; }
         public string InsilicoTime { get; set; }
         public string PtmTime { get; set; }
         public string TunerTime { get; set; }
@@ -23,6 +24,5 @@ namespace PerceptronLocalService.Models
         public string QueryId { get; set; }
         public string FileName { get; set; }
         public string TruncationEngineTime { get; set; }
-        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

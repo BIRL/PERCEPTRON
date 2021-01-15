@@ -14,11 +14,11 @@ namespace PerceptronAPI.Models
     
     public partial class ResultPtmSite
     {
+        public System.DateTime JobSubmission { get; set; }
         public int ResultPtmSitesId { get; set; }
         public string ResultId { get; set; }
         public string Index { get; set; }
         public string ModName { get; set; }
         public string Site { get; set; }
-        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }
