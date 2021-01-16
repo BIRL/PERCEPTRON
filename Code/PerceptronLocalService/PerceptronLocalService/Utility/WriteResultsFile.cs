@@ -217,8 +217,8 @@ namespace PerceptronLocalService.Utility
 
             //MAKING COLUMN NAMES
 
-            var _TruncationMessage = new TruncationMessage();
-            string Truncation_Message = "";
+            var _TruncationIndexed = new TruncationIndexed();
+            int TruncationIndex;
             if (FDRCutOff == "0.0" && FDRCutOff == "0")  // Will Work for Simple File
             {
                 string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
@@ -228,10 +228,10 @@ namespace PerceptronLocalService.Utility
                 {
                     var Protein = BatchModeFileProteins[i];
 
-                    Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
+                    TruncationIndex = _TruncationIndexed.TruncationIndxing(Protein.TruncationIndex);
 
                     sw.WriteLine(BatchModeFileProteins[i].FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
-                    "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
+                    "," + TruncationIndex + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
                     Math.Round(Protein.Mw, 4) + "," +
                     Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue);
                 }
@@ -247,10 +247,10 @@ namespace PerceptronLocalService.Utility
                 for (int i = 0; i < BatchModeFileProteins[0].BatchTargetList.Count; i++) //is this correct alternate for directorycontents   //Updated 20201222  Bug Fix
                 {
                     var Protein = BatchModeFileProteins[0].BatchTargetList[i];
-                    Truncation_Message = _TruncationMessage.TypeOfTruncation(Protein.Truncation);
+                    TruncationIndex = _TruncationIndexed.TruncationIndxing(Protein.TruncationIndex);
 
                     sw.WriteLine(Protein.FileName + "," + Protein.Header + "," + Protein.TerminalModification + "," + Protein.Sequence +
-                    "," + Truncation_Message + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
+                    "," + TruncationIndex + "," + Protein.Truncation + "," + Math.Round(Protein.Score, 6) + "," +
                     Math.Round(Protein.Mw, 4) + "," +
                     Protein.NumOfModifications + "," + Protein.MatchedFragments + "," + Protein.RunTime + "," + Protein.Evalue + "," + BatchModeFileProteins[0].FdrValue[i]);
                 }
