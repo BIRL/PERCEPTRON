@@ -7,11 +7,13 @@ using System.Linq;
 using PerceptronAPI.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;  //Added on 12Sep2019.. WHy its not needed before...???
+using PerceptronAPI.Utility;
 
 namespace PerceptronAPI.Repository
 {
     public class SqlDatabase : IDataAccessLayer
     {
+        DBErrorException _DBErrorException = new DBErrorException();
 
         //Store Query Parameters
         public string StoreSearchParameters(SearchParametersDto parameters)
@@ -103,8 +105,9 @@ namespace PerceptronAPI.Repository
         }
 
 
-        public List<ScanResults> Scan_Results(string qid)
+        public List<ScanResults> Scan_Results(string qid, DateTime JobSubmissionTime)
         {
+
             qid = qid.Trim('"');
             var scanResults = new List<ScanResults>();
             try
@@ -119,11 +122,15 @@ namespace PerceptronAPI.Repository
                         CommandText =
                     //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
 
+          //          " ' AND P.JobSubmission >= ' " + JobSubmissionTime +
 
                     /// ITS HEALTHY BELOW
-                    "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid +
-                        "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ORDER BY P.Queryid Desc ",
+                    //"SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + 
+                    //    "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ORDER BY P.Queryid Desc ",
                         ////// ITS HEALTHY ABOVE
+                        ///
+                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + " ' AND P.JobSubmission >= ' " + JobSubmissionTime +
+                        "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId AND P.JobSubmission = R.JobSubmission ORDER BY P.JobSubmission Desc ",  //Updated 20210118
                         CommandType = CommandType.Text,
                         Connection = sqlConnection1
                     };
@@ -289,7 +296,7 @@ namespace PerceptronAPI.Repository
 
         }
 
-        public List<SummaryResults> Summary_results(string qid, string fid)
+        public List<SummaryResults> Summary_results(string qid, string fid, DateTime JobSubmissionTime)
         {
             qid = qid.Trim('"');
             var summaryResults = new List<SummaryResults>();
@@ -302,7 +309,7 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        "SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' AND E.fileid = '" + fid + "' ORDER BY E.Score DESC ",
+                        "SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' AND E.JobSubmission >= '" + JobSubmissionTime + "' AND E.fileid = '" + fid + "' ORDER BY E.Score DESC ",  //Updated 20210118
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
                 };
@@ -374,39 +381,47 @@ namespace PerceptronAPI.Repository
             return NoOfMatches;
         }
 
-        public List<UserHistory> GetUserHistory(string Uid)
+        public List<UserHistory> GetUserHistory(string Uid, DateTime JobSubmissionTime)
         {
-
             var summaryResults = new List<UserHistory>();
-            using (new PerceptronDatabaseEntities())
-            {
-                var sqlConnection1 =
-                    new SqlConnection(
-                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
-                var cmd = new SqlCommand
-                {
-                    CommandText =
-                        "SELECT P.Queryid, P.Title, R.CreationTime, R.Progress \nFROM SearchQueries as R, SearchParameters as P \nWHERE P.UserId = '" + Uid + "'AND P.Queryid=R.QueryId ",
-                    CommandType = CommandType.Text,
-                    Connection = sqlConnection1
-                };
-                sqlConnection1.Open();
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+            try
+            {
+                using (new PerceptronDatabaseEntities())
                 {
-                    var temp = new UserHistory
+                    var sqlConnection1 =
+                        new SqlConnection(
+                            "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                    var cmd = new SqlCommand
                     {
-                        title = dataReader["Title"].ToString(),
-                        qid = dataReader["Queryid"].ToString(),
-                        time = dataReader["CreationTime"].ToString(),
-                        progress = dataReader["Progress"].ToString()
+                        CommandText =
+                        //"SELECT P.Queryid, P.Title, R.CreationTime, R.Progress \nFROM SearchQueries as R, SearchParameters as P \nWHERE P.UserId = '" + Uid + "'AND P.Queryid=R.QueryId ",
+                        "SELECT P.Queryid, P.Title, R.CreationTime, R.Progress \nFROM SearchQueries as R, SearchParameters as P \nWHERE P.UserId = '" + Uid + " ' AND P.JobSubmission >= ' " + JobSubmissionTime + " 'AND P.Queryid=R.QueryId AND P.JobSubmission=R.JobSubmission ",  //Updated 20210118
+                        CommandType = CommandType.Text,
+                        Connection = sqlConnection1
                     };
-                    summaryResults.Add(temp);
+                    sqlConnection1.Open();
+
+                    var dataReader = cmd.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        var temp = new UserHistory
+                        {
+                            title = dataReader["Title"].ToString(),
+                            qid = dataReader["Queryid"].ToString(),
+                            time = dataReader["CreationTime"].ToString(),
+                            progress = dataReader["Progress"].ToString()
+                        };
+                        summaryResults.Add(temp);
+                    }
+                    dataReader.Close();
+                    cmd.Dispose();
+                    sqlConnection1.Close();
                 }
-                dataReader.Close();
-                cmd.Dispose();
-                sqlConnection1.Close();
+            }
+            catch (DbEntityValidationException e)
+            {
+                _DBErrorException.DbEntitiyError(e);
             }
 
             for (int index = 0; index < summaryResults.Count; index++)
@@ -502,39 +517,89 @@ namespace PerceptronAPI.Repository
         }
 
 
-        public DetailedResults Detailed_Results(string qid, string rid)
+        public DetailedResults Detailed_Results(string qid, string rid, DateTime JobSubmissionTime)
         {
             var detiledResults = new DetailedResults();
-            ////using (new PerceptronDatabaseEntities())            /// ITS HEALTHY
-            ////{
-            ////    var sqlConnection1 =
-            ////        new SqlConnection(
-            ////            "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
-            ////    var cmd = new SqlCommand
-            ////    {
-            ////        CommandText =
-            ////            "SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
-            ////        CommandType = CommandType.Text,
-            ////        Connection = sqlConnection1
-            ////    };
-            ////    sqlConnection1.Open();
+            var searchResult = new SearchResult();
 
-            ////    var dataReader = cmd.ExecuteReader();
-            ////    while (dataReader.Read())
-            ////        qid = dataReader["QueryId"].ToString();
+            using (new PerceptronDatabaseEntities())            /// ITS HEALTHY
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        //"SELECT QueryId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+                        "SELECT * \nFROM SearchResults as R  \nWHERE R.ResultId = '" + rid + "' AND R.QueryId = '" + qid + "' AND R.JobSubmission >= ' " + JobSubmissionTime + "'ORDER BY R.JobSubmission Desc",  //Updated
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
 
-            ////    dataReader.Close();
-            ////    cmd.Dispose();
-            ////    sqlConnection1.Close();
-            ////}
-            ///
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    searchResult = new SearchResult  // Updated 20210118
+                    {
+                        QueryId = dataReader["QueryId"].ToString(),
+                        ResultId = dataReader["ResultId"].ToString(),
+                        Header = dataReader["Header"].ToString(),
+                        Sequence = dataReader["Sequence"].ToString(),
+                        PstScore = Convert.ToDouble(dataReader["PstScore"]),//.ToString(),
+                        InsilicoScore = Convert.ToDouble(dataReader["InsilicoScore"]),
+                        PtmScore = Convert.ToDouble(dataReader["PtmScore"]),
+                        Score = Convert.ToDouble(dataReader["Score"]),
+
+
+                        MwScore = Convert.ToDouble(dataReader["MwScore"]),
+                        Mw = Convert.ToDouble(dataReader["Mw"]),
+                        FileId = dataReader["FileId"].ToString(),
+
+                        OriginalSequence = dataReader["OriginalSequence"].ToString(),
+                        PSTTags = dataReader["PSTTags"].ToString(),
+                        RightMatchedIndex = dataReader["RightMatchedIndex"].ToString(),
+                        RightPeakIndex = dataReader["RightPeakIndex"].ToString(),
+                        RightType = dataReader["RightType"].ToString(),
+                        LeftMatchedIndex = dataReader["LeftMatchedIndex"].ToString(),
+                        LeftPeakIndex = dataReader["LeftPeakIndex"].ToString(),
+                        LeftType = dataReader["LeftType"].ToString(),
+                        InsilicoMassLeft = dataReader["InsilicoMassLeft"].ToString(),
+                        InsilicoMassRight = dataReader["InsilicoMassRight"].ToString(),
+                        InsilicoMassLeftAo = dataReader["InsilicoMassLeftAo"].ToString(),
+                        InsilicoMassLeftBo = dataReader["InsilicoMassLeftBo"].ToString(),
+                        InsilicoMassLeftAstar = dataReader["InsilicoMassLeftAstar"].ToString(),
+                        InsilicoMassLeftBstar = dataReader["InsilicoMassLeftBstar"].ToString(),
+                        InsilicoMassRightYo = dataReader["InsilicoMassRightYo"].ToString(),
+                        InsilicoMassRightYstar = dataReader["InsilicoMassRightYstar"].ToString(),
+                        InsilicoMassRightZo = dataReader["InsilicoMassRightZo"].ToString(),
+                        InsilicoMassRightZoo = dataReader["InsilicoMassRightZoo"].ToString(),
+                        TerminalModification = dataReader["TerminalModification"].ToString(),
+                        TruncationSite = dataReader["TruncationSite"].ToString(),
+                        TruncationIndex = Convert.ToInt16(dataReader["TruncationIndex"]),
+                        FileUniqueId = dataReader["FileUniqueId"].ToString(),
+                        Evalue = Convert.ToInt16(dataReader["Evalue"]),
+                        BlindPtmLocalization = dataReader["BlindPtmLocalization"].ToString(),
+                        ProteinRank = Convert.ToInt16(dataReader["ProteinRank"]),
+
+                    };
+                    //searchResults.Add(temp);
+                }
+
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            
 
             try
             {
                 using (var db = new PerceptronDatabaseEntities())
                 {
                     var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
-                    var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+                    //var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+
+
                     //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
                     //var resultInsilicoRight = db.ResultInsilicoMatchRights.Where(x => x.ResultId == rid).ToList();
 
@@ -564,10 +629,10 @@ namespace PerceptronAPI.Repository
 
 
                     detiledResults.Results.NoOfPtmSites = NoOfPTMMods(rid, db);    //Updated 20200821
-                    detiledResults.Results.NoOfMatchedFragments = NoOfMatchedFrags(searchResult.First());   //Updated 20200821
+                    detiledResults.Results.NoOfMatchedFragments = NoOfMatchedFrags(searchResult);   //Updated 20210118
 
-                    if (searchResult.Count != 0)    //Why if for Safe...?
-                        detiledResults.Results.Results = searchResult.First();
+                    if (searchResult != new SearchResult())    //Why if for Safe...?   //Updated 20210118
+                        detiledResults.Results.Results = searchResult;
                     if (execTime.Count != 0)
                         detiledResults.ExecutionTime = execTime.First();
 
@@ -605,10 +670,11 @@ namespace PerceptronAPI.Repository
 
 
 
-        public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid)
+        public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, DateTime JobSubmissionTime)
         {
             string FileId = ""; var GetPeakListData = new PeakListData();
             var DetailedProteinHitViewResults = new DetailedProteinHitView();
+            var searchResult = new SearchResult();
             using (new PerceptronDatabaseEntities())
             {
                 var sqlConnection1 =
@@ -617,8 +683,10 @@ namespace PerceptronAPI.Repository
                 var cmd = new SqlCommand
                 {
                     CommandText =
-                        //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
-                        "SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",
+                    //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
+                    //"SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",   // Its HEALTHY
+
+                    "SELECT * \nFROM SearchResults \nWHERE ResultId = '" + rid +  "' AND JobSubmission >= ' " + JobSubmissionTime + "'",  //   "' AND QueryId = '" + qid +
 
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1
@@ -628,19 +696,63 @@ namespace PerceptronAPI.Repository
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    qid = dataReader["QueryId"].ToString();
-                    FileId = dataReader["FileUniqueId"].ToString();
-                    //GetPeakListData = dataReader["PeakListData"];
+                    ////qid = dataReader["QueryId"].ToString();
+                    ////FileId = dataReader["FileUniqueId"].ToString();
+                    searchResult = new SearchResult  // Updated 20210118
+                    {
+                        QueryId = dataReader["QueryId"].ToString(),
+                        ResultId = dataReader["ResultId"].ToString(),
+                        Header = dataReader["Header"].ToString(),
+                        Sequence = dataReader["Sequence"].ToString(),
+                        PstScore = Convert.ToDouble(dataReader["PstScore"]),//.ToString(),
+                        InsilicoScore = Convert.ToDouble(dataReader["InsilicoScore"]),
+                        PtmScore = Convert.ToDouble(dataReader["PtmScore"]),
+                        Score = Convert.ToDouble(dataReader["Score"]),
+
+
+                        MwScore = Convert.ToDouble(dataReader["MwScore"]),
+                        Mw = Convert.ToDouble(dataReader["Mw"]),
+                        FileId = dataReader["FileId"].ToString(),
+
+                        OriginalSequence = dataReader["OriginalSequence"].ToString(),
+                        PSTTags = dataReader["PSTTags"].ToString(),
+                        RightMatchedIndex = dataReader["RightMatchedIndex"].ToString(),
+                        RightPeakIndex = dataReader["RightPeakIndex"].ToString(),
+                        RightType = dataReader["RightType"].ToString(),
+                        LeftMatchedIndex = dataReader["LeftMatchedIndex"].ToString(),
+                        LeftPeakIndex = dataReader["LeftPeakIndex"].ToString(),
+                        LeftType = dataReader["LeftType"].ToString(),
+                        InsilicoMassLeft = dataReader["InsilicoMassLeft"].ToString(),
+                        InsilicoMassRight = dataReader["InsilicoMassRight"].ToString(),
+                        InsilicoMassLeftAo = dataReader["InsilicoMassLeftAo"].ToString(),
+                        InsilicoMassLeftBo = dataReader["InsilicoMassLeftBo"].ToString(),
+                        InsilicoMassLeftAstar = dataReader["InsilicoMassLeftAstar"].ToString(),
+                        InsilicoMassLeftBstar = dataReader["InsilicoMassLeftBstar"].ToString(),
+                        InsilicoMassRightYo = dataReader["InsilicoMassRightYo"].ToString(),
+                        InsilicoMassRightYstar = dataReader["InsilicoMassRightYstar"].ToString(),
+                        InsilicoMassRightZo = dataReader["InsilicoMassRightZo"].ToString(),
+                        InsilicoMassRightZoo = dataReader["InsilicoMassRightZoo"].ToString(),
+                        TerminalModification = dataReader["TerminalModification"].ToString(),
+                        TruncationSite = dataReader["TruncationSite"].ToString(),
+                        TruncationIndex = Convert.ToInt16(dataReader["TruncationIndex"]),
+                        FileUniqueId = dataReader["FileUniqueId"].ToString(),
+                        Evalue = Convert.ToInt16(dataReader["Evalue"]),
+                        BlindPtmLocalization = dataReader["BlindPtmLocalization"].ToString(),
+                        ProteinRank = Convert.ToInt16(dataReader["ProteinRank"]),
+
+                    };
                 }
                 dataReader.Close();
                 cmd.Dispose();
                 sqlConnection1.Close();
             }
+            qid = searchResult.QueryId;
             using (var db = new PerceptronDatabaseEntities())
             {
                 var searchParameters = db.SearchParameters.Where(x => x.QueryId == qid).ToList();
-                var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
-                var peakListData = db.PeakListDatas.Where(x => x.FileUniqueId == FileId).ToList();
+                ////var searchResult = db.SearchResults.Where(x => x.ResultId == rid).ToList();
+                var peakListData = db.PeakListDatas.Where(x => x.FileUniqueId == searchResult.FileUniqueId).ToList();
+
                 // var FileInfo = db.SearchFiles.Where(x => x.FileUniqueId == FileName).ToList();
                 //NO NEED 
                 //var resultInsilicoLeft = db.ResultInsilicoMatchLefts.Where(x => x.ResultId == rid).ToList();
@@ -659,7 +771,7 @@ namespace PerceptronAPI.Repository
 
                 /*  WILL USE IT LATER  */
 
-                DetailedProteinHitViewResults.Results.Results = searchResult.First();
+                DetailedProteinHitViewResults.Results.Results = searchResult;//.First();
                 DetailedProteinHitViewResults.searchParameters = searchParameters.First();
                 DetailedProteinHitViewResults.PeakListData = peakListData.First();
 

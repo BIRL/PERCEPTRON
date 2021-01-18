@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PerceptronAPI.Models;
 using PerceptronAPI.Engine;
 
@@ -7,11 +8,11 @@ namespace PerceptronAPI
     internal interface IDataAccessLayer
     {
         ZipResultsDownloadInfo ScanResultFile(string QueryId);
-        List<ScanResults> Scan_Results(string qid);
-        List<SummaryResults> Summary_results(string qid, string fid);
-        DetailedResults Detailed_Results(string qid, string rid);
-        DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid);
-        List<UserHistory> GetUserHistory(string Uid);
+        List<ScanResults> Scan_Results(string qid, DateTime JobSubmissionTime);
+        List<SummaryResults> Summary_results(string qid, string fid, DateTime JobSubmissionTime);
+        DetailedResults Detailed_Results(string qid, string rid, DateTime JobSubmissionTime);
+        DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, DateTime JobSubmissionTime);
+        List<UserHistory> GetUserHistory(string Uid, DateTime JobSubmissionTime);
         stat stat();
         void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults);
         SearchParameter GetSearchParmeters(string qid);

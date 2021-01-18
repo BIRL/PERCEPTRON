@@ -7,17 +7,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Web.Script.Serialization;
 using System.Net.Mail;
 using System.IO;
 using System.IO.Compression;
-//using System.IO.Compression.FileSystem;
 using PerceptronAPI.Engine;
-using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using GraphForm;
-using System.Web.UI.WebControls;
 using PerceptronAPI.Models;
 using PerceptronAPI.Repository;
 using PerceptronAPI.Utility;
@@ -29,15 +23,19 @@ namespace PerceptronAPI.Controllers
     {
 
         readonly IDataAccessLayer _dataLayer;
+        public DateTime JobSubmissionTime = DateTime.Now.AddYears(-10);  //FOR NOW ITS 10 Year for testing //// Fetching Current Time  //Results will available for 48hrs only
+
 
         public SearchController()
         {
-            _dataLayer = new SqlDatabase();
+            _dataLayer = new SqlDatabase(); 
 
             // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
 
 
             // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
+
+
 
             //var blob = Database_Download();
             //var Message = Database_Update();
@@ -150,8 +148,10 @@ namespace PerceptronAPI.Controllers
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
-            catch (Exception e)
+            catch (DbEntityValidationException e)    //DbEntityValidationException
             {
+                var _DBErrorException = new DBErrorException();
+                _DBErrorException.DbEntitiyError(e);
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
                     //Sending_Email(parametersDto, creationTime);
@@ -441,7 +441,7 @@ namespace PerceptronAPI.Controllers
         public List<ScanResults> Post_scan_results([FromBody] string input)
         {
             Debug.WriteLine(input);
-            var temp = _dataLayer.Scan_Results(input);
+            var temp = _dataLayer.Scan_Results(input, JobSubmissionTime);
             return temp;
         }
 
@@ -454,7 +454,7 @@ namespace PerceptronAPI.Controllers
             string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var qid = values[0];
             var fileId = values[1];
-            var temp = _dataLayer.Summary_results(qid, fileId);
+            var temp = _dataLayer.Summary_results(qid, fileId, JobSubmissionTime);
             return temp;
         }
 
@@ -466,7 +466,7 @@ namespace PerceptronAPI.Controllers
             string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var qid = values[0];
             var resultid = values[1];
-            var temp = _dataLayer.Detailed_Results(qid, resultid);
+            var temp = _dataLayer.Detailed_Results(qid, resultid, JobSubmissionTime);
 
             return temp;
         }
@@ -481,7 +481,7 @@ namespace PerceptronAPI.Controllers
 
             //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
 
-            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input);
+            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input, JobSubmissionTime);
 
             var MassSpectra = new FormForGraph();
             var InsilicoSpectra = MassSpectra.fillChart(temp2);
@@ -534,7 +534,7 @@ namespace PerceptronAPI.Controllers
             var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
             string input = RequestInput.Result.ToString();
             Debug.WriteLine(input);
-            var temp = _dataLayer.GetUserHistory(input);
+            var temp = _dataLayer.GetUserHistory(input, JobSubmissionTime);
             string JobStatus = temp[0].progress;
             if (JobStatus == "Completed")
             {
@@ -578,7 +578,7 @@ namespace PerceptronAPI.Controllers
         public List<UserHistory> Post_history([FromBody] string input)
         {
             Debug.WriteLine(input);
-            var temp = _dataLayer.GetUserHistory(input);
+            var temp = _dataLayer.GetUserHistory(input, JobSubmissionTime);
             return temp;
         }
 
