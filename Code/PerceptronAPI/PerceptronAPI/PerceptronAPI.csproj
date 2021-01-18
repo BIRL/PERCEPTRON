@@ -135,7 +135,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Engine\ExtractInsilicoMass.cs" />
     <Compile Include="Engine\FastaReader.cs" />
     <Compile Include="Engine\FastaWriter.cs" />
@@ -230,9 +229,6 @@
     <Compile Include="Models\stat.cs" />
     <Compile Include="Models\SummaryResults.cs" />
     <Compile Include="Models\TermMod.cs" />
-    <Compile Include="Models\Test.cs">
-      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\UserHistory.cs" />
     <Compile Include="Models\ZipResultsDownloadInfo.cs">
@@ -254,6 +250,7 @@
     <Compile Include="Engine\DetailedProteinView.Designer.cs" />
     <Compile Include="Utility\AddSuffixInName.cs" />
     <Compile Include="Utility\AminoAcids.cs" />
+    <Compile Include="Utility\DBErrorException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
