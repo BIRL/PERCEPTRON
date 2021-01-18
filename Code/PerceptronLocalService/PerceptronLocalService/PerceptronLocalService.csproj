@@ -220,9 +220,6 @@
     <Compile Include="Models\SearchResult.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Test.cs">
-      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ZipResultsDownloadInfo.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
@@ -291,7 +288,7 @@
     <Compile Include="Utility\StringSearchResult.cs" />
     <Compile Include="Utility\SwitchTypeOfPTM.cs" />
     <Compile Include="Utility\TerminalModificationsList.cs" />
-    <Compile Include="Utility\TruncationMessage.cs" />
+    <Compile Include="Utility\TruncationIndexed.cs" />
     <Compile Include="Utility\Ubiquitination_CPU.cs" />
     <Compile Include="Utility\WriteResultsFile.cs" />
   </ItemGroup>
