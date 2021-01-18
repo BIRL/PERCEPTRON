@@ -289,6 +289,7 @@
     <Compile Include="Utility\SwitchTypeOfPTM.cs" />
     <Compile Include="Utility\TerminalModificationsList.cs" />
     <Compile Include="Utility\TruncationIndexed.cs" />
+    <Compile Include="Utility\TruncationMessage.cs" />
     <Compile Include="Utility\Ubiquitination_CPU.cs" />
     <Compile Include="Utility\WriteResultsFile.cs" />
   </ItemGroup>
