@@ -250,7 +250,7 @@ namespace PerceptronLocalService
             var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
-            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")
+            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0") // Will work for FDR side
             {
                 iterate = 2;
             }
@@ -420,11 +420,15 @@ namespace PerceptronLocalService
                             {
                                 ProgressStatus = -1;
                             }
+                            else if (numberOfPeaklistFiles == 1 && ProgressStatus == 10 && iterations == 0)
+                            {
+                                ProgressStatus = -1;
+                            }
 
                             // Results Download Part 1 of 3  BELOW //
                             if (iterations == 0) //For simple protein database: If file have not any Candidate Protein List
                             {
-                                var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), candidateProteins);
+                                var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), FinalCandidateProteinListforFinalScoring);  //Updated 20210120 Bug fix
                                 ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
                             }
                             else if (iterations == 1) //For decoy protein database: If file have not any Candidate Protein List   //Updated 20200114    //
