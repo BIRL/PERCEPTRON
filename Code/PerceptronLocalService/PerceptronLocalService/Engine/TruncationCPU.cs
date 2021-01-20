@@ -432,7 +432,7 @@ namespace PerceptronLocalService.Engine
 
                 //truncationMass = AdjustProteinForTruncation(truncationMass, parameters);
                 //Just one Amino Acid can't be Proteform so """start == 1 OR <-1""" is obseleted
-                var start = Convert.ToInt32(Math.Ceiling(truncationMass / NEEDTOBEDECIDED)) - 1; // +factor;  // "-1" is Added for ZeroIndexing.   ////NEEDTOBEDECIDED = 168 OR 256
+                var start = Convert.ToInt32(Math.Ceiling(truncationMass / NEEDTOBEDECIDED)) - 2; //Updated 20210119 // "-1" is Added for ZeroIndexing.   ////NEEDTOBEDECIDED = 168 OR 256
 
                 if (truncationMass > 0)
                 {
