@@ -221,7 +221,7 @@ namespace PerceptronLocalService.Utility
             var _TruncationMessage = new TruncationMessage();
             int TruncationIndex;
             string TruncationAtSite = "";
-            if (FDRCutOff == "0.0" && FDRCutOff == "0")  // Will Work for Simple File
+            if (FDRCutOff == "0.0" || FDRCutOff == "0")  // Will Work for Simple File // Updated 20210120 - Bug fix
             {
                 string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
                 sw.WriteLine(HeaderOfCsv);
