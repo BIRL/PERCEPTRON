@@ -143,7 +143,7 @@ namespace PerceptronLocalService.Engine
                     if (s.Contains(pepmass)) //stores intact mass
                     {
                         pepMass = (s.Split('='))[1]; //splitting at = sign. stores whatever is after = sign//26-3-20
-                        pepMass = string.Format("{0:0.######}", Convert.ToDouble(pepMass));  // Taking pepMass upto 6 digits after decimal  //20200711
+                        pepMass = string.Format("{0:0.###########}", Convert.ToDouble(pepMass));  // Taking pepMass upto 6 digits after decimal  //Updated 20210122
                     }
 
                     if (!s.Contains("BEGIN IONS") && !s.Contains("=")) //stores masses and their intensities
@@ -152,24 +152,24 @@ namespace PerceptronLocalService.Engine
                         if (s.Contains(' '))
                         {
                             string[] arr = s.Split(' ');
-                            arr[0] = string.Format("{0:0.######}", Convert.ToDouble(arr[0]));
+                            arr[0] = string.Format("{0:0.###########}", Convert.ToDouble(arr[0]));  //Updated 20210122
                             mass.Add(Convert.ToDouble(arr[0]));
-                            arr[1] = string.Format("{0:0.######}", Convert.ToDouble(arr[1]));
+                            arr[1] = string.Format("{0:0.###########}", Convert.ToDouble(arr[1]));  //Updated 20210122
                             intensities.Add(Convert.ToDouble(arr[1]));
                         }
                         else if (s.Contains('\t'))
                         {
                             string[] arr = s.Split('\t');
-                            arr[0] = string.Format("{0:0.######}", Convert.ToDouble(arr[0]));
+                            arr[0] = string.Format("{0:0.###########}", Convert.ToDouble(arr[0]));  //Updated 20210122
                             mass.Add(Convert.ToDouble(arr[0]));
-                            arr[1] = string.Format("{0:0.######}", Convert.ToDouble(arr[1]));
+                            arr[1] = string.Format("{0:0.###########}", Convert.ToDouble(arr[1]));  //Updated 20210122
                             intensities.Add(Convert.ToDouble(arr[1]));
                         }
                         else
                         {
                             if (s != "")
                             {
-                                s = string.Format("{0:0.######}", Convert.ToDouble(s));
+                                s = string.Format("{0:0.###########}", Convert.ToDouble(s));  //Updated 20210122
                                 mass.Add(Convert.ToDouble(s));
                                 intensities.Add(-7);
                             }
