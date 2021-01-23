@@ -1,10 +1,97 @@
-﻿//using System.Collections.Generic;
-//using System.Web.Http;
-//using PerceptronAPI.Models;
-//using PerceptronAPI.ServiceLayer;
+﻿using System;
+using System.IO;
+using PerceptronAPI.Models;
+using FireSharp.Config;
+using FireSharp.Response;
+using FireSharp.Interfaces;
 
-//namespace PerceptronAPI.Controllers
-//{
+
+namespace PerceptronAPI.Controllers
+{
+    public class UsersController
+    {
+        StreamReader AuthSecretFile = new StreamReader(@"C:\01_DoNotEnterCallingPerceptronApiAuthenticationInfo\AuthSecret.txt");
+        StreamReader BasePathFile = new StreamReader(@"C:\01_DoNotEnterCallingPerceptronApiAuthenticationInfo\BasePath.txt");
+
+        public void RegisterUser()
+        {
+
+            IFirebaseConfig IFC = new FirebaseConfig()
+            {
+                AuthSecret = AuthSecretFile.ReadLine(),
+                BasePath = BasePathFile.ReadLine()
+            };
+
+            string ErrorMessage = "";
+            try
+            {
+                IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
+
+
+                UserDetails user = new UserDetails("DummyUser", "123456");
+
+                if ((user.UserName == "" || user.Password == "") && (user.UserName == null || user.Password == null))
+                {
+                    try { }
+                    catch
+                    {
+                        ErrorMessage = "All fields are required.";
+                        throw;
+                    }
+
+                }
+
+                SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + user.UserName, user);
+
+
+
+
+
+                //FirebaseResponse res = client.Get(@"perceptron/" + "Farhan");
+                //var result = res.ResultAs<User>();
+
+            }
+            catch (Exception e)
+            {
+
+                ErrorMessage = "Unable to connect with Firebase please try later.";
+            }
+        }
+
+        public void LoginUser()
+        {
+            IFirebaseConfig IFC = new FirebaseConfig()
+            {
+                AuthSecret = AuthSecretFile.ReadLine(),
+                BasePath = BasePathFile.ReadLine()
+            };
+
+            //UserDetails user = new UserDetails("DummyUser", "123456");
+
+            UserDetails CurrentUser = new UserDetails("DummyUser", "123456");
+            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
+            string ErrorMessage = "";
+            if ((CurrentUser.UserName == "" || CurrentUser.Password == "") && (CurrentUser.UserName == null || CurrentUser.Password == null))
+            {
+                ErrorMessage = "All fields are required.";
+            }
+            else
+            {
+                FirebaseResponse res = client.Get(@"CallingPerceptronApiUsers/" + CurrentUser.UserName);
+                UserDetails ResUser = res.ResultAs<UserDetails>();
+
+                if (UserDetails.IsEqual(ResUser, CurrentUser))
+                {
+                    int a = 1;
+                }
+
+            }
+
+        }
+
+    }
+
+}
 //    public class UsersController : ApiController
 //    {
 //        public Users UsersElemenet = new Users();
@@ -77,5 +164,3 @@
 //        }
 //    }
 //}
-
-
