@@ -1,92 +1,10 @@
-﻿using System;
-using PerceptronAPI.Models;
-using FireSharp.Config;
-using FireSharp.Response;
-using FireSharp.Interfaces;
+﻿//using System.Collections.Generic;
+//using System.Web.Http;
+//using PerceptronAPI.Models;
+//using PerceptronAPI.ServiceLayer;
 
-
-namespace PerceptronAPI.Controllers
-{
-    public class UsersController
-    {
-        public void RegisterUser()
-        {
-            IFirebaseConfig IFC = new FirebaseConfig()
-            {
-                AuthSecret = "Ei3lIKbJlKC5hztLMFl14zMIQe8SadxmfQsYoEOj",
-                BasePath = "https://perceptron-51a86.firebaseio.com/"
-            };
-
-            string ErrorMessage = "";
-            try
-            {
-                IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
-
-
-                UserDetails user = new UserDetails("DummyUser", "123456");
-
-                if((user.UserName == "" || user.Password  == "") && (user.UserName == null || user.Password == null))
-                {
-                    try { }
-                    catch
-                    {
-                        ErrorMessage = "All fields are required.";
-                        throw;
-                    }
-                    
-                }
-
-                SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + user.UserName, user);
-
-                
-
-
-
-                //FirebaseResponse res = client.Get(@"perceptron/" + "Farhan");
-                //var result = res.ResultAs<User>();
-
-            }
-            catch (Exception e)
-            {
-
-                ErrorMessage = "Unable to connect with Firebase please try later.";
-            }
-        }
-
-        public void LoginUser()
-        {
-            IFirebaseConfig IFC = new FirebaseConfig()
-            {
-                AuthSecret = "Ei3lIKbJlKC5hztLMFl14zMIQe8SadxmfQsYoEOj",
-                BasePath = "https://perceptron-51a86.firebaseio.com/"
-            };
-
-            //UserDetails user = new UserDetails("DummyUser", "123456");
-
-            UserDetails CurrentUser = new UserDetails("DummyUser", "123456");
-            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
-            string ErrorMessage = "";
-            if ((CurrentUser.UserName == "" || CurrentUser.Password == "") && (CurrentUser.UserName == null || CurrentUser.Password == null))
-            {
-                ErrorMessage = "All fields are required.";
-            }
-            else
-            {
-                FirebaseResponse res = client.Get(@"CallingPerceptronApiUsers/" + CurrentUser.UserName);
-                UserDetails ResUser = res.ResultAs<UserDetails>();
-
-                if(UserDetails.IsEqual(ResUser, CurrentUser))
-                {
-                    int a = 1;
-                }
-
-            }
-
-        }
-
-    }
-
-}
+//namespace PerceptronAPI.Controllers
+//{
 //    public class UsersController : ApiController
 //    {
 //        public Users UsersElemenet = new Users();
