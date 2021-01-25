@@ -29,7 +29,7 @@ namespace PerceptronAPI.Utility
                 }  //I'M COMMENTED
                 else
                 {
-                    mm.Subject = "PERCEPTRON: Email Verification";
+                    mm.Subject = "Calling PERCEPTRON API: Email Verification";
                     var body = "Dear User,";
                     body += "<br/><br/> To complete your Calling PERCEPTRON API sign up, we just need to verify your email address: " + UserEmailAddress + 
                         "Please copy this User Unique Id (" + StringInfo + ") and paste into the function of email verfication.";
