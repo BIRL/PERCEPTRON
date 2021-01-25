@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using PerceptronAPI.Models;
+using PerceptronAPI.Utility;
 using FireSharp.Config;
 using FireSharp.Response;
 using FireSharp.Interfaces;
@@ -12,6 +13,9 @@ namespace PerceptronAPI.Controllers
     {
         StreamReader AuthSecretFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\AuthSecret.txt");
         StreamReader BasePathFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\BasePath.txt");
+        string RootDirectoryForFTP = @"E:\10_PERCEPTRON_Live\PlaceHolderFolder\";
+        string ErrorMessage = "";
+
 
         //StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
         //StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
@@ -22,9 +26,14 @@ namespace PerceptronAPI.Controllers
         string EmailAddress = "DummyUser1@dummy.com";
         string DummyPassword = "123456";
 
+        UserDetails UserVerfiyingEmailAddress = new UserDetails("DummyTest1", "DummyUser1@dummy.com", "123456", "a3a8db5b-e238-409c-8ead-f20ec0736b91", "False");
 
         public string RegisterUser()
         {
+
+            DateTime time = DateTime.Now;             // Fetching Current Time
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var CreationTime = time.ToString(format); // Formating creationTime and assigning  // CHECK IF ITS NEEDED...
 
             IFirebaseConfig IFC = new FirebaseConfig()
             {
@@ -32,7 +41,6 @@ namespace PerceptronAPI.Controllers
                 BasePath = BasePathFile.ReadLine()
             };
 
-            string ErrorMessage = "";
             try
             {
                 IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
@@ -48,68 +56,115 @@ namespace PerceptronAPI.Controllers
                 {
                     try   //If User Already Exists then, give a Message
                     {
-                        FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + NewUser.UserName);
+                        FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + NewUser.UserName);   // Check if email id exists...???
                         UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
                         if (FirebaseFetchedUser.UserName == NewUser.UserName || FirebaseFetchedUser.EmailAddress == NewUser.EmailAddress)
                             return ErrorMessage = "User is already registered with the given Username/Email Address. So, please register with other Username/Email Address and if you forgot the password then, you can change it.";
                     }
-                    catch (Exception e) //If User is New alongwith its Username and Email address then, make a new object 
+                    catch (Exception e) //If User is New alongwith its Username and Email address then, make a new object  // If Email id is not exists then,...
                     {
                         SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + NewUser.UserName, NewUser);
+
+
+                        StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
+                        StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
+
+                        SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), NewUser.EmailAddress, UniqueUserGuid, CreationTime, "VerifyEmail");
                         return ErrorMessage = "Dear User, please verfify your email address."; 
                     }
                 }
-
-                
-                //FirebaseResponse res = client.Get(@"perceptron/" + "Farhan");
-                //var result = res.ResultAs<User>();
-
             }
             catch (Exception e)
             {
 
-                ErrorMessage = "Unable to connect with Firebase please try later.";
+                ErrorMessage = "Unable to connect with Firebase, please try again later.";
             }
             return ErrorMessage;
         }
 
-        public void CheckEmailIdExist()
+        public string VerfiyingEmailAddress()
         {
+            string ErrorMessage = "";
+            IFirebaseConfig IFC = new FirebaseConfig()
+            {
+                AuthSecret = AuthSecretFile.ReadLine(),
+                BasePath = BasePathFile.ReadLine()
+            };
 
+            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
+            FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName);   // Check if email id exists...???
+            UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
+
+            if ((FirebaseFetchedUser.EmailAddress == UserVerfiyingEmailAddress.EmailAddress) && (FirebaseFetchedUser.Password == UserVerfiyingEmailAddress.Password))
+            {
+                if (FirebaseFetchedUser.UniqueUserGuid == UserVerfiyingEmailAddress.UniqueUserGuid)
+                {
+                    FirebaseFetchedUser.VerfiedUser = "True";
+                    client.Update(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName, FirebaseFetchedUser);
+
+                    if (!Directory.Exists(RootDirectoryForFTP + FirebaseFetchedUser.UniqueUserGuid))
+                    {
+                        Directory.CreateDirectory(RootDirectoryForFTP + FirebaseFetchedUser.UniqueUserGuid);
+                    }
+
+                    return ErrorMessage = "Dear User, Your email address has been successfully verified.";
+                }
+            }
+                
+
+            else // If there is not User exists with the given email address.
+                return ErrorMessage = "There is no Username exists with this Username so, please first signup then, proceed.";
+
+
+
+
+
+            return ErrorMessage;
         }
 
 
 
-        //public void LoginUser()
-        //{
-        //    IFirebaseConfig IFC = new FirebaseConfig()
-        //    {
-        //        AuthSecret = AuthSecretFile.ReadLine(),
-        //        BasePath = BasePathFile.ReadLine()
-        //    };
+        public string LoginUser()
+        {
+            
+            IFirebaseConfig IFC = new FirebaseConfig()
+            {
+                AuthSecret = AuthSecretFile.ReadLine(),
+                BasePath = BasePathFile.ReadLine()
+            };
 
-        //    //UserDetails user = new UserDetails("DummyUser", "123456");
+            //UserDetails user = new UserDetails("DummyUser", "123456");
 
-        //    UserDetails CurrentUser = new UserDetails("DummyUser", "123456");
-        //    IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
-        //    string ErrorMessage = "";
-        //    if ((CurrentUser.UserName == "" || CurrentUser.Password == "") && (CurrentUser.UserName == null || CurrentUser.Password == null))
-        //    {
-        //        ErrorMessage = "All fields are required.";
-        //    }
-        //    else
-        //    {
-        //        FirebaseResponse res = client.Get(@"CallingPerceptronApiUsers/" + CurrentUser.UserName);
-        //        UserDetails ResUser = res.ResultAs<UserDetails>();
+            UserDetails LoggedInUser = new UserDetails("DummyTest1", "DummyUser1@dummy.com", "123456", "", "");
+            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
 
-        //        if (UserDetails.IsEqual(ResUser, CurrentUser))
-        //        {
-        //            int a = 1;
-        //            //Send Email for verification of email address...!!!
-        //        }
 
-        //    }
-        //}
+            FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + LoggedInUser.UserName);
+            UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
+
+            if (LoggedInUser.UserName == FirebaseFetchedUser.UserName && LoggedInUser.EmailAddress == FirebaseFetchedUser.EmailAddress && LoggedInUser.Password == FirebaseFetchedUser.Password)
+            {
+
+                if (FirebaseFetchedUser.VerfiedUser == "True")
+                {
+                    //////if (UserDetails.IsEqual(ResUser, LoggedInUser))           // ITS HEALTHY...
+                    //////{
+                    //////    int a = 1;
+                    //////    //Send Email for verification of email address...!!!
+                    //////}
+                    
+                }
+                else
+                {
+                    return ErrorMessage = "Please verify your email address first, then proceed.";
+                }
+            }
+            else
+            {
+                return ErrorMessage = "Credential information is incorrect.";
+            }
+            return ErrorMessage;
+        }
 
         public void AuthenticateUser()   //By One Time Enter Key
         {
