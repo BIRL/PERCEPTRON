@@ -3,34 +3,41 @@
     public class UserDetails
     {
         public string UserName { get; set; }
+        public string EmailAddress { get; set; }
         public string Password { get; set; }
+        public string UniqueUserGuid { get; set; }
+        public string VerfiedUser { get; set; }
+
         private static string Error;
 
-        public UserDetails(string cUserName, string cPassword)
+        public UserDetails(string cUserName, string cEmailAddress, string cPassword, string cUniqueUserGuid, string cVerfiedUser)
         {
             UserName = cUserName;
+            EmailAddress = cEmailAddress;
             Password = cPassword;
+            UniqueUserGuid = cUniqueUserGuid;
+            VerfiedUser = cVerfiedUser;                 // "True"       "False"     "Anonymous"
         }
 
-        public static bool IsEqual(UserDetails user1, UserDetails user2)    // user1 -  Database save User          user2 - logged in user         // Authenticate User
+        public static bool IsEqual(UserDetails DatabaseUser, UserDetails LoggedInUser)    // user1 -  Database save User          user2 - logged in user         // Authenticate User
         {
 
-            if (user1 == null || user2 == null)
+            if (DatabaseUser == null || LoggedInUser == null)
             {
                 return false;
             }
             else
             {
-                if (user1.UserName != user2.UserName)
+                if (DatabaseUser.EmailAddress != LoggedInUser.EmailAddress)
                 {
                     Error = "Username does not exist!";     // Error = "Username and/or password does not exist!";
                     return false;
                 }
-                else if (user1.Password != user2.Password)
-                {
-                    Error = "Username and/or password does not exist!";
-                    return false;
-                }
+                //else if (DatabaseUser.Password != LoggedInUser.Password)
+                //{
+                //    Error = "Username and/or password does not exist!";
+                //    return false;
+                //}
                 return true;
             }
         }
