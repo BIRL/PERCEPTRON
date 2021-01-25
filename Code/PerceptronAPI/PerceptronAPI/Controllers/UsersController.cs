@@ -48,6 +48,9 @@ namespace PerceptronAPI.Controllers
                 var UniqueUserGuid = Guid.NewGuid().ToString();
                 UserDetails NewUser = new UserDetails(UserName, EmailAddress, DummyPassword, UniqueUserGuid, "False");
 
+                if (NewUser.UserName.Length > 50)
+                    return ErrorMessage = "Your username is too lengthy. please proceed with relatively shorter username. Moreover, username should contains less than 50 alphabets.";
+
                 if (NewUser.UserName == "" || NewUser.EmailAddress == "" || NewUser.Password == "" || NewUser.UserName == null || NewUser.EmailAddress == null || NewUser.Password == null)
                 {
                     return ErrorMessage = "All fields are required.";
@@ -102,9 +105,9 @@ namespace PerceptronAPI.Controllers
                     FirebaseFetchedUser.VerfiedUser = "True";
                     client.Update(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName, FirebaseFetchedUser);
 
-                    if (!Directory.Exists(RootDirectoryForFTP + FirebaseFetchedUser.UniqueUserGuid))
+                    if (!Directory.Exists(RootDirectoryForFTP + FirebaseFetchedUser.UserName))
                     {
-                        Directory.CreateDirectory(RootDirectoryForFTP + FirebaseFetchedUser.UniqueUserGuid);
+                        Directory.CreateDirectory(RootDirectoryForFTP + FirebaseFetchedUser.UserName);
                     }
 
                     return ErrorMessage = "Dear User, Your email address has been successfully verified.";
@@ -114,9 +117,6 @@ namespace PerceptronAPI.Controllers
 
             else // If there is not User exists with the given email address.
                 return ErrorMessage = "There is no Username exists with this Username so, please first signup then, proceed.";
-
-
-
 
 
             return ErrorMessage;
