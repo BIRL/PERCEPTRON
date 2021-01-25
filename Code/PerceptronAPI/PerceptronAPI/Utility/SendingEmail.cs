@@ -32,9 +32,9 @@ namespace PerceptronAPI.Utility
                     mm.Subject = "Calling PERCEPTRON API: Email Verification";
                     var body = "Dear User,";
                     body += "<br/><br/> To complete your Calling PERCEPTRON API sign up, we just need to verify your email address: " + UserEmailAddress + 
-                        "Please copy this User Unique Id (" + StringInfo + ") and paste into the function of email verfication.";
+                        " Please copy this User Unique Id (" + StringInfo + ") and paste into the function of email verfication.";
                     //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                    body += "Once verified, you can start using Calling PERCEPTRON API for proteoform search.";
+                    body += "</br></br>Once verified, you can start using Calling PERCEPTRON API for proteoform search.";
 
                     body += "</br></br>Thank You for using Perceptron.";
                     body += "</br><b>The PERCEPTRON Team</b>";
