@@ -271,6 +271,7 @@
     <Compile Include="Utility\AddSuffixInName.cs" />
     <Compile Include="Utility\AminoAcids.cs" />
     <Compile Include="Utility\DBErrorException.cs" />
+    <Compile Include="Utility\SendingEmail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
