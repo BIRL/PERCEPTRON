@@ -10,10 +10,20 @@ namespace PerceptronAPI.Controllers
 {
     public class UsersController
     {
-        StreamReader AuthSecretFile = new StreamReader(@"C:\01_DoNotEnterCallingPerceptronApiAuthenticationInfo\AuthSecret.txt");
-        StreamReader BasePathFile = new StreamReader(@"C:\01_DoNotEnterCallingPerceptronApiAuthenticationInfo\BasePath.txt");
+        StreamReader AuthSecretFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\AuthSecret.txt");
+        StreamReader BasePathFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\BasePath.txt");
 
-        public void RegisterUser()
+        //StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
+        //StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
+
+        //SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), parametersDto.SearchParameters.EmailId, creationTime);
+
+        string UserName = "DummyTest1";
+        string EmailAddress = "DummyUser1@dummy.com";
+        string DummyPassword = "123456";
+
+
+        public string RegisterUser()
         {
 
             IFirebaseConfig IFC = new FirebaseConfig()
@@ -27,26 +37,30 @@ namespace PerceptronAPI.Controllers
             {
                 IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
 
+                var UniqueUserGuid = Guid.NewGuid().ToString();
+                UserDetails NewUser = new UserDetails(UserName, EmailAddress, DummyPassword, UniqueUserGuid, "False");
 
-                UserDetails user = new UserDetails("DummyUser", "123456");
-
-                if ((user.UserName == "" || user.Password == "") && (user.UserName == null || user.Password == null))
+                if (NewUser.UserName == "" || NewUser.EmailAddress == "" || NewUser.Password == "" || NewUser.UserName == null || NewUser.EmailAddress == null || NewUser.Password == null)
                 {
-                    try { }
-                    catch
+                    return ErrorMessage = "All fields are required.";
+                }
+                else
+                {
+                    try   //If User Already Exists then, give a Message
                     {
-                        ErrorMessage = "All fields are required.";
-                        throw;
+                        FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + NewUser.UserName);
+                        UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
+                        if (FirebaseFetchedUser.UserName == NewUser.UserName || FirebaseFetchedUser.EmailAddress == NewUser.EmailAddress)
+                            return ErrorMessage = "User is already registered with the given Username/Email Address. So, please register with other Username/Email Address and if you forgot the password then, you can change it.";
                     }
-
+                    catch (Exception e) //If User is New alongwith its Username and Email address then, make a new object 
+                    {
+                        SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + NewUser.UserName, NewUser);
+                        return ErrorMessage = "Dear User, please verfify your email address."; 
+                    }
                 }
 
-                SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + user.UserName, user);
-
-
-
-
-
+                
                 //FirebaseResponse res = client.Get(@"perceptron/" + "Farhan");
                 //var result = res.ResultAs<User>();
 
@@ -56,39 +70,51 @@ namespace PerceptronAPI.Controllers
 
                 ErrorMessage = "Unable to connect with Firebase please try later.";
             }
+            return ErrorMessage;
         }
 
-        public void LoginUser()
+        public void CheckEmailIdExist()
         {
-            IFirebaseConfig IFC = new FirebaseConfig()
-            {
-                AuthSecret = AuthSecretFile.ReadLine(),
-                BasePath = BasePathFile.ReadLine()
-            };
-
-            //UserDetails user = new UserDetails("DummyUser", "123456");
-
-            UserDetails CurrentUser = new UserDetails("DummyUser", "123456");
-            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
-            string ErrorMessage = "";
-            if ((CurrentUser.UserName == "" || CurrentUser.Password == "") && (CurrentUser.UserName == null || CurrentUser.Password == null))
-            {
-                ErrorMessage = "All fields are required.";
-            }
-            else
-            {
-                FirebaseResponse res = client.Get(@"CallingPerceptronApiUsers/" + CurrentUser.UserName);
-                UserDetails ResUser = res.ResultAs<UserDetails>();
-
-                if (UserDetails.IsEqual(ResUser, CurrentUser))
-                {
-                    int a = 1;
-                }
-
-            }
 
         }
 
+
+
+        //public void LoginUser()
+        //{
+        //    IFirebaseConfig IFC = new FirebaseConfig()
+        //    {
+        //        AuthSecret = AuthSecretFile.ReadLine(),
+        //        BasePath = BasePathFile.ReadLine()
+        //    };
+
+        //    //UserDetails user = new UserDetails("DummyUser", "123456");
+
+        //    UserDetails CurrentUser = new UserDetails("DummyUser", "123456");
+        //    IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
+        //    string ErrorMessage = "";
+        //    if ((CurrentUser.UserName == "" || CurrentUser.Password == "") && (CurrentUser.UserName == null || CurrentUser.Password == null))
+        //    {
+        //        ErrorMessage = "All fields are required.";
+        //    }
+        //    else
+        //    {
+        //        FirebaseResponse res = client.Get(@"CallingPerceptronApiUsers/" + CurrentUser.UserName);
+        //        UserDetails ResUser = res.ResultAs<UserDetails>();
+
+        //        if (UserDetails.IsEqual(ResUser, CurrentUser))
+        //        {
+        //            int a = 1;
+        //            //Send Email for verification of email address...!!!
+        //        }
+
+        //    }
+        //}
+
+        public void AuthenticateUser()   //By One Time Enter Key
+        {
+
+        }
     }
 
 }
