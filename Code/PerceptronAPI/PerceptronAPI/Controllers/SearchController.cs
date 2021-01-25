@@ -17,6 +17,8 @@ using PerceptronAPI.Repository;
 using PerceptronAPI.Utility;
 using System.Data.Entity.Validation;
 
+
+
 namespace PerceptronAPI.Controllers
 {
     public class SearchController : ApiController
@@ -28,8 +30,15 @@ namespace PerceptronAPI.Controllers
 
         public SearchController()
         {
-            _dataLayer = new SqlDatabase(); 
+            _dataLayer = new SqlDatabase();
 
+            UsersController UserController = new UsersController();
+            var ErrorMessage = UserController.RegisterUser();
+            //UserController.LoginUser();
+
+
+
+            //AuthenticateUserByFirebase();
             // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
 
 
@@ -41,10 +50,6 @@ namespace PerceptronAPI.Controllers
             //var Message = Database_Update();
             //Server.MapPath("~");
         }
-        //public string Get_progress(string em)
-        //{
-        //    return Search.Progress_reporter(em);
-        //}
 
         [HttpPost]
         [Route("api/search/File_upload")]
@@ -154,7 +159,10 @@ namespace PerceptronAPI.Controllers
                 _DBErrorException.DbEntitiyError(e);
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    //Sending_Email(parametersDto, creationTime);
+                    StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
+                    StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
+
+                    SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
@@ -689,52 +697,5 @@ namespace PerceptronAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, '1');
         }
 
-
-
-        public static void Sending_Email(SearchParametersDto p, string CreationTime)//, int EmailMsg)
-        {
-            var emailaddress = p.SearchParameters.EmailId;
-            using (var mm = new MailMessage("perceptron@lums.edu.pk", emailaddress))
-            {
-                string BaseUrl = "https://perceptron.lums.edu.pk/";
-
-
-                //if (EmailMsg == -1) // Email Msg for Something Wrong With Entered Query
-                //{
-                mm.Subject = "PERCEPTRON: Protein Search Results";
-                var body = "Dear User,";
-                body += "<br/><br/> Search couldn't complete for protein search query submitted at " + CreationTime + " with job title \"" +
-                        p.SearchParameters.Title + "\" Please check your search parameters and data file.";
-                //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
-
-                body += "</br></br>Thank You for using Perceptron.";
-                body += "</br><b>The PERCEPTRON Team</b>";
-                body += "</br>Biomedical Informatics Research Laboratory (BIRL), Lahore University of Management Sciences (LUMS), Pakistan";
-                mm.Body = body;
-                //}  //I'M COMMENTED
-
-                mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("dummyemail@lums.edu.pk", "*****");
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.office365.com",
-                    EnableSsl = true,
-                    UseDefaultCredentials = true,
-                    Credentials = networkCred,
-                    Port = 587
-                };
-                try
-                {
-                    smtp.Send(mm);
-                }
-                catch (Exception e)
-                {
-                    if (e is System.Net.Mail.SmtpException)
-                        emailaddress = "das bad";
-
-                }
-            }
-        }
     }
 }
