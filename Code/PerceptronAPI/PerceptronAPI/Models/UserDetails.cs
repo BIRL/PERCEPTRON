@@ -10,6 +10,24 @@
 
         private static string Error;
 
+
+        //public UserDetails(string cUserName, string cEmailAddress, string cPassword)
+        //{
+        //    UserName = cUserName;
+        //    EmailAddress = cEmailAddress;
+        //    Password = cPassword;
+        //}
+
+
+        public UserDetails()
+        {
+            UserName = "";
+            EmailAddress = "";
+            Password = "";
+            UniqueUserGuid = "";
+            VerfiedUser = "";                 // "True"       "False"     "Anonymous"
+        }
+
         public UserDetails(string cUserName, string cEmailAddress, string cPassword, string cUniqueUserGuid, string cVerfiedUser)
         {
             UserName = cUserName;
