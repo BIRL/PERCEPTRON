@@ -1,7 +1,5 @@
-
-    ftpobj = ftp('*****', '****', '****');
-    %%Password Added here....
-UniqueUserID = string(java.util.UUID.randomUUID.toString);   %% Generate Unique User ID
+% For Batch Mode Please Upload *.zip file
+UniqueFileID = string(java.util.UUID.randomUUID.toString);   %% Generate Unique User ID
 
 %%% ATTENTION!!! ALL PARAMETER VALUES ARE CASE SENSITIVE
 %%% User will add values below...!!!
@@ -32,11 +30,18 @@ FilterDb = "True";     % User can also, select "False"
 % ParameterValue = [JobName;FDRCutOff;ProteinDatabase;MassMode;FilterDb;"500";"15";"ppm";"False";"HCD";"bo,bstar,yo,ystar";"True";"3";"6";"0.1";"Da";"0.45";"False"; "None,NME,NME_Acetylation,M_Acetylation";"False";"0.5" ; "";"";"None";"";"None";"0"; "0";"100";"";"";"farhan.khalid@lums.edu.pk"; "farhan.khalid@lums.edu.pk"];
 % JsonString = jsonencode(table(ParameterName,ParameterValue))
 % SendParameters.Body = JsonString;
-
-FullFileName = 'D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\CallingPerceptronAPI\HELA_pk13_sw1_66sc_mono.txt'; % Please add here the path alongwith filename
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    D:\01_PERCEPTRON\gitHub\PERCEPTRON\Code\CallingPerceptronAPI\
+FullFileName = 'HELA_pk13_sw1_66sc_mono.txt'; % Please add here the path alongwith filename
 [FilePath,FileName,Extension] = fileparts(FullFileName);
 FileNameWithExtension = strcat(FileName,Extension);
+
+CredentialInfo = importdata("C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronFtpInfo.txt");
+FtpServerName = char(CredentialInfo(1,1));
+UserName = char(CredentialInfo(2,1));
+Password = char(CredentialInfo(3,1));
 try
+    ftpobj = ftp(FtpServerName, UserName, Password);
+    %%Password Added here....
     mput(ftpobj,FullFileName);
 catch
     msgbox('Input file couldn''t uploaded at Server please check your internet connection and data file. If problem still persists report bug on GitHub','CallingPerceptronApi','Modal');
@@ -87,11 +92,7 @@ if (Response.StatusCode == "OK")
         throw;
     
     end
-    
-    
-    
-    sdadsad= 1;
-    
+   
     
 else
     msgbox('Search couldn''t complete please check your search parameters and data file. If problem still persists report bug on GitHub','CallingPerceptronApi','Modal');
