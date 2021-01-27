@@ -14,7 +14,9 @@ import * as CanvasJS from 'canvasjs-non-commercial-2.3.2/canvasjs.min';
 export class ResultsVisualizationComponent implements OnInit {
   displayedColumns = ['rank', 'FragmentID', 'FragmentIon', 'ExperimentalMZ', 'TheoreticalMZ', 'MassDifference'];
   dataSource: MatTableDataSource<UserData>;
+  querryId: any;
   resultId: any;
+  rank: any;
   ImageFilePath: any;
   base64data: any;
   PeakListIntensities: number[] = [];
@@ -35,8 +37,11 @@ export class ResultsVisualizationComponent implements OnInit {
     this.dataSource = new MatTableDataSource(users);
   }
   ngOnInit() {
+    this.route.params.subscribe((params: Params) => this.querryId = params['querryId']);
     this.route.params.subscribe((params: Params) => this.resultId = params['resultId']);
-    this._httpService.GetDetailedProteinHitViewResults(this.resultId).subscribe(data => this.what(data));
+    this.route.params.subscribe((params: Params) => this.rank = params['rank']);
+    // this.route.params.subscribe((params: Params) => this.resultId = params['resultId']);
+    this._httpService.GetDetailedProteinHitViewResults(this.querryId,this.resultId,this.rank).subscribe(data => this.what(data));
   }
   ngAfterViewInit() { //Added //Updated 20201215 
     // Scrolls to top of Page after page view initialized

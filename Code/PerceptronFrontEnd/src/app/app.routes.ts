@@ -75,7 +75,7 @@ export const router: Routes = [
     //    children: [{path: 'results-visualization', component: ResultsVisualizationComponent}]},
 
     // { path: 'patterngenerator', component: PatterngeneratorComponent, canActivate: [AuthGuard]},
-    { path: 'resultsvisualization/:resultId/:rank', component: ResultsVisualizationComponent},
+    { path: 'resultsvisualization/:querryId/:resultId/:rank', component: ResultsVisualizationComponent},
     { path: 'scans/:querryId', component: ScanViewComponent},
     { path: 'sc/:querryId', component: SpectralcountComponent},
     { path: 'xic/:querryId', component: XicComponent},

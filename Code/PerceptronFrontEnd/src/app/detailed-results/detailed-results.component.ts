@@ -173,7 +173,7 @@ export class DetailedResultsComponent implements OnInit {
 
   getResultsView() {
     let x = this.router;
-    x.navigate(["resultsvisualization", this.resultId, this.rank]);
+    x.navigate(["resultsvisualization", this.querryId, this.resultId, this.rank]);
   }
 }
 

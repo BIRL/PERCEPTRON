@@ -120,16 +120,17 @@ namespace PerceptronAPI.Repository
                     var cmd = new SqlCommand
                     {
                         CommandText =
-                    //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
+                        //"SELECT *\nFROM SearchResults E\nWHERE E.QueryId = '" + qid + "' FROM SearchFiles E2 Where E2.QueryId=E.QueryId AND E2.FileUniqueId = E.FileUniqueId))",  // E.ProteinRank = '1',
 
-          //          " ' AND P.JobSubmission >= ' " + JobSubmissionTime +
+                        //          " ' AND P.JobSubmission >= ' " + JobSubmissionTime +
 
-                    /// ITS HEALTHY BELOW
-                    //"SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + 
-                    //    "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ORDER BY P.Queryid Desc ",
+                        /// ITS HEALTHY BELOW
+                        //"SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + 
+                        //    "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId ORDER BY P.Queryid Desc ",
                         ////// ITS HEALTHY ABOVE
                         ///
-                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid + " ' AND P.JobSubmission >= ' " + JobSubmissionTime +
+                        "SELECT P.FileId, P.Mw, P.Header, P.Score, P.FileUniqueId, P.ProteinRank, P.Queryid, R.Queryid, R.FileName \nFROM SearchFiles as R, SearchResults as P \nWHERE P.Queryid = '" + qid +
+                        "' AND P.Queryid = R.Queryid AND P.JobSubmission >= ' " + JobSubmissionTime +
                         "' AND P.ProteinRank = '" + 1 + "' AND P.FileUniqueId=R.FileUniqueId AND P.JobSubmission = R.JobSubmission ORDER BY P.JobSubmission Desc ",  //Updated 20210118
                         CommandType = CommandType.Text,
                         Connection = sqlConnection1
@@ -670,7 +671,7 @@ namespace PerceptronAPI.Repository
 
 
 
-        public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, DateTime JobSubmissionTime)
+        public DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, string rank, DateTime JobSubmissionTime)
         {
             string FileId = ""; var GetPeakListData = new PeakListData();
             var DetailedProteinHitViewResults = new DetailedProteinHitView();
@@ -686,7 +687,7 @@ namespace PerceptronAPI.Repository
                     //  "SELECT SR.Queryid, SR.FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "' as R, AND SELECT PeakListData as P \nWHERE P.FileUniqueId = SR.FileUniqueId ",
                     //"SELECT QueryId, FileUniqueId \nFROM SearchResults \nWHERE ResultId = '" + rid + "'",   // Its HEALTHY
 
-                    "SELECT * \nFROM SearchResults \nWHERE ResultId = '" + rid +  "' AND JobSubmission >= ' " + JobSubmissionTime + "'",  //   "' AND QueryId = '" + qid +
+                    "SELECT * \nFROM SearchResults \nWHERE QueryId = '" + qid + "'AND ResultId = '" + rid + "' AND ProteinRank = '" + rank + "' AND JobSubmission >= ' " + JobSubmissionTime + "'ORDER BY JobSubmission Desc" ,  ////   "' AND QueryId = '" + qid +
 
                     CommandType = CommandType.Text,
                     Connection = sqlConnection1

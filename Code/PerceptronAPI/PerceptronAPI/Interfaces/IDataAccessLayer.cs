@@ -11,7 +11,7 @@ namespace PerceptronAPI
         List<ScanResults> Scan_Results(string qid, DateTime JobSubmissionTime);
         List<SummaryResults> Summary_results(string qid, string fid, DateTime JobSubmissionTime);
         DetailedResults Detailed_Results(string qid, string rid, DateTime JobSubmissionTime);
-        DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, DateTime JobSubmissionTime);
+        DetailedProteinHitView DetailedProteinHitView_Results(string qid, string rid, string rank, DateTime JobSubmissionTime);
         List<UserHistory> GetUserHistory(string Uid, DateTime JobSubmissionTime);
         stat stat();
         void StoringCompiledResults(List<ResultsDownloadDataCompile> CompiledResults);

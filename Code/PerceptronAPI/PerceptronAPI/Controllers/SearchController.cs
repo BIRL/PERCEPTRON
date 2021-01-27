@@ -159,10 +159,10 @@ namespace PerceptronAPI.Controllers
                 _DBErrorException.DbEntitiyError(e);
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
-                    StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
+                    //StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
+                    //StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
 
-                    SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
+                    //SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
@@ -484,12 +484,16 @@ namespace PerceptronAPI.Controllers
         public ResultsVisualizeData Post_DetailedProteinHitView_results([FromBody] string input)
         {
             Debug.WriteLine(input);
+            string[] values = input.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var qid = values[0];
+            var resultid = values[1];
+            var rank = values[2];
             //var temp = _dataLayer.DetailedProteinHitView_Results("1", input);
 
 
             //ITS A PART OF RESULTS VISUALIZATION ONCE COMPELTED WILL MOVE TO THIS (Post_DetailedProteinHitView_results) METHOD       /////NOW EMBEDDED INTO Post_detailed_results TO AVOID 
 
-            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results("1", input, JobSubmissionTime);
+            DetailedProteinHitView temp2 = _dataLayer.DetailedProteinHitView_Results(qid, resultid, rank, JobSubmissionTime);
 
             var MassSpectra = new FormForGraph();
             var InsilicoSpectra = MassSpectra.fillChart(temp2);

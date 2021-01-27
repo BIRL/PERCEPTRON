@@ -264,10 +264,11 @@ export class ConfigService {
             });
     }
 
-    GetDetailedProteinHitViewResults(resId) {
+    GetDetailedProteinHitViewResults(qid,resId,rank) {
         let headers = new Headers();
+        let QueryIdResultIdRank = qid + "," + resId+ "," + rank;
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        return this._http.post(this.baseApiUrl + '/api/search/Post_DetailedProteinHitView_results', '=' + resId, { headers: headers })
+        return this._http.post(this.baseApiUrl + '/api/search/Post_DetailedProteinHitView_results', '=' + QueryIdResultIdRank, { headers: headers })
             .map(res => {
                 return res.json()
             });
