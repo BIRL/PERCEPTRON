@@ -40,7 +40,12 @@ namespace PerceptronLocalService.Utility
                 sw.WriteLine("Email Id = N/A");
 
             sw.WriteLine("Protein Database = " + SearchParameters.ProtDb);
-            sw.WriteLine("FDR Cutoff = " + SearchParameters.FDRCutOff + "%");
+
+            if (SearchParameters.FDRCutOff != "N/A")        //Updated 20210209
+                sw.WriteLine("FDR Cutoff = " + SearchParameters.FDRCutOff + "%");
+            else                  //Updated 20210209
+                sw.WriteLine("FDR Cutoff = " + "N/A");
+
             sw.WriteLine("Number Of Output Results = " + SearchParameters.NumberOfOutputs);
 
             //BUG Mass Mode Not Present
