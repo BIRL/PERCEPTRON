@@ -250,7 +250,7 @@ namespace PerceptronLocalService
             var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
-            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0") // Will work for FDR side
+            if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210209
             {
                 iterate = 2;
             }
@@ -564,7 +564,7 @@ namespace PerceptronLocalService
                 ResultsDownloadFileNames.Add(_WriteResultsFile.WriteParametersInTxtFile(parameters, Path)); // For Parameters File
 
                 var ResultsOfFDR = new List<FalseDiscoveryRateDto>(DataForBatchFileAndFdr.Count);
-                if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")  // Will Work for FDR - Decoy Side
+                if (parameters.FDRCutOff != "N/A")  // Will Work for FDR - Decoy Side  //Updated 20210209
                 {
                     DataForBatchFileAndFdr = DataForBatchFileAndFdr.OrderByDescending(x => x.Score).ToList();
                     DecoyDataForBatchFileAndFdr = DecoyDataForBatchFileAndFdr.OrderByDescending(x => x.Score).ToList();
