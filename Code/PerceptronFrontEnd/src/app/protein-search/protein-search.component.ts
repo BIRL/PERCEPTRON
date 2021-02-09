@@ -299,7 +299,7 @@ export class ProteinSearchComponent implements OnInit {
     this.Title = "Default Run";
     this.EmailId = '';
     this.NameOfDatabase = 'Human';
-    this.NoOfOutputResults = '100+';
+    this.NoOfOutputResults = '100';
     this.MassMode = "2";   // For Selecting M(Neutral)
     this.FilterDB = true;
     this.Mass_Tolerance = 500;
