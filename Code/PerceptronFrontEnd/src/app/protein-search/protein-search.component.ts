@@ -182,7 +182,7 @@ export class ProteinSearchComponent implements OnInit {
     { value: '80', viewValue: '80' },
     { value: '90', viewValue: '90' },
     { value: '100', viewValue: '100' },
-    { value: '100+', viewValue: '100+' }
+    //{ value: '100+', viewValue: '100+' }
 
   ];
 
@@ -324,7 +324,7 @@ export class ProteinSearchComponent implements OnInit {
     this.PtmToleranceUnit = 'Da';
     this.VariableModifications = "";
     this.FixedModifications = "";
-    this.FDR_CutOff = "1";
+    this.FDR_CutOff = "N/A";
 
 
     this.Slider1 = '0'; //Intact Protein Mass Slider
@@ -556,8 +556,8 @@ export class ProteinSearchComponent implements OnInit {
       form.NoOfOutputResults = '100';
     }
     else if (FileExtension != 'zip'){     //Updated 20201215
-      form.FDR_CutOff = "0";
-      form.FDRCutOff = "0";
+      form.FDR_CutOff = "N/A";
+      form.FDRCutOff = "N/A";
     }
 
    
