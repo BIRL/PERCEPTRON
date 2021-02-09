@@ -25,7 +25,7 @@ namespace PerceptronAPI.Controllers
     {
 
         readonly IDataAccessLayer _dataLayer;
-        public DateTime JobSubmissionTime = DateTime.Now.AddYears(-10);  //FOR NOW ITS 10 Year for testing //// Fetching Current Time  //Results will available for 48hrs only
+        public DateTime JobSubmissionTime = DateTime.Now.AddDays(-2);  // Fetching Current Time  //Results will available for 48hrs only
 
 
         public SearchController()
@@ -148,7 +148,7 @@ namespace PerceptronAPI.Controllers
                 }
                 if (parametersDto.SearchFiles.Count == 1)
                 {
-                    parametersDto.SearchParameters.FDRCutOff = "0";
+                    parametersDto.SearchParameters.FDRCutOff = "N/A";  //Updated 20210209
                 }
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
                 return Request.CreateResponse(HttpStatusCode.OK, response);
