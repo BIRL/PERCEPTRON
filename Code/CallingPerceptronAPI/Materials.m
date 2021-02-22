@@ -16,12 +16,16 @@ import matlab.net.http.*
 import matlab.net.http.field.*
 import matlab.net.http.io.*
 
-request = RequestMessage(PUT,[],provider);
-[response,completedrequest,history] = send(request,uri)
 
-provider = FileProvider('dir/imageFile.jpg');
-req = RequestMessage(PUT,[],provider);
+provider = MultipartProvider(FileProvider(["HELA_pk13_sw1_66sc_mono.txt", "HELA_pk13_sw1_66sc_mono.txt"]));
+request = RequestMessage('PUT',[],provider);
+[response,completedrequest,history] = send(request,uri)
 resp = req.send(url);
+
+
+% provider = FileProvider('dir/imageFile.jpg');
+req = RequestMessage(PUT,[],provider);
+
 
 url = "www.somewebsite.com";
 provider = MultipartProvider(FileProvider(["image1.jpg", "file1.txt"]));
@@ -85,7 +89,7 @@ pw = 'verySecret';
 uri = 'http://localhost:52340/api/search/Calling_API'
 input = struct('Username',un,'Password',pw, 'grant_type', 'password');
 inputParameters = struct('parameters', input);
-% aTest = jsonencode(inputParameters);
+aTest = jsonencode(inputParameters);
 options = matlab.net.http.HTTPOptions();
 method = matlab.net.http.RequestMethod.POST;
 request = matlab.net.http.RequestMessage(method,headerField, json);
@@ -171,3 +175,18 @@ temperatures(1).DegreesInFahrenheit = [s.data];
 % Convert temperatures to Fahrenheit
 temperatures(1).DegreesInFahrenheit = temperatures(1).DegreesInFahrenheit * 9/5 + 32;
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % % https://www.mathworks.com/matlabcentral/answers/499434-matlab-http-post-and-json-request
+% 
+% import matlab.net.http.*
+% import matlab.net.http.field.*
+% url = 'http://localhost:52340/api/search/Calling_API';
+% 
+% request = RequestMessage( 'POST', ...
+%     [ContentTypeField( 'application/vnd.api+json' ), AcceptField('application/vnd.api+json')], ...
+%     '{"meta": {"key": "xxxxxx"}}' );
+% response = request.send( url );

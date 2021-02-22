@@ -1,8 +1,21 @@
+BaseApiUrl = "http://localhost:52340/";
+
+% Use RegisterUser for signup, only needed to execute for one time
+% Message = RegisterUser( BaseApiUrl );
+
+
+% Use VerfiyingEmailAddress for email verification, only needed to execute for one time
+% Message = VerfiyingEmailAddress( BaseApiUrl )
+
+Message = SearchQuery( BaseApiUrl )
+
+
+disp (Message)
 % For Batch Mode Please Upload *.zip file
 UniqueFileID = string(java.util.UUID.randomUUID.toString);   %% Generate Unique User ID
 
 %%% ATTENTION!!! ALL PARAMETER VALUES ARE CASE SENSITIVE
-%%% User will add values below...!!!
+%%% User would add values below...!!!
 %Title
 JobName = "Default Run";
 %FDRCutOff
@@ -51,7 +64,7 @@ import matlab.net.http.*
 %JUST CALL CHECKING...
 SendParameters = RequestMessage('POST',[]);
 Options = matlab.net.http.HTTPOptions('ConnectTimeout',1000);  %% 1000sec
-BaseApiUrl = "http://localhost:52340/";
+
 PerceptronApiJobSubmissionUrl = strcat(BaseApiUrl,'api/search/Calling_API');
 
 Pattren = ":";
