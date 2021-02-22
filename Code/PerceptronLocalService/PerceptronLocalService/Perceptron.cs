@@ -255,7 +255,6 @@ namespace PerceptronLocalService
                 iterate = 2;
             }
             
-            
             var DataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
             var DecoyDataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
 
@@ -293,7 +292,12 @@ namespace PerceptronLocalService
                     PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
 
                     /////////////DEL ME 
-
+                    ///
+                    var PstListSting = new List<string>();
+                    for (int iPst = 0; iPst<PstTags.Count; iPst++)
+                    {
+                        PstListSting.Add(PstTags[iPst].PstTags);
+                    }
 
                     //Logging.DumpModifiedProteins(candidateProteins);
 
@@ -315,9 +319,6 @@ namespace PerceptronLocalService
                         {
                             SQLDataBaseProteins = SqlDatabases[1];  //For Decoy Database;
                         }
-
-
-
 
                         //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                         var candidateProteins = new List<ProteinDto>();
@@ -362,27 +363,10 @@ namespace PerceptronLocalService
 
                         candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
 
-
-                        //DEL ME 
-                        var candidateProteinsListTOBEDEL = new List<string>(candidateProteins.Count);
-                        for (int i = 0; i < candidateProteins.Count; i++)
-                        {
-                            candidateProteinsListTOBEDEL.Add(candidateProteins[i].Header);
-                        }
-                        //DEL ME
-
                         // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
                         var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
                         CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
-
-                        //DEL ME 
-                        var CandidateProteinListBlindPtmModifiedListTOBEDEL = new List<string>(CandidateProteinListBlindPtmModified.Count);
-                        for (int i2 = 0; i2 < CandidateProteinListBlindPtmModified.Count; i2++)
-                        {
-                            CandidateProteinListBlindPtmModifiedListTOBEDEL.Add(CandidateProteinListBlindPtmModified[i2].Header);
-                        }
-                        //DEL ME
 
 
                         //Step 4 - ??? Algorithm - Spectral Comparison
@@ -391,17 +375,6 @@ namespace PerceptronLocalService
 
                         //BlindPTMLocalization: Localizing Unknown mass shift
                         CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
-
-
-
-                        //DEL ME    -----    _BlindPostTranslationalModificationModule
-                        var CandidateProteinswithInsilicoScoresListTOBEDEL = new List<string>(CandidateProteinswithInsilicoScores.Count);
-                        for (int i3 = 0; i3 < CandidateProteinswithInsilicoScores.Count; i3++)
-                        {
-                            CandidateProteinswithInsilicoScoresListTOBEDEL.Add(CandidateProteinswithInsilicoScores[i3].Header);
-                        }
-                        //DEL ME
-
 
                         //Logging.DumpInsilicoScores(candidateProteins);
 
@@ -449,6 +422,25 @@ namespace PerceptronLocalService
                         //Evalue 
                         Evalue _Evalue = new Evalue();
                         _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
+
+
+                        //DEL ME 
+                        string FinalFileWithPath = @"C:\PerceptronResultsDownload\FinalScoring.txt";
+                        if (File.Exists(FinalFileWithPath))
+                            File.Delete(FinalFileWithPath); //Deleted Pre-existing file
+
+                        var finalfout = new FileStream(FinalFileWithPath, FileMode.OpenOrCreate);
+                        var finalSw = new StreamWriter(finalfout);
+
+                        var TOBeDel = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
+                        for (int i3 = 0; i3 < FinalCandidateProteinListforFinalScoring.Count; i3++)
+                        {
+                            TOBeDel.Add(FinalCandidateProteinListforFinalScoring[i3].Header);
+
+                            finalSw.WriteLine(FinalCandidateProteinListforFinalScoring[i3].Header);
+                        }
+                        finalSw.Close();
+                        //DEL ME
 
                         //Logging.DumpTotalScores(candidateProteins);
 
@@ -687,7 +679,6 @@ namespace PerceptronLocalService
                 _Truncation.TruncationRight(PtmAllow, CandidateProteinListTruncatedRight, CandidateListTruncationRightProcessed, RemainingProteinsRight, peakData2DList);
                 OnlyTruncationRight.Stop();           // DELME Execution Time Working
 
-
                 CandidateProteinListUnModified.AddRange(CandidateListTruncationLeftProcessed);
                 CandidateProteinListUnModified.AddRange(CandidateListTruncationRightProcessed);
 
@@ -725,6 +716,7 @@ namespace PerceptronLocalService
 
                 var FilteredTruncatedList = _Truncation.FilterTruncatedProteins(parameters, CandidateProteinList, PstTags);
                 CandidateProteinListTrucnatedwithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(FilteredTruncatedList, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+
             }
             modulerTimer.Stop();
             executionTimes.TruncationEngineTime = modulerTimer.Elapsed.ToString();
