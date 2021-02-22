@@ -1,24 +1,7 @@
 
-*.pdb
-*.jpg
 *.fasta
-*.asv
-*.suo
-*.dll
-*.csv
-*.zip
-*.csproj
-*.exe
-*.cs.dll
-*.txt
-*.cache
-*.manifest
-*.application
 *.mgf
 *.mzML
 *.mzXML
-*.png
-*.msl
-*.ssdl
-*.csdl
- *.suo
+*.csv
+*.zip

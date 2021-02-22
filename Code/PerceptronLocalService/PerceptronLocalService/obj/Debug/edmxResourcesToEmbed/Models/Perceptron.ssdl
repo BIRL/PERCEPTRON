@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PerceptronDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="ExecutionTimes">
+    <Key>
+      <PropertyRef Name="QueryId" />
+      <PropertyRef Name="FileName" />
+    </Key>
+    <Property Name="InsilicoTime" Type="nvarchar(max)" />
+    <Property Name="PtmTime" Type="nvarchar(max)" />
+    <Property Name="TunerTime" Type="nvarchar(max)" />
+    <Property Name="MwFilterTime" Type="nvarchar(max)" />
+    <Property Name="PstTime" Type="nvarchar(max)" />
+    <Property Name="TotalTime" Type="nvarchar(max)" />
+    <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PtmFixedModifications">
+    <Key>
+      <PropertyRef Name="Modid" />
+    </Key>
+    <Property Name="Modid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Queryid" Type="nvarchar(max)" />
+    <Property Name="ModificationCode" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PtmVariableModifications">
+    <Key>
+      <PropertyRef Name="Modid" />
+    </Key>
+    <Property Name="Modid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Queryid" Type="nvarchar(max)" />
+    <Property Name="ModificationCode" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ResultInsilicoMatchLefts">
+    <Key>
+      <PropertyRef Name="RowId" />
+    </Key>
+    <Property Name="ResultId" Type="nvarchar(max)" />
+    <Property Name="MatchedPeaks" Type="nvarchar(max)" />
+    <Property Name="RowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ResultInsilicoMatchRights">
+    <Key>
+      <PropertyRef Name="RowId" />
+    </Key>
+    <Property Name="ResultId" Type="nvarchar(max)" />
+    <Property Name="MatchedPeaks" Type="nvarchar(max)" />
+    <Property Name="RowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ResultPtmSites">
+    <Key>
+      <PropertyRef Name="ResultId" />
+      <PropertyRef Name="Index" />
+    </Key>
+    <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Score" Type="float" Nullable="false" />
+    <Property Name="ModWeight" Type="float" Nullable="false" />
+    <Property Name="ModName" Type="nvarchar(max)" />
+    <Property Name="AminoAcid" Type="nvarchar(max)" />
+    <Property Name="Site" Type="char" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="SearchFiles">
+    <Key>
+      <PropertyRef Name="Fileid" />
+    </Key>
+    <Property Name="Fileid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Queryid" Type="nvarchar(max)" />
+    <Property Name="FileName" Type="nvarchar(max)" />
+    <Property Name="FileType" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="SearchParameters">
+    <Key>
+      <PropertyRef Name="Queryid" />
+    </Key>
+    <Property Name="Queryid" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar(max)" />
+    <Property Name="Title" Type="nvarchar(max)" />
+    <Property Name="ProtDb" Type="nvarchar(max)" />
+    <Property Name="InsilicoFragType" Type="nvarchar(max)" />
+    <Property Name="FilterDb" Type="int" Nullable="false" />
+    <Property Name="PtmTolerance" Type="float" Nullable="false" />
+    <Property Name="MinimumPstLength" Type="int" Nullable="false" />
+    <Property Name="MaximumPstLength" Type="int" Nullable="false" />
+    <Property Name="MwTolerance" Type="float" Nullable="false" />
+    <Property Name="MwTolUnit" Type="nvarchar(max)" />
+    <Property Name="HopThreshhold" Type="float" Nullable="false" />
+    <Property Name="HopTolUnit" Type="nvarchar(max)" />
+    <Property Name="GuiMass" Type="float" Nullable="false" />
+    <Property Name="Autotune" Type="int" Nullable="false" />
+    <Property Name="HandleIons" Type="nvarchar(max)" />
+    <Property Name="MwSweight" Type="float" Nullable="false" />
+    <Property Name="PstSweight" Type="float" Nullable="false" />
+    <Property Name="InsilicoSweight" Type="float" Nullable="false" />
+    <Property Name="NumberOfOutputs" Type="int" Nullable="false" />
+    <Property Name="DenovoAllow" Type="int" Nullable="false" />
+    <Property Name="PtmAllow" Type="int" Nullable="false" />
+    <Property Name="NeutralLoss" Type="float" />
+  </EntityType>
+  <EntityType Name="SearchQueries">
+    <Key>
+      <PropertyRef Name="QueryId" />
+    </Key>
+    <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar(max)" />
+    <Property Name="Progress" Type="nvarchar(max)" />
+    <Property Name="CreationTime" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="SearchResults">
+    <Key>
+      <PropertyRef Name="QuerryId" />
+      <PropertyRef Name="ResultId" />
+    </Key>
+    <Property Name="QuerryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Header" Type="nvarchar(max)" />
+    <Property Name="Sequence" Type="nvarchar(max)" />
+    <Property Name="PstScore" Type="float" Nullable="false" />
+    <Property Name="InsilicoScore" Type="float" Nullable="false" />
+    <Property Name="PtmScore" Type="float" Nullable="false" />
+    <Property Name="Score" Type="float" Nullable="false" />
+    <Property Name="MwScore" Type="float" Nullable="false" />
+    <Property Name="Mw" Type="float" Nullable="false" />
+    <Property Name="FileId" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
+    <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModifications" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModifications" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ResultInsilicoMatchRights" EntityType="Self.ResultInsilicoMatchRights" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ResultPtmSites" EntityType="Self.ResultPtmSites" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SearchFiles" EntityType="Self.SearchFiles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SearchParameters" EntityType="Self.SearchParameters" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SearchResults" EntityType="Self.SearchResults" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

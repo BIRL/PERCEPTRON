@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PerceptronDatabaseModelStoreContainer" CdmEntityContainer="PerceptronDatabaseEntities">
+    <EntitySetMapping Name="ExecutionTimes">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ExecutionTime">
+        <MappingFragment StoreEntitySet="ExecutionTimes">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="InsilicoTime" ColumnName="InsilicoTime" />
+          <ScalarProperty Name="PtmTime" ColumnName="PtmTime" />
+          <ScalarProperty Name="TunerTime" ColumnName="TunerTime" />
+          <ScalarProperty Name="MwFilterTime" ColumnName="MwFilterTime" />
+          <ScalarProperty Name="PstTime" ColumnName="PstTime" />
+          <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PeakListDatas">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
+        <MappingFragment StoreEntitySet="PeakListData">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+          <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
+          <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PtmFixedModifications">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmFixedModification">
+        <MappingFragment StoreEntitySet="PtmFixedModifications">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="FixedModifications" ColumnName="FixedModifications" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PtmVariableModifications">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmVariableModification">
+        <MappingFragment StoreEntitySet="PtmVariableModifications">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="VariableModifications" ColumnName="VariableModifications" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResultInsilicoMatchLefts">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultInsilicoMatchLeft">
+        <MappingFragment StoreEntitySet="ResultInsilicoMatchLefts">
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+          <ScalarProperty Name="MatchedPeaks" ColumnName="MatchedPeaks" />
+          <ScalarProperty Name="RowId" ColumnName="RowId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResultInsilicoMatchRights">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultInsilicoMatchRight">
+        <MappingFragment StoreEntitySet="ResultInsilicoMatchRights">
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+          <ScalarProperty Name="MatchedPeaks" ColumnName="MatchedPeaks" />
+          <ScalarProperty Name="RowId" ColumnName="RowId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResultPtmSites">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultPtmSite">
+        <MappingFragment StoreEntitySet="ResultPtmSites">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="ResultPtmSitesId" ColumnName="ResultPtmSitesId" />
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+          <ScalarProperty Name="Index" ColumnName="Index" />
+          <ScalarProperty Name="ModName" ColumnName="ModName" />
+          <ScalarProperty Name="Site" ColumnName="Site" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResultsDownloadables">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultsDownloadable">
+        <MappingFragment StoreEntitySet="ResultsDownloadable">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="MassSpectrumImageFilePath" ColumnName="MassSpectrumImageFilePath" />
+          <ScalarProperty Name="JsonExpThrTableFilePath" ColumnName="JsonExpThrTableFilePath" />
+          <ScalarProperty Name="CompleteDetailedResultsFilePath" ColumnName="CompleteDetailedResultsFilePath" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchFiles">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchFile">
+        <MappingFragment StoreEntitySet="SearchFiles">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="FileType" ColumnName="FileType" />
+          <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
+          <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchParameters">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchParameter">
+        <MappingFragment StoreEntitySet="SearchParameters">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="ProteinDatabase" ColumnName="ProteinDatabase" />
+          <ScalarProperty Name="NumberOfOutputs" ColumnName="NumberOfOutputs" />
+          <ScalarProperty Name="MassMode" ColumnName="MassMode" />
+          <ScalarProperty Name="FilterDb" ColumnName="FilterDb" />
+          <ScalarProperty Name="MwTolerance" ColumnName="MwTolerance" />
+          <ScalarProperty Name="MwToleranceUnit" ColumnName="MwToleranceUnit" />
+          <ScalarProperty Name="PeptideTolerance" ColumnName="PeptideTolerance" />
+          <ScalarProperty Name="PeptideToleranceUnit" ColumnName="PeptideToleranceUnit" />
+          <ScalarProperty Name="Autotune" ColumnName="Autotune" />
+          <ScalarProperty Name="NeutralLoss" ColumnName="NeutralLoss" />
+          <ScalarProperty Name="SliderValue" ColumnName="SliderValue" />
+          <ScalarProperty Name="InsilicoFragType" ColumnName="InsilicoFragType" />
+          <ScalarProperty Name="HandleIons" ColumnName="HandleIons" />
+          <ScalarProperty Name="DenovoAllow" ColumnName="DenovoAllow" />
+          <ScalarProperty Name="MinimumPstLength" ColumnName="MinimumPstLength" />
+          <ScalarProperty Name="MaximumPstLength" ColumnName="MaximumPstLength" />
+          <ScalarProperty Name="HopThreshhold" ColumnName="HopThreshhold" />
+          <ScalarProperty Name="HopTolUnit" ColumnName="HopTolUnit" />
+          <ScalarProperty Name="PSTTolerance" ColumnName="PSTTolerance" />
+          <ScalarProperty Name="Truncation" ColumnName="Truncation" />
+          <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
+          <ScalarProperty Name="PtmAllow" ColumnName="PtmAllow" />
+          <ScalarProperty Name="PtmTolerance" ColumnName="PtmTolerance" />
+          <ScalarProperty Name="PtmToleranceUnit" ColumnName="PtmToleranceUnit" />
+          <ScalarProperty Name="MethionineChemicalModification" ColumnName="MethionineChemicalModification" />
+          <ScalarProperty Name="CysteineChemicalModification" ColumnName="CysteineChemicalModification" />
+          <ScalarProperty Name="MwSweight" ColumnName="MwSweight" />
+          <ScalarProperty Name="PstSweight" ColumnName="PstSweight" />
+          <ScalarProperty Name="InsilicoSweight" ColumnName="InsilicoSweight" />
+          <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
+          <ScalarProperty Name="FDRCutOff" ColumnName="FDRCutOff" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchQueries">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchQuery">
+        <MappingFragment StoreEntitySet="SearchQueries">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Progress" ColumnName="Progress" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchResults">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchResult">
+        <MappingFragment StoreEntitySet="SearchResults">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+          <ScalarProperty Name="Header" ColumnName="Header" />
+          <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+          <ScalarProperty Name="PstScore" ColumnName="PstScore" />
+          <ScalarProperty Name="InsilicoScore" ColumnName="InsilicoScore" />
+          <ScalarProperty Name="PtmScore" ColumnName="PtmScore" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+          <ScalarProperty Name="MwScore" ColumnName="MwScore" />
+          <ScalarProperty Name="Mw" ColumnName="Mw" />
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
+          <ScalarProperty Name="OriginalSequence" ColumnName="OriginalSequence" />
+          <ScalarProperty Name="PSTTags" ColumnName="PSTTags" />
+          <ScalarProperty Name="RightMatchedIndex" ColumnName="RightMatchedIndex" />
+          <ScalarProperty Name="RightPeakIndex" ColumnName="RightPeakIndex" />
+          <ScalarProperty Name="RightType" ColumnName="RightType" />
+          <ScalarProperty Name="LeftMatchedIndex" ColumnName="LeftMatchedIndex" />
+          <ScalarProperty Name="LeftPeakIndex" ColumnName="LeftPeakIndex" />
+          <ScalarProperty Name="LeftType" ColumnName="LeftType" />
+          <ScalarProperty Name="InsilicoMassLeft" ColumnName="InsilicoMassLeft" />
+          <ScalarProperty Name="InsilicoMassRight" ColumnName="InsilicoMassRight" />
+          <ScalarProperty Name="InsilicoMassLeftAo" ColumnName="InsilicoMassLeftAo" />
+          <ScalarProperty Name="InsilicoMassLeftBo" ColumnName="InsilicoMassLeftBo" />
+          <ScalarProperty Name="InsilicoMassLeftAstar" ColumnName="InsilicoMassLeftAstar" />
+          <ScalarProperty Name="InsilicoMassLeftBstar" ColumnName="InsilicoMassLeftBstar" />
+          <ScalarProperty Name="InsilicoMassRightYo" ColumnName="InsilicoMassRightYo" />
+          <ScalarProperty Name="InsilicoMassRightYstar" ColumnName="InsilicoMassRightYstar" />
+          <ScalarProperty Name="InsilicoMassRightZo" ColumnName="InsilicoMassRightZo" />
+          <ScalarProperty Name="InsilicoMassRightZoo" ColumnName="InsilicoMassRightZoo" />
+          <ScalarProperty Name="TerminalModification" ColumnName="TerminalModification" />
+          <ScalarProperty Name="TruncationSite" ColumnName="TruncationSite" />
+          <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
+          <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+          <ScalarProperty Name="Evalue" ColumnName="Evalue" />
+          <ScalarProperty Name="BlindPtmLocalization" ColumnName="BlindPtmLocalization" />
+          <ScalarProperty Name="ProteinRank" ColumnName="ProteinRank" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ZipResultsDownloadInfoes">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.ZipResultsDownloadInfo">
+        <MappingFragment StoreEntitySet="ZipResultsDownloadInfo">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="ZipFileWithQueryId" ColumnName="ZipFileWithQueryId" />
+          <ScalarProperty Name="ZipFileName" ColumnName="ZipFileName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
