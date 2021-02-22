@@ -14,6 +14,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/EntityFramework.SqlServer.dll">
       <publishTime>12/23/2019 12:16:03</publishTime>
     </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>12/23/2019 12:16:03</publishTime>
+    </File>
     <File Include="bin/MySql.Data.dll">
       <publishTime>12/23/2019 12:16:03</publishTime>
     </File>
@@ -21,10 +24,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/23/2019 12:16:03</publishTime>
     </File>
     <File Include="bin/PerceptronAPI.dll">
-      <publishTime>08/31/2020 06:00:26</publishTime>
+      <publishTime>01/18/2021 16:54:01</publishTime>
     </File>
     <File Include="bin/PerceptronAPI.pdb">
-      <publishTime>08/31/2020 06:00:26</publishTime>
+      <publishTime>01/18/2021 16:54:01</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>12/23/2019 12:16:03</publishTime>
@@ -63,7 +66,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 11:30:13</publishTime>
     </File>
     <File Include="Models/PerceptronDatabase.edmx.diagram">
-      <publishTime>08/06/2020 17:11:07</publishTime>
+      <publishTime>01/15/2021 20:41:38</publishTime>
     </File>
     <File Include="Models/PerceptronSessionInfo.edmx.diagram">
       <publishTime>02/13/2020 15:01:58</publishTime>
@@ -84,7 +87,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/18/2020 20:32:52</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/31/2020 06:00:34</publishTime>
+      <publishTime>01/18/2021 16:54:03</publishTime>
     </File>
   </ItemGroup>
 </Project>

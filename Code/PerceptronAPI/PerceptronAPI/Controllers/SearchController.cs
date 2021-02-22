@@ -32,9 +32,9 @@ namespace PerceptronAPI.Controllers
         {
             _dataLayer = new SqlDatabase();
 
-            UsersController UserController = new UsersController();
-            var ErrorMessage = UserController.RegisterUser();
-            //UserController.LoginUser();
+            //UsersController UserController = new UsersController();
+            //var ErrorMessage = UserController.VerfiyingEmailAddress();   // UserController
+            
 
 
 
@@ -202,10 +202,10 @@ namespace PerceptronAPI.Controllers
         }
 
 
-        [HttpPost]
-        [Route("api/search/Calling_API")]
-        public async Task<HttpResponseMessage> Calling_API(HttpRequestMessage request)
+        public string SearchQuery(string[] ParameterValues)
         {
+            string Message = "";
+
             var parametersDto = new SearchParametersDto
             {
                 SearchFiles = new List<SearchFile>(),
@@ -218,16 +218,11 @@ namespace PerceptronAPI.Controllers
             var creationTime = time.ToString(format); // Formating creationTime and assigning
             parametersDto.SearchQuerry.CreationTime = creationTime;
             parametersDto.SearchQuerry.Progress = "0";
-            
+
             var queryId = Guid.NewGuid().ToString();
             try
             {
                 AddSuffixInName _AddSuffixInName = new AddSuffixInName();
-                
-                
-                var result = await request.Content.ReadAsStringAsync();
-                
-                string[] ParameterValues = result.Split(":".ToCharArray());
 
                 ParametersProcessing(queryId, ParameterValues, parametersDto);
 
@@ -235,7 +230,7 @@ namespace PerceptronAPI.Controllers
                 string NewPath = @"D:\10_PERCEPTRON_Live\ftproot\InputFilesWithUniqueIdsByFtp\";
                 string NewFullFileName = NewPath + ParameterValues[30];
                 File.Move(OldFullFileName, NewFullFileName);  // Moving Input file from ftproot folder to InputFilesByFtp folder
-                
+
 
                 var i = 0;
                 List<string> InputFileList = new List<string> { NewFullFileName };
@@ -269,59 +264,166 @@ namespace PerceptronAPI.Controllers
                 }
 
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
-                return Request.CreateResponse(HttpStatusCode.OK, response);
+                //return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (DbEntityValidationException e)
             {
-                if (parametersDto.SearchParameters.EmailId != "")
-                {
-                    //Sending_Email(parametersDto, creationTime);
-                }
-                var _DBErrorException = new DBErrorException();
-                _DBErrorException.DbEntitiyError(e);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return Message = "Error";
             }
 
+
+            return Message;
         }
+
         public void ParametersProcessing(string queryId, string[] ParameterValues, SearchParametersDto parametersDto)
         {
             parametersDto.SearchQuerry.QueryId = queryId;
-            parametersDto.SearchQuerry.UserId = ParameterValues[29];
+            parametersDto.SearchQuerry.UserId = ParameterValues[32];
+            if (ParameterValues[32] == "")
+            {
+                throw new ArgumentException("User id cannot be empty!");
+            }
             parametersDto.SearchParameters.NumberOfOutputs = "100";   //In CallingPerceptronApi User cannot decide the Number of output resutls.
             parametersDto.SearchParameters.QueryId = queryId;
             parametersDto.SearchParameters.Title = ParameterValues[0];
+            if (ParameterValues[0] == "")
+            {
+                throw new ArgumentException("Query title cannot be empty!");
+            }
             parametersDto.SearchParameters.FDRCutOff = ParameterValues[1];
+            if (ParameterValues[1] == "" || Convert.ToDouble(ParameterValues[1]) > 100.0 || Convert.ToDouble(ParameterValues[1]) < 0.0)
+            {
+                throw new ArgumentException("Invalid FDR value!");
+            }
             parametersDto.SearchParameters.ProteinDatabase = ParameterValues[2];
+            if (ParameterValues[2] != "Human" && ParameterValues[2] != "Ecoli")
+            {
+                throw new ArgumentException("Invalid Protein Database!");
+            }
             parametersDto.SearchParameters.MassMode = ParameterValues[3];
-
-
+            if (ParameterValues[3] != "M(Neutral)" && ParameterValues[3] != "MH+")
+            {
+                throw new ArgumentException("Invalid MassMode Input!");
+            }
             parametersDto.SearchParameters.FilterDb = ParameterValues[4];
+            if (ParameterValues[4] != "True" && ParameterValues[4] != "False")
+            {
+                throw new ArgumentException("Invalid FilterDatabase Input!");
+            }
             parametersDto.SearchParameters.MwTolerance = Convert.ToDouble(ParameterValues[5]);
+            if (Convert.ToDouble(ParameterValues[5]) < 0)
+            {
+                throw new ArgumentException("Invalid ProteinMassTolerance!");
+            }
             parametersDto.SearchParameters.PeptideTolerance = Convert.ToDouble(ParameterValues[6]);
+            if (Convert.ToDouble(ParameterValues[6]) < 0)
+            {
+                throw new ArgumentException("Invalid PeptideTolerance!");
+            }
             parametersDto.SearchParameters.PeptideToleranceUnit = ParameterValues[7];
+            if (ParameterValues[7] != "ppm" && ParameterValues[7] != "Da" && ParameterValues[7] != "mmu")
+            {
+                throw new ArgumentException("Invalid PeptideToleranceUnit!");
+            }
             parametersDto.SearchParameters.Autotune = ParameterValues[8];
+            if (ParameterValues[8] != "True" && ParameterValues[8] != "False")
+            {
+                throw new ArgumentException("Invalid TuneIntactProteinMass Input!");
+            }
             parametersDto.SearchParameters.InsilicoFragType = ParameterValues[9];
+            if (ParameterValues[9] != "HCD" && ParameterValues[9] != "CID" && ParameterValues[9] != "ECD" && ParameterValues[9] != "ETD" && ParameterValues[9] != "EDD" && ParameterValues[9] != "BIRD" && ParameterValues[9] != "SID" && ParameterValues[9] != "IMD" && ParameterValues[9] != "NETD")
+            {
+                throw new ArgumentException("Invalid InsilicoFragmentationType!");
+            }
             parametersDto.SearchParameters.HandleIons = ParameterValues[10];
+            if (ParameterValues[9] == "HCD" || ParameterValues[9] == "CID" || ParameterValues[9] == "IMD" || ParameterValues[9] == "BIRD" && ParameterValues[9] == "SID")
+            {
+                if (ParameterValues[10] != "bo" && ParameterValues[10] != "bstar" && ParameterValues[10] != "yo" && ParameterValues[10] != "ystar" && ParameterValues[10] != "bo,bstar" && ParameterValues[10] != "bo,yo" && ParameterValues[10] != "bo,ystar" && ParameterValues[10] != "bstar,yo" && ParameterValues[10] != "bstar,ystar" && ParameterValues[10] != "yo,ystar" && ParameterValues[10] != "bo,bstar,yo" && ParameterValues[10] != "bo,bstar,ystar" && ParameterValues[10] != "bo,yo,ystar" && ParameterValues[10] != "bstar,yo,ystar" && ParameterValues[10] != "bo,bstar,yo,ystar")
+                    throw new ArgumentException("Invalid Types of Special Ions!");
+            }
+            else if (ParameterValues[9] == "ECD" || ParameterValues[9] != "ETD")
+            {
+                if (ParameterValues[10] != "zo" && ParameterValues[10] != "zoo" && ParameterValues[10] != "zo,zoo")
+                    throw new ArgumentException("Invalid Types of Special Ions!");
+            }
+            else if (ParameterValues[9] == "NETD" || ParameterValues[9] != "EDD")
+            {
+                if (ParameterValues[10] != "ao" && ParameterValues[10] != "astar" && ParameterValues[10] != "ao,astar")
+                    throw new ArgumentException("Invalid Types of Special Ions!");
+            }
             parametersDto.SearchParameters.DenovoAllow = ParameterValues[11];
-
+            if (ParameterValues[11] != "True" && ParameterValues[11] != "False")
+            {
+                throw new ArgumentException("Invalid DenovoAllow Input!");
+            }
             parametersDto.SearchParameters.MinimumPstLength = Convert.ToInt16(ParameterValues[12]);
+            if (Convert.ToInt16(ParameterValues[12]) < 2 || Convert.ToInt16(ParameterValues[12]) > 6)
+            {
+                throw new ArgumentException("Invalid Value for MinimumPeptideSequenceTagLength!");
+            }
             parametersDto.SearchParameters.MaximumPstLength = Convert.ToInt16(ParameterValues[13]);
+            if (Convert.ToInt16(ParameterValues[13]) < Convert.ToInt16(ParameterValues[12]) || Convert.ToInt16(ParameterValues[12]) > 8)
+            {
+                throw new ArgumentException("MaximumPeptideSequenceTagLength cannot be smaller than MinimumPeptideSequenceTagLength!");
+            }
             parametersDto.SearchParameters.HopThreshhold = Convert.ToDouble(ParameterValues[14]);
             parametersDto.SearchParameters.HopTolUnit = ParameterValues[15];
+            if (ParameterValues[15] != "Da")
+            {
+                throw new ArgumentException("Invalid PeptideSequenceTag_Hop_Tolerance_Unit!");
+            }
             parametersDto.SearchParameters.PSTTolerance = Convert.ToDouble(ParameterValues[16]);
             parametersDto.SearchParameters.Truncation = ParameterValues[17];
+            if (ParameterValues[17] != "True" && ParameterValues[17] != "False")
+            {
+                throw new ArgumentException("Invalid Truncation Input!");
+            }
             parametersDto.SearchParameters.TerminalModification = ParameterValues[18];
+            if (ParameterValues[18] != "None" && ParameterValues[18] != "NME" && ParameterValues[18] != "NME_Acetylation" && ParameterValues[18] != "M_Acetylation" && ParameterValues[18] != "None,NME" && ParameterValues[18] != "None,NME_Acetylation" && ParameterValues[18] != "None,M_Acetylation" && ParameterValues[18] != "NME,NME_Acetylation" && ParameterValues[18] != "NME,M_Acetylation" && ParameterValues[18] != "NME,M_Acetyaltion" && ParameterValues[18] != "None,NME,NME_Acetylation" && ParameterValues[18] != "None,NME,M_Acetylation" && ParameterValues[18] != "None,NME_Acetylation,M_Acetylation" && ParameterValues[18] != "NME,NME_Acetylation,M_Acetylation" && ParameterValues[18] != "None,NME,NME_Acetylation,M_Acetylation")
+            {
+                throw new ArgumentException("Invalid TerminalModification!");
+            }
             parametersDto.SearchParameters.PtmAllow = ParameterValues[19];
-
-
+            if (ParameterValues[19] != "True" && ParameterValues[19] != "False")
+            {
+                throw new ArgumentException("Invalid PostTranslationalModificationsAllow Input!");
+            }
             parametersDto.SearchParameters.PtmTolerance = Convert.ToDouble(ParameterValues[20]);
             parametersDto.SearchParameters.MethionineChemicalModification = ParameterValues[23];
-            parametersDto.SearchParameters.CysteineChemicalModification = ParameterValues[24];
-            parametersDto.SearchParameters.MwSweight = Convert.ToDouble(ParameterValues[25]);
-
-            parametersDto.SearchParameters.PstSweight = Convert.ToDouble(ParameterValues[26]);
-            parametersDto.SearchParameters.InsilicoSweight = Convert.ToDouble(ParameterValues[27]);
-            parametersDto.SearchParameters.EmailId = ParameterValues[28];
+            if (ParameterValues[23] != "None" && ParameterValues[23] != "MSO" && ParameterValues[23] != "MSONE" && ParameterValues[23] != "None,MSO" && ParameterValues[23] != "None,MSONE" && ParameterValues[23] != "MSO,MSONE" && ParameterValues[23] != "None,MSO,MSONE")
+            {
+                throw new ArgumentException("Invalid MethionineChemicalModification!");
+            }
+            parametersDto.SearchParameters.CysteineChemicalModification = ParameterValues[25];
+            if (ParameterValues[25] != "None" && ParameterValues[25] != "Cys_CAM" && ParameterValues[25] != "Cys_PE" && ParameterValues[25] != "Cys_CM" && ParameterValues[25] != "Cys_PAM" && ParameterValues[25] != "None,Cys_CAM" && ParameterValues[25] != "None,Cys_PE" && ParameterValues[25] != "None,Cys_CM" && ParameterValues[25] != "None,Cys_PAM" && ParameterValues[25] != "None,Cys_CAM,Cys_PE" && ParameterValues[25] != "None,Cys_CAM,Cys_CM" && ParameterValues[25] != "None,Cys_CAM,Cys_PAM" && ParameterValues[25] != "Cys_CAM,Cys_PE,Cys_CM" && ParameterValues[25] != "Cys_CAM,Cys_PE,Cys_PAM" && ParameterValues[25] != "Cys_CAM,Cys_CM,Cys_PAM" && ParameterValues[25] != "Cys_PE,Cys_CM,Cys_PAM" && ParameterValues[25] != "None,Cys_CAM,Cys_PE,Cys_CM" && ParameterValues[25] != "None,Cys_CAM,Cys_PE,Cys_PAM" && ParameterValues[25] != "None,Cys_CAM,Cys_CM,Cys_PAM" && ParameterValues[25] != "None,Cys_PE,Cys_CM,Cys_PAM" && ParameterValues[25] != "Cys_CAM,Cys_PE,Cys_CM,Cys_PAM" && ParameterValues[25] != "None,Cys_CAM,Cys_PE,Cys_CM,Cys_PAM")
+            {
+                throw new ArgumentException("Invalid CysteineChemicalModification!");
+            }
+            parametersDto.SearchParameters.MwSweight = Convert.ToDouble(ParameterValues[26]);
+            if (Convert.ToDouble(ParameterValues[26]) < 0 || Convert.ToDouble(ParameterValues[26]) > 100)
+            {
+                throw new ArgumentException("Invalid MwScoringWeightage Value!");
+            }
+            parametersDto.SearchParameters.PstSweight = Convert.ToDouble(ParameterValues[27]);
+            if (Convert.ToDouble(ParameterValues[27]) < 0 || Convert.ToDouble(ParameterValues[27]) > 100)
+            {
+                throw new ArgumentException("Invalid PeptideSequenceTagScoringWeightage Value!");
+            }
+            parametersDto.SearchParameters.InsilicoSweight = Convert.ToDouble(ParameterValues[28]);
+            if (Convert.ToDouble(ParameterValues[28]) < 0 || Convert.ToDouble(ParameterValues[28]) > 100)
+            {
+                throw new ArgumentException("Invalid InsilicoScoringWeightage Value!");
+            }
+            parametersDto.SearchParameters.EmailId = ParameterValues[31];
+            bool validEmail = IsValidEmail(ParameterValues[31]);
+            if (ParameterValues[31] == "")
+            {
+                // throw no error
+            }
+            else if (!validEmail)
+            {
+                throw new ArgumentException("Invalid Email ID!");
+            }
             parametersDto.SearchParameters.UserId = ParameterValues[29];
 
             if (ParameterValues[21] != "")
@@ -341,6 +443,79 @@ namespace PerceptronAPI.Controllers
             }
 
         }
+
+        bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        //public void ParametersProcessing(string queryId, string[] ParameterValues, SearchParametersDto parametersDto)
+        //{
+        //    parametersDto.SearchQuerry.QueryId = queryId;
+        //    parametersDto.SearchQuerry.UserId = ParameterValues[29];
+        //    parametersDto.SearchParameters.NumberOfOutputs = "100";   //In CallingPerceptronApi User cannot decide the Number of output resutls.
+        //    parametersDto.SearchParameters.QueryId = queryId;
+        //    parametersDto.SearchParameters.Title = ParameterValues[0];
+        //    parametersDto.SearchParameters.FDRCutOff = ParameterValues[1];
+        //    parametersDto.SearchParameters.ProteinDatabase = ParameterValues[2];
+        //    parametersDto.SearchParameters.MassMode = ParameterValues[3];
+
+
+        //    parametersDto.SearchParameters.FilterDb = ParameterValues[4];
+        //    parametersDto.SearchParameters.MwTolerance = Convert.ToDouble(ParameterValues[5]);
+        //    parametersDto.SearchParameters.PeptideTolerance = Convert.ToDouble(ParameterValues[6]);
+        //    parametersDto.SearchParameters.PeptideToleranceUnit = ParameterValues[7];
+        //    parametersDto.SearchParameters.Autotune = ParameterValues[8];
+        //    parametersDto.SearchParameters.InsilicoFragType = ParameterValues[9];
+        //    parametersDto.SearchParameters.HandleIons = ParameterValues[10];
+        //    parametersDto.SearchParameters.DenovoAllow = ParameterValues[11];
+
+        //    parametersDto.SearchParameters.MinimumPstLength = Convert.ToInt16(ParameterValues[12]);
+        //    parametersDto.SearchParameters.MaximumPstLength = Convert.ToInt16(ParameterValues[13]);
+        //    parametersDto.SearchParameters.HopThreshhold = Convert.ToDouble(ParameterValues[14]);
+        //    parametersDto.SearchParameters.HopTolUnit = ParameterValues[15];
+        //    parametersDto.SearchParameters.PSTTolerance = Convert.ToDouble(ParameterValues[16]);
+        //    parametersDto.SearchParameters.Truncation = ParameterValues[17];
+        //    parametersDto.SearchParameters.TerminalModification = ParameterValues[18];
+        //    parametersDto.SearchParameters.PtmAllow = ParameterValues[19];
+
+
+        //    parametersDto.SearchParameters.PtmTolerance = Convert.ToDouble(ParameterValues[20]);
+        //    parametersDto.SearchParameters.MethionineChemicalModification = ParameterValues[23];
+        //    parametersDto.SearchParameters.CysteineChemicalModification = ParameterValues[24];
+        //    parametersDto.SearchParameters.MwSweight = Convert.ToDouble(ParameterValues[25]);
+
+        //    parametersDto.SearchParameters.PstSweight = Convert.ToDouble(ParameterValues[26]);
+        //    parametersDto.SearchParameters.InsilicoSweight = Convert.ToDouble(ParameterValues[27]);
+        //    parametersDto.SearchParameters.EmailId = ParameterValues[28];
+        //    parametersDto.SearchParameters.UserId = ParameterValues[29];
+
+        //    if (ParameterValues[21] != "")
+        //    {
+        //        parametersDto.FixedMods.QueryId = queryId;
+        //        parametersDto.FixedMods.ModificationId = 1;
+        //        parametersDto.FixedMods.FixedModifications = ParameterValues[21];
+
+        //    }
+
+        //    if (ParameterValues[22] != "")
+        //    {
+        //        parametersDto.VarMods.QueryId = queryId;
+        //        parametersDto.VarMods.ModificationId = 1;
+        //        parametersDto.VarMods.VariableModifications = ParameterValues[22];
+
+        //    }
+
+        //}
+
 
 
         [HttpPost]
@@ -538,6 +713,42 @@ namespace PerceptronAPI.Controllers
 
         //    //return "This is a testing string...";
         //}
+
+
+
+        [HttpPost]
+        [Route("api/search/CallingPerceptronApiRegisterUser")]
+        public async Task<string> RegisterUser(HttpRequestMessage request)
+        {
+            var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
+            string input = RequestInput.Result.ToString();
+            Debug.WriteLine(input);
+            var temp = _dataLayer.GetUserHistory(input, JobSubmissionTime);
+            string JobStatus = temp[0].progress;
+            if (JobStatus == "Completed")
+            {
+                var ZipResultFileInfo = _dataLayer.ScanResultFile(input);
+
+                string OldFullFileName = ZipResultFileInfo.ZipFileWithQueryId;
+                string NewPath = @"D:\10_PERCEPTRON_Live\ftproot\ResultsReadilyAvailableByFtp\";
+                string FileName = Path.GetFileName(OldFullFileName);
+                string NewFullFileName = NewPath + FileName;
+
+                File.Move(OldFullFileName, NewFullFileName);  // Moving Input file from ftproot folder to InputFilesByFtp folder
+
+                string FtpPath = @"\ftproot\ResultsReadilyAvailableByFtp\";
+
+                return FtpPath + FileName;
+            }
+            else
+            {
+                return JobStatus;
+            }
+
+
+        }
+
+
 
         [HttpPost]
         [Route("api/search/CallingPerceptronApiResults")]

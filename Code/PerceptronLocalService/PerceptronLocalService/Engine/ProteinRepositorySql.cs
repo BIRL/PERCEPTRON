@@ -234,27 +234,36 @@ namespace PerceptronLocalService.Engine
 
                 for (int iter = 0; iter < Capacity; iter++)   //Updated 20201210  //   MyNotes - apply here for loop not a foreach loop
                 {                                                   ///  MyNotes - PERCEPTRON NOTES
+
+
                     var proteinInfo = FetchedSqlProteins[iter];  //Updated 20201210
 
-                    var insilico = new InsilicoObjectDto()
+                    //if ((proteinInfo.ID == "P77481") || (proteinInfo.ID == "P37760") || (proteinInfo.ID == "P0A7H6") || (proteinInfo.ID == "P0A817") || (proteinInfo.ID == "P77671"))   //DELME
                     {
-                        InsilicoMassLeft = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.Insilico.Split(',')),
-                        InsilicoMassRight = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.InsilicoR.Split(','))   // InsilicoR
-                    };
-                    // Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
 
 
-                    var protein = new ProteinDto()
-                    {
-                        Header = proteinInfo.ID,
-                        InsilicoDetails = insilico,
-                        Mw = proteinInfo.MW,
-                        Sequence = proteinInfo.Seq,
-                        OriginalSequence = proteinInfo.Seq
 
-                    };
 
-                    SqlDatabaseProteins.Add(protein);   //  MyNotes - Assign Capacity of SqlDatabaseProteins
+                        var insilico = new InsilicoObjectDto()
+                        {
+                            InsilicoMassLeft = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.Insilico.Split(',')),
+                            InsilicoMassRight = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.InsilicoR.Split(','))   // InsilicoR
+                        };
+                        // Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
+
+
+                        var protein = new ProteinDto()
+                        {
+                            Header = proteinInfo.ID,
+                            InsilicoDetails = insilico,
+                            Mw = proteinInfo.MW,
+                            Sequence = proteinInfo.Seq,
+                            OriginalSequence = proteinInfo.Seq
+
+                        };
+
+                        SqlDatabaseProteins.Add(protein);   //  MyNotes - Assign Capacity of SqlDatabaseProteins
+                    }       //DELME
                 }
                 SqlDatabases[iterations] = SqlDatabaseProteins;
             }
