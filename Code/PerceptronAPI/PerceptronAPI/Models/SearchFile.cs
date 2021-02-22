@@ -14,12 +14,12 @@ namespace PerceptronAPI.Models
     
     public partial class SearchFile
     {
-        public System.DateTime JobSubmission { get; set; }
         public int FileId { get; set; }
         public string QueryId { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
         public string UniqueFileName { get; set; }
         public string FileUniqueId { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }
