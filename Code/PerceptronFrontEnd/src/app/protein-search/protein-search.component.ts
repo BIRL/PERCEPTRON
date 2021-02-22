@@ -338,7 +338,7 @@ export class ProteinSearchComponent implements OnInit {
   ngOnInit() {
     this.Mass_Tolerance_Unit = 'Da';
     this.Neutral_Loss = 0.0;
-    this.Slider_Value = 0.0;
+    this.Slider_Value = 50.0;
     this.PtmAllow = false;
     this.Autotune = false;
     this.PeptideToleranceUnit = 'ppm';
