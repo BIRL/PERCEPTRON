@@ -14,9 +14,9 @@ namespace PerceptronLocalService.Models
     
     public partial class ZipResultsDownloadInfo
     {
-        public System.DateTime JobSubmission { get; set; }
         public string QueryId { get; set; }
         public string ZipFileWithQueryId { get; set; }
         public string ZipFileName { get; set; }
+        public Nullable<System.DateTime> JobSubmission { get; set; }
     }
 }

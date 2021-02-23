@@ -14,7 +14,6 @@ namespace PerceptronAPI.Models
     
     public partial class SearchParameter
     {
-        public System.DateTime JobSubmission { get; set; }
         public string QueryId { get; set; }
         public string Title { get; set; }
         public string EmailId { get; set; }
@@ -50,5 +49,6 @@ namespace PerceptronAPI.Models
         public double InsilicoSweight { get; set; }
         public int TruncationIndex { get; set; }
         public string FDRCutOff { get; set; }
+        public System.DateTime JobSubmission { get; set; }
     }
 }
