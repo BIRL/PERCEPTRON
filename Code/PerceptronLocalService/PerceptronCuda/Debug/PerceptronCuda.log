@@ -1,0 +1,159 @@
+﻿Build started 2/22/2021 6:32:54 PM.
+     1>Project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" on node 2 (Rebuild target(s)).
+     1>Building with tools version "15.0".
+       Target "EnableIntermediateOutputPathMismatchWarning" skipped, due to false condition; ('$(RestoreProjectStyle)' == 'PackageReference') was evaluated as ('' == 'PackageReference').
+     1>Target "_CheckForInvalidConfigurationAndPlatform" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "SetTelemetryEnvironmentVariables" depends on it):
+       Task "Error" skipped, due to false condition; ( '$(_InvalidConfigurationError)' == 'true' ) was evaluated as ( '' == 'true' ).
+       Task "Warning" skipped, due to false condition; ( '$(_InvalidConfigurationWarning)' == 'true' ) was evaluated as ( '' == 'true' ).
+       Using "Message" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "Message"
+         Configuration=Debug
+       Done executing task "Message".
+       Task "Message"
+         Platform=Win32
+       Done executing task "Message".
+       Task "Error" skipped, due to false condition; ('$(OutDir)' != '' and !HasTrailingSlash('$(OutDir)')) was evaluated as ('D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\' != '' and !HasTrailingSlash('D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\')).
+       Task "Error" skipped, due to false condition; ('$(BaseIntermediateOutputPath)' != '' and !HasTrailingSlash('$(BaseIntermediateOutputPath)')) was evaluated as ('obj\' != '' and !HasTrailingSlash('obj\')).
+       Task "Error" skipped, due to false condition; ('$(IntermediateOutputPath)' != '' and !HasTrailingSlash('$(IntermediateOutputPath)')) was evaluated as ('Debug\' != '' and !HasTrailingSlash('Debug\')).
+       Task "Error" skipped, due to false condition; ( '$(_InitialMSBuildProjectExtensionsPath)' != '' And '$(MSBuildProjectExtensionsPath)' != '$(_InitialMSBuildProjectExtensionsPath)' ) was evaluated as ( 'D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\obj\' != '' And 'D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\obj\' != 'D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\obj\' ).
+       Task "Warning" skipped, due to false condition; ( '$(EnableBaseIntermediateOutputPathMismatchWarning)' == 'true' And '$(_InitialBaseIntermediateOutputPath)' != '$(BaseIntermediateOutputPath)' And '$(BaseIntermediateOutputPath)' != '$(MSBuildProjectExtensionsPath)' ) was evaluated as ( '' == 'true' And 'obj\' != 'obj\' And 'obj\' != 'D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\obj\' ).
+     1>Done building target "_CheckForInvalidConfigurationAndPlatform" in project "PerceptronCuda.vcxproj".
+       Target "_CheckForInvalidConfigurationAndPlatform" skipped. Previously built successfully.
+     1>Target "SetTelemetryEnvironmentVariables" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.Cpp.DesignTime.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Rebuild" depends on it):
+       Using "SetEnv" task from assembly "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.Build.CppTasks.Common.dll".
+       Task "SetEnv"
+         VSTEL_SolutionSessionID={FFC800B6-63DC-4031-ABAD-EC130915E776}
+       Done executing task "SetEnv".
+       Task "SetEnv"
+         VSTEL_CurrentSolutionBuildID=853479812
+       Done executing task "SetEnv".
+       Task "SetEnv"
+         VSTEL_ProjectID={A91915C9-77B2-4419-A6BA-E0F05D9FA876}
+       Done executing task "SetEnv".
+     1>Done building target "SetTelemetryEnvironmentVariables" in project "PerceptronCuda.vcxproj".
+     1>Target "_PrepareForRebuild" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.BuildSteps.Targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Rebuild" depends on it):
+     1>Done building target "_PrepareForRebuild" in project "PerceptronCuda.vcxproj".
+     1>Target "BeforeRebuild" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Rebuild" depends on it):
+     1>Done building target "BeforeRebuild" in project "PerceptronCuda.vcxproj".
+     1>Target "_PrepareForClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.BuildSteps.Targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+       Task "Delete" skipped, due to false condition; (Exists($(LastBuildState))) was evaluated as (Exists(Debug\PerceptronCuda.tlog\PerceptronCuda.lastbuildstate)).
+     1>Done building target "_PrepareForClean" in project "PerceptronCuda.vcxproj".
+     1>Target "BeforeClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+     1>Done building target "BeforeClean" in project "PerceptronCuda.vcxproj".
+       Target "UnmanagedUnregistration" skipped, due to false condition; ((('$(_AssemblyTimestampBeforeCompile)' != '$(_AssemblyTimestampAfterCompile)' or '$(RegisterForComInterop)' != 'true' or '$(OutputType)' != 'library') or
+                           ('$(_AssemblyTimestampBeforeCompile)' == '')) and
+                          Exists('@(_UnmanagedRegistrationCache)')) was evaluated as ((('' != '' or '' != 'true' or 'library' != 'library') or
+                           ('' == '')) and
+                          Exists('obj\PerceptronCuda.vcxproj.UnmanagedRegistration.cache')).
+     1>Target "CoreClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+       Using "Delete" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "Delete"
+         File "Debug\\TempCA\PerceptronCuda.pdb" doesn't exist. Skipping.
+         File "Debug\\TempCA\PerceptronCuda.dll" doesn't exist. Skipping.
+       Done executing task "Delete".
+       Using "ReadLinesFromFile" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "ReadLinesFromFile"
+       Done executing task "ReadLinesFromFile".
+       Using "FindUnderPath" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "FindUnderPath"
+         Comparison path is "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\".
+       Done executing task "FindUnderPath".
+       Task "FindUnderPath"
+         Comparison path is "Debug\".
+       Done executing task "FindUnderPath".
+       Task "Delete"
+       Done executing task "Delete".
+       Using "RemoveDuplicates" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "RemoveDuplicates"
+       Done executing task "RemoveDuplicates".
+       Using "MakeDir" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "MakeDir"
+       Done executing task "MakeDir".
+       Using "WriteLinesToFile" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "WriteLinesToFile"
+       Done executing task "WriteLinesToFile".
+     1>Done building target "CoreClean" in project "PerceptronCuda.vcxproj".
+     1>Target "AssignProjectConfiguration" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "PrepareProjectReferences" depends on it):
+       Using "AssignProjectConfiguration" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "AssignProjectConfiguration"
+       Done executing task "AssignProjectConfiguration".
+     1>Done building target "AssignProjectConfiguration" in project "PerceptronCuda.vcxproj".
+     1>Target "_SplitProjectReferencesByFileExistence" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "PrepareProjectReferences" depends on it):
+       Task "ResolveNonMSBuildProjectOutput" skipped, due to false condition; ('$(BuildingInsideVisualStudio)'=='true' and '@(ProjectReferenceWithConfiguration)'!='') was evaluated as ('true'=='true' and ''!='').
+     1>Done building target "_SplitProjectReferencesByFileExistence" in project "PerceptronCuda.vcxproj".
+     1>Target "_GetProjectReferenceTargetFrameworkProperties" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "PrepareProjectReferences" depends on it):
+       Using "MSBuild" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Task "MSBuild"
+       Done executing task "MSBuild".
+       Task "GetReferenceNearestTargetFrameworkTask" skipped, due to false condition; ('@(_ProjectReferenceTargetFrameworkPossibilities->Count())' != '0' and '$(ReferringTargetFrameworkForProjectReferences)' != '') was evaluated as ('0' != '0' and '.NETFramework,Version=v4.0' != '').
+     1>Done building target "_GetProjectReferenceTargetFrameworkProperties" in project "PerceptronCuda.vcxproj".
+     1>Target "PrepareProjectReferences" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CleanReferencedProjects" depends on it):
+     1>Done building target "PrepareProjectReferences" in project "PerceptronCuda.vcxproj".
+     1>Target "CleanReferencedProjects" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+       Task "MSBuild" skipped, due to false condition; ('$(BuildingInsideVisualStudio)' != 'true' and '$(BuildProjectReferences)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('true' != 'true' and 'true' == 'true' and '' != '').
+     1>Done building target "CleanReferencedProjects" in project "PerceptronCuda.vcxproj".
+     1>Target "CleanPublishFolder" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+       Task "RemoveDir" skipped, due to false condition; ('$(PublishDir)'=='$(OutputPath)app.publish\' and Exists('$(PublishDir)')) was evaluated as ('D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\app.publish\'=='D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\app.publish\' and Exists('D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\Debug\app.publish\')).
+     1>Done building target "CleanPublishFolder" in project "PerceptronCuda.vcxproj".
+     1>Target "AfterClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "Clean" depends on it):
+     1>Done building target "AfterClean" in project "PerceptronCuda.vcxproj".
+       Target "EntityClean" skipped, due to false condition; ('@(EntityDeploy)' != '') was evaluated as ('' != '').
+     1>Target "BeforeCppClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CppClean" depends on it):
+     1>Done building target "BeforeCppClean" in project "PerceptronCuda.vcxproj".
+     1>Target "CoreCppClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CppClean" depends on it):
+       Task "MakeDir"
+       Done executing task "MakeDir".
+       Using "CppClean" task from assembly "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.Build.CppTasks.Common.dll".
+       Task "CppClean"
+       Done executing task "CppClean".
+       Task "WriteLinesToFile"
+       Done executing task "WriteLinesToFile".
+     1>Done building target "CoreCppClean" in project "PerceptronCuda.vcxproj".
+     1>Target "AfterCppClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CppClean" depends on it):
+     1>Done building target "AfterCppClean" in project "PerceptronCuda.vcxproj".
+     1>Target "PGInstrumentedClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CppClean" depends on it):
+       Task "Delete"
+       Done executing task "Delete".
+     1>Done building target "PGInstrumentedClean" in project "PerceptronCuda.vcxproj".
+     1>Target "InitializeCudaHostProperties" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "AddCudaCompileMetadata" depends on it):
+     1>Done building target "InitializeCudaHostProperties" in project "PerceptronCuda.vcxproj".
+     1>Target "AddCudaCompileMetadata" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CudaClean" depends on it):
+       Building target "AddCudaCompileMetadata" completely.
+       No input files were specified.
+       Using "SanitizePaths" task from assembly "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\Nvda.Build.CudaTasks.v10.0.dll".
+       Task "SanitizePaths"
+       Done executing task "SanitizePaths".
+       Task "ReadLinesFromFile" skipped, due to false condition; (Exists('%(CudaCompile.DepsOutputPath)')) was evaluated as (Exists('Debug\MassTunerGpu.cu514136279.deps')).
+       Using "SplitToItemMetadata" task from assembly "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\Nvda.Build.CudaTasks.v10.0.dll".
+       Task "SplitToItemMetadata"
+       Done executing task "SplitToItemMetadata".
+     1>Done building target "AddCudaCompileMetadata" in project "PerceptronCuda.vcxproj".
+     1>Target "ValidateCudaBuild" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CudaClean" depends on it):
+       Task "Error" skipped, due to false condition; (!Exists($(CudaToolkitDir))) was evaluated as (!Exists(C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\)).
+     1>Done building target "ValidateCudaBuild" in project "PerceptronCuda.vcxproj".
+     1>Target "CudaClean" in file "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets" from project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (target "CppClean" depends on it):
+       Building target "CudaClean" completely.
+       No input files were specified.
+       Initializing task factory "XamlTaskFactory" from assembly "Microsoft.Build.Tasks.v4.0, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+       Using "CudaCompile" task from the task factory "XamlTaskFactory".
+       Task "CudaCompile"
+         cmd.exe /C "C:\Users\Amna Ghafoor\AppData\Local\Temp\tmp14b90d9c3bc04b5aa8828d898993c4ed.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86" -x cu  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -DPERCEPTRONCUDA_EXPORTS -D_WINDOWS -D_USRDLL -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od  /FS /Zi /RTC1 /MDd " -o Debug\MassTunerGpu.cu.obj "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\MassTunerGpu.cu" -clean
+         
+         D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86" -x cu  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -DPERCEPTRONCUDA_EXPORTS -D_WINDOWS -D_USRDLL -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od  /FS /Zi /RTC1 /MDd " -o Debug\MassTunerGpu.cu.obj "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\MassTunerGpu.cu" -clean 
+         nvcc fatal   : 32 bit compilation is only supported for Microsoft Visual Studio 2013 and earlier
+     1>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets(889,9): error MSB3721: The command ""C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86" -x cu  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -DPERCEPTRONCUDA_EXPORTS -D_WINDOWS -D_USRDLL -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od  /FS /Zi /RTC1 /MDd " -o Debug\MassTunerGpu.cu.obj "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\MassTunerGpu.cu" -clean" exited with code 1.
+       Done executing task "CudaCompile" -- FAILED.
+     1>Done building target "CudaClean" in project "PerceptronCuda.vcxproj" -- FAILED.
+     1>Done Building Project "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+       "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\PerceptronCuda.vcxproj" (Rebuild target) (1) ->
+       (CudaClean target) -> 
+         C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\BuildCustomizations\CUDA 10.0.targets(889,9): error MSB3721: The command ""C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86" -x cu  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile   -g   -DWIN32 -D_DEBUG -DPERCEPTRONCUDA_EXPORTS -D_WINDOWS -D_USRDLL -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od  /FS /Zi /RTC1 /MDd " -o Debug\MassTunerGpu.cu.obj "D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\PerceptronCuda\MassTunerGpu.cu" -clean" exited with code 1.
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.20
