@@ -17,6 +17,7 @@ using System.Globalization;
 //using Cudafy;
 //using Cudafy.Host;
 //using Cudafy.Translator;
+using System.Runtime.InteropServices;
 
 namespace PerceptronLocalService
 {
@@ -278,7 +279,24 @@ namespace PerceptronLocalService
 
                     //Step 1 - 1st Algorithm - Mass Tuner 
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
+                    
+                    // --- GPU Code Below ---   Updated: 20210223
+                    double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
+                    double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
+                    for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
+                    {
+                        PeakListMasses[i] = massSpectrometryData.Mass[i];
+                        PeakListIntensities[i] = massSpectrometryData.Intensity[i];
+                    }
+                    int PeakListLength = massSpectrometryData.Mass.Count;
+                    Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
+                    Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
+                    massTunerGpuTime.Start();
+                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue);
+                    // --- GPU Code Above ---   Updated: 20210223
+                    massTunerGpuTime.Stop();
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
+
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
                         massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
@@ -974,5 +992,19 @@ namespace PerceptronLocalService
             return peakList;
         }
     }
+
+    // --- GPU Code Below ---   Updated: 20210223
+    public static class NativeCudaCalls
+    {
+        private const string DllFilePath = @"D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
+        [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+ 
+        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue);
+        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue)
+        {
+            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, MwTolerance, NeutralLoss, SliderValue);
+        }
+    }
+    // --- GPU Code Above ---   Updated: 20210223
 }
 
