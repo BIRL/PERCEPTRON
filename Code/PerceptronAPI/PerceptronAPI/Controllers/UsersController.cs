@@ -8,10 +8,6 @@ using FireSharp.Interfaces;
 using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-
 
 namespace PerceptronAPI.Controllers
 {
@@ -31,8 +27,10 @@ namespace PerceptronAPI.Controllers
         string UserName = "DummyTest1";
         string EmailAddress = "DummyUser1@dummy.com";
         string Password = "123456";
+        string FtpSiteName = "PerceptronFTP";
+        string FtpPathDir = "E:/10_PERCEPTRON_Live/FtpRoot/LocalUser/";
 
-        
+
 
         public UsersController()
         {
@@ -122,46 +120,49 @@ namespace PerceptronAPI.Controllers
         [Route("api/user/CallingPerceptronApi_VerfiyingEmailAddress")]
         public async Task<string> VerfiyingEmailAddress(HttpRequestMessage request)
         {
-
-            var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
-            string input = RequestInput.Result.ToString();
-
-
-            string[] UserInfoArray = input.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            UserDetails UserVerfiyingEmailAddress = new UserDetails(UserInfoArray[0], UserInfoArray[1], UserInfoArray[2], UserInfoArray[3], "False");
-
-            IFirebaseConfig IFC = new FirebaseConfig()
+            try
             {
-                AuthSecret = AuthSecretFile.ReadLine(),
-                BasePath = BasePathFile.ReadLine()
-            };
+                var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
+                string input = RequestInput.Result.ToString();
 
-            IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
-            FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName);   // Check if email id exists...???
-            UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
 
-            if ((FirebaseFetchedUser.EmailAddress == UserVerfiyingEmailAddress.EmailAddress) && (FirebaseFetchedUser.Password == UserVerfiyingEmailAddress.Password))
-            {
-                if (FirebaseFetchedUser.UniqueUserGuid == UserVerfiyingEmailAddress.UniqueUserGuid)
+                string[] UserInfoArray = input.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                UserDetails UserVerfiyingEmailAddress = new UserDetails(UserInfoArray[0], UserInfoArray[1], UserInfoArray[2], UserInfoArray[3], "False");
+
+                IFirebaseConfig IFC = new FirebaseConfig()
                 {
-                    FirebaseFetchedUser.VerfiedUser = "True";
-                    client.Update(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName, FirebaseFetchedUser);
+                    AuthSecret = AuthSecretFile.ReadLine(),
+                    BasePath = BasePathFile.ReadLine()
+                };
 
-                    if (!Directory.Exists(RootDirectoryForFTP + FirebaseFetchedUser.UserName))
+                IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
+                FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName);   // Check if email id exists...???
+                UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
+
+                if ((FirebaseFetchedUser.EmailAddress == UserVerfiyingEmailAddress.EmailAddress) && (FirebaseFetchedUser.Password == UserVerfiyingEmailAddress.Password))
+                {
+                    if (FirebaseFetchedUser.UniqueUserGuid == UserVerfiyingEmailAddress.UniqueUserGuid)
                     {
-                        Directory.CreateDirectory(RootDirectoryForFTP + FirebaseFetchedUser.UserName);
+                        FirebaseFetchedUser.VerfiedUser = "True";
+                        client.Update(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName, FirebaseFetchedUser);
+
+                        AddIisManagerUser _AddIisManagerUser = new AddIisManagerUser();
+                        _AddIisManagerUser.CreatingUser(FirebaseFetchedUser.EmailAddress, FirebaseFetchedUser.Password, FtpSiteName, FtpPathDir);
+
+
+                        return Message = "Dear User, Your email address has been successfully verified.";
                     }
-
-                    return Message = "Dear User, Your email address has been successfully verified.";
                 }
+
+
+                else // If there is not User exists with the given email address.
+                    return Message = "There is no Username exists with this Username so, please first signup then, proceed.";
             }
-                
-
-            else // If there is not User exists with the given email address.
-                return Message = "There is no Username exists with this Username so, please first signup then, proceed.";
-
-
+            catch(Exception e)
+            {
+                Message = "Something went wrong if problem still persists then, report a bug on GitHub.";
+            }
             return Message;
         }
 
