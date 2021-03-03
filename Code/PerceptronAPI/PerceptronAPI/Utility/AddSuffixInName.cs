@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using PerceptronAPI.Engine;
-using PerceptronAPI.Repository;
 
 namespace PerceptronAPI.Utility
 {
