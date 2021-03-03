@@ -247,7 +247,7 @@ namespace PerceptronLocalService
 
                 //var counter = 0;
                 string EmailMsg = "";
-            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -262,8 +262,7 @@ namespace PerceptronLocalService
 
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
-            //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
-            var SqlDatabases = new List<List<ProteinDto>>();
+            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
             if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210209
