@@ -10,6 +10,7 @@ using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Repository;
 using PerceptronLocalService.Utility;
+using System.Management;
 using System.Globalization;
 //using System.IO.Compression;
 ////using PerceptronLocalService.Testing;
@@ -228,12 +229,25 @@ namespace PerceptronLocalService
 
         private void PerformSearch(SearchParametersDto parameters)
         {
-            //Logging.CreateDirectory();
-            //Logging.DumpParameters(parameters);
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
+            string graphicsCard = string.Empty;
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                foreach (PropertyData property in mo.Properties)
+                {
+                    if (property.Name == "Description")
+                    {
+                        graphicsCard = property.Value.ToString();
+                    }
+                }
+            }
 
-            //var counter = 0;
-            string EmailMsg = "";
-            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+                //Logging.CreateDirectory();
+                //Logging.DumpParameters(parameters);
+
+                //var counter = 0;
+                string EmailMsg = "";
+            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -248,7 +262,8 @@ namespace PerceptronLocalService
 
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
-            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
+            //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
+            var SqlDatabases = new List<List<ProteinDto>>();
 
             int iterate = 1;
             if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210209
@@ -292,7 +307,7 @@ namespace PerceptronLocalService
                     Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
                     Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
                     massTunerGpuTime.Start();
-                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue);
+                    //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold);
                     // --- GPU Code Above ---   Updated: 20210223
                     massTunerGpuTime.Stop();
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
@@ -999,10 +1014,10 @@ namespace PerceptronLocalService
         private const string DllFilePath = @"D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
  
-        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue);
-        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue)
+        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshold);
+        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshold)
         {
-            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, MwTolerance, NeutralLoss, SliderValue);
+            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, MwTolerance, NeutralLoss, SliderValue, HopThreshold);
         }
     }
     // --- GPU Code Above ---   Updated: 20210223
