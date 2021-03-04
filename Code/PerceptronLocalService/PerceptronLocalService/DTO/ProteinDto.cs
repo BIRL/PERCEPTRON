@@ -35,7 +35,7 @@ namespace PerceptronLocalService.DTO
         public List<int> RightPeakIndex;
         public List<string> LeftType;
         public List<string> RightType;
-
+        
 
         public double Evalue;
         public int ProteinRank;
@@ -107,6 +107,48 @@ namespace PerceptronLocalService.DTO
             PstTagsWithComma = ProteinClone.PstTagsWithComma;
 
         }
+
+
+        public static ProteinDto GetCopy(ProteinDto ProteinClone)  //Updated 20210304
+        {
+            ProteinDto ProteinInfo = new ProteinDto();
+
+            ProteinInfo.Header = ProteinClone.Header;
+            ProteinInfo.OriginalSequence = ProteinClone.OriginalSequence;
+            ProteinInfo.Sequence = ProteinClone.Sequence;
+            ProteinInfo.PstScore = ProteinClone.PstScore;
+            ProteinInfo.InsilicoScore = ProteinClone.InsilicoScore;
+            ProteinInfo.PtmScore = ProteinClone.PtmScore;
+            ProteinInfo.Score = ProteinClone.Score;
+            ProteinInfo.MwScore = ProteinClone.MwScore;
+            ProteinInfo.Mw = ProteinClone.Mw;
+            ProteinInfo.PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
+            ProteinInfo.BlindPtmLocalizationInfo = new BlindPtmInfo(
+                ProteinClone.BlindPtmLocalizationInfo.Start, 
+                ProteinClone.BlindPtmLocalizationInfo.End,
+                ProteinClone.BlindPtmLocalizationInfo.Mass);
+
+            ProteinInfo.InsilicoDetails = new InsilicoObjectDto(ProteinClone.InsilicoDetails);
+
+            ProteinInfo.TruncationIndex = ProteinClone.TruncationIndex;
+            ProteinInfo.TerminalModification = ProteinClone.TerminalModification;
+            ProteinInfo.Truncation = ProteinClone.Truncation;
+            ProteinInfo.TruncatedSequence = ProteinClone.TruncatedSequence;
+            ProteinInfo.TruncatedMolecaularWeight = ProteinClone.TruncatedMolecaularWeight;
+            ProteinInfo.InsilicoScore = ProteinClone.InsilicoScore;
+            ProteinInfo.MatchCounter = ProteinClone.MatchCounter;
+
+            ProteinInfo.LeftMatchedIndex = ProteinClone.LeftMatchedIndex;
+            ProteinInfo.RightMatchedIndex = ProteinClone.RightMatchedIndex;
+            ProteinInfo.LeftPeakIndex = ProteinClone.LeftPeakIndex;
+            ProteinInfo.RightPeakIndex = ProteinClone.RightPeakIndex;
+            ProteinInfo.LeftType = ProteinClone.LeftType;
+            ProteinInfo.RightType = ProteinClone.RightType;
+
+            ProteinInfo.PstTagsWithComma = ProteinClone.PstTagsWithComma;
+            return ProteinInfo;
+        }
+
 
         public ProteinDto(string h, string s, double mw, double mwScore)
         {
