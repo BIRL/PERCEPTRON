@@ -38,6 +38,18 @@ __device__ int dev_pst_count = 0;
 __device__ int multipleLengthPstCounter = 0;
 __device__ int charArrayCounter = 0;
 
+struct ParametersToCpp
+{
+	double MwTolerance;
+	double NeutralLoss;
+	double SliderValue;
+	double HopThreshhold;
+	int Autotune;
+	int DenovoAllow;
+	int MinimumPstLength;
+	int MaximumPstLength;
+};
+
 typedef struct _WindowCapturedElementsStruct
 {
 	double TunedMass;
@@ -113,12 +125,49 @@ __global__ void vectorAdd(double *raw_ptr_masses, double *raw_ptr_intensities, d
 				{
 					PST_push_back(SingleLengthPSTs_ptr, tid, i, raw_ptr_masses[tid], raw_ptr_masses[i], differenceOfMasses, dev_aminoAcidSymbolList[j], TagError, averageOfIntensities);
 				}
-			}
-			
+			}			
 		}
 	}
 	else
 		return;
+}
+
+__device__ void window_push_back(_WindowCapturedElementsStruct *windowcapturedelements, double a, int b)
+{
+	int insert_ptr = atomicAdd(&dev_wind_count, 1);
+	windowcapturedelements[insert_ptr].TunedMass = a;
+	windowcapturedelements[insert_ptr].elementCount = b;
+	return;
+}
+
+__global__ void WindowLaunchKernel(int NumOfThreadsToLaunch, double minSum, double maxSum, _ShortlistedMassSumsAndIntensities *shortListedData, int sizeOfShortlistedData, _WindowCapturedElementsStruct *windowcapturedelements, double SliderValue)
+{
+	int tid = blockIdx.x * blockDim.x + threadIdx.x;
+	if (tid < NumOfThreadsToLaunch)
+	{
+		double WindowStart = minSum + (tid * SliderValue);
+		double WindowEnd = WindowStart + 1.00727647;
+		double sumoftunedmassesandintensities = 0;
+		double sumoftunedintensities = 0;
+		int Count = 0;
+		for (int i = 0; i < sizeOfShortlistedData; i++)
+		{
+			if (WindowStart <= shortListedData[i].massSum && shortListedData[i].massSum < WindowEnd)//#DISCUSSION
+			{
+				double data = shortListedData[i].massSum * shortListedData[i].AvgIntensity;
+				sumoftunedmassesandintensities = sumoftunedmassesandintensities + data;
+				sumoftunedintensities = sumoftunedintensities + shortListedData[i].AvgIntensity;
+				Count = Count + 1;
+			}
+			else if (shortListedData[i].massSum >= WindowEnd)
+			{
+				break;
+			}
+		}
+		double TunedMass = sumoftunedmassesandintensities / sumoftunedintensities;
+		int elementCount = Count;
+		window_push_back(windowcapturedelements, TunedMass, elementCount);
+	}
 }
 
 __device__ char * my_strcpy(char *dest, const char *src) {
@@ -280,7 +329,7 @@ string convertToString(char* a, int size)
 }
 
 extern "C" __declspec(dllexport) double __cdecl
-wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int PeakListLength, double MwTolerance, double NeutralLoss, double Slider_Value, double HopThreshold)
+wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int PeakListLength, ParametersToCpp Parameters)
 {
 	double WholeProteinMass = PeakListMasses[0];
 
@@ -322,6 +371,8 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 	int BLOCKS = (N + THREADS - 1);
 	vectorAdd << < BLOCKS, THREADS >> > (dev_masses, dev_intensities, DevicePeakListMassesSum_ptr, DevicePeakListAvgIntensities_ptr, SingleLengthPSTs_ptr, dev_aminoAcidMassesList, dev_aminoAcidSymbolList, MwTolerance, NeutralLoss, HopThreshold, N);
 	//cudaMemcpy(&Count, devCount, sizeof(int), cudaMemcpyHostToDevice);
+	int BLOCKS = (N/THREADS + 5);
+	vectorAdd << < BLOCKS, THREADS >> > (dev_masses, dev_intensities, DevicePeakListMassesSum_ptr, DevicePeakListAvgIntensities_ptr, SingleLengthPSTs_ptr, dev_aminoAcidMassesList, dev_aminoAcidSymbolList, Parameters.MwTolerance, Parameters.NeutralLoss, Parameters.HopThreshhold, N);
 
 	thrust::host_vector<_DataForPsts> Host_SingleLengthPSTs = SingleLengthPSTs;
 	thrust::host_vector<double> PeakListMassesSum = DevicePeakListMassesSum;
@@ -331,7 +382,7 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 	for (int i = 0; i < zN; i++)
 	{
 		double a = PeakListMassesSum[i];
-		if (PeakListMasses[0] - MwTolerance <= PeakListMassesSum[i] && PeakListMassesSum[i] <= PeakListMasses[0] + MwTolerance)
+		if (PeakListMasses[0] - Parameters.MwTolerance <= PeakListMassesSum[i] && PeakListMassesSum[i] <= PeakListMasses[0] + Parameters.MwTolerance)
 		{
 			_ShortlistedMassSumsAndIntensities data;
 			data.massSum = PeakListMassesSum[i];
@@ -339,6 +390,9 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 			shortlistedMassSumAndIntensities.push_back(data);
 		}
 	}
+
+
+	int qwe = 1;
 
 	std::sort(shortlistedMassSumAndIntensities.begin(), shortlistedMassSumAndIntensities.end(),
 		[](const _ShortlistedMassSumsAndIntensities &mass, const _ShortlistedMassSumsAndIntensities &mass2)
@@ -525,6 +579,12 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 		}
 		arr[i- size] = convertToString(host_MultipleLengthPst[i].PstTag, 8);
 		dev_MultipleLengthPst2.push_back(host_MultipleLengthPst[i]);
+
+	double TunedMass = 0;
+
+	if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
+		cudaDeviceSynchronize();
+		return TunedMass = 0;
 	}
 	arr[0] = arr[0];
 	StartIndArray[0] = StartIndArray[0];
@@ -573,8 +633,31 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 	//		}
 	//	}
 	//}
+	int BLOCKS2 = (NumOfThreadsToLaunch / THREADS + 5);
+
+	WindowLaunchKernel << <BLOCKS2, THREADS2 >> > (NumOfThreadsToLaunch, minSum, maxSum, raw_ptr, sizeOfShortlistedData, raw_ptr2, SliderValue);
+
+	thrust::host_vector<_WindowCapturedElementsStruct> host_windowcapturedelements = device_windowcapturedelements;
 
 	
+	int oldElementCount = 0;
+
+	for (int x = 0; x < NumOfThreadsToLaunch; x++)
+	{
+		if (oldElementCount < host_windowcapturedelements[x].elementCount)
+		{
+			oldElementCount = host_windowcapturedelements[x].elementCount;
+			TunedMass = host_windowcapturedelements[x].TunedMass;
+		}
+		else if (oldElementCount == host_windowcapturedelements[x].elementCount)
+		{
+			if (abs(TunedMass - WholeProteinMass) >= abs(host_windowcapturedelements[x].TunedMass - WholeProteinMass))
+			{
+				TunedMass = host_windowcapturedelements[x].TunedMass;
+			}
+		}
+	}
+
 	cudaDeviceSynchronize();
-	return 1.1;
+	return TunedMass;
 }
