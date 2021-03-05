@@ -6,3 +6,5 @@
 *.csv
 *.zip
 *.txt
+*.ide-shm
+*.ide-wal
