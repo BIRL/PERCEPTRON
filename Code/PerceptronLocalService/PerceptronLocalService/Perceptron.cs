@@ -22,6 +22,30 @@ using System.Runtime.InteropServices;
 
 namespace PerceptronLocalService
 {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct ParametersToCpp
+    {
+        public double MwTolerance;
+        public double NeutralLoss;
+        public double SliderValue;
+        public double HopThreshhold;
+        public int Autotune;
+        public int DenovoAllow;
+        public int MinimumPstLength;
+        public int MaximumPstLength;
+
+        public ParametersToCpp(double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshhold, int Autotune, int DenovoAllow, int MinimumPstLength, int MaximumPstLength)
+        {
+            this.MwTolerance = MwTolerance;
+            this.NeutralLoss = NeutralLoss;
+            this.SliderValue = SliderValue;
+            this.HopThreshhold = HopThreshhold;
+            this.Autotune = Autotune;
+            this.DenovoAllow = DenovoAllow;
+            this.MinimumPstLength = MinimumPstLength;
+            this.MaximumPstLength = MaximumPstLength;
+        }
+    }
     public class Perceptron
     {
         readonly IPeptideSequenceTagScoring _pstFilter;
@@ -303,10 +327,21 @@ namespace PerceptronLocalService
                         PeakListIntensities[i] = massSpectrometryData.Intensity[i];
                     }
                     int PeakListLength = massSpectrometryData.Mass.Count;
+                    int AutoTune, DenovoAllow;
+                    if (parameters.Autotune == "Yes")
+                        AutoTune = 1;
+                    else
+                        AutoTune = 0;
+                    if (parameters.DenovoAllow == "Yes")
+                        DenovoAllow = 1;
+                    else
+                        DenovoAllow = 0;
+
+                    ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
                     Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
                     Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
                     massTunerGpuTime.Start();
-                    //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold);
+                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
                     // --- GPU Code Above ---   Updated: 20210223
                     massTunerGpuTime.Stop();
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
@@ -1013,10 +1048,10 @@ namespace PerceptronLocalService
         private const string DllFilePath = @"D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
  
-        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshold);
-        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshold)
+        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
+        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
         {
-            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, MwTolerance, NeutralLoss, SliderValue, HopThreshold);
+            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
         }
     }
     // --- GPU Code Above ---   Updated: 20210223
