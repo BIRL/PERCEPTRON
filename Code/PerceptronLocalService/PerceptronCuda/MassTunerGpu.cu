@@ -599,7 +599,8 @@ wholeproteinmasstuner(double PeakListMasses[], double PeakListIntensities[], int
 	double maxSum = shortlistedMassSumAndIntensities[shortlistedMassSumAndIntensities.size() - 1].massSum;
 
 	int sizeOfShortlistedData = shortlistedMassSumAndIntensities.size();
-	double SliderValue = (WholeProteinMass * Slider_Value) / (pow(10.0, 6.0));
+	double SliderValue = (WholeProteinMass * Parameters.SliderValue) / (pow(10.0, 6.0));
+
 	int NumOfThreadsToLaunch = floor((maxSum - minSum) * (1 / SliderValue));
 
 	thrust::device_vector<_ShortlistedMassSumsAndIntensities> device_shortlistedMassSumAndIntensities = shortlistedMassSumAndIntensities;
