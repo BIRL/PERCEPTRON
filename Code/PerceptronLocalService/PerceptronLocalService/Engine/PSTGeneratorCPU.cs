@@ -57,7 +57,7 @@ namespace PerceptronLocalService.Engine
                     //var AccoFinalPstTagList = AccomodateIsoforms(FinalPstTagList, parameters); // Its Accomodated Isoforms also, considered...  COMMENT ME MORE
 
                     List<PstTagList> PstTags = AccomodateIsoforms(FinalPstTagList, parameters);
-
+                   
                     PstTagCPU = PstTags;
 
                 }
@@ -574,12 +574,11 @@ namespace PerceptronLocalService.Engine
             return UniquePstTagInfoList;
         }
 
-
         public static List<PstTagList> AccomodateIsoforms(List<PstTagList> FinalPstTagList, SearchParametersDto parameters)
         {
             char[] ResidueForReplacement = { 'L', 'D', 'N', 'E', 'Q' };
             string newResidue;
-            List<PstTagList> NewAccomodatedPstTagList = new List<PstTagList>();
+            //List<PstTagList> NewAccomodatedPstTagList = new List<PstTagList>();
 
             for (int indexFinalPstTagList = 0; indexFinalPstTagList <= FinalPstTagList.Count - 1; indexFinalPstTagList++)   //Pura Chlana ha islya...
             {
@@ -621,7 +620,7 @@ namespace PerceptronLocalService.Engine
                                 var AccomodatedPstTag = ResidueInserted;
                                 var tempD = new PstTagList(FinalPstTagList[indexFinalPstTagList].PstTagLength, AccomodatedPstTag, FinalPstTagList[indexFinalPstTagList].PstErrorScore, FinalPstTagList[indexFinalPstTagList].PstFrequency);
 
-                                NewAccomodatedPstTagList.Add(tempD);
+                                FinalPstTagList.Add(tempD);   //Updated 20210305  // Bug Removed Now will ZRL, ZRI, ERI, ZRI against ERL Tag
                                 BeforeAccomodatePst = AccomodatedPstTag;// Just for using same PST Tag for further Accommodation.......
                             }
 
@@ -629,7 +628,7 @@ namespace PerceptronLocalService.Engine
                     }
                 }
             }
-            FinalPstTagList.AddRange(NewAccomodatedPstTagList);
+            //FinalPstTagList.AddRange(NewAccomodatedPstTagList);
             return FinalPstTagList;
         }
     }
