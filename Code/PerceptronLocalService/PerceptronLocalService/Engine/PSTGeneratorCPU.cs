@@ -23,7 +23,7 @@ namespace PerceptronLocalService.Engine
         public List<PstTagList> GeneratePeptideSequenceTags(SearchParametersDto parameters, MsPeaksDto peakData)
         {
 
-            List<PstTagList> PstTagCPU = new List<PstTagList>();
+            List<PstTagList> FinalPstTags = new List<PstTagList>();
             //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
             //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
             //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
@@ -49,20 +49,20 @@ namespace PerceptronLocalService.Engine
 
 
                 List<List<PstTagsDto>> TrimPstTagsList = TrimPstTags(multipleLenghtTagList, parameters);   // Break the larger Tags into all possible smaller tags &&& Filtering the Tags according to Minimum-Maximum Range Length of PST
-                var FinalPstTagList = PstTagInfoList(TrimPstTagsList, parameters);  //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc. && Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
-                //If 2 or more Tags are same then also keep just one
+                var PstTagList = PstTagInfoList(TrimPstTagsList, parameters);  //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc. && Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
 
-                if (FinalPstTagList.Count != 0)
-                {
-                    //var AccoFinalPstTagList = AccomodateIsoforms(FinalPstTagList, parameters); // Its Accomodated Isoforms also, considered...  COMMENT ME MORE
+                
+                //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
+                //If 2 or more Tags are same AT SAME POSITION then keep ONLY just one
+                List<Psts> FirstUniquePstTagInfoList = UniquePsts(PstTagList);
 
-                    List<PstTagList> PstTags = AccomodateIsoforms(FinalPstTagList, parameters);
-                   
-                    PstTagCPU = PstTags;
+                var AccomodatePsts = AccomodateIsoforms(FirstUniquePstTagInfoList, parameters);
 
-                }
+                List<Psts> SecondUniquePstTagInfoList = UniquePsts(AccomodatePsts);
+
+                FinalPstTags = FilteredPsts(SecondUniquePstTagInfoList, parameters);
             }
-            return PstTagCPU;
+            return FinalPstTags;
         }
 
         private List<PstTagsDto> GenerateSingleLengthPstList(SearchParametersDto parameters, List<peakData2Dlist> peakDatalistsort)
@@ -379,7 +379,7 @@ namespace PerceptronLocalService.Engine
             return consecutivenumbers;
         }
 
-        public static List<PstTagList> PstTagInfoList(List<List<PstTagsDto>> LadderList, SearchParametersDto parameters)
+        public static List<Psts> PstTagInfoList(List<List<PstTagsDto>> LadderList, SearchParametersDto parameters)
         {
             string psttags;
             int psttaglength;
@@ -412,39 +412,11 @@ namespace PerceptronLocalService.Engine
 
             }
 
-            ///////////////DELME  /// POINT-3
-            var Tag4 = new List<string>();
-            for (int i = 0; i < psttaginfolist.Count; i++)
-            {
-                //string tag = "";
-                //for (int j = 0; j < psttaginfolist[i].Count; j++)
-                //{
-                //    tag = String.Concat(tag, psttaginfolist[i][j].AminoAcidSymbol);
-                //}
-                //tag = String.Concat(tag, psttaginfolist[i].psttags);
-                Tag4.Add(psttaginfolist[i].psttags);
+            return psttaginfolist;
+        }
 
-            }
-            ///////////////DELME 
-
-
-            //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
-            //If 2 or more Tags are same then also keep just one
-            List<Psts> UniquePstTagInfoList = UniquePsts(psttaginfolist);
-
-            /////////////DEL ME POINT-6
-            ///
-            var TagName = new List<string>(UniquePstTagInfoList.Count);
-            for (int i = 0; i < UniquePstTagInfoList.Count; i++)
-            {
-                TagName.Add(UniquePstTagInfoList[i].psttags);
-            }
-
-            /// 
-            /////////////DEL ME 
-
-            //Filter tags according to fulltag error threshold
-            var FilteredTagList = new List<Psts>();
+        public List<PstTagList> FilteredPsts(List<Psts> UniquePstTagInfoList, SearchParametersDto parameters) //Filter tags according to fulltag error threshold
+        {  
             List<PstTagList> FinalPstTagList = new List<PstTagList>();
 
             for (int indexUniquePstTagInfoList = 0; indexUniquePstTagInfoList <= UniquePstTagInfoList.Count - 1; indexUniquePstTagInfoList++)
@@ -574,15 +546,15 @@ namespace PerceptronLocalService.Engine
             return UniquePstTagInfoList;
         }
 
-        public static List<PstTagList> AccomodateIsoforms(List<PstTagList> FinalPstTagList, SearchParametersDto parameters)
+        public static List<Psts> AccomodateIsoforms(List<Psts> FinalPstTagList, SearchParametersDto parameters)
         {
             char[] ResidueForReplacement = { 'L', 'D', 'N', 'E', 'Q' };
             string newResidue;
-            //List<PstTagList> NewAccomodatedPstTagList = new List<PstTagList>();
+            //List<Psts> NewAccomodatedPstTagList = new List<Psts>();
 
             for (int indexFinalPstTagList = 0; indexFinalPstTagList <= FinalPstTagList.Count - 1; indexFinalPstTagList++)   //Pura Chlana ha islya...
             {
-                List<PstTagList> RowofFinalPstTagList = new List<PstTagList>();
+                List<Psts> RowofFinalPstTagList = new List<Psts>();
                 RowofFinalPstTagList.Add(FinalPstTagList[indexFinalPstTagList]);
 
 
@@ -590,7 +562,7 @@ namespace PerceptronLocalService.Engine
                 for (int indexResidueAA = 0; indexResidueAA <= ResidueForReplacement.Length - 1; indexResidueAA++)                //ResidueForReplacement wise Chlana ha islya 
                 {
                     char OldResidue = ResidueForReplacement[indexResidueAA];
-                    string BeforeAccomodatePst = RowofFinalPstTagList[0].PstTags;
+                    string BeforeAccomodatePst = RowofFinalPstTagList[0].psttags;
 
                     if (BeforeAccomodatePst.Contains(OldResidue))
                     {
@@ -618,7 +590,9 @@ namespace PerceptronLocalService.Engine
                                 var ResidueInserted = ResidueRemoved.Insert(iter, newResidue);
 
                                 var AccomodatedPstTag = ResidueInserted;
-                                var tempD = new PstTagList(FinalPstTagList[indexFinalPstTagList].PstTagLength, AccomodatedPstTag, FinalPstTagList[indexFinalPstTagList].PstErrorScore, FinalPstTagList[indexFinalPstTagList].PstFrequency);
+                                var tempD = new Psts(FinalPstTagList[indexFinalPstTagList].psttaglength,
+                                    AccomodatedPstTag, FinalPstTagList[indexFinalPstTagList].PstTagErrorSum, 
+                                    FinalPstTagList[indexFinalPstTagList].rootmeansquareerror, FinalPstTagList[indexFinalPstTagList].PstTagIntensity);
 
                                 FinalPstTagList.Add(tempD);   //Updated 20210305  // Bug Removed Now will ZRL, ZRI, ERI, ZRI against ERL Tag
                                 BeforeAccomodatePst = AccomodatedPstTag;// Just for using same PST Tag for further Accommodation.......
