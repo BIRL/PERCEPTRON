@@ -328,11 +328,11 @@ namespace PerceptronLocalService
                     }
                     int PeakListLength = massSpectrometryData.Mass.Count;
                     int AutoTune, DenovoAllow;
-                    if (parameters.Autotune == "Yes")
+                    if (parameters.Autotune == "True")
                         AutoTune = 1;
                     else
                         AutoTune = 0;
-                    if (parameters.DenovoAllow == "Yes")
+                    if (parameters.DenovoAllow == "True")
                         DenovoAllow = 1;
                     else
                         DenovoAllow = 0;
@@ -341,7 +341,7 @@ namespace PerceptronLocalService
                     Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
                     Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
                     massTunerGpuTime.Start();
-                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
+                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
                     // --- GPU Code Above ---   Updated: 20210223
                     massTunerGpuTime.Stop();
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
@@ -1045,13 +1045,13 @@ namespace PerceptronLocalService
     // --- GPU Code Below ---   Updated: 20210223
     public static class NativeCudaCalls
     {
-        private const string DllFilePath = @"D:\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
+        private const string DllFilePath = @"E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
  
-        private extern static double wholeproteinmasstuner(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
-        public static double WholeProteinMassTunerGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
+        private extern static double wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
+        public static double WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
         {
-            return wholeproteinmasstuner(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
+            return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
         }
     }
     // --- GPU Code Above ---   Updated: 20210223
