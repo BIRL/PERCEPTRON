@@ -51,7 +51,7 @@ namespace PerceptronLocalService.Engine
                 List<List<PstTagsDto>> TrimPstTagsList = TrimPstTags(multipleLenghtTagList, parameters);   // Break the larger Tags into all possible smaller tags &&& Filtering the Tags according to Minimum-Maximum Range Length of PST
                 var PstTagList = PstTagInfoList(TrimPstTagsList, parameters);  //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc. && Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
 
-                
+
                 //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
                 //If 2 or more Tags are same AT SAME POSITION then keep ONLY just one
                 List<Psts> FirstUniquePstTagInfoList = UniquePsts(PstTagList);
@@ -108,178 +108,109 @@ namespace PerceptronLocalService.Engine
         private List<List<PstTagsDto>> GenerateMultipleLenghtPstList(SearchParametersDto parameters, List<PstTagsDto> singleLengthPstTagList)
         { //FIGURE 6: STEP 3:::: OBTAIN AMINO ACIDS CORRESPONDING TO FRAGMENT-PAIR DIFFERENCES
             //Hops having equal starting peak and ending peak values were joined together to form PST ladders
+            int HopPeak;
+            int minusonesingleTagsFound = singleLengthPstTagList.Count; // - 1;
+            List<List<PstTagsDto>> DoubleTagPstTags = new List<List<PstTagsDto>>();
 
-            List<List<PstTagsDto>> wholeDatatemporaryList = new List<List<PstTagsDto>>(); //Full PST data will be Stored into it     //LadderRaw
-            int hop_peak;
-            int length_tags = 0; //Indexing start from 0 so that why its "0"
-            int minusonesingleTagsFound = singleLengthPstTagList.Count - 1;
 
-            for (int home_peak = 0; home_peak <= minusonesingleTagsFound - 2; home_peak++)//HERE IS THE  STARTING OF MAKING MORE THAN ON PST TAGS...
+            //HERE FIRST GENERATING Duplicate Tags
+            for (int HomePeak = 0; HomePeak < minusonesingleTagsFound - 1; HomePeak++)//HERE IS THE  STARTING OF MAKING MORE THAN ON PST TAGS...
             {
 
-                for (int startIndexmultiple = 0; startIndexmultiple <= minusonesingleTagsFound - 2; startIndexmultiple++)
+                for (int startIndexmultiple = 0; startIndexmultiple < minusonesingleTagsFound - 1; startIndexmultiple++)
                 {
-                    hop_peak = startIndexmultiple + 1;
-
-                    if (singleLengthPstTagList[home_peak].endIndex == singleLengthPstTagList[hop_peak].startIndex)  // CHECKING "ENDPOSITION" AND "STARTPOSITION" OF SINGLE LENGTH TAGS
+                    HopPeak = startIndexmultiple + 1;
                     {
-                        List<PstTagsDto> temporaryList = new List<PstTagsDto>();
-                        var subtemporaryList = new PstTagsDto(singleLengthPstTagList[home_peak].startIndex, singleLengthPstTagList[home_peak].endIndex, singleLengthPstTagList[home_peak].startIndexMass, singleLengthPstTagList[home_peak].endIndexMass, singleLengthPstTagList[home_peak].massDifferenceBetweenPeaks, singleLengthPstTagList[home_peak].AminoAcidSymbol, singleLengthPstTagList[home_peak].AminoAcidName, singleLengthPstTagList[home_peak].TagError, singleLengthPstTagList[home_peak].averageIntensity); //Home Peak will be attached with everyone...
 
-                        temporaryList.Add(subtemporaryList);
-
-                        var temporaryListClassData = Join(hop_peak, length_tags, singleLengthPstTagList, minusonesingleTagsFound, parameters);
-
-
-                        for (int index = 0; index <= temporaryListClassData.Count - 1; index++)
+                        if (singleLengthPstTagList[HomePeak].endIndex == singleLengthPstTagList[HopPeak].startIndex)  // CHECKING "ENDPOSITION" AND "STARTPOSITION" OF SINGLE LENGTH TAGS
                         {
-                            List<PstTagsDto> subwholeDatatemporaryList = new List<PstTagsDto>();
-                            subwholeDatatemporaryList.Add(subtemporaryList);                    // Willl be start here 
-                            subwholeDatatemporaryList.AddRange(temporaryListClassData[index]);
+                            List<PstTagsDto> TempList = new List<PstTagsDto>();
+                            TempList.Add(new PstTagsDto(singleLengthPstTagList[HomePeak].startIndex, singleLengthPstTagList[HomePeak].endIndex,
+                            singleLengthPstTagList[HomePeak].startIndexMass, singleLengthPstTagList[HomePeak].endIndexMass,
+                            singleLengthPstTagList[HomePeak].massDifferenceBetweenPeaks, singleLengthPstTagList[HomePeak].AminoAcidSymbol,
+                            singleLengthPstTagList[HomePeak].AminoAcidName, singleLengthPstTagList[HomePeak].TagError,
+                            singleLengthPstTagList[HomePeak].averageIntensity)); //Home Peak will be attached with everyone...
 
-                            wholeDatatemporaryList.Insert(length_tags, subwholeDatatemporaryList);
-                            length_tags = length_tags + 1;
+                            TempList.Add(new PstTagsDto(singleLengthPstTagList[HopPeak].startIndex, singleLengthPstTagList[HopPeak].endIndex,
+                            singleLengthPstTagList[HopPeak].startIndexMass, singleLengthPstTagList[HopPeak].endIndexMass,
+                            singleLengthPstTagList[HopPeak].massDifferenceBetweenPeaks, singleLengthPstTagList[HopPeak].AminoAcidSymbol,
+                            singleLengthPstTagList[HopPeak].AminoAcidName, singleLengthPstTagList[HopPeak].TagError,
+                            singleLengthPstTagList[HopPeak].averageIntensity)); //Home Peak will be attached with everyone...
+
+                            DoubleTagPstTags.Add(TempList);
                         }
                     }
-                    if (singleLengthPstTagList[home_peak].endIndex < singleLengthPstTagList[hop_peak].startIndex)
+                    if (singleLengthPstTagList[HomePeak].endIndex < singleLengthPstTagList[HopPeak].startIndex)
                     {
                         break;
                     }
                 }
             }
-            return wholeDatatemporaryList;
+            //AFTER GENERATING DUPLICATE TAGS NOW GENERATING MULTIPLE TAGS
+            var MultipleTags = MultipleTagsGeneration(DoubleTagPstTags, parameters, 2, singleLengthPstTagList);
+
+
+            //REMOVE TAGS WHICH ARE LESS THAN THE USER DEFINED MINIMUM PST TAG LENGTH
+            var MultipleTagsProcessed = new List<List<PstTagsDto>>();
+            for (int iPst = 0; iPst < MultipleTags.Count; iPst++)
+            {
+                if (parameters.MinimumPstLength <= MultipleTags[iPst].Count)
+                {
+                    MultipleTagsProcessed.Add(MultipleTags[iPst]);
+                }
+
+            }
+            
+            //var PstListSting = new List<string>();  //DELME
+            //for (int iPst = 0; iPst < MultipleTagsProcessed.Count; iPst++)
+            //{
+            //    string Tag = "";
+            //    for (int iter = 0; iter < MultipleTagsProcessed[iPst].Count; iter++)
+            //    {
+            //        Tag = Tag + MultipleTagsProcessed[iPst][iter].AminoAcidSymbol;
+            //    }
+            //    PstListSting.Add(Tag);
+            //}
+            return MultipleTagsProcessed;
         }
 
-        private List<List<PstTagsDto>> Join(int home_peak, int length_tags, List<PstTagsDto> singleLengthPstTagList, int minusonesingleTagsFound, SearchParametersDto parameters) // IN ABOVE METHOD's PARAMETERS, hop_peak now will be USED as home_peak
+        private List<List<PstTagsDto>> MultipleTagsGeneration(List<List<PstTagsDto>> DoubleTagPstTags, SearchParametersDto parameters, int TagLength, List<PstTagsDto> singleLengthPstTagList)
         {
-            int plusonemaxpstlength = parameters.MaximumPstLength + 1;
-            int length = 1; //Change my Name
-            int hop_peak;
-            int subindex = 0;
-
-            List<List<PstTagsDto>> wholeDatatemporaryListClasswise = new List<List<PstTagsDto>>();   //Full PST data of this Class will be Stored into it
-            List<List<PstTagsDto>> sub = new List<List<PstTagsDto>>();
-            List<List<PstTagsDto>> subData = new List<List<PstTagsDto>>();
-
-            List<PstTagsDto> temporaryList = new List<PstTagsDto>();
-
-            int checkpoint = 0;// We want to mimic Join.m of lines(17,18 and 24, 25, 26). So, that if for loop iterate and gave AA_Next{iter,1} = Hop_Info{Home_peak} while if statement(line 19) is FALSE then, what can we do in Perceptron....? {Introduced: checkpoint variable}
-
-
-            for (int start_peak = home_peak; start_peak <= minusonesingleTagsFound - 1; start_peak++)
+            for (int HopPeakIndex = 0; HopPeakIndex < DoubleTagPstTags.Count; HopPeakIndex++)
             {
-                hop_peak = start_peak + 1;
+                TagLength = DoubleTagPstTags[HopPeakIndex].Count;
 
-                if (start_peak == home_peak)  // New addition not in SPECTRUM. Now just one time value will be assigned...
+                int DoubleTagEndIndex = DoubleTagPstTags[HopPeakIndex][TagLength - 1].endIndex;
+                for (int SinglePstHomePeakIndex = 0; SinglePstHomePeakIndex < singleLengthPstTagList.Count; SinglePstHomePeakIndex++)
                 {
-
-                    var subtemporaryList = new PstTagsDto(singleLengthPstTagList[home_peak].startIndex, singleLengthPstTagList[home_peak].endIndex, singleLengthPstTagList[home_peak].startIndexMass, singleLengthPstTagList[home_peak].endIndexMass, singleLengthPstTagList[home_peak].massDifferenceBetweenPeaks, singleLengthPstTagList[home_peak].AminoAcidSymbol, singleLengthPstTagList[home_peak].AminoAcidName, singleLengthPstTagList[home_peak].TagError, singleLengthPstTagList[home_peak].averageIntensity);
-
-                    temporaryList.Add(subtemporaryList); //Dear! make it more computationally efficient 
-
-                    sub.Add(temporaryList);
-
-                }
-                checkpoint = 0;
-                if (singleLengthPstTagList[home_peak].endIndex == singleLengthPstTagList[hop_peak].startIndex)  // CHECKING "ENDPOSITION" AND "STARTPOSITION" OF SINGLE LENGTH TAGS
-                {
-                    List<List<PstTagsDto>> subwholeDatatemporaryListClasswise = new List<List<PstTagsDto>>();
-                    length_tags = length_tags + 1;
-                    var temporaryListClassData = JoinInner(hop_peak, length_tags, singleLengthPstTagList, minusonesingleTagsFound, plusonemaxpstlength, length);
-
-                    List<PstTagsDto> intersubwholeDatatemporaryListClasswise = new List<PstTagsDto>();
-                    intersubwholeDatatemporaryListClasswise.AddRange(temporaryList);
-                    intersubwholeDatatemporaryListClasswise.AddRange(temporaryListClassData);
-
-                    subwholeDatatemporaryListClasswise.Insert(0, intersubwholeDatatemporaryListClasswise);
-
-                    subData.InsertRange(subindex, subwholeDatatemporaryListClasswise);
-                    subindex = subindex + 1;
-                    checkpoint = 1; // "checkpoint" is used to check after reaching this point at which "subData populated" whether its go back and populate "sub" due to for loop...?
-                }
-            }
-
-            if (subData.Count != 0 && checkpoint == 0)
-            {
-                wholeDatatemporaryListClasswise.AddRange(subData);
-                wholeDatatemporaryListClasswise.AddRange(sub);
-            }
-            else if (subData.Count != 0 && checkpoint == 1)
-            {
-                wholeDatatemporaryListClasswise.AddRange(subData);
-            }
-            else
-            {
-                wholeDatatemporaryListClasswise.AddRange(sub);
-            }
-            return wholeDatatemporaryListClasswise;
-        }
-
-        private List<PstTagsDto> JoinInner(int home_peak, int length_tags, List<PstTagsDto> singleLengthPstTagList, int minusonesingleTagsFound, int plusonemaxpstlength, int length) // Here hop_peak will be considered as home_peak
-        {
-            List<PstTagsDto> wholeDatatemporaryListClasswise = new List<PstTagsDto>(); //Full PST data of this Class will be Stored into it
-
-            var subtemporaryList = new PstTagsDto(singleLengthPstTagList[home_peak].startIndex, singleLengthPstTagList[home_peak].endIndex, singleLengthPstTagList[home_peak].startIndexMass, singleLengthPstTagList[home_peak].endIndexMass, singleLengthPstTagList[home_peak].massDifferenceBetweenPeaks, singleLengthPstTagList[home_peak].AminoAcidSymbol, singleLengthPstTagList[home_peak].AminoAcidName, singleLengthPstTagList[home_peak].TagError, singleLengthPstTagList[home_peak].averageIntensity);
-
-            if (length == plusonemaxpstlength)
-            {
-                wholeDatatemporaryListClasswise.Add(subtemporaryList);
-            }
-            else
-            {
-                int hop_peak;
-                length = length + 1;
-
-                List<PstTagsDto> temporaryList = new List<PstTagsDto>();
-                temporaryList.Add(subtemporaryList);
-
-                wholeDatatemporaryListClasswise.Add(subtemporaryList);
-
-                int subindex = 0;
-
-                for (int start_peak = home_peak; start_peak <= minusonesingleTagsFound - 2; start_peak++)     //
-                {
-                    hop_peak = start_peak + 1;
-                    if (singleLengthPstTagList[home_peak].endIndex == singleLengthPstTagList[hop_peak].startIndex)  // CHECKING "ENDPOSITION" AND "STARTPOSITION" OF SINGLE LENGTH TAGS
+                    if (DoubleTagEndIndex == singleLengthPstTagList[SinglePstHomePeakIndex].startIndex)  // CHECKING "ENDPOSITION" AND "STARTPOSITION" OF SINGLE LENGTH TAGS
                     {
-                        wholeDatatemporaryListClasswise.Clear();
-                        length_tags = length_tags + 1;
-                        var temporaryListClassData = JoinInner(hop_peak, length_tags, singleLengthPstTagList, minusonesingleTagsFound, plusonemaxpstlength, length); //Here Again, JoinInner function is calling (Working as Recursive Function)
+                        if (parameters.MaximumPstLength > TagLength)
+                        {
+                            var temp = new List<PstTagsDto>(DoubleTagPstTags[HopPeakIndex]);
 
-                        List<PstTagsDto> intersubwholeDatatemporaryListClasswise = new List<PstTagsDto>();
-                        intersubwholeDatatemporaryListClasswise.AddRange(temporaryList);
-                        intersubwholeDatatemporaryListClasswise.AddRange(temporaryListClassData);
+                            temp.Add(new PstTagsDto(singleLengthPstTagList[SinglePstHomePeakIndex].startIndex, singleLengthPstTagList[SinglePstHomePeakIndex].endIndex,
+                            singleLengthPstTagList[SinglePstHomePeakIndex].startIndexMass, singleLengthPstTagList[SinglePstHomePeakIndex].endIndexMass,
+                            singleLengthPstTagList[SinglePstHomePeakIndex].massDifferenceBetweenPeaks, singleLengthPstTagList[SinglePstHomePeakIndex].AminoAcidSymbol,
+                            singleLengthPstTagList[SinglePstHomePeakIndex].AminoAcidName, singleLengthPstTagList[SinglePstHomePeakIndex].TagError,
+                            singleLengthPstTagList[SinglePstHomePeakIndex].averageIntensity));
 
-                        List<PstTagsDto> subwholeDatatemporaryListClasswise = new List<PstTagsDto>();
-                        subwholeDatatemporaryListClasswise.AddRange(intersubwholeDatatemporaryListClasswise);
-                        //subwholeDatatemporaryListClasswise.Insert(subindex, temporaryList);
-                        //subwholeDatatemporaryListClasswise.InsertRange(subindex, temporaryListClassData);
-                        wholeDatatemporaryListClasswise.AddRange(subwholeDatatemporaryListClasswise);
-                        subindex = subindex + 1;
+                            DoubleTagPstTags.Add(temp);
+                        }
+                    }
+                    if (DoubleTagEndIndex < singleLengthPstTagList[SinglePstHomePeakIndex].startIndex)
+                    {
+                        break;
                     }
                 }
             }
-            return wholeDatatemporaryListClasswise;
-        }
 
+            var MultipleTags = new List<List<PstTagsDto>>(DoubleTagPstTags); //Because of referenced based deep clonning (here more precisely because of safe side).
+            return MultipleTags;
+        }
 
         public static List<List<PstTagsDto>> TrimPstTags(List<List<PstTagsDto>> multipleLenghtTagList, SearchParametersDto parameters)
         {
-            ///////////////DELME  /// POINT-0
-            var Tag = new List<string>();
-            for (int i = 0; i < multipleLenghtTagList.Count; i++)
-            {
-                string tag = "";
-                for (int j = 0; j < multipleLenghtTagList[i].Count; j++)
-                {
-                    tag = String.Concat(tag, multipleLenghtTagList[i][j].AminoAcidSymbol);
-                }
-                Tag.Add(tag);
-
-            }
-            ///////////////DELME
-
-
             //Break the larger Tags into all possible smaller tags
             //E.g. larger tag (SDTI)         divided into smaller tags         S,SD,SDT,SDTI
             //Break the larger Tags into all possible smaller tags
@@ -416,7 +347,7 @@ namespace PerceptronLocalService.Engine
         }
 
         public List<PstTagList> FilteredPsts(List<Psts> UniquePstTagInfoList, SearchParametersDto parameters) //Filter tags according to fulltag error threshold
-        {  
+        {
             List<PstTagList> FinalPstTagList = new List<PstTagList>();
 
             for (int indexUniquePstTagInfoList = 0; indexUniquePstTagInfoList <= UniquePstTagInfoList.Count - 1; indexUniquePstTagInfoList++)
@@ -591,7 +522,7 @@ namespace PerceptronLocalService.Engine
 
                                 var AccomodatedPstTag = ResidueInserted;
                                 var tempD = new Psts(FinalPstTagList[indexFinalPstTagList].psttaglength,
-                                    AccomodatedPstTag, FinalPstTagList[indexFinalPstTagList].PstTagErrorSum, 
+                                    AccomodatedPstTag, FinalPstTagList[indexFinalPstTagList].PstTagErrorSum,
                                     FinalPstTagList[indexFinalPstTagList].rootmeansquareerror, FinalPstTagList[indexFinalPstTagList].PstTagIntensity);
 
                                 FinalPstTagList.Add(tempD);   //Updated 20210305  // Bug Removed Now will ZRL, ZRI, ERI, ZRI against ERL Tag
