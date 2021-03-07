@@ -476,6 +476,13 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 		[](const _ShortlistedMassSumsAndIntensities &mass, const _ShortlistedMassSumsAndIntensities &mass2)
 	{ return (mass.massSum < mass2.massSum); });
 
+	double TunedMass = 0;
+
+	if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
+		cudaDeviceSynchronize();
+		return TunedMass = 0;
+	}
+
 	double minSum = shortlistedMassSumAndIntensities[0].massSum;
 	double maxSum = shortlistedMassSumAndIntensities[shortlistedMassSumAndIntensities.size() - 1].massSum;
 
@@ -496,7 +503,7 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 
 	thrust::host_vector<_WindowCapturedElementsStruct> host_windowcapturedelements = device_windowcapturedelements;
 
-	double TunedMass = 0;
+	
 	int oldElementCount = 0;
 
 	for (int x = 0; x < NumOfThreadsToLaunch; x++)
