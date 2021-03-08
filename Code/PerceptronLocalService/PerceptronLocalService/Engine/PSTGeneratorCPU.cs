@@ -24,9 +24,6 @@ namespace PerceptronLocalService.Engine
         {
 
             List<PstTagList> FinalPstTags = new List<PstTagList>();
-            //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
-            //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
-            //////// ************* FARHAN!!! WHAT IF THERE WILL BE NO PST TAGS FOUND THEN, WHAT COULD HAPPENED...?????
 
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             var peakDatalist = new List<peakData2Dlist>();
@@ -48,9 +45,9 @@ namespace PerceptronLocalService.Engine
             {
 
 
-                List<List<PstTagsDto>> TrimPstTagsList = TrimPstTags(multipleLenghtTagList, parameters);   // Break the larger Tags into all possible smaller tags &&& Filtering the Tags according to Minimum-Maximum Range Length of PST
-                var PstTagList = PstTagInfoList(TrimPstTagsList, parameters);  //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc. && Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
-
+                //List<List<PstTagsDto>> TrimPstTagsList = TrimPstTags(multipleLenghtTagList, parameters);   // Break the larger Tags into all possible smaller tags &&& Filtering the Tags according to Minimum-Maximum Range Length of PST
+                //var PstTagList = PstTagInfoList(TrimPstTagsList, parameters);  //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc. && Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
+                var PstTagList = PstTagInfoList(multipleLenghtTagList, parameters); //Calculating  PST Tag Error, PST intensity, & Root Mean Square Error etc.   //Updated 20210305
 
                 //Finding the Unique PSTs: Remove all other redundant PSTs but keep only one having lowest Root Mean Square Error(RMSE)
                 //If 2 or more Tags are same AT SAME POSITION then keep ONLY just one
