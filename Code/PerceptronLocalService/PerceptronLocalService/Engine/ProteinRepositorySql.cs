@@ -197,7 +197,7 @@ namespace PerceptronLocalService.Engine
             ProteinFetchingTime.Start();              // DELME Execution Time Working
 
             int iterate = 1;
-            if (parameters.FDRCutOff != "0.0" && parameters.FDRCutOff != "0")
+            if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210309
             {
                 iterate = 2;
             }
