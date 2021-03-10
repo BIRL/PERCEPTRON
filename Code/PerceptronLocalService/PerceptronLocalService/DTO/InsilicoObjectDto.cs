@@ -35,6 +35,26 @@ namespace PerceptronLocalService.DTO
             InsilicoMassRightZoo = new List<double>();
         }
 
+
+        public InsilicoObjectDto(List<double> InsilicoLeft, List<double> InsilicoRight)
+        {
+            InsilicoMassRight = InsilicoRight;
+            InsilicoMassLeft = InsilicoLeft;
+            PeaklistMassLeft = new List<double>();
+            PeaklistMassRight = new List<double>();
+            InsilicoMassLeftAo = new List<double>();
+            InsilicoMassLeftBo = new List<double>();
+            InsilicoMassLeftAstar = new List<double>();
+            InsilicoMassLeftBstar = new List<double>();
+            InsilicoMassRightYo = new List<double>();
+            InsilicoMassRightYstar = new List<double>();
+            InsilicoMassRightZo = new List<double>();
+            InsilicoMassRightZoo = new List<double>();
+        }
+
+
+
+
         public InsilicoObjectDto(InsilicoObjectDto insilico)
         {
             InsilicoMassRight = insilico.InsilicoMassRight;

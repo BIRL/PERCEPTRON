@@ -164,7 +164,7 @@ namespace PerceptronLocalService.Engine
             string query = "";
             if (1 == 1)//CandidateList == "User Defined Range List")
             {
-                string subquery1 = "Select * From  [";
+                string subquery1 = "Select Seq From  [";
                 string subquery2 = "].[dbo].[ProteinInfoes]";
                 query = subquery1 + DatabaseName + subquery2;  //Query to select all proteins in specified Database
             }
@@ -185,11 +185,24 @@ namespace PerceptronLocalService.Engine
 
 
 
-        public List<List<ProteinDto>> FetchingSqlDatabaseProteins(SearchParametersDto parameters)
+        public List<List<ProteinDto>> FetchingSqlDatabaseProteins(string ProteinDb)
         {
-            ConvertStringListToDoubleList _ConvertStringListToDoubleList = new ConvertStringListToDoubleList();
 
             List<List<ProteinDto>> SqlDatabases = new List<List<ProteinDto>>(2) { new List<ProteinDto>(), new List<ProteinDto>() };
+
+            SqlDatabases[0] = FastaReader.MainMethod();
+
+            return SqlDatabases;
+
+
+            SearchParametersDto parameters = new SearchParametersDto();    //Placeholder
+            string query;
+            string connectionString;
+
+
+            ConvertStringListToDoubleList _ConvertStringListToDoubleList = new ConvertStringListToDoubleList();
+
+            
 
 
             Stopwatch ProteinFetchingTime = new Stopwatch();         // DELME Execution Time Working
@@ -202,8 +215,7 @@ namespace PerceptronLocalService.Engine
                 iterate = 2;
             }
 
-            string query;
-            string connectionString;
+
 
             for (int iterations = 0; iterations < iterate; iterations++)
             {

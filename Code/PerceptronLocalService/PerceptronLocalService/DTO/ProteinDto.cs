@@ -67,6 +67,44 @@ namespace PerceptronLocalService.DTO
 
         }
 
+        
+        public ProteinDto(string cHeader, double cWholeProteinMass, string cSequence, List<double> InsilicoLeftIons, List<double> InsilicoRightIons)  // , string FastaHeader   ---Wait for FastaHeader
+        {
+
+            Header = cHeader;
+            OriginalSequence = cSequence;
+            Sequence = cSequence;
+            PstScore = 0.0;
+            InsilicoScore = 0.0;
+            PtmScore = 0.0;
+            Score = 0.0;
+            MwScore = 0.0;
+            Mw = 0.0;
+            PtmParticulars = new List<PostTranslationModificationsSiteDto>();
+            BlindPtmLocalizationInfo = new BlindPtmInfo();
+            InsilicoDetails = new InsilicoObjectDto(InsilicoLeftIons, InsilicoRightIons);
+
+
+
+
+            Truncation = "None";  //20200126
+            TruncationIndex = -1;
+            TruncatedSequence = "";
+            TruncatedMolecaularWeight = 0;
+            TerminalModification = "None";
+
+            InsilicoScore = 0.0;
+            MatchCounter = 0;
+
+            LeftMatchedIndex = new List<int>();
+            RightMatchedIndex = new List<int>();
+            LeftPeakIndex = new List<int>();
+            RightPeakIndex = new List<int>();
+            LeftType = new List<string>();
+            RightType = new List<string>();
+
+            PstTagsWithComma = "";
+        }
 
             
 
