@@ -105,6 +105,12 @@ namespace PerceptronLocalService
 
         public void Start()
         {
+            Stopwatch Time = new Stopwatch();
+            Time.Start();
+            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins("Human");
+            Time.Stop();
+
+
             while (true)
             {
 
@@ -121,7 +127,7 @@ namespace PerceptronLocalService
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
                     var TotalTime = new Stopwatch();
                     TotalTime.Start();
-                    PerformSearch(searchParameters);
+                    PerformSearch(searchParameters, SqlDatabases);
                     TotalTime.Stop();
                     string time = TotalTime.Elapsed.ToString();
                     int a = 1;
@@ -251,7 +257,7 @@ namespace PerceptronLocalService
         }
 
 
-        private void PerformSearch(SearchParametersDto parameters)
+        private void PerformSearch(SearchParametersDto parameters, List<List<ProteinDto>> SqlDatabases)
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
             string graphicsCard = string.Empty;
