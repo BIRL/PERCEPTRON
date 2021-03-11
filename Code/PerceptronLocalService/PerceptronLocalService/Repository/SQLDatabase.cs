@@ -36,15 +36,15 @@ namespace PerceptronLocalService.Repository
                 JobSubmission = JobSubmission
 
             };
-            using (var db = new PerceptronDatabaseEntities())
+            using (var PeakDataStoreInDb = new PerceptronDatabaseEntities())
             {
-                db.PeakListDatas.Add(peakList);
-                db.SaveChanges();
+                PeakDataStoreInDb.PeakListDatas.Add(peakList);
+                PeakDataStoreInDb.SaveChanges();
             }
 
         }
 
-        public void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId, DateTime JobSubmission)
+        public void StoreZipResultsForDownload( string Queryid, string ZipFileName, string ZipFileWithQueryId, DateTime JobSubmission)
         {
             var ResultsDownloadInfo = new ZipResultsDownloadInfo
             {
@@ -53,22 +53,23 @@ namespace PerceptronLocalService.Repository
                 ZipFileWithQueryId = ZipFileWithQueryId,
                 JobSubmission = JobSubmission
             };
-            using (var db = new PerceptronDatabaseEntities())
+            using (var ZipFileDataStoreInDb = new PerceptronDatabaseEntities())
             {
-                db.ZipResultsDownloadInfoes.Add(ResultsDownloadInfo);
-                db.SaveChanges();
+                ZipFileDataStoreInDb.ZipResultsDownloadInfoes.Add(ResultsDownloadInfo);
+                ZipFileDataStoreInDb.SaveChanges();
             }
         }
 
 
-        public string StoreResults(PerceptronDatabaseEntities DbStoreResults, SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission)
+        public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId,
+            DateTime JobSubmission)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
-            using (DbStoreResults)
+            using (var ResultDataStoreInDb = new PerceptronDatabaseEntities())
             {
                 int ResultPtmSitesId = 0;
                 var executionTime = GetExecutionTimeModel(res, fileName);
-                DbStoreResults.ExecutionTimes.Add(executionTime);
+                ResultDataStoreInDb.ExecutionTimes.Add(executionTime);
                 //db.SaveChanges();
 
                 foreach (ProteinDto protein in res.FinalProt)
@@ -76,14 +77,14 @@ namespace PerceptronLocalService.Repository
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
                     var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, FileUniqueId, JobSubmission);
-                    DbStoreResults.SearchResults.Add(searchResult);
+                    ResultDataStoreInDb.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
                     if (protein.PtmParticulars.Count != 0)
                     {
                         ResultPtmSitesId = ResultPtmSitesId + 1;
                         var resultPtmSites = GetResultPtmSitesModel(ResultPtmSitesId, resId, protein.PtmParticulars, JobSubmission);
-                        DbStoreResults.ResultPtmSites.Add(resultPtmSites);
+                        ResultDataStoreInDb.ResultPtmSites.Add(resultPtmSites);
                         //db.SaveChanges();
                     }
 
@@ -97,7 +98,7 @@ namespace PerceptronLocalService.Repository
                     //db.SaveChanges();
                 }
 
-                DbStoreResults.SaveChanges();
+                ResultDataStoreInDb.SaveChanges();
             }
             return message;
         }
@@ -184,13 +185,13 @@ namespace PerceptronLocalService.Repository
 
         public int Set_Progress(string qid, int progress)
         {
-            using (var db = new PerceptronDatabaseEntities())
+            using (var JobStatusDataStoreInDb = new PerceptronDatabaseEntities())
             {
-                var result = db.SearchQueries.SingleOrDefault(b => b.QueryId == qid);
+                var result = JobStatusDataStoreInDb.SearchQueries.SingleOrDefault(b => b.QueryId == qid);
                 if (result != null)
                 {
                     result.Progress = progress.ToString();
-                    db.SaveChanges();
+                    JobStatusDataStoreInDb.SaveChanges();
                 }
             }
             return 1;

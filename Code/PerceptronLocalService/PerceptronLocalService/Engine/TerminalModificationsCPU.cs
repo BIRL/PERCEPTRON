@@ -38,27 +38,9 @@ namespace PerceptronLocalService.Engine
 
                 //if (candidateProteins[index].Header == "A6NDN8" || candidateProteins[index].Header ==  "Q99525")
                 //{
-                //countDELME = 1;
 
                 //Preparing Protein Info
                 //var protein = candidateProteins[index];
-
-                //Stopwatch ProteinNullTime = new Stopwatch();
-                //ProteinNullTime.Start();
-                //var ProteinNull = new ProteinDto(protein);
-                //ProteinNullTime.Stop();
-
-
-                //Stopwatch DeepCloneTime = new Stopwatch();
-                //DeepCloneTime.Start();
-                //var tempprotein = new ProteinDto(protein, 1);  // Lists are referenced based. Cloned a copy of protein
-                //DeepCloneTime.Stop();
-
-
-                //Stopwatch DeepCloneTime1 = new Stopwatch();
-                //DeepCloneTime1.Start();
-                //var tempprotein1 = ProteinDto.GetCopy(protein);  // Lists are referenced based. Cloned a copy of protein
-                //DeepCloneTime1.Stop();
 
 
                 //var sequence = tempprotein.Sequence;
@@ -121,14 +103,9 @@ namespace PerceptronLocalService.Engine
             {
 
                 InMemoryCopy.Start();   //DELME
-                var newProtein = ProteinDto.GetCopy(tempprotein); // new ProteinDto(tempprotein); 
+                var newProtein = new ProteinDto(tempprotein);
+                //var newProtein = ProteinDto.GetCopy(tempprotein);
                 InMemoryCopy.Stop();
-
-                Stopwatch InMemoryCopy2 = new Stopwatch();
-                InMemoryCopy2.Start();
-                newProtein = new ProteinDto(tempprotein);
-                InMemoryCopy2.Stop();    //DELME
-
 
                 newProtein.TerminalModification = "None";
                 newProtein.Mw = molW;
@@ -143,7 +120,6 @@ namespace PerceptronLocalService.Engine
                 {
                     //var newProtein = ProteinDto.GetCopy(tempprotein); //new ProteinDto(tempprotein);
                     var newProtein = new ProteinDto(tempprotein);
-
 
                     newProtein.TerminalModification = "NME";
 

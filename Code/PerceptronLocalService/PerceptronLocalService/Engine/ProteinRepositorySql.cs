@@ -295,6 +295,16 @@ namespace PerceptronLocalService.Engine
                 var protein = SqlDatabaseProteins[index];
 
 
+                //if  (!(protein.Header == "Q9BTM9"))
+                //{
+                //    continue;
+                //}
+
+                //if (!(protein.Header == "P31689"))
+                //{
+                //    continue;
+                //}
+
                 if (parameters.FilterDb == "True")
                 {
                     double TotalFixedWeight = 0.0;

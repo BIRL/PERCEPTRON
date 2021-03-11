@@ -148,6 +148,8 @@ namespace PerceptronLocalService
             string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable";
             string NewPath = @"C:\PerceptronResultsDownload\ResultsToBeDeleted\";
 
+            var JobStatusDataStoreInDb = new PerceptronDatabaseEntities();
+
             DateTime startDate = DateTime.Now.AddYears(-1);  //Start from last year
             DateTime endDate = DateTime.Now.AddDays(-2);     //Till last 2days
 
@@ -278,7 +280,7 @@ namespace PerceptronLocalService
 
                 //var counter = 0;
                 string EmailMsg = "";
-            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -290,9 +292,25 @@ namespace PerceptronLocalService
 
 
             //List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
-            var DbStoreResults = new PerceptronDatabaseEntities();
+            //var ResultDataStoreInDb = new PerceptronDatabaseEntities();
+            //var PeakDataStoreInDb = new PerceptronDatabaseEntities();
+            //var ZipFileDataStoreInDb = new PerceptronDatabaseEntities();
+            //var JobStatusDataStoreInDb = new PerceptronDatabaseEntities();
 
+            //_dataLayer.Set_Progress(JobStatusDataStoreInDb, parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
+
+            Stopwatch PstTime = new Stopwatch();
+            Stopwatch SpectralComparisonTime = new Stopwatch();
+            Stopwatch BlindPtmSearchTime = new Stopwatch();
+            Stopwatch TruncatedTime = new Stopwatch();
+            Stopwatch InsilicoFragTime = new Stopwatch();
+            Stopwatch EvalueTime = new Stopwatch();
+            Stopwatch AddRangeTime = new Stopwatch();
+
+
+
+
             //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
@@ -363,16 +381,17 @@ namespace PerceptronLocalService
 
 
                     //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
+                    PstTime.Start();
                     var PstTags = new List<PstTagList>();
                     PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
-
+                    PstTime.Stop();
                     /////////////DEL ME 
                     ///
-                    var PstListSting = new List<string>();
-                    for (int iPst = 0; iPst<PstTags.Count; iPst++)
-                    {
-                        PstListSting.Add(PstTags[iPst].PstTags);
-                    }
+                    //var PstListSting = new List<string>();
+                    //for (int iPst = 0; iPst<PstTags.Count; iPst++)
+                    //{
+                    //    PstListSting.Add(PstTags[iPst].PstTags);
+                    //}
 
                     //Logging.DumpModifiedProteins(candidateProteins);
 
@@ -412,6 +431,7 @@ namespace PerceptronLocalService
                         //Logging.DumpCandidateProteins(candidateProteins);
 
                         //////UpdatedParse_database.m
+                        //candidateProteins = new List<ProteinDto>();
                         candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
                         if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                         {
@@ -436,30 +456,47 @@ namespace PerceptronLocalService
                             continue;
                         }
 
+                        InsilicoFragTime.Start();
                         candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
+                        InsilicoFragTime.Stop();
 
                         // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
+
+                        BlindPtmSearchTime.Start();
                         var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
                         CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
+                        BlindPtmSearchTime.Stop();
 
 
                         //Step 4 - ??? Algorithm - Spectral Comparison
+                        SpectralComparisonTime.Start();
                         var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
                         CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+                        SpectralComparisonTime.Stop();
+
+
 
                         //BlindPTMLocalization: Localizing Unknown mass shift
+                        BlindPtmSearchTime.Start();
                         CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
+                        BlindPtmSearchTime.Stop();
 
                         //Logging.DumpInsilicoScores(candidateProteins);
 
                         //Executing Truncation 
+                        TruncatedTime.Start();
                         var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
+                        TruncatedTime.Stop();
 
+                        
                         int FinalCandidateProteinListCapacity = CandidateProteinswithInsilicoScores.Count + CandidateProteinListTrucnatedwithInsilicoScores.Count;
                         var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>(FinalCandidateProteinListCapacity);    // Updated 20201203 Capacity defined
+
+                        AddRangeTime.Start();
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
+                        AddRangeTime.Stop();
 
                         if (FinalCandidateProteinListforFinalScoring.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)   //Updated 20200114
                         {
@@ -495,27 +532,28 @@ namespace PerceptronLocalService
                         FinalCandidateProteinListforFinalScoring = RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring);
 
                         //Evalue 
+                        EvalueTime.Start();
                         Evalue _Evalue = new Evalue();
                         _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
+                        EvalueTime.Stop();
 
+                        ////DEL ME 
+                        //string FinalFileWithPath = @"C:\PerceptronResultsDownload\FinalScoring.txt";
+                        //if (File.Exists(FinalFileWithPath))
+                        //    File.Delete(FinalFileWithPath); //Deleted Pre-existing file
 
-                        //DEL ME 
-                        string FinalFileWithPath = @"C:\PerceptronResultsDownload\FinalScoring.txt";
-                        if (File.Exists(FinalFileWithPath))
-                            File.Delete(FinalFileWithPath); //Deleted Pre-existing file
+                        //var finalfout = new FileStream(FinalFileWithPath, FileMode.OpenOrCreate);
+                        //var finalSw = new StreamWriter(finalfout);
 
-                        var finalfout = new FileStream(FinalFileWithPath, FileMode.OpenOrCreate);
-                        var finalSw = new StreamWriter(finalfout);
+                        //var TOBeDel = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
+                        //for (int i3 = 0; i3 < FinalCandidateProteinListforFinalScoring.Count; i3++)
+                        //{
+                        //    TOBeDel.Add(FinalCandidateProteinListforFinalScoring[i3].Header);
 
-                        var TOBeDel = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
-                        for (int i3 = 0; i3 < FinalCandidateProteinListforFinalScoring.Count; i3++)
-                        {
-                            TOBeDel.Add(FinalCandidateProteinListforFinalScoring[i3].Header);
-
-                            finalSw.WriteLine(FinalCandidateProteinListforFinalScoring[i3].Header);
-                        }
-                        finalSw.Close();
-                        //DEL ME
+                        //    finalSw.WriteLine(FinalCandidateProteinListforFinalScoring[i3].Header);
+                        //}
+                        //finalSw.Close();
+                        ////DEL ME
 
                         //Logging.DumpTotalScores(candidateProteins);
 
@@ -552,9 +590,16 @@ namespace PerceptronLocalService
                             pipeLineTimer.Stop();
                             executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
                             executionTimes.JobSubmission = parameters.JobSubmission;
-                            StoreSearchResults(DbStoreResults, parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
+
+                            Stopwatch time = new Stopwatch();
+                            time.Start();
+                            StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                             StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList, parameters.JobSubmission);
+                            time.Stop();
+
+                            int test = 1;
+                            
                         }
                         else
                         {
@@ -973,7 +1018,7 @@ namespace PerceptronLocalService
             return CandidateProteinListBlindPtmModified;
         }
 
-        private void StoreSearchResults(PerceptronDatabaseEntities DbStoreResults, SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
+        private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
 
             //if (candidateProteins.Count > Constants.NumberOfResultsToStore)                        //ITS HEALTHY.....!!!
@@ -989,7 +1034,7 @@ namespace PerceptronLocalService
             }
             
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
-            _dataLayer.StoreResults(DbStoreResults, final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
+            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
         }
 
         private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime JobSubmission)

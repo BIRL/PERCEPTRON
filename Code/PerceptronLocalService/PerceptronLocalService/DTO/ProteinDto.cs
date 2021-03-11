@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PerceptronLocalService.Utility;
+using System.Diagnostics;
 
 namespace PerceptronLocalService.DTO
 {
@@ -68,6 +69,56 @@ namespace PerceptronLocalService.DTO
         }
 
 
+        public ProteinDto(ProteinDto protein)   //Simple    //...................WITH NEW ProteinDto
+        {
+            Header = protein.Header;
+            OriginalSequence = protein.OriginalSequence;
+            Sequence = protein.Sequence;
+            PstScore = protein.PstScore;
+            InsilicoScore = protein.InsilicoScore;
+            PtmScore = protein.PtmScore;
+            Score = protein.Score;
+            MwScore = protein.MwScore;
+            Mw = protein.Mw;
+
+
+            PtmParticulars = new List<PostTranslationModificationsSiteDto>();
+
+            PtmParticulars.AddRange(protein.PtmParticulars);
+
+            BlindPtmLocalizationInfo = new BlindPtmInfo(protein.BlindPtmLocalizationInfo.Start,
+            protein.BlindPtmLocalizationInfo.End, protein.BlindPtmLocalizationInfo.Mass);
+
+
+            InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
+
+            TruncationIndex = protein.TruncationIndex;
+            TerminalModification = protein.TerminalModification;
+            Truncation = protein.Truncation;
+            TruncatedSequence = protein.TruncatedSequence;
+            TruncatedMolecaularWeight = protein.TruncatedMolecaularWeight;
+            InsilicoScore = protein.InsilicoScore;
+            MatchCounter = protein.MatchCounter;
+
+            LeftMatchedIndex = protein.LeftMatchedIndex;
+            RightMatchedIndex = protein.RightMatchedIndex;
+            LeftPeakIndex = protein.LeftPeakIndex;
+            RightPeakIndex = protein.RightPeakIndex;
+            LeftType = protein.LeftType;
+            RightType = protein.RightType;
+
+            PstTagsWithComma = protein.PstTagsWithComma;
+
+        }
+
+        
+
+        public static ProteinDto GetCopy(ProteinDto protein)
+        {
+            return Clone.DeepClone<ProteinDto>(protein);
+        }
+
+
         public ProteinDto(string cHeader, double cWholeProteinMass, string cSequence, List<double> InsilicoLeftIons, List<double> InsilicoRightIons)  // , string FastaHeader   ---Wait for FastaHeader
         {
 
@@ -106,88 +157,6 @@ namespace PerceptronLocalService.DTO
             PstTagsWithComma = "";
         }
 
-
-
-        public ProteinDto(ProteinDto protein)             ///ITS HEALTHY..........!!!!!!!!
-        {
-
-            var ProteinClone = Clone.DeepClone<ProteinDto>(protein);
-
-
-            Header = ProteinClone.Header;
-            OriginalSequence = ProteinClone.OriginalSequence;
-            Sequence = ProteinClone.Sequence;
-            PstScore = ProteinClone.PstScore;
-            InsilicoScore = ProteinClone.InsilicoScore;
-            PtmScore = ProteinClone.PtmScore;
-            Score = ProteinClone.Score;
-            MwScore = ProteinClone.MwScore;
-            Mw = ProteinClone.Mw;
-            PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
-            BlindPtmLocalizationInfo = ProteinClone.BlindPtmLocalizationInfo;
-            InsilicoDetails = new InsilicoObjectDto(ProteinClone.InsilicoDetails);
-
-            TruncationIndex = ProteinClone.TruncationIndex;
-            TerminalModification = ProteinClone.TerminalModification;
-            Truncation = ProteinClone.Truncation;
-            TruncatedSequence = ProteinClone.TruncatedSequence;
-            TruncatedMolecaularWeight = ProteinClone.TruncatedMolecaularWeight;
-            InsilicoScore = ProteinClone.InsilicoScore;
-            MatchCounter = ProteinClone.MatchCounter;
-
-            LeftMatchedIndex = ProteinClone.LeftMatchedIndex;
-            RightMatchedIndex = ProteinClone.RightMatchedIndex;
-            LeftPeakIndex = ProteinClone.LeftPeakIndex;
-            RightPeakIndex = ProteinClone.RightPeakIndex;
-            LeftType = ProteinClone.LeftType;
-            RightType = ProteinClone.RightType;
-
-            PstTagsWithComma = ProteinClone.PstTagsWithComma;
-
-        }
-
-
-        public static ProteinDto GetCopy(ProteinDto ProteinClone)  //Updated 20210304
-        {
-            ProteinDto ProteinInfo = new ProteinDto();
-
-            ProteinInfo.Header = ProteinClone.Header;
-            ProteinInfo.OriginalSequence = ProteinClone.OriginalSequence;
-            ProteinInfo.Sequence = ProteinClone.Sequence;
-            ProteinInfo.PstScore = ProteinClone.PstScore;
-            ProteinInfo.InsilicoScore = ProteinClone.InsilicoScore;
-            ProteinInfo.PtmScore = ProteinClone.PtmScore;
-            ProteinInfo.Score = ProteinClone.Score;
-            ProteinInfo.MwScore = ProteinClone.MwScore;
-            ProteinInfo.Mw = ProteinClone.Mw;
-            ProteinInfo.PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
-            ProteinInfo.BlindPtmLocalizationInfo = new BlindPtmInfo(
-                ProteinClone.BlindPtmLocalizationInfo.Start,
-                ProteinClone.BlindPtmLocalizationInfo.End,
-                ProteinClone.BlindPtmLocalizationInfo.Mass);
-
-            ProteinInfo.InsilicoDetails = new InsilicoObjectDto(ProteinClone.InsilicoDetails);
-
-            ProteinInfo.TruncationIndex = ProteinClone.TruncationIndex;
-            ProteinInfo.TerminalModification = ProteinClone.TerminalModification;
-            ProteinInfo.Truncation = ProteinClone.Truncation;
-            ProteinInfo.TruncatedSequence = ProteinClone.TruncatedSequence;
-            ProteinInfo.TruncatedMolecaularWeight = ProteinClone.TruncatedMolecaularWeight;
-            ProteinInfo.InsilicoScore = ProteinClone.InsilicoScore;
-            ProteinInfo.MatchCounter = ProteinClone.MatchCounter;
-
-            ProteinInfo.LeftMatchedIndex = ProteinClone.LeftMatchedIndex;
-            ProteinInfo.RightMatchedIndex = ProteinClone.RightMatchedIndex;
-            ProteinInfo.LeftPeakIndex = ProteinClone.LeftPeakIndex;
-            ProteinInfo.RightPeakIndex = ProteinClone.RightPeakIndex;
-            ProteinInfo.LeftType = ProteinClone.LeftType;
-            ProteinInfo.RightType = ProteinClone.RightType;
-
-            ProteinInfo.PstTagsWithComma = ProteinClone.PstTagsWithComma;
-            return ProteinInfo;
-        }
-
-
         public ProteinDto(string h, string s, double mw, double mwScore)
         {
             Header = h;
@@ -209,17 +178,10 @@ namespace PerceptronLocalService.DTO
         }
 
 
-        // Should be Discarded One Code Clean   // Should be Discarded One Code Clean
-        // Alternate of "set_score"  is in Perceptron.cs with name of  "AggregatedScoreByScoringComponents"
         public void set_score(double mwSweight, double pstSweight, double insilicoSweight)   // Should be Discarded One Code Clean
         {
             Score = ((mwSweight * MwScore) + (pstSweight * PstScore) + (insilicoSweight * InsilicoScore)) / (mwSweight + pstSweight + insilicoSweight); //3.0;
 
-            //Score = (pstSweight * PstScore + insilicoSweight * InsilicoScore + mwSweight * MwScore) / (mwSweight + pstSweight + insilicoSweight);
         }
-        //public void set_score(double mwSweight, double pstSweight, double insilicoSweight)
-        //{
-        //    Score = (pstSweight * PstScore / 100 + insilicoSweight * InsilicoScore / 100 + mwSweight * MwScore / 100) / 3.0;
-        //}
     }
 }

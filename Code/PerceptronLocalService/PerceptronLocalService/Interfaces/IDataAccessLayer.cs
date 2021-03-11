@@ -14,7 +14,7 @@ namespace PerceptronLocalService.Interfaces
         void StoreZipResultsForDownload(string Queryid, string ZipFileName, string ZipFileWithQueryId, DateTime JobSubmission);
         void StorePeakList(string FileUniqueId, string peakDataMassesString, string peakDataIntensitiesString, DateTime JobSubmission);
         //string GetCreationTime(string qid);   // HOLD FOR KNOW..
-        string StoreResults(PerceptronDatabaseEntities DbStoreResults, SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission);
+        string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission);
         List<SearchQueryDto> ServerStatus();
         SearchParametersDto GetParameters(string qid);
         //void GetFiles(SearchParametersDto qp);

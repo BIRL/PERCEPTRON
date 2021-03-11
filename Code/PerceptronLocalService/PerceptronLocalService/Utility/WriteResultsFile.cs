@@ -204,8 +204,6 @@ namespace PerceptronLocalService.Utility
         //    return Matches;
         //}
 
-
-
         public string WriteBatchResultsFile(string ProteinSearchTitle, string FDRCutOff, List<FalseDiscoveryRateDto> BatchModeFileProteins, string filePath)
         {
             string FileWithPath = filePath + ProteinSearchTitle + "_Results.csv";
@@ -218,7 +216,13 @@ namespace PerceptronLocalService.Utility
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
 
-
+            if (BatchModeFileProteins.Count == 0 || BatchModeFileProteins[0].BatchTargetList.Count == 0)  //For Empty File  Updated 20210111
+            {
+                sw.WriteLine("No Result Found Please search with another set of parameters");
+                sw.Close();
+                return FileWithPath;
+                
+            }
 
             //MAKING COLUMN NAMES
 
@@ -230,6 +234,8 @@ namespace PerceptronLocalService.Utility
             {
                 string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
                 sw.WriteLine(HeaderOfCsv);
+
+                
 
                 for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
                 {

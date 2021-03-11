@@ -24,9 +24,9 @@ namespace PerceptronLocalService.Engine
                 //Stopwatch Time = Stopwatch.StartNew();
                 //Time.Start();
                 var tempD = new List<FastaProteinDataDto>();
-                string Path = @"E:\01_PERCEPTRON\GitHub\Code\FastaDatabases\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
+                string Path = @"E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\_FastaDatabases\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
 
-
+                //string s = System.IO.Directory.GetCurrentDirectory();
                 string FileName = "Human.fasta";  //Add here fasta File Name
                 string FastaFullFileName = Path + FileName;
                 string DatabaseToBeUpdated = "HumanDecoy";
