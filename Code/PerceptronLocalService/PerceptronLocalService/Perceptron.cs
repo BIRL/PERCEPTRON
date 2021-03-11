@@ -19,6 +19,7 @@ using System.Globalization;
 //using Cudafy.Host;
 //using Cudafy.Translator;
 using System.Runtime.InteropServices;
+using PerceptronLocalService.Models;
 
 namespace PerceptronLocalService
 {
@@ -303,6 +304,7 @@ namespace PerceptronLocalService
             var DataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
             var DecoyDataForBatchFileAndFdr = new List<FalseDiscoveryRateDto>(numberOfPeaklistFiles);
 
+            PerceptronDatabaseEntities db = new PerceptronDatabaseEntities();
             for (var fileNumber = 0; fileNumber < numberOfPeaklistFiles; fileNumber++)
             {
                 //Logging.CreatePeakFileDirectory(fileNumber);
@@ -551,6 +553,9 @@ namespace PerceptronLocalService
                             executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
                             executionTimes.JobSubmission = parameters.JobSubmission;
                             StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
+                            Stopwatch StoreResultTime = new Stopwatch();
+                            StoreResultTime.Start();
+                            StoreSearchResults(db, parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                             StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList, parameters.JobSubmission);
                         }
@@ -972,6 +977,7 @@ namespace PerceptronLocalService
         }
 
         private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
+        private void StoreSearchResults(PerceptronDatabaseEntities db, SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
 
             //if (candidateProteins.Count > Constants.NumberOfResultsToStore)                        //ITS HEALTHY.....!!!
@@ -988,6 +994,7 @@ namespace PerceptronLocalService
             
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
             _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
+            _dataLayer.StoreResults(db, final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
         }
 
         private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime JobSubmission)
