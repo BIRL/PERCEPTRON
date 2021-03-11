@@ -7,11 +7,9 @@
       <Schema Namespace="PerceptronDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ExecutionTimes">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
             <PropertyRef Name="FileName" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="InsilicoTime" Type="nvarchar(max)" />
           <Property Name="PtmTime" Type="nvarchar(max)" />
           <Property Name="TunerTime" Type="nvarchar(max)" />
@@ -21,36 +19,34 @@
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="PeakListData">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="FileUniqueId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="PeakListMasses" Type="nvarchar(max)" />
           <Property Name="PeakListIntensities" Type="nvarchar(max)" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ModificationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" />
           <Property Name="FixedModifications" Type="nvarchar(max)" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="PtmVariableModifications">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ModificationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" />
           <Property Name="VariableModifications" Type="nvarchar(max)" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="ResultInsilicoMatchLefts">
           <Key>
@@ -70,47 +66,42 @@
         </EntityType>
         <EntityType Name="ResultPtmSites">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ResultPtmSitesId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ResultPtmSitesId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Index" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ModName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Site" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="ResultsDownloadable">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ResultId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ResultId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="MassSpectrumImageFilePath" Type="nvarchar(max)" Nullable="false" />
           <Property Name="JsonExpThrTableFilePath" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CompleteDetailedResultsFilePath" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="SearchFiles">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="FileId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QueryId" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="FileType" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="QueryId" Type="nvarchar(max)" />
+          <Property Name="FileName" Type="nvarchar(max)" />
+          <Property Name="FileType" Type="nvarchar(max)" />
           <Property Name="UniqueFileName" Type="nvarchar(max)" />
           <Property Name="FileUniqueId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="SearchParameters">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="EmailId" Type="nvarchar(max)" />
@@ -146,13 +137,13 @@
           <Property Name="InsilicoSweight" Type="float" Nullable="false" />
           <Property Name="TruncationIndex" Type="int" Nullable="false" />
           <Property Name="FDRCutOff" Type="nvarchar(max)" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchQueries">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Progress" Type="nvarchar(max)" />
@@ -204,13 +195,12 @@
         </EntityType>
         <EntityType Name="ZipResultsDownloadInfo">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ZipFileWithQueryId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ZipFileName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
@@ -234,11 +224,9 @@
       <Schema Namespace="PerceptronDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="ExecutionTime">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
             <PropertyRef Name="FileName" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="InsilicoTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PtmTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TunerTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -248,36 +236,34 @@
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="PeakListData">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="FileUniqueId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ModificationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="FixedModifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="PtmVariableModification">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ModificationId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ModificationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="VariableModifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="ResultInsilicoMatchLeft">
           <Key>
@@ -297,47 +283,42 @@
         </EntityType>
         <EntityType Name="ResultPtmSite">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ResultPtmSitesId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ResultPtmSitesId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Index" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ModName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="ResultsDownloadable">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="ResultId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResultId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MassSpectrumImageFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="JsonExpThrTableFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CompleteDetailedResultsFilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="SearchFile">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="FileId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="QueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UniqueFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="SearchParameter">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -373,13 +354,13 @@
           <Property Name="InsilicoSweight" Type="Double" Nullable="false" />
           <Property Name="TruncationIndex" Type="Int32" Nullable="false" />
           <Property Name="FDRCutOff" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
         </EntityType>
         <EntityType Name="SearchQuery">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Progress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -431,13 +412,12 @@
         </EntityType>
         <EntityType Name="ZipResultsDownloadInfo">
           <Key>
-            <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
           </Key>
-          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ZipFileWithQueryId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ZipFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="JobSubmission" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
@@ -463,7 +443,6 @@
           <EntitySetMapping Name="ExecutionTimes">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ExecutionTime">
               <MappingFragment StoreEntitySet="ExecutionTimes">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="InsilicoTime" ColumnName="InsilicoTime" />
                 <ScalarProperty Name="PtmTime" ColumnName="PtmTime" />
                 <ScalarProperty Name="TunerTime" ColumnName="TunerTime" />
@@ -473,36 +452,37 @@
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PeakListDatas">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
               <MappingFragment StoreEntitySet="PeakListData">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
                 <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
                 <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PtmFixedModifications">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmFixedModification">
               <MappingFragment StoreEntitySet="PtmFixedModifications">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FixedModifications" ColumnName="FixedModifications" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PtmVariableModifications">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmVariableModification">
               <MappingFragment StoreEntitySet="PtmVariableModifications">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="VariableModifications" ColumnName="VariableModifications" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -527,44 +507,43 @@
           <EntitySetMapping Name="ResultPtmSites">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultPtmSite">
               <MappingFragment StoreEntitySet="ResultPtmSites">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="ResultPtmSitesId" ColumnName="ResultPtmSitesId" />
                 <ScalarProperty Name="ResultId" ColumnName="ResultId" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="ModName" ColumnName="ModName" />
                 <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ResultsDownloadables">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultsDownloadable">
               <MappingFragment StoreEntitySet="ResultsDownloadable">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
-                <ScalarProperty Name="ResultId" ColumnName="ResultId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+                <ScalarProperty Name="ResultId" ColumnName="ResultId" />
                 <ScalarProperty Name="MassSpectrumImageFilePath" ColumnName="MassSpectrumImageFilePath" />
                 <ScalarProperty Name="JsonExpThrTableFilePath" ColumnName="JsonExpThrTableFilePath" />
                 <ScalarProperty Name="CompleteDetailedResultsFilePath" ColumnName="CompleteDetailedResultsFilePath" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SearchFiles">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchFile">
               <MappingFragment StoreEntitySet="SearchFiles">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="FileType" ColumnName="FileType" />
                 <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SearchParameters">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchParameter">
               <MappingFragment StoreEntitySet="SearchParameters">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="EmailId" ColumnName="EmailId" />
@@ -600,6 +579,7 @@
                 <ScalarProperty Name="InsilicoSweight" ColumnName="InsilicoSweight" />
                 <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
                 <ScalarProperty Name="FDRCutOff" ColumnName="FDRCutOff" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -660,10 +640,10 @@
           <EntitySetMapping Name="ZipResultsDownloadInfoes">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ZipResultsDownloadInfo">
               <MappingFragment StoreEntitySet="ZipResultsDownloadInfo">
-                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
                 <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="ZipFileWithQueryId" ColumnName="ZipFileWithQueryId" />
                 <ScalarProperty Name="ZipFileName" ColumnName="ZipFileName" />
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

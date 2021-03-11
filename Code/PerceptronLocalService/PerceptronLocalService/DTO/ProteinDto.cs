@@ -35,7 +35,7 @@ namespace PerceptronLocalService.DTO
         public List<int> RightPeakIndex;
         public List<string> LeftType;
         public List<string> RightType;
-        
+
 
         public double Evalue;
         public int ProteinRank;
@@ -67,7 +67,7 @@ namespace PerceptronLocalService.DTO
 
         }
 
-        
+
         public ProteinDto(string cHeader, double cWholeProteinMass, string cSequence, List<double> InsilicoLeftIons, List<double> InsilicoRightIons)  // , string FastaHeader   ---Wait for FastaHeader
         {
 
@@ -79,7 +79,7 @@ namespace PerceptronLocalService.DTO
             PtmScore = 0.0;
             Score = 0.0;
             MwScore = 0.0;
-            Mw = 0.0;
+            Mw = cWholeProteinMass;
             PtmParticulars = new List<PostTranslationModificationsSiteDto>();
             BlindPtmLocalizationInfo = new BlindPtmInfo();
             InsilicoDetails = new InsilicoObjectDto(InsilicoLeftIons, InsilicoRightIons);
@@ -106,7 +106,7 @@ namespace PerceptronLocalService.DTO
             PstTagsWithComma = "";
         }
 
-            
+
 
         public ProteinDto(ProteinDto protein)             ///ITS HEALTHY..........!!!!!!!!
         {
@@ -162,7 +162,7 @@ namespace PerceptronLocalService.DTO
             ProteinInfo.Mw = ProteinClone.Mw;
             ProteinInfo.PtmParticulars = new List<PostTranslationModificationsSiteDto>(ProteinClone.PtmParticulars);
             ProteinInfo.BlindPtmLocalizationInfo = new BlindPtmInfo(
-                ProteinClone.BlindPtmLocalizationInfo.Start, 
+                ProteinClone.BlindPtmLocalizationInfo.Start,
                 ProteinClone.BlindPtmLocalizationInfo.End,
                 ProteinClone.BlindPtmLocalizationInfo.Mass);
 

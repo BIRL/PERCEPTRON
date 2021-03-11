@@ -36,19 +36,19 @@ namespace PerceptronLocalService.Engine
             /* (Above) Updated 20201130  -- For Time Efficiancy  */
 
 
-            Stopwatch OnlyPreTruncation = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch OnlyPreTruncation = new Stopwatch();    // DELME Execution Time Working
 
             Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
-            Stopwatch OnlyInMemoryCopyTime = Stopwatch.StartNew();    // DELME Execution Time Working
-            Stopwatch OnlyPreTruncationRemain = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch OnlyInMemoryCopyTime = new Stopwatch();   // DELME Execution Time Working
+            Stopwatch OnlyPreTruncationRemain = new Stopwatch();    // DELME Execution Time Working
             //OnlyPreTruncationFirstHalf.Start();     // DELME Execution Time Working
-            Stopwatch OnlyTerminalModification = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch OnlyTerminalModification = new Stopwatch();    // DELME Execution Time Working
 
-            Stopwatch TimeUsedBySubstring = Stopwatch.StartNew();    // DELME Execution Time Working
-            Stopwatch TimeUsedByGetRange = Stopwatch.StartNew();    // DELME Execution Time Working
-            
-            Stopwatch TimeUsedBySelect = Stopwatch.StartNew();    // DELME Execution Time Working
-            Stopwatch TimeUsedByFindPreTruncation = Stopwatch.StartNew();    // DELME Execution Time Working
+            Stopwatch TimeUsedBySubstring = new Stopwatch();    // DELME Execution Time Working
+            Stopwatch TimeUsedByGetRange = new Stopwatch();    // DELME Execution Time Working
+
+            Stopwatch TimeUsedBySelect = new Stopwatch();   // DELME Execution Time Working
+            Stopwatch TimeUsedByFindPreTruncation = new Stopwatch();   // DELME Execution Time Working
             Stopwatch AnotherClassCalling = new Stopwatch();    // DELME Execution Time Working
 
             Stopwatch ProteinSequenceLengthTime = new Stopwatch();    // DELME Execution Time Working
@@ -70,15 +70,15 @@ namespace PerceptronLocalService.Engine
                 //proteinList[i].Header == "Q9BWD1" || proteinList[i].Header == "Q9H8M9" || proteinList[i].Header == "Q5BKX8" || proteinList[i].Header == "Q496J9" || proteinList[i].Header == "P35250" || proteinList[i].Header == "P17661" || proteinList[i].Header == "A6H8Y1" || proteinList[i].Header == "P53801")
                 //{
                 /////////////////////////////////////////////////////////// #J4TDM  ///////////////////////////////////////////////////////////
-
-                OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
+                OneCallTime.Start();
+                //OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
                 var protein1 = proteinList[i];
-                OneCallTime.Start();    // DELME Execution Time Working
-                var protein = new ProteinDto(protein1);
+                //OnlyInMemoryCopyTime.Stop();
+                // DELME Execution Time Working
+                var protein = new ProteinDto(protein1); //ProteinDto.GetCopy(protein1);
                 OneCallTime.Stop();     // DELME Execution Time Working
-                OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
-                                                 //continue;  //  #HardCode
-
+                                        // DELME Execution Time Working
+                                        //continue;  //  #HardCode
 
 
                 OnlyPreTruncationRemain.Start();        // DELME Execution Time Working
@@ -123,10 +123,10 @@ namespace PerceptronLocalService.Engine
 
 
                 OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
-                var newProtein = new ProteinDto(protein);
+                var newProtein = new ProteinDto(protein); //ProteinDto.GetCopy(protein);
                 OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
 
-                
+
 
                 TimeUsedBySubstring.Start();      // DELME Execution Time Working
                 var tmpSeq = sequence.Substring(0, preTruncationIndex + factor);
@@ -187,7 +187,7 @@ namespace PerceptronLocalService.Engine
                 protein.TruncationIndex = truncationIndex + minusfactorTruncationIndex;
 
                 OnlyInMemoryCopyTime.Start();     // DELME Execution Time Working
-                newProtein = new ProteinDto(protein);
+                newProtein = new ProteinDto(protein); //ProteinDto.GetCopy(protein);
                 OnlyInMemoryCopyTime.Stop();     // DELME Execution Time Working
 
 
@@ -204,7 +204,7 @@ namespace PerceptronLocalService.Engine
                     TimeUsedByGetRange.Start();      // DELME Execution Time Working
                     rightIons = rightIons.GetRange(0, preTruncationIndex + 1).ToList();
                     TimeUsedByGetRange.Stop();      // DELME Execution Time Working
-                    
+
 
                     newProtein.Mw = rightIons[rightIons.Count - 1] + MassOfWater;
                     newProtein.TerminalModification = "None";
@@ -215,7 +215,7 @@ namespace PerceptronLocalService.Engine
                     TimeUsedByGetRange.Start();      // DELME Execution Time Working
                     leftIons = leftIons.GetRange(truncationIndex, prtLength - truncationIndex);
                     TimeUsedByGetRange.Stop();      // DELME Execution Time Working
-                    
+
                     TimeUsedBySelect.Start();      // DELME Execution Time Working
                     ////leftIons = leftIons.Select(x => x - insilicoTruncationIdxMass1).ToList();   /// Updated 20201201 Removed Because of its Runtime cost
                     leftIons = _MassRemove.MassRemoval(leftIons, insilicoTruncationIdxMass1);    // Added for Time Efficiency /// Updated 20201201
@@ -226,8 +226,10 @@ namespace PerceptronLocalService.Engine
                     proteinListLeft.Add(newProtein);
                 }
                 //}  //COMMENT ME
-                
+
             }
+
+
             OnlyPreTruncation.Stop();     // DELME Execution Time Working
         }
 
@@ -324,7 +326,7 @@ namespace PerceptronLocalService.Engine
                 var tempprotein = CandidateProteinListTruncatedLeft[index];
 
                 subTruncationLeftInMemory.Start();         // DELME Execution Time Working
-                var protein = new ProteinDto(tempprotein);
+                var protein = new ProteinDto(tempprotein); //ProteinDto.GetCopy(tempprotein);
                 subTruncationLeftInMemory.Stop();         // DELME Execution Time Working
 
                 var prtLength = protein.Sequence.Length;
@@ -423,7 +425,7 @@ namespace PerceptronLocalService.Engine
                 //{
 
                 var tempprotein = CandidateProteinListTruncatedRight[index];
-                var protein = new ProteinDto(tempprotein);
+                var protein = new ProteinDto(tempprotein); //ProteinDto.GetCopy(tempprotein);
 
                 var prtLength = protein.Sequence.Length;
 
@@ -437,7 +439,7 @@ namespace PerceptronLocalService.Engine
                 var start = -1; //Just for Initialization
                 if (factor == -1)  //Updated 20210122
                     start = Convert.ToInt32(Math.Ceiling(truncationMass / NEEDTOBEDECIDED)) - 2; //Updated 20210119 // "-1" is Added for ZeroIndexing.   ////NEEDTOBEDECIDED = 168 OR 256
-                else if(factor == 0)
+                else if (factor == 0)
                     start = Convert.ToInt32(Math.Ceiling(truncationMass / NEEDTOBEDECIDED)) - 1; //Updated 20210122 // "-1" is Added for ZeroIndexing.   ////NEEDTOBEDECIDED = 168 OR 256
 
 
@@ -515,7 +517,7 @@ namespace PerceptronLocalService.Engine
                 {
 
                     var tempprotein = CandidateProteinListInput[iterationOnProteinList];
-                    var protein = new ProteinDto(tempprotein);
+                    var protein = new ProteinDto(tempprotein); //ProteinDto.GetCopy(tempprotein);
 
                     var LeftIons = protein.InsilicoDetails.InsilicoMassLeft;
                     var RightIons = protein.InsilicoDetails.InsilicoMassRight;
@@ -548,7 +550,7 @@ namespace PerceptronLocalService.Engine
                 for (int iterationOnProteinList = 0; iterationOnProteinList < CandidateProteinListInput.Count; iterationOnProteinList++)
                 {
                     var tempprotein = CandidateProteinListInput[iterationOnProteinList];
-                    var protein = new ProteinDto(tempprotein);
+                    var protein = new ProteinDto(tempprotein); //ProteinDto.GetCopy(tempprotein);
 
                     var LeftIons = protein.InsilicoDetails.InsilicoMassLeft;
                     var RightIons = protein.InsilicoDetails.InsilicoMassRight;

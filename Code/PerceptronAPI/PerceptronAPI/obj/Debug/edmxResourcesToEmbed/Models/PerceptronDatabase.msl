@@ -4,7 +4,6 @@
     <EntitySetMapping Name="ExecutionTimes">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.ExecutionTime">
         <MappingFragment StoreEntitySet="ExecutionTimes">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="InsilicoTime" ColumnName="InsilicoTime" />
           <ScalarProperty Name="PtmTime" ColumnName="PtmTime" />
           <ScalarProperty Name="TunerTime" ColumnName="TunerTime" />
@@ -14,36 +13,37 @@
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="FileName" ColumnName="FileName" />
           <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="PeakListDatas">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.PeakListData">
         <MappingFragment StoreEntitySet="PeakListData">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
           <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
           <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="PtmFixedModifications">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmFixedModification">
         <MappingFragment StoreEntitySet="PtmFixedModifications">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="FixedModifications" ColumnName="FixedModifications" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="PtmVariableModifications">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmVariableModification">
         <MappingFragment StoreEntitySet="PtmVariableModifications">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="ModificationId" ColumnName="ModificationId" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="VariableModifications" ColumnName="VariableModifications" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -68,44 +68,43 @@
     <EntitySetMapping Name="ResultPtmSites">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultPtmSite">
         <MappingFragment StoreEntitySet="ResultPtmSites">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="ResultPtmSitesId" ColumnName="ResultPtmSitesId" />
           <ScalarProperty Name="ResultId" ColumnName="ResultId" />
           <ScalarProperty Name="Index" ColumnName="Index" />
           <ScalarProperty Name="ModName" ColumnName="ModName" />
           <ScalarProperty Name="Site" ColumnName="Site" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ResultsDownloadables">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.ResultsDownloadable">
         <MappingFragment StoreEntitySet="ResultsDownloadable">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
-          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="ResultId" ColumnName="ResultId" />
           <ScalarProperty Name="MassSpectrumImageFilePath" ColumnName="MassSpectrumImageFilePath" />
           <ScalarProperty Name="JsonExpThrTableFilePath" ColumnName="JsonExpThrTableFilePath" />
           <ScalarProperty Name="CompleteDetailedResultsFilePath" ColumnName="CompleteDetailedResultsFilePath" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="SearchFiles">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchFile">
         <MappingFragment StoreEntitySet="SearchFiles">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="FileId" ColumnName="FileId" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="FileName" ColumnName="FileName" />
           <ScalarProperty Name="FileType" ColumnName="FileType" />
           <ScalarProperty Name="UniqueFileName" ColumnName="UniqueFileName" />
           <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="SearchParameters">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.SearchParameter">
         <MappingFragment StoreEntitySet="SearchParameters">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="Title" ColumnName="Title" />
           <ScalarProperty Name="EmailId" ColumnName="EmailId" />
@@ -141,6 +140,7 @@
           <ScalarProperty Name="InsilicoSweight" ColumnName="InsilicoSweight" />
           <ScalarProperty Name="TruncationIndex" ColumnName="TruncationIndex" />
           <ScalarProperty Name="FDRCutOff" ColumnName="FDRCutOff" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -201,10 +201,10 @@
     <EntitySetMapping Name="ZipResultsDownloadInfoes">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.ZipResultsDownloadInfo">
         <MappingFragment StoreEntitySet="ZipResultsDownloadInfo">
-          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
           <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="ZipFileWithQueryId" ColumnName="ZipFileWithQueryId" />
           <ScalarProperty Name="ZipFileName" ColumnName="ZipFileName" />
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

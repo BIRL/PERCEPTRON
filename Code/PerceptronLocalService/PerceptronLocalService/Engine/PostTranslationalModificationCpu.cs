@@ -83,9 +83,9 @@ namespace PerceptronLocalService.Engine
             return arraySize;
         }
 
-        
 
-        
+
+
 
         ////////*******************************
 
@@ -653,10 +653,10 @@ namespace PerceptronLocalService.Engine
                     }*/
                 }
             }
-        }        
+        }
 
-        
-                
+
+
         //private IEnumerable<int[]> CombinationsRosettaWoRecursion(int m, int n)
         //{
         //    int[] result = new int[m];
@@ -718,7 +718,7 @@ namespace PerceptronLocalService.Engine
                 All_Mets = _MSO.MSO(protein.Sequence, parameters.PtmTolerance);
             else if (parameters.MethionineChemicalModification == "MSONE")
                 All_Mets = _MSONE.MSONE(protein.Sequence, parameters.PtmTolerance);
-            
+
             if (parameters.PtmAllow != "True")
             {
                 //parameters.VariableModifications = new List<string>{"Acetylation_A", "Acetylation_K", "Acetylation_S", "Hydroxylation_P", "Methylation_K", 
@@ -753,7 +753,7 @@ namespace PerceptronLocalService.Engine
             var CombinedConsecutiveNumList = _Combinations.GetAllCombination(All_Var_PTMs.Count);
 
             var ModificationsList = new List<List<List<PostTranslationModificationsSiteDto>>>();
-            
+
 
             for (int index = 0; index < CombinedConsecutiveNumList.Count; index++)
             {
@@ -772,7 +772,7 @@ namespace PerceptronLocalService.Engine
                 ModificationsList.Add(subModificationsList);
             }
 
-            ProteinDto ModifiedProtein = new ProteinDto(protein);
+            ProteinDto ModifiedProtein = ProteinDto.GetCopy(protein);
 
             if (All_Fix_PTMs.Any())         //In case fixed modification is selected
             {
@@ -808,7 +808,7 @@ namespace PerceptronLocalService.Engine
                     ModifiedProtein.PtmScore = ModifiedProtein.PtmScore + All_Fix_PTMs[fixedIndex].Score;
                     ModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto
                         (All_Fix_PTMs[fixedIndex].Index, All_Fix_PTMs[fixedIndex].ModName, All_Fix_PTMs[fixedIndex].Site));
-                    
+
                 }
                 double Error = Math.Abs(Experimentalmz - ModifiedProtein.Mw);
                 if (Error == 0)
@@ -827,11 +827,13 @@ namespace PerceptronLocalService.Engine
 
 
             var ModifiedSite = new PostTranslationModificationsSiteDto();
-            for (int index = 0; index < ModificationsList.Count; index++)         //In case variable modification is selected
+            int count = ModificationsList.Count;
+            for (int index = 0; index < count; index++)         //In case variable modification is selected
             {
-                for (int index1 = 0; index1 < ModificationsList[index].Count; index1++)
+                int innerCount = ModificationsList[index].Count;
+                for (int index1 = 0; index1 < innerCount; index1++)
                 {
-                    ProteinDto AnotherModifiedProtein = new ProteinDto(protein);
+                    ProteinDto AnotherModifiedProtein = ProteinDto.GetCopy(protein);
                     AnotherModifiedProtein.Mw = MolecularWeight;
                     AnotherModifiedProtein.InsilicoDetails.InsilicoMassLeft = Clone.DeepClone<List<double>>(LeftIons); // Lists are referenced based so, therefore...    //Updated 20201113
                     for (int index2 = 0; index2 < ModificationsList[index][index1].Count; index2++)
@@ -839,7 +841,7 @@ namespace PerceptronLocalService.Engine
                         ModifiedSite = ModificationsList[index][index1][index2];
                         AnotherModifiedProtein.Mw = AnotherModifiedProtein.Mw + ModifiedSite.ModWeight;
                         //AnotherModifiedProtein.PtmScore = AnotherModifiedProtein.PtmScore + ModifiedSite.Score;
-                        
+
 
                         for (int protIndex = 0; protIndex < protein.Sequence.Length - 1; protIndex++)
                         {
@@ -862,7 +864,7 @@ namespace PerceptronLocalService.Engine
                     {
                         ModifiedSite = ModificationsList[index][index1][iter];
                         AnotherModifiedProtein.PtmScore = AnotherModifiedProtein.PtmScore + ModifiedSite.Score;
-                        AnotherModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(ModifiedSite.Index,ModifiedSite.ModName,ModifiedSite.Site));
+                        AnotherModifiedProtein.PtmParticulars.Add(new PostTranslationModificationsSiteDto(ModifiedSite.Index, ModifiedSite.ModName, ModifiedSite.Site));
 
                     }
 
@@ -885,12 +887,12 @@ namespace PerceptronLocalService.Engine
 
                     AnotherModifiedProtein.PtmScore = 1 - Math.Exp(-AnotherModifiedProtein.PtmScore / 3);
 
-                    ProteinDto tempProtein = new ProteinDto(AnotherModifiedProtein); // Just for safety against referenced based property of list...
+                    ProteinDto tempProtein = ProteinDto.GetCopy(AnotherModifiedProtein); // Just for safety against referenced based property of list...
                     ListOfModifiedProteins.Add(tempProtein);
-                }   
+                }
             }
 
-            
+
             return ListOfModifiedProteins;
         }
     }

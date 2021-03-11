@@ -159,8 +159,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Engine\FalseDiscoveryRate.cs" />
+    <Compile Include="Engine\FastaReader.cs" />
     <Compile Include="Engine\PostTranslationalModificationCpu.cs" />
-    <Compile Include="Engine\PSTCpuGpuCombineMethod.cs" />
     <Compile Include="Engine\PSTFilterGPU.cs" />
     <Compile Include="Engine\PSTGeneratorGPU.cs" />
     <Compile Include="Engine\PtmCpu.cs" />

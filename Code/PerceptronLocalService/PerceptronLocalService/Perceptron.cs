@@ -19,6 +19,7 @@ using System.Globalization;
 //using Cudafy.Host;
 //using Cudafy.Translator;
 using System.Runtime.InteropServices;
+using PerceptronLocalService.Models;
 
 namespace PerceptronLocalService
 {
@@ -277,7 +278,7 @@ namespace PerceptronLocalService
 
                 //var counter = 0;
                 string EmailMsg = "";
-            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -286,13 +287,13 @@ namespace PerceptronLocalService
             List<string> ResultsDownloadFileNames = new List<string>(numberOfPeaklistFiles + 2);  // Used to Collect the names of the files for Zipping (File Zip) Purpose // Just for approximate Capacity of the list.
             //var DecoyTopFinalCandidateProteinList = new List<ProteinDto>(numberOfPeaklistFiles);
             List<ResultsDownloadToBeWrite> ResultsDownloadToBeWriteList = new List<ResultsDownloadToBeWrite>();   // For storing all individual(single) results files
-            
-            
-            //List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
 
+
+            //List<ResultsDownloadToBeWrite> BatchModeFileProteins = new List<ResultsDownloadToBeWrite>(numberOfPeaklistFiles);
+            var DbStoreResults = new PerceptronDatabaseEntities();
 
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
-            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
+            //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
             int iterate = 1;
             if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210209
@@ -324,32 +325,33 @@ namespace PerceptronLocalService
                     //Step 1 - 1st Algorithm - Mass Tuner 
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
                     
-                    // --- GPU Code Below ---   Updated: 20210223
-                    double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
-                    double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
-                    for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
-                    {
-                        PeakListMasses[i] = massSpectrometryData.Mass[i];
-                        PeakListIntensities[i] = massSpectrometryData.Intensity[i];
-                    }
-                    int PeakListLength = massSpectrometryData.Mass.Count;
-                    int AutoTune, DenovoAllow;
-                    if (parameters.Autotune == "True")
-                        AutoTune = 1;
-                    else
-                        AutoTune = 0;
-                    if (parameters.DenovoAllow == "True")
-                        DenovoAllow = 1;
-                    else
-                        DenovoAllow = 0;
+                    //// --- GPU Code Below ---   Updated: 20210223
+                    //double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
+                    //double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
+                    //for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
+                    //{
+                    //    PeakListMasses[i] = massSpectrometryData.Mass[i];
+                    //    PeakListIntensities[i] = massSpectrometryData.Intensity[i];
+                    //}
+                    //int PeakListLength = massSpectrometryData.Mass.Count;
+                    //int AutoTune, DenovoAllow;
+                    //if (parameters.Autotune == "True")
+                    //    AutoTune = 1;
+                    //else
+                    //    AutoTune = 0;
+                    //if (parameters.DenovoAllow == "True")
+                    //    DenovoAllow = 1;
+                    //else
+                    //    DenovoAllow = 0;
 
-                    ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
-                    Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
-                    Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
-                    massTunerGpuTime.Start();
-                    massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
-                    // --- GPU Code Above ---   Updated: 20210223
-                    massTunerGpuTime.Stop();
+                    //ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
+                    //Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
+                    //Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
+                    //massTunerGpuTime.Start();
+                    //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
+                    //massTunerGpuTime.Stop();
+                    //// --- GPU Code Above ---   Updated: 20210223
+
                     ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
 
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
@@ -550,7 +552,7 @@ namespace PerceptronLocalService
                             pipeLineTimer.Stop();
                             executionTimes.TotalTime = pipeLineTimer.Elapsed.ToString();
                             executionTimes.JobSubmission = parameters.JobSubmission;
-                            StoreSearchResults(parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
+                            StoreSearchResults(DbStoreResults, parameters, FinalCandidateProteinListforFinalScoring, executionTimes, fileNumber);
                             //peakData2DList = peakData2DList.OrderByDescending(x => x.Mass).ToList();
                             StorePeakListData(parameters.FileUniqueIdArray[fileNumber], peakData2DList, parameters.JobSubmission);
                         }
@@ -971,7 +973,7 @@ namespace PerceptronLocalService
             return CandidateProteinListBlindPtmModified;
         }
 
-        private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
+        private void StoreSearchResults(PerceptronDatabaseEntities DbStoreResults, SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
 
             //if (candidateProteins.Count > Constants.NumberOfResultsToStore)                        //ITS HEALTHY.....!!!
@@ -987,7 +989,7 @@ namespace PerceptronLocalService
             }
             
             var final = new SearchResultsDto(parameters.Queryid, candidateProteins, executionTimes);
-            _dataLayer.StoreResults(final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
+            _dataLayer.StoreResults(DbStoreResults, final, parameters.PeakListFileName[fileNumber], parameters.FileUniqueIdArray[fileNumber], fileNumber, parameters.JobSubmission);
         }
 
         private void StorePeakListData(string FileUniqueId, List<newMsPeaksDto> peakData2DList, DateTime JobSubmission)

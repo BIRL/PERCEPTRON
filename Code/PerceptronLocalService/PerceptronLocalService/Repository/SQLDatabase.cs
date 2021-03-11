@@ -60,14 +60,15 @@ namespace PerceptronLocalService.Repository
             }
         }
 
-        public string StoreResults(SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission)
+
+        public string StoreResults(PerceptronDatabaseEntities DbStoreResults, SearchResultsDto res, string fileName, string FileUniqueId, int fileId, DateTime JobSubmission)
         {
             string message = Constants.ResultsSotredSuccessfully; //Spelling mistake?#PROBLEM_DETECTED
-            using (var db = new PerceptronDatabaseEntities())
+            using (DbStoreResults)
             {
                 int ResultPtmSitesId = 0;
                 var executionTime = GetExecutionTimeModel(res, fileName);
-                db.ExecutionTimes.Add(executionTime);
+                DbStoreResults.ExecutionTimes.Add(executionTime);
                 //db.SaveChanges();
 
                 foreach (ProteinDto protein in res.FinalProt)
@@ -75,14 +76,14 @@ namespace PerceptronLocalService.Repository
                     var resId = Guid.NewGuid();
                     var headerTag = GetHeaderTag(protein.Header);
                     var searchResult = GetSearchResultModel(res.QueryId, fileId, headerTag, protein, resId, FileUniqueId, JobSubmission);
-                    db.SearchResults.Add(searchResult);
+                    DbStoreResults.SearchResults.Add(searchResult);
                     //db.SaveChanges();
 
                     if (protein.PtmParticulars.Count != 0)
                     {
                         ResultPtmSitesId = ResultPtmSitesId + 1;
                         var resultPtmSites = GetResultPtmSitesModel(ResultPtmSitesId, resId, protein.PtmParticulars, JobSubmission);
-                        db.ResultPtmSites.Add(resultPtmSites);
+                        DbStoreResults.ResultPtmSites.Add(resultPtmSites);
                         //db.SaveChanges();
                     }
 
@@ -96,7 +97,7 @@ namespace PerceptronLocalService.Repository
                     //db.SaveChanges();
                 }
 
-                db.SaveChanges();
+                DbStoreResults.SaveChanges();
             }
             return message;
         }
