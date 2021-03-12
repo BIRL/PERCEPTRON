@@ -103,14 +103,35 @@ namespace PerceptronLocalService
 
         }
 
+        private List<List<ProteinDto>> ParameterBasedDbSelection(SearchParametersDto parameters, List<List<ProteinDto>> AllDatabasesOfProteins)
+        {
+            var SqlDatabases = new List<List<ProteinDto>>() { new List<ProteinDto>(), new List<ProteinDto>() };
+
+            if (parameters.ProtDb == "Human")  // For Selecting Simple Human Database
+            {
+                SqlDatabases[0] = AllDatabasesOfProteins[0];
+                if (parameters.FDRCutOff != "N/A")      // Will work for FDR side. ...For Selecting Human Decoy Database
+                {
+                    SqlDatabases[1] = AllDatabasesOfProteins[1];
+                }
+            }
+            else       // For Selecting Simple Ecoli Database
+            {
+                SqlDatabases[0] = AllDatabasesOfProteins[2];
+                if (parameters.FDRCutOff != "N/A")       // Will work for FDR side. ...For Selecting Ecoli Decoy Database
+                {
+                    SqlDatabases[1] = AllDatabasesOfProteins[3];
+                }
+            }
+            return SqlDatabases;
+        }
 
         public void Start()
         {
-            Stopwatch Time = new Stopwatch();
-            Time.Start();
-            var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins("Human");
-            Time.Stop();
-
+            Stopwatch AllDatabasesOfProteinsTime = new Stopwatch();
+            AllDatabasesOfProteinsTime.Start();
+            var AllDatabasesOfProteins = FastaReader.FetchingSqlDatabaseProteins();   // Will fetch all four databases (Human, Human Decoy, Ecoli, Ecoli Decoy)
+            AllDatabasesOfProteinsTime.Stop();
 
             while (true)
             {
@@ -118,14 +139,14 @@ namespace PerceptronLocalService
                 var pendingJobs = _dataLayer.ServerStatus();
                 var pendingJobsParameters = pendingJobs.Select(element => _dataLayer.GetParameters(element.QueryId));
 
-
                 //MoveResultFilesToResultsToBeDeletedFolder();  //COMMENTED FOR THE TIME BEING...!!!  //20201224
-
-
                 foreach (var searchParameters in pendingJobsParameters)
                 {
                     //Send_Results_Link(searchParameters);
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
+
+                    var SqlDatabases = ParameterBasedDbSelection(searchParameters, AllDatabasesOfProteins);
+
                     var TotalTime = new Stopwatch();
                     TotalTime.Start();
                     PerformSearch(searchParameters, SqlDatabases);
@@ -143,7 +164,7 @@ namespace PerceptronLocalService
             //ignored
         }
 
-        public void MoveResultFilesToResultsToBeDeletedFolder()   //For moving Result Files from ResultsReadilyAvailable to ResultsToBeDeleted
+        public void MoveResultFilesToResultsToBeDeletedFolder()   //No need for moving just delete the result files except of last 2 days
         {
             string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable";
             string NewPath = @"C:\PerceptronResultsDownload\ResultsToBeDeleted\";
@@ -275,11 +296,11 @@ namespace PerceptronLocalService
                 }
             }
 
-                //Logging.CreateDirectory();
-                //Logging.DumpParameters(parameters);
+            //Logging.CreateDirectory();
+            //Logging.DumpParameters(parameters);
 
-                //var counter = 0;
-                string EmailMsg = "";
+            //var counter = 0;
+            string EmailMsg = "";
             int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 

@@ -17,22 +17,31 @@ namespace PerceptronLocalService.Engine
 {
     public class FastaReader
     {
-        public static List<ProteinDto> MainMethod()
+        public static List<List<ProteinDto>> FetchingSqlDatabaseProteins()
+        {
+            var AllDatabasesOfProteins = new List<List<ProteinDto>>();
+
+            string CurrentDirectory = Directory.GetCurrentDirectory();
+            string DatabasesFolder = CurrentDirectory.Replace("\\bin\\Debug", "\\ProteinDatabasesInFastaFormat\\");
+            List<string> DatabaseFileNames = new List<string>() { "Human.fasta", "HumanDecoyDB.fasta", "EColi.fasta", "EColiDecoyDB.fasta" };
+            
+            for (int index = 0; index < DatabaseFileNames.Count; index++)
+            {
+                string FastaFullFileName = DatabasesFolder + DatabaseFileNames[index];
+                AllDatabasesOfProteins.Add(EachFileCandidateProteinsFetching(FastaFullFileName));
+            }
+            return AllDatabasesOfProteins;
+        }
+
+        public static List<ProteinDto> EachFileCandidateProteinsFetching(string FastaFullFileName)
         {
             try
             {
                 //Stopwatch Time = Stopwatch.StartNew();
                 //Time.Start();
+                
+
                 var tempD = new List<FastaProteinDataDto>();
-                string Path = @"E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\_FastaDatabases\";  // Add here fasta file location        //       C:\Users\Administrator\Desktop\
-
-                //string s = System.IO.Directory.GetCurrentDirectory();
-                string FileName = "Human.fasta";  //Add here fasta File Name
-                string FastaFullFileName = Path + FileName;
-                string DatabaseToBeUpdated = "HumanDecoy";
-
-                var ExcelFileName = Path + FileName + ".xlsx";
-
 
                 var FastaFile = new StreamReader(FastaFullFileName);
                 var ReadPeripheralFastaFile = new StreamReader(FastaFullFileName); // Reading same file but for using ReadLine() method separately...!
@@ -98,7 +107,7 @@ namespace PerceptronLocalService.Engine
                             break;
                         }
                     }
-                    GetSequenceInfoData(tempHeader, tempFastaHeader, Path, FileName, tempSequence, FastaProteinInfo);
+                    GetSequenceInfoData(tempHeader, tempFastaHeader, tempSequence, FastaProteinInfo);
 
                 }
                 //FastaProteinInfo = FastaProteinInfo.OrderByDescending(n => n.MolecularWeight).ToList();  //Sort By Descending Order         //ITS HEALTHY
@@ -153,7 +162,7 @@ namespace PerceptronLocalService.Engine
             }
         }
 
-        public static void GetSequenceInfoData(string Header, string FastaHeader, string Path, string FileName, string Sequence, List<ProteinDto> FastaProteinInfo)
+        public static void GetSequenceInfoData(string Header, string FastaHeader,  string Sequence, List<ProteinDto> FastaProteinInfo)       //   string Path, string FileName,
         {//This method will calculate Insilico Left & Right Ion Fragments
             
 

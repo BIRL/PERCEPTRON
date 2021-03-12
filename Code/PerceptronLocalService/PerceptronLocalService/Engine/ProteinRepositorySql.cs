@@ -179,109 +179,103 @@ namespace PerceptronLocalService.Engine
             return query;
         }
 
+        //public List<List<ProteinDto>> FetchingSqlDatabaseProteins()
+        //{
+        //    List<List<ProteinDto>> SqlDatabases = new List<List<ProteinDto>>(ListOfDatabases.Count) { };
 
 
+            
+
+        //    return SqlDatabases;
 
 
+        //    //SearchParametersDto parameters = new SearchParametersDto();    //Placeholder
+        //    //string query;
+        //    //string connectionString;
 
 
-        public List<List<ProteinDto>> FetchingSqlDatabaseProteins(string ProteinDb)
-        {
-
-            List<List<ProteinDto>> SqlDatabases = new List<List<ProteinDto>>(2) { new List<ProteinDto>(), new List<ProteinDto>() };
-
-            SqlDatabases[0] = FastaReader.MainMethod();
-
-            return SqlDatabases;
-
-
-            SearchParametersDto parameters = new SearchParametersDto();    //Placeholder
-            string query;
-            string connectionString;
-
-
-            ConvertStringListToDoubleList _ConvertStringListToDoubleList = new ConvertStringListToDoubleList();
+        //    //ConvertStringListToDoubleList _ConvertStringListToDoubleList = new ConvertStringListToDoubleList();
 
             
 
 
-            Stopwatch ProteinFetchingTime = new Stopwatch();         // DELME Execution Time Working
-            Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
-            ProteinFetchingTime.Start();              // DELME Execution Time Working
+        //    //Stopwatch ProteinFetchingTime = new Stopwatch();         // DELME Execution Time Working
+        //    //Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
+        //    //ProteinFetchingTime.Start();              // DELME Execution Time Working
 
-            int iterate = 1;
-            if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210309
-            {
-                iterate = 2;
-            }
-
-
-
-            for (int iterations = 0; iterations < iterate; iterations++)
-            {
-
-                if (iterations == 0)
-                {
-                    query = GetQuery(parameters.ProtDb);
-                    connectionString = GetConnectionString(parameters.ProtDb);
-                }
-                else
-                {
-                    string DbName = parameters.ProtDb + "Decoy";
-                    query = GetQuery(DbName);
-                    connectionString = GetConnectionString(DbName);
-                }
-
-
-                List<SerializedProteinDataDto> FetchedSqlProteins = new List<SerializedProteinDataDto>();  //Updated 20201208 - Initialized
-                OneCallTime.Start();              // DELME Execution Time Working
-
-                using (var connection = new SqlConnection(connectionString))
-                {
-                    FetchedSqlProteins = connection.Query<SerializedProteinDataDto>(query).ToList();
-                }
-                OneCallTime.Stop();              // DELME Execution Time Working
-                int Capacity = FetchedSqlProteins.Count;    //Updated 20201210
-                var SqlDatabaseProteins = new List<ProteinDto>(Capacity);  //Updated 20201210
-
-                for (int iter = 0; iter < Capacity; iter++)   //Updated 20201210  //   MyNotes - apply here for loop not a foreach loop
-                {                                                   ///  MyNotes - PERCEPTRON NOTES
-
-
-                    var proteinInfo = FetchedSqlProteins[iter];  //Updated 20201210
-
-                    //if ((proteinInfo.ID == "P77481") || (proteinInfo.ID == "P37760") || (proteinInfo.ID == "P0A7H6") || (proteinInfo.ID == "P0A817") || (proteinInfo.ID == "P77671"))   //DELME
-                    {
+        //    //int iterate = 1;
+        //    //if (parameters.FDRCutOff != "N/A") // Will work for FDR side   //Updated 20210309
+        //    //{
+        //    //    iterate = 2;
+        //    //}
 
 
 
+        //    //for (int iterations = 0; iterations < iterate; iterations++)
+        //    //{
 
-                        var insilico = new InsilicoObjectDto()
-                        {
-                            InsilicoMassLeft = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.Insilico.Split(',')),
-                            InsilicoMassRight = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.InsilicoR.Split(','))   // InsilicoR
-                        };
-                        // Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
+        //    //    if (iterations == 0)
+        //    //    {
+        //    //        query = GetQuery(parameters.ProtDb);
+        //    //        connectionString = GetConnectionString(parameters.ProtDb);
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        string DbName = parameters.ProtDb + "Decoy";
+        //    //        query = GetQuery(DbName);
+        //    //        connectionString = GetConnectionString(DbName);
+        //    //    }
 
 
-                        var protein = new ProteinDto()
-                        {
-                            Header = proteinInfo.ID,
-                            InsilicoDetails = insilico,
-                            Mw = proteinInfo.MW,
-                            Sequence = proteinInfo.Seq,
-                            OriginalSequence = proteinInfo.Seq
+        //    //    List<SerializedProteinDataDto> FetchedSqlProteins = new List<SerializedProteinDataDto>();  //Updated 20201208 - Initialized
+        //    //    OneCallTime.Start();              // DELME Execution Time Working
 
-                        };
+        //    //    using (var connection = new SqlConnection(connectionString))
+        //    //    {
+        //    //        FetchedSqlProteins = connection.Query<SerializedProteinDataDto>(query).ToList();
+        //    //    }
+        //    //    OneCallTime.Stop();              // DELME Execution Time Working
+        //    //    int Capacity = FetchedSqlProteins.Count;    //Updated 20201210
+        //    //    var SqlDatabaseProteins = new List<ProteinDto>(Capacity);  //Updated 20201210
 
-                        SqlDatabaseProteins.Add(protein);   //  MyNotes - Assign Capacity of SqlDatabaseProteins
-                    }       //DELME
-                }
-                SqlDatabases[iterations] = SqlDatabaseProteins;
-            }
-            ProteinFetchingTime.Stop();       // DELME Execution Time Working
-            return SqlDatabases;
-        }
+        //    //    for (int iter = 0; iter < Capacity; iter++)   //Updated 20201210  //   MyNotes - apply here for loop not a foreach loop
+        //    //    {                                                   ///  MyNotes - PERCEPTRON NOTES
+
+
+        //    //        var proteinInfo = FetchedSqlProteins[iter];  //Updated 20201210
+
+        //    //        //if ((proteinInfo.ID == "P77481") || (proteinInfo.ID == "P37760") || (proteinInfo.ID == "P0A7H6") || (proteinInfo.ID == "P0A817") || (proteinInfo.ID == "P77671"))   //DELME
+        //    //        {
+
+
+
+
+        //    //            var insilico = new InsilicoObjectDto()
+        //    //            {
+        //    //                InsilicoMassLeft = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.Insilico.Split(',')),
+        //    //                InsilicoMassRight = _ConvertStringListToDoubleList.ConvertStringToDouble(proteinInfo.InsilicoR.Split(','))   // InsilicoR
+        //    //            };
+        //    //            // Description Updated 20200917 --- Last Elements of InsilicoMassLeft & InsilicoMassRight are the "MW of Protein - Water" so, it will be removed in TerminalModificationsCPU.cs (Method: EachProteinTerminalModifications)
+
+
+        //    //            var protein = new ProteinDto()
+        //    //            {
+        //    //                Header = proteinInfo.ID,
+        //    //                InsilicoDetails = insilico,
+        //    //                Mw = proteinInfo.MW,
+        //    //                Sequence = proteinInfo.Seq,
+        //    //                OriginalSequence = proteinInfo.Seq
+
+        //    //            };
+
+        //    //            SqlDatabaseProteins.Add(protein);   //  MyNotes - Assign Capacity of SqlDatabaseProteins
+        //    //        }       //DELME
+        //    //    }
+        //    //    SqlDatabases[iterations] = SqlDatabaseProteins;
+        //    //}
+        //    //ProteinFetchingTime.Stop();       // DELME Execution Time Working
+        //    //return SqlDatabases;
+        //}
 
 
         public CandidateProteinListsDto ExtractProteins(double IntactMass, SearchParametersDto parameters, List<PstTagList> PstTags, List<ProteinDto> SqlDatabaseProteins)
