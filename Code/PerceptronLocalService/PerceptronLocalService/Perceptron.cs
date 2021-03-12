@@ -126,8 +126,29 @@ namespace PerceptronLocalService
             return SqlDatabases;
         }
 
+        private bool CheckGpu()
+        {
+            bool IsGpu = false;
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
+            string graphicsCard = string.Empty;
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                foreach (PropertyData property in mo.Properties)
+                {
+                    if (property.Name == "Description")
+                    {
+                        graphicsCard = property.Value.ToString();
+                        IsGpu = true;
+                    }
+                }
+            }
+            return IsGpu;
+        }
+
+
         public void Start()
         {
+            bool IsGpu = CheckGpu();   // Check is Gpu exist into the system
             Stopwatch AllDatabasesOfProteinsTime = new Stopwatch();
             AllDatabasesOfProteinsTime.Start();
             var AllDatabasesOfProteins = FastaReader.FetchingSqlDatabaseProteins();   // Will fetch all four databases (Human, Human Decoy, Ecoli, Ecoli Decoy)
@@ -149,7 +170,7 @@ namespace PerceptronLocalService
 
                     var TotalTime = new Stopwatch();
                     TotalTime.Start();
-                    PerformSearch(searchParameters, SqlDatabases);
+                    PerformSearch(IsGpu, searchParameters, SqlDatabases);
                     TotalTime.Stop();
                     string time = TotalTime.Elapsed.ToString();
                     int a = 1;
@@ -281,20 +302,9 @@ namespace PerceptronLocalService
         }
 
 
-        private void PerformSearch(SearchParametersDto parameters, List<List<ProteinDto>> SqlDatabases)
+        private void PerformSearch(bool IsGpu, SearchParametersDto parameters, List<List<ProteinDto>> SqlDatabases)
         {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
-            string graphicsCard = string.Empty;
-            foreach (ManagementObject mo in searcher.Get())
-            {
-                foreach (PropertyData property in mo.Properties)
-                {
-                    if (property.Name == "Description")
-                    {
-                        graphicsCard = property.Value.ToString();
-                    }
-                }
-            }
+            
 
             //Logging.CreateDirectory();
             //Logging.DumpParameters(parameters);
@@ -363,59 +373,55 @@ namespace PerceptronLocalService
 
                     //Step 1 - 1st Algorithm - Mass Tuner 
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
-                    
-                    //// --- GPU Code Below ---   Updated: 20210223
-                    //double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
-                    //double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
-                    //for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
-                    //{
-                    //    PeakListMasses[i] = massSpectrometryData.Mass[i];
-                    //    PeakListIntensities[i] = massSpectrometryData.Intensity[i];
-                    //}
-                    //int PeakListLength = massSpectrometryData.Mass.Count;
-                    //int AutoTune, DenovoAllow;
-                    //if (parameters.Autotune == "True")
-                    //    AutoTune = 1;
-                    //else
-                    //    AutoTune = 0;
-                    //if (parameters.DenovoAllow == "True")
-                    //    DenovoAllow = 1;
-                    //else
-                    //    DenovoAllow = 0;
+                    var PstTags = new List<PstTagList>();
 
-                    //ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
-                    //Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
-                    //Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
-                    //massTunerGpuTime.Start();
-                    //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
-                    //massTunerGpuTime.Stop();
-                    //// --- GPU Code Above ---   Updated: 20210223
+                    if (IsGpu == false)  // CPU side Mass Tuner & Pst
+                    {
+                        //Logging.DumpMwTunerResult(massSpectrometryData);
+                        ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
+                        //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
+                        PstTime.Start();
+                        
+                        PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
+                        PstTime.Stop();
+                    }
+                    else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
+                    {
+                        double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
+                        double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
+                        for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
+                        {
+                            PeakListMasses[i] = massSpectrometryData.Mass[i];
+                            PeakListIntensities[i] = massSpectrometryData.Intensity[i];
+                        }
+                        int PeakListLength = massSpectrometryData.Mass.Count;
+                        int AutoTune, DenovoAllow;
+                        if (parameters.Autotune == "True")
+                            AutoTune = 1;
+                        else
+                            AutoTune = 0;
+                        if (parameters.DenovoAllow == "True")
+                            DenovoAllow = 1;
+                        else
+                            DenovoAllow = 0;
 
-                    ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
+                        ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, 
+                            parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
+                        Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
+                        Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
+                        massTunerGpuTime.Start();
+                        massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
+                        massTunerGpuTime.Stop();
+                    }   //// --- GPU Code Above ---   Updated: 20210223
 
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
-                        massSpectrometryData.WholeProteinMolecularWeight = old;/// UNCOMMENT IT!! If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
+                        massSpectrometryData.WholeProteinMolecularWeight = old; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
                     }
 
-                    //Logging.DumpMwTunerResult(massSpectrometryData);
-
-
-                    //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
-                    PstTime.Start();
-                    var PstTags = new List<PstTagList>();
-                    PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
-                    PstTime.Stop();
-                    /////////////DEL ME 
-                    ///
-                    //var PstListSting = new List<string>();
-                    //for (int iPst = 0; iPst<PstTags.Count; iPst++)
-                    //{
-                    //    PstListSting.Add(PstTags[iPst].PstTags);
-                    //}
+                    
 
                     //Logging.DumpModifiedProteins(candidateProteins);
-
                     List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
 
                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
