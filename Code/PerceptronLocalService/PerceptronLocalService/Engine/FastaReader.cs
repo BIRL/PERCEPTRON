@@ -41,7 +41,7 @@ namespace PerceptronLocalService.Engine
                 //Time.Start();
                 
 
-                var tempD = new List<FastaProteinDataDto>();
+                //var tempD = new List<FastaProteinDataDto>();
 
                 var FastaFile = new StreamReader(FastaFullFileName);
                 var ReadPeripheralFastaFile = new StreamReader(FastaFullFileName); // Reading same file but for using ReadLine() method separately...!
@@ -126,41 +126,38 @@ namespace PerceptronLocalService.Engine
             }
         }
 
+        //private static void GetConnectionString(List<FastaProteinDataDto> FastaProteinInfo, string DatabaseToBeUpdated)
+        //{
 
+        //    try
+        //    {
+        //        string ConnetionString = "Data Source=****-II;Initial Catalog=HumanDecoy;Integrated Security=True";
 
+        //        //ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
+        //        SqlConnection Connection = new SqlConnection(ConnetionString);
+        //        Connection.Open();
 
-        private static void GetConnectionString(List<FastaProteinDataDto> FastaProteinInfo, string DatabaseToBeUpdated)
-        {
+        //        var QueryInfo = "";
 
-            try
-            {
-                string ConnetionString = "Data Source=****-II;Initial Catalog=HumanDecoy;Integrated Security=True";
+        //        for (int index = 0; index < FastaProteinInfo.Count; index++)
+        //        {
 
-                //ConfigurationManager.ConnectionStrings["EcoliConnectionStringName"].ConnectionString;
-                SqlConnection Connection = new SqlConnection(ConnetionString);
-                Connection.Open();
+        //            QueryInfo = "Insert INTO " + DatabaseToBeUpdated + ".dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR, FastaHeader) Values ('"
+        //             + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "','" + FastaProteinInfo[index].FastaHeader + "')";
 
-                var QueryInfo = "";
+        //            var Command = new SqlCommand(QueryInfo, Connection);
+        //            Command.ExecuteNonQuery();
+        //        }
+        //        //db.SaveChanges();
 
-                for (int index = 0; index < FastaProteinInfo.Count; index++)
-                {
+        //        Connection.Close();
+        //    }
 
-                    QueryInfo = "Insert INTO " + DatabaseToBeUpdated + ".dbo.ProteinInfoes (ID,MW, Seq, Insilico, InsilicoR, FastaHeader) Values ('"
-                     + FastaProteinInfo[index].ID + "'," + FastaProteinInfo[index].MolecularWeight + ",'" + FastaProteinInfo[index].Sequence + "','" + FastaProteinInfo[index].InsilicoLeft + "','" + FastaProteinInfo[index].InsilicoRight + "','" + FastaProteinInfo[index].FastaHeader + "')";
-
-                    var Command = new SqlCommand(QueryInfo, Connection);
-                    Command.ExecuteNonQuery();
-                }
-                //db.SaveChanges();
-
-                Connection.Close();
-            }
-
-            catch (Exception e)
-            {
-                throw;
-            }
-        }
+        //    catch (Exception e)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         public static void GetSequenceInfoData(string Header, string FastaHeader,  string Sequence, List<ProteinDto> FastaProteinInfo)       //   string Path, string FileName,
         {//This method will calculate Insilico Left & Right Ion Fragments
@@ -231,26 +228,6 @@ namespace PerceptronLocalService.Engine
         {'Z', 128.5506}  //Z = avg(E,Q)
         };
 
-    }
-
-    public class FastaProteinDataDto
-    {
-        public string ID;
-        public string Sequence;
-        public double MolecularWeight;
-        public List<double> InsilicoLeft = new List<double>();
-        public List<double> InsilicoRight = new List<double>();
-        public string FastaHeader;
-
-        public FastaProteinDataDto(string cID, double cMolecularWeight, string cSequence, List<double> cInsilicoLeft, List<double> cInsilicoRight, string cFastaHeader)
-        {
-            ID = cID;
-            MolecularWeight = cMolecularWeight;
-            Sequence = cSequence;
-            InsilicoLeft = cInsilicoLeft;
-            InsilicoRight = cInsilicoRight;
-            FastaHeader = cFastaHeader;
-        }
     }
 }
 
