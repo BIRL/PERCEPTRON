@@ -129,19 +129,19 @@ namespace PerceptronLocalService
         private bool CheckGpu()
         {
             bool IsGpu = false;
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");
-            string graphicsCard = string.Empty;
-            foreach (ManagementObject mo in searcher.Get())
-            {
-                foreach (PropertyData property in mo.Properties)
-                {
-                    if (property.Name == "Description")
-                    {
-                        graphicsCard = property.Value.ToString();
-                        IsGpu = true;
-                    }
-                }
-            }
+            //ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");    //ITS HEALTHY....    
+            //string graphicsCard = string.Empty;
+            //foreach (ManagementObject mo in searcher.Get())
+            //{
+            //    foreach (PropertyData property in mo.Properties)
+            //    {
+            //        if (property.Name == "Description")
+            //        {
+            //            graphicsCard = property.Value.ToString();
+            //            IsGpu = true;
+            //        }
+            //    }
+            //}
             return IsGpu;
         }
 
@@ -177,7 +177,6 @@ namespace PerceptronLocalService
                 }
                 //System.Threading.Thread.Sleep(10000);
             }
-
         }
 
         public void Stop()
@@ -564,27 +563,7 @@ namespace PerceptronLocalService
                         _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
                         EvalueTime.Stop();
 
-                        ////DEL ME 
-                        //string FinalFileWithPath = @"C:\PerceptronResultsDownload\FinalScoring.txt";
-                        //if (File.Exists(FinalFileWithPath))
-                        //    File.Delete(FinalFileWithPath); //Deleted Pre-existing file
-
-                        //var finalfout = new FileStream(FinalFileWithPath, FileMode.OpenOrCreate);
-                        //var finalSw = new StreamWriter(finalfout);
-
-                        //var TOBeDel = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
-                        //for (int i3 = 0; i3 < FinalCandidateProteinListforFinalScoring.Count; i3++)
-                        //{
-                        //    TOBeDel.Add(FinalCandidateProteinListforFinalScoring[i3].Header);
-
-                        //    finalSw.WriteLine(FinalCandidateProteinListforFinalScoring[i3].Header);
-                        //}
-                        //finalSw.Close();
-                        ////DEL ME
-
                         //Logging.DumpTotalScores(candidateProteins);
-
-
                         if (iterations == 0)
                         {
                             // Results Download Part 2 of 3  BELOW //
@@ -646,38 +625,7 @@ namespace PerceptronLocalService
 
                             //DecoyTopFinalCandidateProteinList.Add(FinalCandidateProteinListforFinalScoring[0]);
                         }
-
-
-
-
-                        //////////DEL ME   // Dummy Code for Testing FileFormats
-
-                        ////////string FileWithPath = @"C:\PerceptronResultsDownload\StringList.txt";
-                        ////////if (File.Exists(FileWithPath))
-                        ////////    File.Delete(FileWithPath); //Deleted Pre-existing file
-
-                        ////////var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
-                        ////////var sw = new StreamWriter(fout);
-
-
-                        ////////var stringList = new List<string>(FinalCandidateProteinListforFinalScoring.Count);
-                        ////////for (int i = 0; i < FinalCandidateProteinListforFinalScoring.Count; i++)
-                        ////////{
-                        ////////    stringList.Add(FinalCandidateProteinListforFinalScoring[i].Header);
-                        ////////    sw.WriteLine(FinalCandidateProteinListforFinalScoring[i].Header);
-                        ////////}
-
-                        ////////sw.Close();
-
-                        //////////DEL ME
                     }
-
-
-
-
-
-
-
                 }
                 catch (Exception r)
                 {
