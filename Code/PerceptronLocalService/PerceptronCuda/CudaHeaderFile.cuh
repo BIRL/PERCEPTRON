@@ -17,6 +17,8 @@
 #include <chrono>
 #include <math.h>
 
+#ifndef CudaHeaderFile_h
+#define CudaHeaderFile_h
 
 __device__ int dev_data[50];
 __device__ int dev_count = 0;
@@ -35,6 +37,29 @@ struct ParametersToCpp
 	int DenovoAllow;
 	int MinimumPstLength;
 	int MaximumPstLength;
+};
+
+struct ProteinStruct
+{
+	char* Header;
+	double InsilicoScore;
+	int MatchCounter;
+	int LeftMatchedIndex[100];
+	int RightMatchedIndex[100];
+	int LeftPeakIndex[100];
+	int RightPeakIndex[100];
+	char* LeftType[100];
+	char* RightType[100];
+	double InsilicoMassLeft[100];
+	double InsilicoMassRight[100];
+	double InsilicoMassLeftAo[100];
+	double InsilicoMassLeftBo[100];
+	double InsilicoMassLeftAstar[100];
+	double InsilicoMassLeftBstar[100];
+	double InsilicoMassRightYo[100];
+	double InsilicoMassRightYstar[100];
+	double InsilicoMassRightZo[100];
+	double InsilicoMassRightZoo[100];
 };
 
 typedef struct _WindowCapturedElementsStruct
@@ -75,7 +100,7 @@ typedef struct _PeptideSequenceTags
 	double RMSE;
 } peptidesequencetags;
 
-__device__ void my_push_back(double *dev_PeakListMassesSum, double *dev_PeakListIntensitiesAverage, double summationOfMasses, double averageOfIntensities)
+inline __device__ void my_push_back(double *dev_PeakListMassesSum, double *dev_PeakListIntensitiesAverage, double summationOfMasses, double averageOfIntensities)
 {
 	int insert_pt = atomicAdd(&dev_count, 1);
 	dev_PeakListMassesSum[insert_pt] = summationOfMasses;
@@ -83,7 +108,7 @@ __device__ void my_push_back(double *dev_PeakListMassesSum, double *dev_PeakList
 	return;
 }
 
-__device__ void PST_push_back(_DataForPsts *SingleLengthPSTs_ptr, int tid, int i, double StartIndMass, double EndIndMass, double differenceOfMasses, char aminoAcidSymbol, double TagError, double averageOfIntensities)
+inline __device__ void PST_push_back(_DataForPsts *SingleLengthPSTs_ptr, int tid, int i, double StartIndMass, double EndIndMass, double differenceOfMasses, char aminoAcidSymbol, double TagError, double averageOfIntensities)
 {
 	int insert_ptr = atomicAdd(&dev_pst_count, 1);
 	SingleLengthPSTs_ptr[insert_ptr].startIndex = tid;
@@ -97,7 +122,7 @@ __device__ void PST_push_back(_DataForPsts *SingleLengthPSTs_ptr, int tid, int i
 	return;
 }
 
-__device__ void window_push_back(_WindowCapturedElementsStruct *windowcapturedelements, double a, int b)
+inline __device__ void window_push_back(_WindowCapturedElementsStruct *windowcapturedelements, double a, int b)
 {
 	int insert_ptr = atomicAdd(&dev_wind_count, 1);
 	windowcapturedelements[insert_ptr].TunedMass = a;
@@ -105,7 +130,7 @@ __device__ void window_push_back(_WindowCapturedElementsStruct *windowcapturedel
 	return;
 }
 
-__device__ char * my_strcpy(char *dest, const char *src) {
+inline __device__ char * my_strcpy(char *dest, const char *src) {
 	int i = 0;
 	do {
 		dest[i] = src[i];
@@ -173,6 +198,7 @@ __global__ void WindowLaunchKernel(int NumOfThreadsToLaunch, double minSum, doub
 		window_push_back(windowcapturedelements, TunedMass, elementCount);
 	}
 }
+#endif
 
 //
 //
