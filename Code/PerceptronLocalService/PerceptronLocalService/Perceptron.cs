@@ -23,30 +23,6 @@ using PerceptronLocalService.Models;
 
 namespace PerceptronLocalService
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct ParametersToCpp
-    {
-        public double MwTolerance;
-        public double NeutralLoss;
-        public double SliderValue;
-        public double HopThreshhold;
-        public int Autotune;
-        public int DenovoAllow;
-        public int MinimumPstLength;
-        public int MaximumPstLength;
-
-        public ParametersToCpp(double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshhold, int Autotune, int DenovoAllow, int MinimumPstLength, int MaximumPstLength)
-        {
-            this.MwTolerance = MwTolerance;
-            this.NeutralLoss = NeutralLoss;
-            this.SliderValue = SliderValue;
-            this.HopThreshhold = HopThreshhold;
-            this.Autotune = Autotune;
-            this.DenovoAllow = DenovoAllow;
-            this.MinimumPstLength = MinimumPstLength;
-            this.MaximumPstLength = MaximumPstLength;
-        }
-    }
     public class Perceptron
     {
         readonly IPeptideSequenceTagScoring _pstFilter;
@@ -129,19 +105,20 @@ namespace PerceptronLocalService
         private bool CheckGpu()
         {
             bool IsGpu = false;
-            //ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");    //ITS HEALTHY....    
-            //string graphicsCard = string.Empty;
-            //foreach (ManagementObject mo in searcher.Get())
-            //{
-            //    foreach (PropertyData property in mo.Properties)
-            //    {
-            //        if (property.Name == "Description")
-            //        {
-            //            graphicsCard = property.Value.ToString();
-            //            IsGpu = true;
-            //        }
-            //    }
-            //}
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DisplayConfiguration");    //ITS HEALTHY....    
+            string graphicsCard = string.Empty;
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                foreach (PropertyData property in mo.Properties)
+                {
+                    if (property.Name == "Description")
+                    {
+                        graphicsCard = property.Value.ToString();
+                        NativeCudaCalls.InitializingGpu();
+                        IsGpu = true;
+                    }
+                }
+            }
             return IsGpu;
         }
 
@@ -386,31 +363,8 @@ namespace PerceptronLocalService
                     }
                     else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
                     {
-                        double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
-                        double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
-                        for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
-                        {
-                            PeakListMasses[i] = massSpectrometryData.Mass[i];
-                            PeakListIntensities[i] = massSpectrometryData.Intensity[i];
-                        }
-                        int PeakListLength = massSpectrometryData.Mass.Count;
-                        int AutoTune, DenovoAllow;
-                        if (parameters.Autotune == "True")
-                            AutoTune = 1;
-                        else
-                            AutoTune = 0;
-                        if (parameters.DenovoAllow == "True")
-                            DenovoAllow = 1;
-                        else
-                            DenovoAllow = 0;
+                        
 
-                        ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, 
-                            parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength);
-                        Stopwatch massTunerGpuTime = new Stopwatch();         // DELME Execution Time Working
-                        Stopwatch OneCallTime = new Stopwatch();         // DELME Execution Time Working
-                        massTunerGpuTime.Start();
-                        massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
-                        massTunerGpuTime.Stop();
                     }   //// --- GPU Code Above ---   Updated: 20210223
 
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
@@ -1068,6 +1022,54 @@ namespace PerceptronLocalService
             }
             return peakList;
         }
+
+        private MassTunerAndPstCombinedStruct[] ExecuteMassTunerModuleGpu(MsPeaksDto massSpectrometryData, SearchParametersDto parameters, ExecutionTimeDto executionTimes)
+        {
+            Stopwatch moduleTimer = Stopwatch.StartNew();
+            double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
+            double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
+            double[] PeakListIntensitiesForSpectralComp = new double[massSpectrometryData.Intensity.Count];
+            for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
+            {
+                PeakListMasses[i] = massSpectrometryData.Mass[i];
+                PeakListIntensities[i] = massSpectrometryData.Intensity[i];
+                //if (massSpectrometryData.Intensity[i] < 0.000092)
+                //    PeakListIntensitiesForSpectralComp[i] = 0.001;
+                //else
+                //    PeakListIntensitiesForSpectralComp[i] = 1;
+            }
+            int PeakListLength = massSpectrometryData.Mass.Count;
+            int AutoTune, DenovoAllow;
+            if (parameters.Autotune == "True")
+                AutoTune = 1;
+            else
+                AutoTune = 0;
+            if (parameters.DenovoAllow == "True")
+                DenovoAllow = 1;
+            else
+                DenovoAllow = 0;
+
+            ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
+
+            //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
+
+            IntPtr[] pResultsFromGpu = new IntPtr[5000];
+
+            for (int i = 0; i < 5000; i++)
+                pResultsFromGpu[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MassTunerAndPstCombinedStruct)));
+
+            int SizeOfDataFromGpu = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp, pResultsFromGpu);
+
+            MassTunerAndPstCombinedStruct[] returnArray = new MassTunerAndPstCombinedStruct[SizeOfDataFromGpu];
+            for (int i = 0; i < SizeOfDataFromGpu; i++)
+            {
+                returnArray[i] = (MassTunerAndPstCombinedStruct)Marshal.PtrToStructure(pResultsFromGpu[i], typeof(MassTunerAndPstCombinedStruct));
+            }
+
+            moduleTimer.Stop();
+            executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
+            return returnArray;
+        }
     }
 
     // --- GPU Code Below ---   Updated: 20210223
@@ -1075,12 +1077,30 @@ namespace PerceptronLocalService
     {
         private const string DllFilePath = @"E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
- 
-        private extern static double wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
-        public static double WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
+        private extern static void MainInitializer();
+        public static void InitializingGpu()
         {
-            return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
+            MainInitializer();
         }
+        //private extern static double wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
+        //public static double WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
+        //{
+        //    return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
+        //}
+        [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+        private extern static int wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters, IntPtr[] pResultsFromGpu);
+        public static int WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters, IntPtr[] pResultsFromGpu)
+        {
+            return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters, pResultsFromGpu);
+        }
+
+        [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+        private extern static void insilicospectralcomparisongpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount);
+        public static void InsilicoSpectralComparisonGpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount)
+        {
+            insilicospectralcomparisongpu(Parameters, candidateProteins, PeakListMasses, PeakListIntensitiesForSpectralComp, PeakListCount, candidateProteinsCount);
+        }
+
     }
     // --- GPU Code Above ---   Updated: 20210223
 }
