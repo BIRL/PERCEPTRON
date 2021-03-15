@@ -32,6 +32,26 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 	}
 }
 
+#pragma pack(1)
+typedef struct MassTunerAndPstCombinedStruct
+{
+	int PstTagLength;	
+	double PstErrorScore;
+	double PstFrequency;
+	double MassTuner;
+	char PstTags[8];
+}masstunerandpstcombinedstruct;
+
+typedef struct ToDefineSizeStruct
+{
+	int sizeOfArray;
+}Todefinesizestruct;
+
+//typedef struct sample {
+//	double *num;
+//	int elements;
+//}mysample;
+
 //	--- Updated: 20210223 ---
 //__device__ int dev_data[50];
 //__device__ int dev_count = 0;
@@ -341,13 +361,15 @@ void FindingUniquePSTs(vector< _PeptideSequenceTags> &Final_MultipleLengthPsts)
 vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<_DataForPsts> Host_SingleLengthPSTs, ParametersToCpp Parameters, int zN)
 {
 	thrust::device_vector<_DataForPsts> Final_SingleLengthPSTs;
-
+	vector<_DataForPsts> lol;
 	for (int i = 0; i < zN; i++)	// Populating the single length PSTs calculated while running mass tuner function
 	{
 		if (Host_SingleLengthPSTs[i].startIndexMass == 0)
 			break;
 		Final_SingleLengthPSTs.push_back(Host_SingleLengthPSTs[i]);
+		lol.push_back(Host_SingleLengthPSTs[i]);
 	}
+	lol[0] = lol[0];
 	_DataForPsts *Final_SingleLengthPSTs_ptr = thrust::raw_pointer_cast(Final_SingleLengthPSTs.data());	// Pointer pointing to single length PST vector that is to be sent to gpu
 
 	thrust::device_vector<_PeptideSequenceTags> dev_MultipleLengthPst(1000);
@@ -415,16 +437,53 @@ vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<
 	return Final_MultipleLengthPsts;
 }
 
-extern "C" __declspec(dllexport) double __cdecl
-wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[], int PeakListLength, ParametersToCpp Parameters)
+//__global__ void test(sample *dev_vptr)
+//{
+//	int a = dev_vptr[0].elements;
+//	double b = dev_vptr[0].num[0];
+//	double c = dev_vptr[0].num[1];
+//	double d = dev_vptr[0].num[2];
+//	double e = dev_vptr[0].num[3];
+//}
+
+extern "C" __declspec(dllexport) int __cdecl
+wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[], int PeakListLength, ParametersToCpp Parameters, MassTunerAndPstCombinedStruct **_MassTunerAndPstCombinedStruct)
 {
+	/*sample x;
+	x.elements = 4;
+	double h_arr[] = { 1, 2, 3, -5 };
+	double *d_arr;
+	cudaMalloc((void**) &(d_arr), sizeof(int)*x.elements);
+	cudaMemcpy(d_arr, h_arr, sizeof(int)*x.elements, cudaMemcpyHostToDevice);
+	x.num = d_arr;
+
+	thrust::device_vector<sample> dev_v;
+	dev_v.push_back(x);
+	dev_v.push_back(x);
+	sample *dev_vptr = thrust::raw_pointer_cast(dev_v.data());
+	test << <1, 1 >> > (dev_vptr);*/
+
+	/*sample x = { 0, 4 };
+	double init[] = { 1, 2, 3, -5 };
+
+	x.num = new double[x.elements];
+
+	for (int i = 0; i < x.elements; i++)
+		x.num[i] = init[i];
+
+	thrust::device_vector<sample> dev_v;
+	dev_v.push_back(x);
+	dev_v.push_back(x);
+	sample *dev_vptr = thrust::raw_pointer_cast(dev_v.data());
+	test << <1, 1 >> > (dev_vptr);*/
+	
 	double WholeProteinMass = PeakListMasses[0];
-	vector<double> masses;  vector<double> intensities;
+	/*vector<double> masses;  vector<double> intensities;
 	for (int i = 0; i < PeakListLength; i++)
 	{
 		masses.push_back(PeakListMasses[i]);
 		intensities.push_back(PeakListIntensities[i]);
-	}
+	}*/
 
 	const int N = PeakListLength;
 	const int zN = (floor(PeakListLength*PeakListLength) / 2) - (floor(PeakListLength / 2));
@@ -436,9 +495,11 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 	double *dev_aminoAcidMassesList; char *dev_aminoAcidSymbolList;
 
 	cudaMalloc((void**)&dev_masses, sizeof(double) * N);
+	auto start = chrono::steady_clock::now();
 	cudaMalloc((void**)&dev_intensities, sizeof(double) * N);
 	cudaMalloc((void**)&dev_aminoAcidMassesList, sizeof(double)*21);
 	cudaMalloc((void**)&dev_aminoAcidSymbolList, sizeof(char)*21);
+	
 
 	thrust::device_vector<double> DevicePeakListMassesSum(zN);
 	double *DevicePeakListMassesSum_ptr = thrust::raw_pointer_cast(DevicePeakListMassesSum.data());
@@ -451,10 +512,12 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 	cudaMemcpy(dev_intensities, PeakListIntensities, N * sizeof(double), cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_aminoAcidMassesList, aminoAcidMassesList, 21 * sizeof(double), cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_aminoAcidSymbolList, aminoAcidSymbolList, 21 * sizeof(char), cudaMemcpyHostToDevice);
-
+	
 	int THREADS = 256;
 	int BLOCKS = (N/THREADS + 5);
+	
 	CalculatingTupleSumsAndSingleLengthPsts << < BLOCKS, THREADS >> > (dev_masses, dev_intensities, DevicePeakListMassesSum_ptr, DevicePeakListAvgIntensities_ptr, SingleLengthPSTs_ptr, dev_aminoAcidMassesList, dev_aminoAcidSymbolList, Parameters.MwTolerance, Parameters.NeutralLoss, Parameters.HopThreshhold, N, Parameters.Autotune, Parameters.DenovoAllow);
+	
 
 	thrust::host_vector<_DataForPsts> Host_SingleLengthPSTs = DeviceSingleLengthPSTs;
 	thrust::host_vector<double> PeakListMassesSum = DevicePeakListMassesSum;
@@ -472,16 +535,15 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 		}
 	}
 
+	double TunedMass = 0.0;
+	if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
+		cudaDeviceSynchronize();
+		return TunedMass = 0.0;
+	}
+
 	std::sort(shortlistedMassSumAndIntensities.begin(), shortlistedMassSumAndIntensities.end(),
 		[](const _ShortlistedMassSumsAndIntensities &mass, const _ShortlistedMassSumsAndIntensities &mass2)
 	{ return (mass.massSum < mass2.massSum); });
-
-	double TunedMass = 0;
-
-	if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
-		cudaDeviceSynchronize();
-		return TunedMass = 0;
-	}
 
 	double minSum = shortlistedMassSumAndIntensities[0].massSum;
 	double maxSum = shortlistedMassSumAndIntensities[shortlistedMassSumAndIntensities.size() - 1].massSum;
@@ -498,9 +560,9 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 
 	int THREADS2 = 256;
 	int BLOCKS2 = (NumOfThreadsToLaunch / THREADS + 5);
-
+	
 	WindowLaunchKernel << <BLOCKS2, THREADS2 >> > (NumOfThreadsToLaunch, minSum, maxSum, raw_ptr, sizeOfShortlistedData, raw_ptr2, SliderValue);
-
+	
 	thrust::host_vector<_WindowCapturedElementsStruct> host_windowcapturedelements = device_windowcapturedelements;
 
 	
@@ -521,13 +583,39 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 			}
 		}
 	}
+	
 
 	// --------- PST STARTS HERE ---------
-
+	
 	vector<_PeptideSequenceTags> PeptideSequenceTags = CalculatingPeptideSequenceTags(Host_SingleLengthPSTs, Parameters, zN);
-
+	auto end = chrono::steady_clock::now();
+	int time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+	
 	// --------- PST ENDS HERE ---------
 
+	ToDefineSizeStruct SizeStruct;
+	SizeStruct.sizeOfArray = PeptideSequenceTags.size();
+
+	for (int i = 0; i < PeptideSequenceTags.size(); i++) {
+		(*_MassTunerAndPstCombinedStruct)->PstTagLength = PeptideSequenceTags[i].PstTagLength;
+		
+		(*_MassTunerAndPstCombinedStruct)->PstErrorScore = PeptideSequenceTags[i].PstErrorScore;
+		(*_MassTunerAndPstCombinedStruct)->PstFrequency = PeptideSequenceTags[i].PstFrequency;
+		(*_MassTunerAndPstCombinedStruct)->MassTuner = TunedMass;
+
+		for (int j = 0; j < PeptideSequenceTags[i].PstTagLength; j++)
+		{
+			(*_MassTunerAndPstCombinedStruct)->PstTags[j] = PeptideSequenceTags[i].PstTag[j];
+		}
+		_MassTunerAndPstCombinedStruct++;
+	}
+	
 	cudaDeviceSynchronize();
-	return TunedMass;
+	return PeptideSequenceTags.size();
 }
+
+//extern "C" __declspec(dllexport) void __cdecl
+//insilicospectralcomparisongpu(ParametersToCpp Parameters, ProteinStruct *candidateProteins, double *PeakListMasses, double *PeakListIntensitiesForSpectralComp)
+//{
+//	int a = 1;
+//}
