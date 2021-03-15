@@ -142,9 +142,11 @@
     <Compile Include="DTO\ExecutionTimeDto.cs" />
     <Compile Include="DTO\FalseDiscoveryRateDto.cs" />
     <Compile Include="DTO\InsilicoObjectDto.cs" />
+    <Compile Include="DTO\MassTunerAndPstCombinedStruct.cs" />
     <Compile Include="DTO\MolecularWeightServiceParametersDto.cs" />
     <Compile Include="DTO\MsPeaksDto.cs" />
     <Compile Include="DTO\newMsPeaksDto.cs" />
+    <Compile Include="DTO\ParametersToCpp.cs" />
     <Compile Include="DTO\PostTranslationModificationsSiteDto.cs" />
     <Compile Include="DTO\ProteinDto.cs" />
     <Compile Include="DTO\PstTagsDto.cs" />

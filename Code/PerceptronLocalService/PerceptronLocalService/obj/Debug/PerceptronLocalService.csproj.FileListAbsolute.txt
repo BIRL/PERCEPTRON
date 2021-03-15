@@ -130,7 +130,6 @@ E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\bin\D
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\bin\Debug\MySql.Data.xml
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\bin\Debug\Newtonsoft.Json.xml
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\bin\Debug\Topshelf.xml
-E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.csprojAssemblyReference.cache
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\Interop.Microsoft.Office.Core.dll
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.csproj.ResolveComReference.cache
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.csproj.CoreCompileInputs.cache
@@ -139,3 +138,4 @@ E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\D
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.csproj.CopyComplete
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.exe
 E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.pdb
+E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\PerceptronLocalService\obj\Debug\PerceptronLocalService.csprojAssemblyReference.cache
