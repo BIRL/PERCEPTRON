@@ -21,6 +21,7 @@ namespace PerceptronAPI
         string UpdatingDatabase(string DatabaseName, List<FastaReaderProteinDataDto> FastaProteinInfo);
 
         ScanInputDataDto ScanInputData(string qid);
+        string StorePerceptronSdkInfo(DateTime JobSubmission, string QueryId, string Title, string UserName);
 
         //List<string> ScanResultsAgainstFileUniqueId(string qid, string FileId);
         //MassSpectrumImagedetail GetImagePathMassSpectrum(string qid);

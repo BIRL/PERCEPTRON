@@ -103,7 +103,7 @@ namespace PerceptronAPI.Controllers
                         StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
 
                         SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), NewUser.EmailAddress, UniqueUserGuid, CreationTime, "VerifyEmail");
-                        return Message = "Dear User, please verfify your email address."; 
+                        return Message = "Dear User, please verfify your email address.";
                     }
                 }
             }
@@ -115,7 +115,6 @@ namespace PerceptronAPI.Controllers
             return Message;
         }
 
-
         [HttpPost]
         [Route("api/user/CallingPerceptronApi_VerfiyingEmailAddress")]
         public async Task<string> VerfiyingEmailAddress(HttpRequestMessage request)
@@ -124,7 +123,6 @@ namespace PerceptronAPI.Controllers
             {
                 var RequestInput = request.Content.ReadAsStringAsync();  //.Content.ToString();  //.
                 string input = RequestInput.Result.ToString();
-
 
                 string[] UserInfoArray = input.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -148,8 +146,7 @@ namespace PerceptronAPI.Controllers
                         client.Update(@"CallingPerceptronApiUsers/" + UserVerfiyingEmailAddress.UserName, FirebaseFetchedUser);
 
                         AddIisManagerUser _AddIisManagerUser = new AddIisManagerUser();
-                        _AddIisManagerUser.CreatingUser(FirebaseFetchedUser.EmailAddress, FirebaseFetchedUser.Password, FtpSiteName, FtpPathDir);
-
+                        _AddIisManagerUser.CreatingUser(FirebaseFetchedUser.UserName, FirebaseFetchedUser.Password, FtpSiteName, FtpPathDir);
 
                         return Message = "Dear User, Your email address has been successfully verified.";
                     }
@@ -159,7 +156,7 @@ namespace PerceptronAPI.Controllers
                 else // If there is not User exists with the given email address.
                     return Message = "There is no Username exists with this Username so, please first signup then, proceed.";
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Message = "Something went wrong if problem still persists then, report a bug on GitHub.";
             }
@@ -176,7 +173,8 @@ namespace PerceptronAPI.Controllers
             var RequestInput = request.Content.ReadAsStringAsync();
             string input = RequestInput.Result.ToString();
 
-            string[] UserInfoArray = input.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var UserInfoArray = new string[36];
+            UserInfoArray = input.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             IFirebaseConfig IFC = new FirebaseConfig()
             {
@@ -186,46 +184,39 @@ namespace PerceptronAPI.Controllers
 
             //UserDetails user = new UserDetails("DummyUser", "123456");
 
-            UserDetails LoggedInUser = new UserDetails(UserInfoArray[0], UserInfoArray[1], UserInfoArray[2], "", "");
+            UserDetails LoggedInUser = new UserDetails(UserInfoArray[31], UserInfoArray[32], UserInfoArray[33], "", "");
             IFirebaseClient client = new FireSharp.FirebaseClient(IFC);
 
 
             FirebaseResponse FirebaseUserData = client.Get(@"CallingPerceptronApiUsers/" + LoggedInUser.UserName);
             UserDetails FirebaseFetchedUser = FirebaseUserData.ResultAs<UserDetails>();
 
-            if (LoggedInUser.UserName == FirebaseFetchedUser.UserName && LoggedInUser.EmailAddress == FirebaseFetchedUser.EmailAddress && LoggedInUser.Password == FirebaseFetchedUser.Password)
-            {
-
-                if (FirebaseFetchedUser.VerfiedUser == "True")
-                {
-                    SearchController _SearchController = new SearchController();
-                    _SearchController.SearchQuery(UserInfoArray);
-                    //////if (UserDetails.IsEqual(ResUser, LoggedInUser))           // ITS HEALTHY...
-                    //////{
-                    //////    int a = 1;
-                    //////    //Send Email for verification of email address...!!!
-                    //////}
-
-                }
-                else  // Use Calling Perceptron Api as a Guest User
-                {
-                    //return Message = "Please verify your email address first, then proceed.";
-                }
-            }
-            else
+            if (!(LoggedInUser.UserName == FirebaseFetchedUser.UserName && LoggedInUser.EmailAddress == FirebaseFetchedUser.EmailAddress && LoggedInUser.Password == FirebaseFetchedUser.Password))
             {
                 return Message = "Credential information is incorrect.";
             }
+
+            if (FirebaseFetchedUser.VerfiedUser == "True")
+            {
+                SearchController _SearchController = new SearchController();
+                _SearchController.SearchQuery(UserInfoArray, "True");
+            }
+            else  // Use Calling Perceptron Api as a Guest User
+            {
+                SearchController _SearchController = new SearchController();
+                _SearchController.SearchQuery(UserInfoArray, "False");
+            }
             return Message;
         }
-
-        public void AuthenticateUser()   //By One Time Enter Key
-        {
-
-        }
     }
-
 }
+    //    public void AuthenticateUser()   //By One Time Enter Key
+    //    {
+
+    //    }
+    //}
+
+
 //    public class UsersController : ApiController
 //    {
 //        public Users UsersElemenet = new Users();
