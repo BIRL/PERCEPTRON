@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -195,6 +197,42 @@ namespace PerceptronLocalService.Repository
                 }
             }
             return 1;
+        }
+
+        public List<PerceptronSdkResults> PreparePerceptronSdkResults(DateTime JobSubmissionTime)
+        {
+            List<PerceptronSdkResults> ListPerceptronSdkResults = new List<PerceptronSdkResults>();
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                var sqlConnection1 =
+                    new SqlConnection(
+                        "Server= CHIRAGH-I; Database= PerceptronDatabase; Integrated Security=SSPI;");
+                var cmd = new SqlCommand
+                {
+                    CommandText =
+                        "SELECT * FROM PerceptronSdk   WHERE JobSubmission>= '" + JobSubmissionTime + "' AND ResultsAvailable = 'False' ORDER BY JobSubmission Desc ",  //Updated 20210118
+                    CommandType = CommandType.Text,
+                    Connection = sqlConnection1
+                };
+                sqlConnection1.Open();
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    var temp = new PerceptronSdkResults
+                    {
+                        QueryId = dataReader["QueryId"].ToString(),
+                        Title = dataReader["Title"].ToString(),
+                        UserName = dataReader["UserName"].ToString(),
+                        ResultsAvailable = dataReader["ResultsAvailable"].ToString()
+                    };
+                    ListPerceptronSdkResults.Add(temp);
+                }
+                dataReader.Close();
+                cmd.Dispose();
+                sqlConnection1.Close();
+            }
+            return ListPerceptronSdkResults;
         }
 
         private ResultInsilicoMatchLeft GetResultInsilicoMatchLeftModel(Guid resId, List<double> peaklistMass)
