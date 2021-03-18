@@ -42,239 +42,6 @@ typedef struct MassTunerAndPstCombinedStruct
 	char PstTags[8];
 }masstunerandpstcombinedstruct;
 
-typedef struct ToDefineSizeStruct
-{
-	int sizeOfArray;
-}Todefinesizestruct;
-
-//typedef struct sample {
-//	double *num;
-//	int elements;
-//}mysample;
-
-//	--- Updated: 20210223 ---
-//__device__ int dev_data[50];
-//__device__ int dev_count = 0;
-//__device__ int dev_wind_count = 0;
-//__device__ int dev_pst_count = 0;
-//__device__ int multipleLengthPstCounter = 0;
-//__device__ int charArrayCounter = 0;
-//
-//struct ParametersToCpp
-//{
-//	double MwTolerance;
-//	double NeutralLoss;
-//	double SliderValue;
-//	double HopThreshhold;
-//	int Autotune;
-//	int DenovoAllow;
-//	int MinimumPstLength;
-//	int MaximumPstLength;
-//};
-//
-//typedef struct _WindowCapturedElementsStruct
-//{
-//	double TunedMass;
-//	int elementCount;
-//} windowcapturedelementsstruct;
-//
-//typedef struct _ShortlistedMassSumsAndIntensities
-//{
-//	double massSum;
-//	double AvgIntensity;
-//	bool operator() (_ShortlistedMassSumsAndIntensities i, _ShortlistedMassSumsAndIntensities j) { return (i.massSum < j.massSum); }
-//} ShortlistedMassSumsAndIntensities;
-//
-//typedef struct _DataForPsts
-//{
-//	int startIndex;
-//	int endIndex;
-//	double startIndexMass;
-//	double endIndexMass;
-//	double massDifferenceBetweenPeaks;
-//	char AminoAcidSymbol;
-//	double TagError;
-//	double averageIntensity;
-//} dataforpsts;
-//
-//typedef struct _PeptideSequenceTags
-//{
-//	char PstTag[8];
-//	int PstTagLength;
-//	double PstErrorScore;
-//	double PstFrequency;
-//	double IntensitySum;
-//	int startIndex;
-//	int endIndex;
-//	double ErrorSum;
-//	double RMSE;
-//} peptidesequencetags;
-
-
-//__device__ void my_push_back(double *dev_PeakListMassesSum, double *dev_PeakListIntensitiesAverage, double summationOfMasses, double averageOfIntensities)
-//{
-//	int insert_pt = atomicAdd(&dev_count, 1);
-//	dev_PeakListMassesSum[insert_pt] = summationOfMasses;
-//	dev_PeakListIntensitiesAverage[insert_pt] = averageOfIntensities;
-//	return;
-//}
-
-//__device__ void PST_push_back(_DataForPsts *SingleLengthPSTs_ptr, int tid, int i, double StartIndMass, double EndIndMass, double differenceOfMasses, char aminoAcidSymbol, double TagError, double averageOfIntensities)
-//{
-//	int insert_ptr = atomicAdd(&dev_pst_count, 1);
-//	SingleLengthPSTs_ptr[insert_ptr].startIndex = tid;
-//	SingleLengthPSTs_ptr[insert_ptr].endIndex = i;
-//	SingleLengthPSTs_ptr[insert_ptr].startIndexMass = StartIndMass;
-//	SingleLengthPSTs_ptr[insert_ptr].endIndexMass = EndIndMass;
-//	SingleLengthPSTs_ptr[insert_ptr].massDifferenceBetweenPeaks = differenceOfMasses;
-//	SingleLengthPSTs_ptr[insert_ptr].AminoAcidSymbol = aminoAcidSymbol;
-//	SingleLengthPSTs_ptr[insert_ptr].TagError = TagError;
-//	SingleLengthPSTs_ptr[insert_ptr].averageIntensity = averageOfIntensities;
-//	return;
-//}
-
-//__global__ void CalculatingTupleSumsAndSingleLengthPsts(double *raw_ptr_masses, double *raw_ptr_intensities, double *dev_PeakListMassesSum, double *dev_PeakListIntensitiesAverage, _DataForPsts *SingleLengthPSTs_ptr, double *dev_aminoAcidMassesList, char *dev_aminoAcidSymbolList, double MwTolerance, double NeutralLoss, double HopThreshold, int N, int AutoTune, int DenovoAllow) {
-//	int tid = blockIdx.x * blockDim.x + threadIdx.x;
-//
-//	if (tid < N)
-//	{
-//		for (int i = tid + 1; i < N; i++)
-//		{
-//			double averageOfIntensities = (raw_ptr_intensities[tid] + raw_ptr_intensities[i]) / 2;
-//			if (AutoTune == 1)
-//			{
-//				double summationOfMasses = raw_ptr_masses[tid] + raw_ptr_masses[i] + NeutralLoss;
-//				my_push_back(dev_PeakListMassesSum, dev_PeakListIntensitiesAverage, summationOfMasses, averageOfIntensities);
-//			}
-//			if (DenovoAllow == 1)
-//			{
-//				double differenceOfMasses = fabs(raw_ptr_masses[tid] - raw_ptr_masses[i]);
-//				for (int j = 0; j < 21; j++)
-//				{
-//					double TagError = pow(fabs(dev_aminoAcidMassesList[j] - differenceOfMasses), 2);
-//					if (fabs(dev_aminoAcidMassesList[j] - differenceOfMasses) <= HopThreshold)
-//					{
-//						PST_push_back(SingleLengthPSTs_ptr, tid, i, raw_ptr_masses[tid], raw_ptr_masses[i], differenceOfMasses, dev_aminoAcidSymbolList[j], TagError, averageOfIntensities);
-//					}
-//				}
-//			}		
-//		}
-//	}
-//	else
-//		return;
-//}
-
-//__device__ void window_push_back(_WindowCapturedElementsStruct *windowcapturedelements, double a, int b)
-//{
-//	int insert_ptr = atomicAdd(&dev_wind_count, 1);
-//	windowcapturedelements[insert_ptr].TunedMass = a;
-//	windowcapturedelements[insert_ptr].elementCount = b;
-//	return;
-//}
-
-//__global__ void WindowLaunchKernel(int NumOfThreadsToLaunch, double minSum, double maxSum, _ShortlistedMassSumsAndIntensities *shortListedData, int sizeOfShortlistedData, _WindowCapturedElementsStruct *windowcapturedelements, double SliderValue)
-//{
-//	int tid = blockIdx.x * blockDim.x + threadIdx.x;
-//	if (tid < NumOfThreadsToLaunch)
-//	{
-//		double WindowStart = minSum + (tid * SliderValue);
-//		double WindowEnd = WindowStart + 1.00727647;
-//		double sumoftunedmassesandintensities = 0;
-//		double sumoftunedintensities = 0;
-//		int Count = 0;
-//		for (int i = 0; i < sizeOfShortlistedData; i++)
-//		{
-//			if (WindowStart <= shortListedData[i].massSum && shortListedData[i].massSum < WindowEnd)//#DISCUSSION
-//			{
-//				double data = shortListedData[i].massSum * shortListedData[i].AvgIntensity;
-//				sumoftunedmassesandintensities = sumoftunedmassesandintensities + data;
-//				sumoftunedintensities = sumoftunedintensities + shortListedData[i].AvgIntensity;
-//				Count = Count + 1;
-//			}
-//			else if (shortListedData[i].massSum >= WindowEnd)
-//			{
-//				break;
-//			}
-//		}
-//		double TunedMass = sumoftunedmassesandintensities / sumoftunedintensities;
-//		int elementCount = Count;
-//		window_push_back(windowcapturedelements, TunedMass, elementCount);
-//	}
-//}
-
-//__device__ char * my_strcpy(char *dest, const char *src) {
-//	int i = 0;
-//	do {
-//		dest[i] = src[i];
-//	} while (src[i++] != 0);
-//	return dest;
-//}
-
-//__global__ void GeneratingMultipleLengthPsts(_PeptideSequenceTags *MultipleLengthPst_ptr, _DataForPsts *SingleLengthPSTs, int N)
-//{
-//	int tid = blockIdx.x * blockDim.x + threadIdx.x;
-//	if (tid < N)
-//	{
-//		int HomePeak = SingleLengthPSTs[tid].endIndex;
-//		char HomePeakAA = SingleLengthPSTs[tid].AminoAcidSymbol;
-//		int StartIndex = SingleLengthPSTs[tid].startIndex;
-//		for (int i = 0; i < N; i++)
-//		{
-//			int HopPeak = SingleLengthPSTs[i].startIndex;
-//			char HopPeakAA = SingleLengthPSTs[i].AminoAcidSymbol;
-//			int EndIndex = SingleLengthPSTs[i].endIndex;
-//			if (HomePeak == HopPeak)
-//			{
-//				int insert_ptr = atomicAdd(&multipleLengthPstCounter, 1);
-//				MultipleLengthPst_ptr[insert_ptr].PstTag[0] = HomePeakAA;
-//				MultipleLengthPst_ptr[insert_ptr].PstTag[1] = HopPeakAA;
-//				MultipleLengthPst_ptr[insert_ptr].startIndex = StartIndex;
-//				MultipleLengthPst_ptr[insert_ptr].endIndex = EndIndex;
-//				MultipleLengthPst_ptr[insert_ptr].PstTagLength = 2;
-//				MultipleLengthPst_ptr[insert_ptr].IntensitySum = SingleLengthPSTs[tid].averageIntensity + SingleLengthPSTs[i].averageIntensity;
-//				MultipleLengthPst_ptr[insert_ptr].PstFrequency = ((SingleLengthPSTs[tid].averageIntensity + SingleLengthPSTs[i].averageIntensity) / 2)*(2*2);
-//				MultipleLengthPst_ptr[insert_ptr].ErrorSum = SingleLengthPSTs[tid].TagError + SingleLengthPSTs[i].TagError;
-//				MultipleLengthPst_ptr[insert_ptr].RMSE = MultipleLengthPst_ptr[insert_ptr].ErrorSum / 2;
-//				double RMSE = (sqrt(MultipleLengthPst_ptr[insert_ptr].ErrorSum) / 2)*10;
-//				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = exp(-RMSE * 2);
-//				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = (MultipleLengthPst_ptr[insert_ptr].PstTagLength * MultipleLengthPst_ptr[insert_ptr].PstFrequency) / RMSE;
-//			}
-//		}
-//	}
-//}
-
-//__global__ void GeneratingMultipleLengthPsts2(_PeptideSequenceTags *MultipleLengthPst_ptr, _PeptideSequenceTags *DupletPSTs, _DataForPsts *SingleLengthPSTs, int N, int num, int SizeOfPst)
-//{
-//	int tid = blockIdx.x * blockDim.x + threadIdx.x;
-//	if (tid < N)
-//	{
-//		int HomePeak = DupletPSTs[tid].endIndex;
-//		char *HomePeakAA = DupletPSTs[tid].PstTag;
-//		int StartIndex = DupletPSTs[tid].startIndex;
-//		for (int i = 0; i < num; i++)
-//		{
-//			int HopPeak = SingleLengthPSTs[i].startIndex;
-//			char HopPeakAA = SingleLengthPSTs[i].AminoAcidSymbol;
-//			int EndIndex = SingleLengthPSTs[i].endIndex;
-//			if (HomePeak == HopPeak)
-//			{
-//				int insert_ptr = atomicAdd(&multipleLengthPstCounter, 1);
-//				my_strcpy(MultipleLengthPst_ptr[insert_ptr].PstTag, HomePeakAA);
-//				MultipleLengthPst_ptr[insert_ptr].PstTag[SizeOfPst-1] = HopPeakAA;
-//				MultipleLengthPst_ptr[insert_ptr].startIndex = StartIndex;
-//				MultipleLengthPst_ptr[insert_ptr].endIndex = EndIndex;
-//				MultipleLengthPst_ptr[insert_ptr].PstTagLength = SizeOfPst;
-//				MultipleLengthPst_ptr[insert_ptr].IntensitySum = DupletPSTs[tid].IntensitySum + SingleLengthPSTs[i].averageIntensity;
-//				MultipleLengthPst_ptr[insert_ptr].PstFrequency = ((DupletPSTs[tid].IntensitySum + SingleLengthPSTs[i].averageIntensity) / SizeOfPst)*(SizeOfPst*SizeOfPst);
-//				MultipleLengthPst_ptr[insert_ptr].ErrorSum = DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError;
-//				MultipleLengthPst_ptr[insert_ptr].RMSE = (DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst;
-//				double RMSE = (sqrt(DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst) * 10;
-//				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = exp(-RMSE * 2);
-//				//MultipleLengthPst_ptr[insert_ptr].PstErrorScore = (MultipleLengthPst_ptr[insert_ptr].PstTagLength * MultipleLengthPst_ptr[insert_ptr].PstFrequency) / RMSE;
-//			}
-//		}
-//	}
-//}
 void AccomodateIsoforms(vector< _PeptideSequenceTags> &Final_MultipleLengthPsts, ParametersToCpp Parameters)
 {
 	char ResidueForReplacement[] = { 'L', 'D', 'N', 'E', 'Q' };
@@ -437,53 +204,12 @@ vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<
 	return Final_MultipleLengthPsts;
 }
 
-//__global__ void test(sample *dev_vptr)
-//{
-//	int a = dev_vptr[0].elements;
-//	double b = dev_vptr[0].num[0];
-//	double c = dev_vptr[0].num[1];
-//	double d = dev_vptr[0].num[2];
-//	double e = dev_vptr[0].num[3];
-//}
-
 extern "C" __declspec(dllexport) int __cdecl
 wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[], int PeakListLength, ParametersToCpp Parameters, MassTunerAndPstCombinedStruct **_MassTunerAndPstCombinedStruct)
-{
-	/*sample x;
-	x.elements = 4;
-	double h_arr[] = { 1, 2, 3, -5 };
-	double *d_arr;
-	cudaMalloc((void**) &(d_arr), sizeof(int)*x.elements);
-	cudaMemcpy(d_arr, h_arr, sizeof(int)*x.elements, cudaMemcpyHostToDevice);
-	x.num = d_arr;
+{	
+	auto start = chrono::steady_clock::now();
 
-	thrust::device_vector<sample> dev_v;
-	dev_v.push_back(x);
-	dev_v.push_back(x);
-	sample *dev_vptr = thrust::raw_pointer_cast(dev_v.data());
-	test << <1, 1 >> > (dev_vptr);*/
-
-	/*sample x = { 0, 4 };
-	double init[] = { 1, 2, 3, -5 };
-
-	x.num = new double[x.elements];
-
-	for (int i = 0; i < x.elements; i++)
-		x.num[i] = init[i];
-
-	thrust::device_vector<sample> dev_v;
-	dev_v.push_back(x);
-	dev_v.push_back(x);
-	sample *dev_vptr = thrust::raw_pointer_cast(dev_v.data());
-	test << <1, 1 >> > (dev_vptr);*/
-	
 	double WholeProteinMass = PeakListMasses[0];
-	/*vector<double> masses;  vector<double> intensities;
-	for (int i = 0; i < PeakListLength; i++)
-	{
-		masses.push_back(PeakListMasses[i]);
-		intensities.push_back(PeakListIntensities[i]);
-	}*/
 
 	const int N = PeakListLength;
 	const int zN = (floor(PeakListLength*PeakListLength) / 2) - (floor(PeakListLength / 2));
@@ -495,7 +221,6 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 	double *dev_aminoAcidMassesList; char *dev_aminoAcidSymbolList;
 
 	cudaMalloc((void**)&dev_masses, sizeof(double) * N);
-	auto start = chrono::steady_clock::now();
 	cudaMalloc((void**)&dev_intensities, sizeof(double) * N);
 	cudaMalloc((void**)&dev_aminoAcidMassesList, sizeof(double)*21);
 	cudaMalloc((void**)&dev_aminoAcidSymbolList, sizeof(char)*21);
@@ -520,102 +245,123 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 	
 
 	thrust::host_vector<_DataForPsts> Host_SingleLengthPSTs = DeviceSingleLengthPSTs;
-	thrust::host_vector<double> PeakListMassesSum = DevicePeakListMassesSum;
-	thrust::host_vector<double> PeakListIntensitiesAverage = DevicePeakListAvgIntensities;
-	thrust::host_vector<_ShortlistedMassSumsAndIntensities> shortlistedMassSumAndIntensities;
-
-	for (int i = 0; i < zN; i++)
-	{
-		if (PeakListMasses[0] - Parameters.MwTolerance <= PeakListMassesSum[i] && PeakListMassesSum[i] <= PeakListMasses[0] + Parameters.MwTolerance)
-		{
-			_ShortlistedMassSumsAndIntensities data;
-			data.massSum = PeakListMassesSum[i];
-			data.AvgIntensity = PeakListIntensitiesAverage[i];
-			shortlistedMassSumAndIntensities.push_back(data);
-		}
-	}
-
+	
 	double TunedMass = 0.0;
-	if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
-		cudaDeviceSynchronize();
-		return TunedMass = 0.0;
-	}
-
-	std::sort(shortlistedMassSumAndIntensities.begin(), shortlistedMassSumAndIntensities.end(),
-		[](const _ShortlistedMassSumsAndIntensities &mass, const _ShortlistedMassSumsAndIntensities &mass2)
-	{ return (mass.massSum < mass2.massSum); });
-
-	double minSum = shortlistedMassSumAndIntensities[0].massSum;
-	double maxSum = shortlistedMassSumAndIntensities[shortlistedMassSumAndIntensities.size() - 1].massSum;
-
-	int sizeOfShortlistedData = shortlistedMassSumAndIntensities.size();
-	double SliderValue = (WholeProteinMass * Parameters.SliderValue) / (pow(10.0, 6.0));
-	int NumOfThreadsToLaunch = floor((maxSum - minSum) * (1 / SliderValue));
-
-	thrust::device_vector<_ShortlistedMassSumsAndIntensities> device_shortlistedMassSumAndIntensities = shortlistedMassSumAndIntensities;
-	_ShortlistedMassSumsAndIntensities *raw_ptr = thrust::raw_pointer_cast(device_shortlistedMassSumAndIntensities.data());
-
-	thrust::device_vector<_WindowCapturedElementsStruct> device_windowcapturedelements(NumOfThreadsToLaunch);
-	_WindowCapturedElementsStruct *raw_ptr2 = thrust::raw_pointer_cast(device_windowcapturedelements.data());
-
-	int THREADS2 = 256;
-	int BLOCKS2 = (NumOfThreadsToLaunch / THREADS + 5);
-	
-	WindowLaunchKernel << <BLOCKS2, THREADS2 >> > (NumOfThreadsToLaunch, minSum, maxSum, raw_ptr, sizeOfShortlistedData, raw_ptr2, SliderValue);
-	
-	thrust::host_vector<_WindowCapturedElementsStruct> host_windowcapturedelements = device_windowcapturedelements;
-
-	
-	int oldElementCount = 0;
-
-	for (int x = 0; x < NumOfThreadsToLaunch; x++)
+	if (Parameters.Autotune == 1)
 	{
-		if (oldElementCount < host_windowcapturedelements[x].elementCount)
+		thrust::host_vector<double> PeakListMassesSum = DevicePeakListMassesSum;
+		thrust::host_vector<double> PeakListIntensitiesAverage = DevicePeakListAvgIntensities;
+		thrust::host_vector<_ShortlistedMassSumsAndIntensities> shortlistedMassSumAndIntensities;
+
+		for (int i = 0; i < zN; i++)
 		{
-			oldElementCount = host_windowcapturedelements[x].elementCount;
-			TunedMass = host_windowcapturedelements[x].TunedMass;
-		}
-		else if (oldElementCount == host_windowcapturedelements[x].elementCount)
-		{
-			if (abs(TunedMass - WholeProteinMass) >= abs(host_windowcapturedelements[x].TunedMass - WholeProteinMass))
+			if (PeakListMasses[0] - Parameters.MwTolerance <= PeakListMassesSum[i] && PeakListMassesSum[i] <= PeakListMasses[0] + Parameters.MwTolerance)
 			{
+				_ShortlistedMassSumsAndIntensities data;
+				data.massSum = PeakListMassesSum[i];
+				data.AvgIntensity = PeakListIntensitiesAverage[i];
+				shortlistedMassSumAndIntensities.push_back(data);
+			}
+		}
+
+		if (shortlistedMassSumAndIntensities.size() == 0) {  // When short list (thrust vector) sum of masses and their intensities will be zero //Updated 20210305
+			cudaDeviceSynchronize();
+			return TunedMass = 0.0;
+		}
+
+		std::sort(shortlistedMassSumAndIntensities.begin(), shortlistedMassSumAndIntensities.end(),
+			[](const _ShortlistedMassSumsAndIntensities &mass, const _ShortlistedMassSumsAndIntensities &mass2)
+		{ return (mass.massSum < mass2.massSum); });
+
+		double minSum = shortlistedMassSumAndIntensities[0].massSum;
+		double maxSum = shortlistedMassSumAndIntensities[shortlistedMassSumAndIntensities.size() - 1].massSum;
+
+		int sizeOfShortlistedData = shortlistedMassSumAndIntensities.size();
+		double SliderValue = (WholeProteinMass * Parameters.SliderValue) / (pow(10.0, 6.0));
+		int NumOfThreadsToLaunch = floor((maxSum - minSum) * (1 / SliderValue));
+
+		thrust::device_vector<_ShortlistedMassSumsAndIntensities> device_shortlistedMassSumAndIntensities = shortlistedMassSumAndIntensities;
+		_ShortlistedMassSumsAndIntensities *raw_ptr = thrust::raw_pointer_cast(device_shortlistedMassSumAndIntensities.data());
+
+		thrust::device_vector<_WindowCapturedElementsStruct> device_windowcapturedelements(NumOfThreadsToLaunch);
+		_WindowCapturedElementsStruct *raw_ptr2 = thrust::raw_pointer_cast(device_windowcapturedelements.data());
+
+		int THREADS2 = 256;
+		int BLOCKS2 = (NumOfThreadsToLaunch / THREADS + 5);
+
+		WindowLaunchKernel << <BLOCKS2, THREADS2 >> > (NumOfThreadsToLaunch, minSum, maxSum, raw_ptr, sizeOfShortlistedData, raw_ptr2, SliderValue);
+
+		thrust::host_vector<_WindowCapturedElementsStruct> host_windowcapturedelements = device_windowcapturedelements;
+
+
+		int oldElementCount = 0;
+
+		for (int x = 0; x < NumOfThreadsToLaunch; x++)
+		{
+			if (oldElementCount < host_windowcapturedelements[x].elementCount)
+			{
+				oldElementCount = host_windowcapturedelements[x].elementCount;
 				TunedMass = host_windowcapturedelements[x].TunedMass;
+			}
+			else if (oldElementCount == host_windowcapturedelements[x].elementCount)
+			{
+				if (abs(TunedMass - WholeProteinMass) >= abs(host_windowcapturedelements[x].TunedMass - WholeProteinMass))
+				{
+					TunedMass = host_windowcapturedelements[x].TunedMass;
+				}
 			}
 		}
 	}
-	
+
+	else
+		TunedMass = 0.0;
+
+
+	auto MassTunerEnd = chrono::steady_clock::now();
+	int ModularMassTunerTime = chrono::duration_cast<chrono::milliseconds>(MassTunerEnd - start).count();
+
 
 	// --------- PST STARTS HERE ---------
 	
-	vector<_PeptideSequenceTags> PeptideSequenceTags = CalculatingPeptideSequenceTags(Host_SingleLengthPSTs, Parameters, zN);
-	auto end = chrono::steady_clock::now();
-	int time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-	
-	// --------- PST ENDS HERE ---------
+	vector<_PeptideSequenceTags> PeptideSequenceTags;
 
-	ToDefineSizeStruct SizeStruct;
-	SizeStruct.sizeOfArray = PeptideSequenceTags.size();
+	if (Parameters.DenovoAllow == 1)
+	{
+		auto PstStart = chrono::steady_clock::now();
+		PeptideSequenceTags = CalculatingPeptideSequenceTags(Host_SingleLengthPSTs, Parameters, zN);
+		// --------- PST ENDS HERE ---------
 
-	for (int i = 0; i < PeptideSequenceTags.size(); i++) {
-		(*_MassTunerAndPstCombinedStruct)->PstTagLength = PeptideSequenceTags[i].PstTagLength;
-		
-		(*_MassTunerAndPstCombinedStruct)->PstErrorScore = PeptideSequenceTags[i].PstErrorScore;
-		(*_MassTunerAndPstCombinedStruct)->PstFrequency = PeptideSequenceTags[i].PstFrequency;
-		(*_MassTunerAndPstCombinedStruct)->MassTuner = TunedMass;
+		for (int i = 0; i < PeptideSequenceTags.size(); i++) {
+			(*_MassTunerAndPstCombinedStruct)->PstTagLength = PeptideSequenceTags[i].PstTagLength;
 
-		for (int j = 0; j < PeptideSequenceTags[i].PstTagLength; j++)
-		{
-			(*_MassTunerAndPstCombinedStruct)->PstTags[j] = PeptideSequenceTags[i].PstTag[j];
+			(*_MassTunerAndPstCombinedStruct)->PstErrorScore = PeptideSequenceTags[i].PstErrorScore;
+			(*_MassTunerAndPstCombinedStruct)->PstFrequency = PeptideSequenceTags[i].PstFrequency;
+			(*_MassTunerAndPstCombinedStruct)->MassTuner = TunedMass;
+
+			for (int j = 0; j < PeptideSequenceTags[i].PstTagLength; j++)
+			{
+				(*_MassTunerAndPstCombinedStruct)->PstTags[j] = PeptideSequenceTags[i].PstTag[j];
+			}
+			_MassTunerAndPstCombinedStruct++;
 		}
-		_MassTunerAndPstCombinedStruct++;
+
+		auto PstEnd = chrono::steady_clock::now();
+		int ModularPstEndTime = chrono::duration_cast<chrono::milliseconds>(PstEnd - PstStart).count();
+
+		cudaDeviceSynchronize();
+		return PeptideSequenceTags.size();
 	}
-	
-	cudaDeviceSynchronize();
-	return PeptideSequenceTags.size();
+
+	else
+	{
+		(*_MassTunerAndPstCombinedStruct)->PstTagLength = 0;
+		(*_MassTunerAndPstCombinedStruct)->PstErrorScore = 0;
+		(*_MassTunerAndPstCombinedStruct)->PstFrequency = 0;
+		(*_MassTunerAndPstCombinedStruct)->PstTags[0] = '\0';
+
+		(*_MassTunerAndPstCombinedStruct)->MassTuner = TunedMass;
+		
+		return 1;
+	}
 }
 
-//extern "C" __declspec(dllexport) void __cdecl
-//insilicospectralcomparisongpu(ParametersToCpp Parameters, ProteinStruct *candidateProteins, double *PeakListMasses, double *PeakListIntensitiesForSpectralComp)
-//{
-//	int a = 1;
-//}
