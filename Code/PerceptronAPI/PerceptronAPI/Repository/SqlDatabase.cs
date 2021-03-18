@@ -32,6 +32,28 @@ namespace PerceptronAPI.Repository
             return "Ok";
         }
 
+        public string StorePerceptronSdkInfo(DateTime JobSubmission, string QueryId, string Title, string UserName)
+        {
+            string Message = "Query successfully submitted!";
+            var PerceptronSdkInfo = new PerceptronSdk
+            {
+                JobSubmission = JobSubmission,
+                QueryId = QueryId,
+                Title = Title,
+                UserName = UserName,
+                ResultsAvailable = "False"
+            };
+
+            using (var db = new PerceptronDatabaseEntities())
+            {
+                db.PerceptronSdks.Add(PerceptronSdkInfo);
+
+                db.SaveChanges();
+
+            }
+            return Message;
+        }
+
 
         public void StoreSearchFiles(SearchParametersDto param)
         {
