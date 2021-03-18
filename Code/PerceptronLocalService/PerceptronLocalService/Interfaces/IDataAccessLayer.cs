@@ -19,5 +19,6 @@ namespace PerceptronLocalService.Interfaces
         SearchParametersDto GetParameters(string qid);
         //void GetFiles(SearchParametersDto qp);
         int Set_Progress(string qid, int p);
+        List<PerceptronSdkResults> PreparePerceptronSdkResults(DateTime JobSubmissionTime);
     }
 }

@@ -32,6 +32,17 @@
           <Property Name="PeakListMasses" Type="nvarchar(max)" />
           <Property Name="PeakListIntensities" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="PerceptronSdk">
+          <Key>
+            <PropertyRef Name="JobSubmission" />
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ResultsAvailable" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="PtmFixedModifications">
           <Key>
             <PropertyRef Name="JobSubmission" />
@@ -215,6 +226,7 @@
         <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PerceptronSdk" EntityType="Self.PerceptronSdk" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />
@@ -258,6 +270,17 @@
           <Property Name="FileUniqueId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PerceptronSdk">
+          <Key>
+            <PropertyRef Name="JobSubmission" />
+            <PropertyRef Name="QueryId" />
+          </Key>
+          <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ResultsAvailable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="PtmFixedModification">
           <Key>
@@ -442,6 +465,7 @@
         <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
           <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
+          <EntitySet Name="PerceptronSdks" EntityType="Self.PerceptronSdk" />
           <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModification" />
           <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModification" />
           <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />
@@ -483,6 +507,17 @@
                 <ScalarProperty Name="FileUniqueId" ColumnName="FileUniqueId" />
                 <ScalarProperty Name="PeakListMasses" ColumnName="PeakListMasses" />
                 <ScalarProperty Name="PeakListIntensities" ColumnName="PeakListIntensities" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PerceptronSdks">
+            <EntityTypeMapping TypeName="PerceptronDatabaseModel.PerceptronSdk">
+              <MappingFragment StoreEntitySet="PerceptronSdk">
+                <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ResultsAvailable" ColumnName="ResultsAvailable" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
