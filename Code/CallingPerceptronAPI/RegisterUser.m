@@ -1,4 +1,4 @@
-function Message = RegisterUser( BaseApiUrl )
+function Message = RegisterUser( BaseApiUrl, UserName,  EmailAddress, DummyPassword)
 
 % Please use this function for Signing Up at Calling PERCEPTRON API
 % After successfully execution of this function you would recieve an email for verifying your email address.
@@ -9,9 +9,6 @@ SendUserInfo = RequestMessage('POST',[]);
 
 PerceptronApiRegisterUserUrl =  BaseApiUrl + 'api/user/CallingPerceptronApi_RegisterUser' %   CallingPerceptronApiRegisterUser'
 
-UserName = "Farhan";
-EmailAddress = "farhan.biomedical.2022@gmail.com";
-DummyPassword = "12345";
 f = ':'
 
 UserRegisterationInfo = strcat(UserName, f, EmailAddress, f, DummyPassword);

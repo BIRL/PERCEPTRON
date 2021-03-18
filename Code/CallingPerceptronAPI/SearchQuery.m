@@ -1,15 +1,27 @@
-function Message = SearchQuery( BaseApiUrl )
-
-
-import matlab.net.http.*
-SendParameterAndUserInfo = RequestMessage('POST',[]);
+function Message = SearchQuery( BaseApiUrl, UserName, EmailAddress, Password )
 
 PerceptronApiRegisterUserUrl =  BaseApiUrl + 'api/user/CallingPerceptronApi_LoginUserWithSearchQuery' %   CallingPerceptronApiRegisterUser'
 
-EmailAddress = "farhan.biomedical.2022@gmail.com";
-Password = "12345";
-f = ':'
 
+CredentialInfo = importdata("C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronFtpInfo.txt");
+FtpServerName =  char(CredentialInfo(1,1)); %%string (CredentialInfo.textdata{1, 1});% + string(CredentialInfo.data);
+UniqueUserID = string(java.util.UUID.randomUUID.toString);  
+FullFileName = 'HELA_pk13_sw1_66sc_mono.txt'; % Please add here the path alongwith filename
+
+
+try
+    ftpobj = ftp(FtpServerName, UserName, Password);
+    %%Password Added here....
+    mput(ftpobj,FullFileName);
+    
+catch
+    Message = "File is unable to upload on server."
+    msgbox('Input file couldn''t uploaded at Server please check your internet connection and data file. If problem still persists report bug on GitHub','CallingPerceptronApi','Modal');
+    return;
+end
+
+
+f = ':'
 
 %%% ATTENTION!!! ALL PARAMETER VALUES ARE CASE SENSITIVE
 %%% User will add values below...!!!
@@ -82,17 +94,17 @@ PostTranslationalModificationsAllow = "False";  % User can also select "True"to 
 PostTranslationalModificationsTolerance = "0.5";    % User can select any decimal value
 
 % List_of_Modifications
-List_of_Modifications = "";
+List_of_Modifications = "-";
 
 % Variable_Modifications
-Variable_Modifications = "";    % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
+Variable_Modifications = "-";    % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
 
 % MethionineChemicalModification
 MethionineChemicalModification = "None";    % User can select any or all of "None,MSO,MSONE" where MSO being for Methionine Sulfoxide, and MSONE being for Methionine Sulfone 
 % Note: Order must be maintained when adding methionine chemical modifications
 
 % Fixed_Modification
-Fixed_Modification = "";     % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
+Fixed_Modification = "-";     % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
 
 % CysteineChemicalModification
 CysteineChemicalModification = "None";  % User can select any or all of "None,Cys_CAM,Cys_PE,Cys_CM,Cys_PAM" where Cys_CAM being for Carboxyamidomethyl Cysteine, Cys_PE being for Pyridyl-Ethyl Cysteine, Cys_CM for Carboxymethyl Cysteine, and Cys_PAM for Propionamide Cysteine
@@ -107,20 +119,38 @@ PeptideSequenceTagScoringWeightage = "0";   % User can select the scoring weight
 % InsilicoSweight
 InsilicoScoringWeightage = "100";   % User can select the scoring weightage from 0 to 100
 
-VariableModifications = "";
+VariableModifications = "-";
 
-FixedModifications = "";
+FixedModifications = "-";
 
 %%% User will add values above...!!!
 
-ParameterValue = strcat(JobName,f,FDRCutOff,f,ProteinDatabase,f,MassMode,f,FilterDatabase,f,ProteinMassTolerance,f,PeptideTolerance,f,PeptideToleranceUnit,f,TuneIntactProteinMass,f,InsilicoFragmentationType,f,SpecialIons,f,DenovoAllow,f,MinimumPeptideSequenceTagLength,f,MaximumPeptideSequenceTagLength,f,PeptideSequenceTagHopThreshhold,f,PeptideSequenceTag_Hop_Tolerance_Unit,f,OverallPeptideSequenceTagTolerance,f,Truncation,f,TerminalModification,f,PostTranslationalModificationsAllow,f,PostTranslationalModificationsTolerance,f,List_of_Modifications,f,Variable_Modifications,f,MethionineChemicalModification,f,Fixed_Modification,f,CysteineChemicalModification,f,MwScoringWeightage,f,PeptideSequenceTagScoringWeightage,f,InsilicoScoringWeightage,f,VariableModifications,f,FixedModifications,f,EmailAddress,f,EmailAddress,f,Password);
+[~,FileName,ext] = fileparts(FullFileName);
+FileNameWext = string (FileName) + string(ext);  %%% FileName Should not be greater than 15 Characters
 
+ParameterValue = strcat(JobName,f,FDRCutOff,f,ProteinDatabase,f,MassMode,f,FilterDatabase,f,...
+    ProteinMassTolerance,f,PeptideTolerance,f,PeptideToleranceUnit,f,TuneIntactProteinMass,f,...
+    InsilicoFragmentationType,f,SpecialIons,f,DenovoAllow,f,MinimumPeptideSequenceTagLength,f,...
+    MaximumPeptideSequenceTagLength,f,PeptideSequenceTagHopThreshhold,f,PeptideSequenceTag_Hop_Tolerance_Unit,...
+    f,OverallPeptideSequenceTagTolerance,f,Truncation,f,TerminalModification,f,PostTranslationalModificationsAllow,f,...
+    PostTranslationalModificationsTolerance,f,List_of_Modifications,f,Variable_Modifications,f,...
+    MethionineChemicalModification,f,Fixed_Modification,f,CysteineChemicalModification,f,MwScoringWeightage,...
+    f,PeptideSequenceTagScoringWeightage,f,InsilicoScoringWeightage,f,VariableModifications,f,FixedModifications,...
+    f,UserName,f,EmailAddress,f,Password, f,FileNameWext);
+
+
+import matlab.net.http.*
+SendParameterAndUserInfo = RequestMessage('POST',[]);
 
 SendParameterAndUserInfo.Body = ParameterValue;
 Options = matlab.net.http.HTTPOptions('ConnectTimeout',1000);  %% 1000sec
 Response = SendParameterAndUserInfo.send(PerceptronApiRegisterUserUrl, Options);
 
 Message = Response.Body.Data;
+
+if (string(Message.ExceptionMessage) ~= "")
+    Message = string (Message.ExceptionMessage);
+end
 
 
 end
