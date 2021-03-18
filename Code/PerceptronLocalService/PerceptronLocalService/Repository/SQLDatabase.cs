@@ -199,6 +199,20 @@ namespace PerceptronLocalService.Repository
             return 1;
         }
 
+        public void UpdatePerceptronSdkResults(string QueryId)
+        {
+            using (var UpdatePerceptronSdkResultsStatus = new PerceptronDatabaseEntities())
+            {
+                var PerceptronSdkResults = UpdatePerceptronSdkResultsStatus.PerceptronSdks.SingleOrDefault
+                    ((b => b.QueryId == QueryId));
+                if (PerceptronSdkResults != null)
+                {
+                    PerceptronSdkResults.ResultsAvailable = "True";
+                    UpdatePerceptronSdkResultsStatus.SaveChanges();
+                }
+            }
+        }
+
         public List<PerceptronSdkResults> PreparePerceptronSdkResults(DateTime JobSubmissionTime)
         {
             List<PerceptronSdkResults> ListPerceptronSdkResults = new List<PerceptronSdkResults>();

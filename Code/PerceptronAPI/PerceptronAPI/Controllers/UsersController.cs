@@ -195,15 +195,14 @@ namespace PerceptronAPI.Controllers
             {
                 return Message = "Credential information is incorrect.";
             }
-
+            SearchController _SearchController = new SearchController();
             if (FirebaseFetchedUser.VerfiedUser == "True")
             {
-                SearchController _SearchController = new SearchController();
                 _SearchController.SearchQuery(UserInfoArray, "True");
             }
             else  // Use Calling Perceptron Api as a Guest User
             {
-                SearchController _SearchController = new SearchController();
+                
                 _SearchController.SearchQuery(UserInfoArray, "False");
             }
             return Message;

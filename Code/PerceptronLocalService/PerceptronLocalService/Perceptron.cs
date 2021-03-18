@@ -115,18 +115,28 @@ namespace PerceptronLocalService
                     {
                         graphicsCard = property.Value.ToString();
                         NativeCudaCalls.InitializingGpu();
-                        //IsGpu = true;
+                        //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                     }
                 }
             }
             return IsGpu;
         }
 
+        private string CreateDirectory()
+        {
+            string MainPathForResults = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
+            if (!(Directory.Exists(MainPathForResults)))
+            {
+                Directory.CreateDirectory(MainPathForResults);
+            }
+            return MainPathForResults;
+        }
 
         public void Start()
         {
-            PerceptronSdkResultsAvailable();
-            DeleteOldResultFiles();  //COMMENTED FOR THE TIME BEING...!!!  //20201224
+            string MainPathForResults = CreateDirectory();
+            //string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
+            string NewPath = @"E:\10_PERCEPTRON_Live\FtpRoot\LocalUser\";
             bool IsGpu = CheckGpu();   // Check is Gpu exist into the system
             Stopwatch AllDatabasesOfProteinsTime = new Stopwatch();
             AllDatabasesOfProteinsTime.Start();
@@ -149,10 +159,13 @@ namespace PerceptronLocalService
 
                     var TotalTime = new Stopwatch();
                     TotalTime.Start();
-                    PerformSearch(IsGpu, searchParameters, SqlDatabases);
+                    PerformSearch(IsGpu, searchParameters, SqlDatabases, MainPathForResults);
                     TotalTime.Stop();
                     string time = TotalTime.Elapsed.ToString();
                     int a = 1;
+
+                    PerceptronSdkResultsAvailable(MainPathForResults, NewPath);
+                    DeleteOldResultFiles(MainPathForResults);  //COMMENTED FOR THE TIME BEING...!!!  //20201224
                 }
                 //System.Threading.Thread.Sleep(10000);
             }
@@ -163,17 +176,36 @@ namespace PerceptronLocalService
             //ignored
         }
 
-        private void PerceptronSdkResultsAvailable()
+        private void PerceptronSdkResultsAvailable(string OldPath, string NewPath)
         {
+            
             DateTime JobSubmissionTime = DateTime.Now.AddDays(-20);
             List<PerceptronSdkResults> PerceptronSdkResults = _dataLayer.PreparePerceptronSdkResults(JobSubmissionTime);
-
+            string OldResultFileName = "";
+            string NewResultFileName = "";
+            string NewFileName = "";
+            for (int i = 0; i < PerceptronSdkResults.Count; i++)
+            {
+                OldResultFileName = OldPath + PerceptronSdkResults[i].Title + "_" + PerceptronSdkResults[i].QueryId + ".zip";
+                NewFileName = PerceptronSdkResults[i].Title + ".zip";
+                if (PerceptronSdkResults[i].UserName != "Guest")
+                {
+                    NewResultFileName = NewPath + PerceptronSdkResults[i].UserName + "\\" + NewFileName;
+                    DeleteOldResultFiles(NewPath + PerceptronSdkResults[i].UserName + "\\");   //Need to be analyze if its computationally expensive
+                }
+                else
+                {
+                    NewResultFileName = NewPath + "\\Public\\" + NewFileName;
+                    DeleteOldResultFiles(NewPath + "\\Public\\");   //Need to be analyze if its computationally expensive
+                }
+                File.Copy(OldResultFileName, NewResultFileName, true);   //Copying file from "inetsrv\config"  to   "IIS Express\config" for editting
+                _dataLayer.UpdatePerceptronSdkResults(PerceptronSdkResults[i].QueryId);
+            }
+            
         }
 
-        public void DeleteOldResultFiles()   //Delete the result files except of last 2 days
+        public void DeleteOldResultFiles(string OldPath)   //Delete the result files except of last 2 days
         {
-            string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable";
-            string NewPath = @"C:\PerceptronResultsDownload\ResultsToBeDeleted\";
 
             var JobStatusDataStoreInDb = new PerceptronDatabaseEntities();
 
@@ -267,7 +299,7 @@ namespace PerceptronLocalService
         }
 
 
-        private void PerformSearch(bool IsGpu, SearchParametersDto parameters, List<List<ProteinDto>> SqlDatabases)
+        private void PerformSearch(bool IsGpu, SearchParametersDto parameters, List<List<ProteinDto>> SqlDatabases, string Path)
         {
             
 
@@ -280,7 +312,6 @@ namespace PerceptronLocalService
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
-            string Path = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
 
             List<string> ResultsDownloadFileNames = new List<string>(numberOfPeaklistFiles + 2);  // Used to Collect the names of the files for Zipping (File Zip) Purpose // Just for approximate Capacity of the list.
             //var DecoyTopFinalCandidateProteinList = new List<ProteinDto>(numberOfPeaklistFiles);

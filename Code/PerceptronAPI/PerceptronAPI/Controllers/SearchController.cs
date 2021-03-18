@@ -246,7 +246,15 @@ namespace PerceptronAPI.Controllers
                 InputFileProcessing(queryId, NewFullFileName, time, parametersDto);
 
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
-                Message = _dataLayer.StorePerceptronSdkInfo(time, queryId, parametersDto.SearchParameters.Title, ParameterValues[31]);
+                if (VerifiedUser == "True")
+                {
+                    Message = _dataLayer.StorePerceptronSdkInfo(time, queryId, parametersDto.SearchParameters.Title, ParameterValues[31]);
+                }
+                else
+                {
+                    Message = _dataLayer.StorePerceptronSdkInfo(time, queryId, parametersDto.SearchParameters.Title, "Guest");
+                }
+                    
                 //return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (DbEntityValidationException e)
@@ -458,9 +466,17 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchParameters.UserId = ParameterValues[32];
                 parametersDto.SearchQuerry.UserId = ParameterValues[32];
             }
-            else
+            else        //If  User is a Guest
             {
-                parametersDto.SearchParameters.EmailId = "";
+                if(IsValidEmail(ParameterValues[32]))       //Guest User Give its Email Id
+                {
+                    parametersDto.SearchParameters.EmailId = ParameterValues[32];
+                }
+                else                //Guest User does not give its Email Id
+                {
+                    parametersDto.SearchParameters.EmailId = "";
+                }
+                
                 parametersDto.SearchParameters.UserId = queryId;   // Here UserId is Based on QueryId
             }
 
@@ -484,18 +500,18 @@ namespace PerceptronAPI.Controllers
 
         }
 
-        //bool IsValidEmail(string email)
-        //{
-        //    try
-        //    {
-        //        var addr = new System.Net.Mail.MailAddress(email);
-        //        return addr.Address == email;
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
+        bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         [HttpPost]
         [Route("api/search/FDR_Data_upload")]
