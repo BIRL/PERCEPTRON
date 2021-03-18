@@ -27,6 +27,17 @@
     <Property Name="PeakListMasses" Type="nvarchar(max)" />
     <Property Name="PeakListIntensities" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="PerceptronSdk">
+    <Key>
+      <PropertyRef Name="JobSubmission" />
+      <PropertyRef Name="QueryId" />
+    </Key>
+    <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
+    <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ResultsAvailable" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
   <EntityType Name="PtmFixedModifications">
     <Key>
       <PropertyRef Name="JobSubmission" />
@@ -210,6 +221,7 @@
   <EntityContainer Name="PerceptronDatabaseModelStoreContainer">
     <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTimes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PeakListData" EntityType="Self.PeakListData" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PerceptronSdk" EntityType="Self.PerceptronSdk" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLefts" Schema="dbo" store:Type="Tables" />

@@ -27,6 +27,17 @@
     <Property Name="PeakListMasses" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="PeakListIntensities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
+  <EntityType Name="PerceptronSdk">
+    <Key>
+      <PropertyRef Name="JobSubmission" />
+      <PropertyRef Name="QueryId" />
+    </Key>
+    <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ResultsAvailable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
   <EntityType Name="PtmFixedModification">
     <Key>
       <PropertyRef Name="JobSubmission" />
@@ -210,6 +221,7 @@
   <EntityContainer Name="PerceptronDatabaseEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="ExecutionTimes" EntityType="Self.ExecutionTime" />
     <EntitySet Name="PeakListDatas" EntityType="Self.PeakListData" />
+    <EntitySet Name="PerceptronSdks" EntityType="Self.PerceptronSdk" />
     <EntitySet Name="PtmFixedModifications" EntityType="Self.PtmFixedModification" />
     <EntitySet Name="PtmVariableModifications" EntityType="Self.PtmVariableModification" />
     <EntitySet Name="ResultInsilicoMatchLefts" EntityType="Self.ResultInsilicoMatchLeft" />

@@ -27,6 +27,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="PerceptronSdks">
+      <EntityTypeMapping TypeName="PerceptronDatabaseModel.PerceptronSdk">
+        <MappingFragment StoreEntitySet="PerceptronSdk">
+          <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="ResultsAvailable" ColumnName="ResultsAvailable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PtmFixedModifications">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.PtmFixedModification">
         <MappingFragment StoreEntitySet="PtmFixedModifications">
