@@ -12,46 +12,29 @@ namespace PerceptronAPI.Utility
         {
             try
             {
+
+                string AdminConfigIISFile = @"C:\Windows\System32\inetsrv\config\administration.config";
+                string AdminConfigIISExpressFile = @"C:\Program Files\IIS Express\config\administration.config";
+                File.Copy(AdminConfigIISFile, AdminConfigIISExpressFile, true);   //Copying file from "inetsrv\config"  to   "IIS Express\config" for editting
+
                 // create Powershell runspace
-                string scriptText = @"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.Web.Management')" + "\n" +
-                    "[Microsoft.Web.Management.Server.ManagementAuthentication]::CreateUser('" + UserName + "','" + Password + "')" + "\n" +
-                     "[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant('" + UserName + "','" + FtpSiteName + "', $FALSE)";
+                string scriptText = "[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.Web.Management');" +
+                    "[Microsoft.Web.Management.Server.ManagementAuthentication]::CreateUser('" + UserName + "','" + Password + "');" +
+                    "[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant('" + UserName + "','" + FtpSiteName + "', $FALSE)";
 
                 Runspace runspace = RunspaceFactory.CreateRunspace();
 
-                // open it
-
                 runspace.Open();
-
-                // create a pipeline and feed it the script text
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(scriptText);
 
-                // add an extra command to transform the script
-                // output objects into nicely formatted strings
-
-                // remove this line to get the actual objects
-                // that the script returns. For example, the script
-
-                // "Get-Process" returns a collection
-                // of System.Diagnostics.Process instances.
-
                 pipeline.Commands.Add("Out-String");
 
-                // execute the script
                 Collection<PSObject> results = pipeline.Invoke();
-
-                // close the runspace
                 runspace.Close();
 
-                // convert the script result into a single string
-                //StringBuilder stringBuilder = new StringBuilder();
-                //foreach (PSObject obj in results)
-                //{
-
-                //    Console.WriteLine(stringBuilder.AppendLine(obj.ToString()));
-                //}
+                File.Copy(AdminConfigIISExpressFile, AdminConfigIISFile, true);   //Copying BACK EDITTED FILE from  "IIS Express\config" to "inetsrv\config"  
 
                 string strCmdText = "C:/Windows/System32/inetsrv/appcmd.exe set config " +
                     FtpSiteName + " - section:system.ftpServer / security / authorization / +'[accessType='Allow',users='" + UserName + "',permissions='Read, Write']' / commit:apphost";
@@ -60,11 +43,10 @@ namespace PerceptronAPI.Utility
                 string directory = FtpPathDir + UserName;
                 Directory.CreateDirectory(directory);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                
-            }
-            
+
+            }   
         }
     }
 }
