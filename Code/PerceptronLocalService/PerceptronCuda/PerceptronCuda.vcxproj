@@ -32,7 +32,7 @@
     <ProjectGuid>{A91915C9-77B2-4419-A6BA-E0F05D9FA876}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PerceptronCuda</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
