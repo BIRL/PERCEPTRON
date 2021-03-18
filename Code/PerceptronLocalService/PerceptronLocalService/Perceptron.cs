@@ -115,7 +115,7 @@ namespace PerceptronLocalService
                     {
                         graphicsCard = property.Value.ToString();
                         NativeCudaCalls.InitializingGpu();
-                        IsGpu = true;
+                        //IsGpu = true;
                     }
                 }
             }
@@ -125,6 +125,8 @@ namespace PerceptronLocalService
 
         public void Start()
         {
+            PerceptronSdkResultsAvailable();
+            DeleteOldResultFiles();  //COMMENTED FOR THE TIME BEING...!!!  //20201224
             bool IsGpu = CheckGpu();   // Check is Gpu exist into the system
             Stopwatch AllDatabasesOfProteinsTime = new Stopwatch();
             AllDatabasesOfProteinsTime.Start();
@@ -137,7 +139,7 @@ namespace PerceptronLocalService
                 var pendingJobs = _dataLayer.ServerStatus();
                 var pendingJobsParameters = pendingJobs.Select(element => _dataLayer.GetParameters(element.QueryId));
 
-                //MoveResultFilesToResultsToBeDeletedFolder();  //COMMENTED FOR THE TIME BEING...!!!  //20201224
+                
                 foreach (var searchParameters in pendingJobsParameters)
                 {
                     //Send_Results_Link(searchParameters);
@@ -161,7 +163,14 @@ namespace PerceptronLocalService
             //ignored
         }
 
-        public void MoveResultFilesToResultsToBeDeletedFolder()   //No need for moving just delete the result files except of last 2 days
+        private void PerceptronSdkResultsAvailable()
+        {
+            DateTime JobSubmissionTime = DateTime.Now.AddDays(-20);
+            List<PerceptronSdkResults> PerceptronSdkResults = _dataLayer.PreparePerceptronSdkResults(JobSubmissionTime);
+
+        }
+
+        public void DeleteOldResultFiles()   //Delete the result files except of last 2 days
         {
             string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable";
             string NewPath = @"C:\PerceptronResultsDownload\ResultsToBeDeleted\";
@@ -173,33 +182,13 @@ namespace PerceptronLocalService
 
             DirectoryInfo di = new DirectoryInfo(OldPath);
             FileInfo[] files = di.GetFiles();
-            List<string> FilesToMove = files.Where(fi => fi.CreationTime >= startDate && fi.CreationTime <= endDate).Select(fi => fi.FullName).ToList();   //#Enhancement Don't use {{ Select }}
+            List<string> FilesToBeDeleted = files.Where(fi => fi.CreationTime >= startDate && fi.CreationTime <= endDate).Select(fi => fi.FullName).ToList();   //#Enhancement Don't use {{ Select }}
 
-            int TotalFilesToMove = FilesToMove.Count;
-            var QueryIdList = new List<string>(FilesToMove.Count);   //#FUTUREWORK   --- Will use to make a list of QueryIds for updating the Progress Status of multiple queries at a time.
-            string QueryId = "";
-            int index;
-            string newFileName = "";
-            try
+            int TotalFilesToBeDel = FilesToBeDeleted.Count;
+            for (int iter = 0; iter < TotalFilesToBeDel - 1; iter++)
             {
-
-                for (int iter = 0; iter < TotalFilesToMove; iter++)
-                {
-                    newFileName = Path.GetFileName(FilesToMove[iter]);
-
-                    index = FilesToMove[iter].LastIndexOf('_') + 1;
-
-
-                    File.Move(FilesToMove[iter], NewPath + newFileName);
-                    QueryIdList.Add(FilesToMove[iter].Substring(index, 36));//#FUTUREWORK
-                    _dataLayer.Set_Progress(QueryIdList[iter], -100);   //#FUTUREWORK   - SHOULD NOT BE IN LOOP...!!!  Write Query to update the multiple enteries (Progress - Status) in SearchQueries table. 
-                }
+                File.Delete(FilesToBeDeleted[iter]);
             }
-            catch (Exception e)
-            {
-                int wat = 0;
-            }
-
         }
 
         public static void Sending_Email(SearchParametersDto p, string EmailMsg)
@@ -363,8 +352,13 @@ namespace PerceptronLocalService
                     }
                     else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
                     {
+                        if (parameters.Autotune == "True" || parameters.DenovoAllow == "True")
+                        {
+                            var MassTunerAndPstData = ExecuteMassTunerModuleGpu(massSpectrometryData, parameters, executionTimes);
+                            PstTags = ConvertStructToPstTagList(MassTunerAndPstData);
+                            massSpectrometryData.WholeProteinMolecularWeight = MassTunerAndPstData[0].MassTuner;
+                        }
                         
-
                     }   //// --- GPU Code Above ---   Updated: 20210223
 
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
@@ -1068,7 +1062,33 @@ namespace PerceptronLocalService
 
             moduleTimer.Stop();
             executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
+
             return returnArray;
+        }
+
+        private List<PstTagList> ConvertStructToPstTagList(MassTunerAndPstCombinedStruct[] MassTunerAndPstData)
+        {
+
+            //  PstTagList(int cPstTagLength, string cPstTags, double cPstErrorScore, double cPstFrequency)
+            int Count = MassTunerAndPstData.Length;
+
+            var PstTags = new List<PstTagList>(Count);
+            if (MassTunerAndPstData[0].PstTagLength > 0)  //If there is not tag find into the input file.
+            {
+                for (int index = 0; index < Count; index++)
+                {
+                    var Data = MassTunerAndPstData[index];
+                    string Tag = "";
+                    for (int iter = 0; iter < Data.PstTagLength; iter++)
+                    {
+                        Tag = Tag + Data.PstTags[iter];
+                    }
+                    PstTags.Add(new PstTagList(Data.PstTagLength, Tag, Data.PstErrorScore, Data.PstFrequency));
+                }
+            }
+            
+
+            return PstTags;
         }
     }
 
