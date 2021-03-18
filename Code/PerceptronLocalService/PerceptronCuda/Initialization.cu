@@ -7,7 +7,7 @@ using namespace std;
 
 extern "C" __declspec(dllexport) void __cdecl MainInitializer()
 {
-	int *IamInitializing;
-	cudaMalloc((void**)&IamInitializing, sizeof(int) * 10);
+	int *GpuIsInitializing;
+	cudaMalloc((void**)&GpuIsInitializing, sizeof(int) * 10);
 }
 
