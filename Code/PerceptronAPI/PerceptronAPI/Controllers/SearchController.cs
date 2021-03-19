@@ -38,7 +38,7 @@ namespace PerceptronAPI.Controllers
 
         public SearchController()
         {
-            //CreateDirectory();
+            CreateDirectory();
             _dataLayer = new SqlDatabase();
 
             //UsersController UserController = new UsersController();
