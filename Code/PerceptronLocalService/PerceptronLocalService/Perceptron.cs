@@ -109,6 +109,7 @@ namespace PerceptronLocalService
             string graphicsCard = string.Empty;
             foreach (ManagementObject mo in searcher.Get())
             {
+
                 foreach (PropertyData property in mo.Properties)
                 {
                     if (property.Name == "Description")
@@ -119,6 +120,7 @@ namespace PerceptronLocalService
                             NativeCudaCalls.InitializingGpu();
                             //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
+                        break;
                     }
                 }
             }
