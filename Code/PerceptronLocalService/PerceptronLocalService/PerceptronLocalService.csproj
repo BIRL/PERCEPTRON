@@ -147,6 +147,7 @@
     <Compile Include="DTO\MsPeaksDto.cs" />
     <Compile Include="DTO\newMsPeaksDto.cs" />
     <Compile Include="DTO\ParametersToCpp.cs" />
+    <Compile Include="DTO\PerceptronSdkResults.cs" />
     <Compile Include="DTO\PostTranslationModificationsSiteDto.cs" />
     <Compile Include="DTO\ProteinDto.cs" />
     <Compile Include="DTO\PstTagsDto.cs" />
@@ -191,6 +192,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PerceptronSdk.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PtmFixedModification.cs">
       <DependentUpon>PerceptronDatabase.tt</DependentUpon>
