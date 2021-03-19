@@ -141,7 +141,7 @@ namespace PerceptronLocalService
         {
             string MainPathForResults = CreateDirectory();
             //string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
-            string NewPath = @"E:\10_PERCEPTRON_Live\FtpRoot\LocalUser\";
+            string NewPath = @"E:\10_PERCEPTRON_Live\FtpRoot\LocalUser\";        //Would be vary according to User
             bool IsGpu = CheckGpu();   // Check is Gpu exist into the system
             Stopwatch AllDatabasesOfProteinsTime = new Stopwatch();
             AllDatabasesOfProteinsTime.Start();
