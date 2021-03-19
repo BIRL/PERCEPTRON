@@ -27,9 +27,18 @@ namespace PerceptronAPI.Controllers
         readonly IDataAccessLayer _dataLayer;
         public DateTime JobSubmissionTime = DateTime.Now.AddDays(-2);  // Fetching Current Time  //Results will available for 48hrs only
 
+        private void CreateDirectory()
+        {
+            string MainPathForResults = @"C:\PerceptronApi-tempResultsFolder\";
+            if (!(Directory.Exists(MainPathForResults)))
+            {
+                Directory.CreateDirectory(MainPathForResults);
+            }
+        }
 
         public SearchController()
         {
+            //CreateDirectory();
             _dataLayer = new SqlDatabase();
 
             //UsersController UserController = new UsersController();
