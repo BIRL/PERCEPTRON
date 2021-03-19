@@ -62,6 +62,14 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Administration\7.9.0.0__31bf3856ad364e35\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Management, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Management\7.0.0.0__31bf3856ad364e35\Microsoft.Web.Management.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
       <Private>True</Private>
@@ -116,9 +124,6 @@
     </Reference>
     <Reference Include="System.Web.Helpers">
       <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
@@ -201,6 +206,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PerceptronSdk.cs">
+      <DependentUpon>PerceptronDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PostTranslationModificationsSiteDto.cs" />
     <Compile Include="Models\ProteinDto.cs" />
@@ -290,7 +298,6 @@
     <Content Include="Models\PerceptronDatabase.edmx.diagram">
       <DependentUpon>PerceptronDatabase.edmx</DependentUpon>
     </Content>
-    <None Include="Properties\PublishProfiles\farhan.pubxml" />
     <None Include="Properties\PublishProfiles\PERCEPTRON.pubxml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
