@@ -114,8 +114,11 @@ namespace PerceptronLocalService
                     if (property.Name == "Description")
                     {
                         graphicsCard = property.Value.ToString();
-                        NativeCudaCalls.InitializingGpu();
-                        //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                        if (graphicsCard.Contains("NVIDIA"))
+                        {
+                            NativeCudaCalls.InitializingGpu();
+                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                        }
                     }
                 }
             }
