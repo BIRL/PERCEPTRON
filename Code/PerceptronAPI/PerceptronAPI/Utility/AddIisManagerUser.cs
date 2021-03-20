@@ -15,6 +15,8 @@ namespace PerceptronAPI.Utility
 
                 string AdminConfigIISFile = @"C:\Windows\System32\inetsrv\config\administration.config";
                 string AdminConfigIISExpressFile = @"C:\Program Files\IIS Express\config\administration.config";
+
+                // ONLY NEED THIS ( File.Copy(AdminConfigIISFile, AdminConfigIISExpressFile, true);  ) BELOW CODE WHILE TESTING LOCALLY
                 File.Copy(AdminConfigIISFile, AdminConfigIISExpressFile, true);   //Copying file from "inetsrv\config"  to   "IIS Express\config" for editting
 
                 // create Powershell runspace
@@ -34,6 +36,7 @@ namespace PerceptronAPI.Utility
                 Collection<PSObject> results = pipeline.Invoke();
                 runspace.Close();
 
+                // ONLY NEED THIS ( File.Copy(AdminConfigIISExpressFile, AdminConfigIISFile, true); ) BELOW CODE WHILE TESTING LOCALLY
                 File.Copy(AdminConfigIISExpressFile, AdminConfigIISFile, true);   //Copying BACK EDITTED FILE from  "IIS Express\config" to "inetsrv\config"  
 
                 string strCmdText = "C:/Windows/System32/inetsrv/appcmd.exe set config " +
