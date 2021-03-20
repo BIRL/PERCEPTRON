@@ -166,7 +166,7 @@ namespace PerceptronAPI.Controllers
                 string file = InputFileList[index];
                 var FileUniqueId = Guid.NewGuid().ToString();
                 string FileNameWithUniqueID = _AddSuffixInName.AddSuffix(file, "-ID-" + FileUniqueId); //Updated: To avoid file replacement due to same filenames
-                System.IO.File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+                File.Move(file, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
 
                 i++;
                 var x = new SearchFile
@@ -211,9 +211,8 @@ namespace PerceptronAPI.Controllers
         }
 
 
-        public string SearchQuery(string[] ParameterValues, string VerifiedUser)
+        public string SearchQuery(string[] ParameterValues, string VerifiedUser, string FtpRootPath, string FtpUploadedFilePathKeepLocalCopy)
         {
-            string FtpRootPath = @"E:\10_PERCEPTRON_Live\FtpRoot\";
             string Message = "";
 
             var parametersDto = new SearchParametersDto
@@ -240,17 +239,24 @@ namespace PerceptronAPI.Controllers
                 string OldFullFileName = "";
                 if (VerifiedUser == "True")
                 {
-                    OldFullFileName = FtpRootPath + "LocalUser\\" + ParameterValues[31] + "\\" + FileNamewExtension;
+                    OldFullFileName = FtpRootPath + ParameterValues[31] + "\\" + FileNamewExtension;
                 }
                 else
                 {
-                    OldFullFileName = FtpRootPath + @"LocalUser\Public\" + FileNamewExtension;
+                    OldFullFileName = FtpRootPath + @"Public\" + FileNamewExtension;
                 }
                     
                 
-                string NewPath = @"L:\FtpInputFiles\";
-                string NewFullFileName = NewPath + FileNamewExtension;
-                File.Move(OldFullFileName, NewFullFileName);  // Moving Input file from ftproot folder to FtpInputFiles folder
+                //string FtpUploadedFilePathKeepLocalCopy = @"L:\FtpInputFiles\";
+                string NewFullFileName = FtpUploadedFilePathKeepLocalCopy + FileNamewExtension;
+                //if (File.Exists(NewFullFileName))
+                //{
+                //    var FileUniqueId = Guid.NewGuid().ToString();
+                //    string FileNameWithUniqueID = _AddSuffixInName.QueryIdWithPathChange(NewFullFileName, FileUniqueId, "\\ToBeDel\\"); //Updated: To avoid file replacement due to same filenames
+
+                //    File.Move(NewFullFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
+                //}
+                File.Copy(OldFullFileName, NewFullFileName, true);  // Moving Input file from ftproot folder to FtpInputFiles folder
 
                 InputFileProcessing(queryId, NewFullFileName, time, parametersDto);
 
