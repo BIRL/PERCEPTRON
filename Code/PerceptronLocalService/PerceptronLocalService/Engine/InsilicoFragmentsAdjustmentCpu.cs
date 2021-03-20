@@ -39,8 +39,20 @@ namespace PerceptronLocalService.Engine
             //var rightString = Clone.CloneObject(prot.InsilicoDetails.InsilicoMassRight);
             //var rightIons = Clone.Decrypt<List<double>>(rightString);
 
-            var leftIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassLeft);    //Updated 20201113
-            var rightIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassRight);    //Updated 20201113
+            //Stopwatch AddRangeTime = new Stopwatch();
+            //AddRangeTime.Start();
+            var tempLeft = new List<double>();
+            tempLeft.AddRange(prot.InsilicoDetails.InsilicoMassLeft);
+            var leftIons = tempLeft;
+
+
+            var tempRight = new List<double>();
+            tempRight.AddRange(prot.InsilicoDetails.InsilicoMassRight);
+            var rightIons = tempRight;
+            //AddRangeTime.Stop();
+
+            //var leftIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassLeft);    //Updated 20201113
+            //var rightIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassRight);    //Updated 20201113
 
             var strprotein = prot.Sequence.ToUpper();
             var prtlength = strprotein.Length; //Gives length of Protein
