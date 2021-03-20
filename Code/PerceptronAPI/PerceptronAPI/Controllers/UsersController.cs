@@ -15,7 +15,6 @@ namespace PerceptronAPI.Controllers
     {
         StreamReader AuthSecretFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\AuthSecret.txt");
         StreamReader BasePathFile = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\BasePath.txt");
-        string RootDirectoryForFTP = @"E:\10_PERCEPTRON_Live\PlaceHolderFolder\";
         string Message = "";
 
 
@@ -28,13 +27,14 @@ namespace PerceptronAPI.Controllers
         string EmailAddress = "DummyUser1@dummy.com";
         string Password = "123456";
         string FtpSiteName = "PerceptronFTP";
-        string FtpPathDir = "E:/10_PERCEPTRON_Live/FtpRoot/LocalUser/";
-
-
+        string FtpPathDir = "";
+        string FtpUploadedFilePathKeepLocalCopy = "";
 
         public UsersController()
         {
-            int a = 1;
+            string CommonBasePath = @"E:\10_PERCEPTRON_Live\";
+            FtpPathDir = CommonBasePath + @"FtpRoot\LocalUser\";                //  @"D:\10_PERCEPTRON_Live\PerceptronSDK\FtpRoot\LocalUser\";
+            FtpUploadedFilePathKeepLocalCopy = CommonBasePath + @"FtpUploadedFilePathKeepLocalCopy\";
         }
 
 
@@ -198,12 +198,12 @@ namespace PerceptronAPI.Controllers
             SearchController _SearchController = new SearchController();
             if (FirebaseFetchedUser.VerfiedUser == "True")
             {
-                _SearchController.SearchQuery(UserInfoArray, "True");
+                _SearchController.SearchQuery(UserInfoArray, "True", FtpPathDir, FtpUploadedFilePathKeepLocalCopy);
             }
             else  // Use Calling Perceptron Api as a Guest User
             {
                 
-                _SearchController.SearchQuery(UserInfoArray, "False");
+                _SearchController.SearchQuery(UserInfoArray, "False", FtpPathDir, FtpUploadedFilePathKeepLocalCopy);
             }
             return Message;
         }
