@@ -3,14 +3,16 @@ function Message = SearchQuery( BaseApiUrl, UserName, EmailAddress, Password )
 PerceptronApiRegisterUserUrl =  BaseApiUrl + 'api/user/CallingPerceptronApi_LoginUserWithSearchQuery' %   CallingPerceptronApiRegisterUser'
 
 
-CredentialInfo = importdata("C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronFtpInfo.txt");
-FtpServerName =  char(CredentialInfo(1,1)); %%string (CredentialInfo.textdata{1, 1});% + string(CredentialInfo.data);
+%CredentialInfo = importdata("C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronFtpInfo.txt");
+FtpServerName = 'perceptron.lums.edu.pk';
+FtpUserName =  char("perceptron.lums.edu.pk" + "|" + UserName) ; %char(CredentialInfo(1,1)); %%string (CredentialInfo.textdata{1, 1});% + string(CredentialInfo.data);
 UniqueUserID = string(java.util.UUID.randomUUID.toString);  
 FullFileName = 'HELA_pk13_sw1_66sc_mono.txt'; % Please add here the path alongwith filename
 
 
 try
-    ftpobj = ftp(FtpServerName, UserName, Password);
+    ftpobj = ftp(FtpServerName, FtpUserName, Password);
+    cd(ftpobj);  sf=struct(ftpobj);  sf.jobject.enterLocalPassiveMode();   %https://undocumentedmatlab.com/blog_old/solving-an-mput-ftp-hang-problem
     %%Password Added here....
     mput(ftpobj,FullFileName);
     
@@ -151,7 +153,5 @@ Message = Response.Body.Data;
 if (string(Message.ExceptionMessage) ~= "")
     Message = string (Message.ExceptionMessage);
 end
-
-
 end
 
