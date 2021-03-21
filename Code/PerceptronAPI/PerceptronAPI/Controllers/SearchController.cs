@@ -254,6 +254,11 @@ namespace PerceptronAPI.Controllers
 
                 InputFileProcessing(queryId, NewFullFileName, time, parametersDto);
 
+                if (parametersDto.SearchFiles.Count == 1)
+                {
+                    parametersDto.SearchParameters.FDRCutOff = "N/A";  //Updated 20210321
+                }
+
                 var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
                 if (VerifiedUser == "True")
                 {
