@@ -245,17 +245,11 @@ namespace PerceptronAPI.Controllers
                 {
                     OldFullFileName = FtpRootPath + @"Public\" + FileNamewExtension;
                 }
-                    
-                
+
+
                 //string FtpUploadedFilePathKeepLocalCopy = @"L:\FtpInputFiles\";
                 string NewFullFileName = FtpUploadedFilePathKeepLocalCopy + FileNamewExtension;
-                //if (File.Exists(NewFullFileName))
-                //{
-                //    var FileUniqueId = Guid.NewGuid().ToString();
-                //    string FileNameWithUniqueID = _AddSuffixInName.QueryIdWithPathChange(NewFullFileName, FileUniqueId, "\\ToBeDel\\"); //Updated: To avoid file replacement due to same filenames
 
-                //    File.Move(NewFullFileName, FileNameWithUniqueID); // Renaming "user's input data file" with "user's input data file + Unique ID (FileUniqueId)"
-                //}
                 File.Copy(OldFullFileName, NewFullFileName, true);  // Moving Input file from ftproot folder to FtpInputFiles folder
 
                 InputFileProcessing(queryId, NewFullFileName, time, parametersDto);
@@ -269,7 +263,7 @@ namespace PerceptronAPI.Controllers
                 {
                     Message = _dataLayer.StorePerceptronSdkInfo(time, queryId, parametersDto.SearchParameters.Title, "Guest");
                 }
-                    
+
                 //return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (DbEntityValidationException e)
