@@ -91,15 +91,15 @@ PostTranslationalModificationsTolerance = "0.5";    % User can select any decima
 List_of_Modifications = "-";
 
 % Variable_Modifications
-Variable_Modifications = "-";    % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
-
+Variable_Modifications = "Acetylation_A,Acetylation_K";    % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
+                                 % Variable_Modifications and Fixed_Modification should not be conflict with each other
 % MethionineChemicalModification
-MethionineChemicalModification = "None";    % User can select any or all of "None,MSO,MSONE" where MSO being for Methionine Sulfoxide, and MSONE being for Methionine Sulfone 
+MethionineChemicalModification = "None";    % User can only select anyone "None","MSO", or "MSONE" where MSO being for Methionine Sulfoxide, and MSONE being for Methionine Sulfone 
 % Note: Order must be maintained when adding methionine chemical modifications
 
 % Fixed_Modification
 Fixed_Modification = "-";     % User can select any or all modifications from "Acetylation_A,Acetylation_K,Acetylation_S,Amidation_F,Hydroxylation_P,Methylation_K,Methylation_R,N_Linked_Glycosylation_N,O_Linked_Glycosylation_T,O_Linked_Glycosylation_S,Phosphorylation_S,Phosphorylation_T,Phosphorylation_Y"
-
+                              % Fixed_Modification and Variable_Modifications should not be conflict with each other
 % CysteineChemicalModification
 CysteineChemicalModification = "None";  % User can select any or all of "None,Cys_CAM,Cys_PE,Cys_CM,Cys_PAM" where Cys_CAM being for Carboxyamidomethyl Cysteine, Cys_PE being for Pyridyl-Ethyl Cysteine, Cys_CM for Carboxymethyl Cysteine, and Cys_PAM for Propionamide Cysteine
 % Note: Order must be maintained when adding cysteine chemical modifications
