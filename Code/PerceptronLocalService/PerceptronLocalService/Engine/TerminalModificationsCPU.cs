@@ -59,18 +59,16 @@ namespace PerceptronLocalService.Engine
                 ////TerminalModifications(FlagSet, molW, leftIons, rightIons, sequence, tmpSeqLength, parameters, protein, tempCandidateProteins); //Updated 20201112
                 //TerminalModifications(molW, AcetylationWeight, MethionineWeight, AcetylationMinusMethionine, leftIons, rightIons, sequence, tmpSeqLength, IndividualModifications, tempprotein, tempCandidateProteins); //Updated 20201221 Bug Fix   //#EnhancementOfCode In PreTruncation: newProtein should contains all information irrespective to individual molW, leftIons, rightIons, tmpSeq, tmpSeqLength etc.
 
-
-                var tempprotein = candidateProteins[index];
+                var tempprotein = new ProteinDto(candidateProteins[index]);  // If not used this then, otherwise Main SQL Candidate List will be altered.
 
                 var sequence = tempprotein.Sequence;
+
                 var leftIons = tempprotein.InsilicoDetails.InsilicoMassLeft;
                 var rightIons = tempprotein.InsilicoDetails.InsilicoMassRight;
 
                 //Fragmentation Ions: Therefore, last positioned Ions Removed as its the Mass of protein -H2O
                 leftIons.RemoveAt(leftIons.Count - 1);
                 rightIons.RemoveAt(rightIons.Count - 1);
-
-
 
                 double molW = tempprotein.Mw; //InsilicoDetails.InsilicoMassLeft[tempprotein.InsilicoDetails.InsilicoMassLeft.Count - 1];
                 int tmpSeqLength = sequence.Length;
@@ -109,8 +107,13 @@ namespace PerceptronLocalService.Engine
 
                 newProtein.TerminalModification = "None";
                 newProtein.Mw = molW;
-                newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
-                newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
+                //newProtein.InsilicoDetails.InsilicoMassLeft = leftIons;
+                //newProtein.InsilicoDetails.InsilicoMassRight = rightIons;
+                newProtein.InsilicoDetails = new InsilicoObjectDto
+                {
+                    InsilicoMassLeft = leftIons.ToList(),
+                    InsilicoMassRight = rightIons.ToList()
+                };
                 tempCandidateProteins.Add(newProtein);
             }
 
@@ -177,7 +180,6 @@ namespace PerceptronLocalService.Engine
                     tempCandidateProteins.Add(newProtein);
                 }
             }
-
             TimeTerminalModification.Stop();
         }
     }
