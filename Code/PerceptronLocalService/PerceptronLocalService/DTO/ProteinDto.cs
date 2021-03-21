@@ -18,7 +18,7 @@ namespace PerceptronLocalService.DTO
         public double Mw;
         public List<PostTranslationModificationsSiteDto> PtmParticulars;
         public BlindPtmInfo BlindPtmLocalizationInfo;
-        public InsilicoObjectDto InsilicoDetails;
+        public InsilicoObjectDto InsilicoDetails = new InsilicoObjectDto();
 
 
         public int TruncationIndex;
@@ -69,6 +69,8 @@ namespace PerceptronLocalService.DTO
         }
 
 
+ 
+
         public ProteinDto(ProteinDto protein)   //Simple    //...................WITH NEW ProteinDto
         {
             Header = protein.Header;
@@ -89,8 +91,15 @@ namespace PerceptronLocalService.DTO
             BlindPtmLocalizationInfo = new BlindPtmInfo(protein.BlindPtmLocalizationInfo.Start,
             protein.BlindPtmLocalizationInfo.End, protein.BlindPtmLocalizationInfo.Mass);
 
-
-            InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
+            InsilicoDetails.InsilicoMassLeft.AddRange(protein.InsilicoDetails.InsilicoMassLeft);
+            InsilicoDetails.InsilicoMassRight.AddRange(protein.InsilicoDetails.InsilicoMassRight);
+            InsilicoDetails.InsilicoMassLeftAo.AddRange(protein.InsilicoDetails.InsilicoMassLeftAo);
+            InsilicoDetails.InsilicoMassLeftBo.AddRange(protein.InsilicoDetails.InsilicoMassLeftBo);
+            InsilicoDetails.InsilicoMassLeftAstar.AddRange(protein.InsilicoDetails.InsilicoMassLeftAstar);
+            InsilicoDetails.InsilicoMassRightYo.AddRange(protein.InsilicoDetails.InsilicoMassRightYo);
+            InsilicoDetails.InsilicoMassRightYstar.AddRange(protein.InsilicoDetails.InsilicoMassRightYstar);
+            InsilicoDetails.InsilicoMassRightZo.AddRange(protein.InsilicoDetails.InsilicoMassRightZo);
+            InsilicoDetails.InsilicoMassRightZoo.AddRange(protein.InsilicoDetails.InsilicoMassRightZoo);
 
             TruncationIndex = protein.TruncationIndex;
             TerminalModification = protein.TerminalModification;
@@ -111,7 +120,7 @@ namespace PerceptronLocalService.DTO
 
         }
 
-        
+
 
         public static ProteinDto GetCopy(ProteinDto protein)
         {
@@ -185,3 +194,105 @@ namespace PerceptronLocalService.DTO
         }
     }
 }
+
+//public ProteinDto(ProteinDto protein) // Not Useful constructor  contains Reference based of Insilico DTO
+//{
+//    Header = protein.Header;
+//    OriginalSequence = protein.OriginalSequence;
+//    Sequence = protein.Sequence;
+//    PstScore = protein.PstScore;
+//    InsilicoScore = protein.InsilicoScore;
+//    PtmScore = protein.PtmScore;
+//    Score = protein.Score;
+//    MwScore = protein.MwScore;
+//    Mw = protein.Mw;
+
+
+//    PtmParticulars = new List<PostTranslationModificationsSiteDto>();
+
+//    PtmParticulars.AddRange(protein.PtmParticulars);
+
+//    BlindPtmLocalizationInfo = new BlindPtmInfo(protein.BlindPtmLocalizationInfo.Start,
+//    protein.BlindPtmLocalizationInfo.End, protein.BlindPtmLocalizationInfo.Mass);
+
+//    InsilicoDetails = new InsilicoObjectDto(protein.InsilicoDetails);
+
+//    TruncationIndex = protein.TruncationIndex;
+//    TerminalModification = protein.TerminalModification;
+//    Truncation = protein.Truncation;
+//    TruncatedSequence = protein.TruncatedSequence;
+//    TruncatedMolecaularWeight = protein.TruncatedMolecaularWeight;
+//    InsilicoScore = protein.InsilicoScore;
+//    MatchCounter = protein.MatchCounter;
+
+//    LeftMatchedIndex = protein.LeftMatchedIndex;
+//    RightMatchedIndex = protein.RightMatchedIndex;
+//    LeftPeakIndex = protein.LeftPeakIndex;
+//    RightPeakIndex = protein.RightPeakIndex;
+//    LeftType = protein.LeftType;
+//    RightType = protein.RightType;
+
+//    PstTagsWithComma = protein.PstTagsWithComma;
+
+//}
+
+
+
+
+//InsilicoDetails = new InsilicoObjectDto
+//{
+//    InsilicoMassLeft = protein.InsilicoDetails.InsilicoMassLeft,
+//    InsilicoMassRight = protein.InsilicoDetails.InsilicoMassRight,
+//    InsilicoMassLeftAo = protein.InsilicoDetails.InsilicoMassLeftAo,
+//    InsilicoMassLeftBo = protein.InsilicoDetails.InsilicoMassLeftBo,
+//    InsilicoMassLeftAstar = protein.InsilicoDetails.InsilicoMassLeftAstar,
+//    InsilicoMassLeftBstar = protein.InsilicoDetails.InsilicoMassLeftBstar,
+//    InsilicoMassRightYo = protein.InsilicoDetails.InsilicoMassRightYo,
+//    InsilicoMassRightYstar = protein.InsilicoDetails.InsilicoMassRightYstar,
+//    InsilicoMassRightZo = protein.InsilicoDetails.InsilicoMassRightZo,
+//    InsilicoMassRightZoo = protein.InsilicoDetails.InsilicoMassRightZoo,
+
+//};
+
+//var temp = protein.InsilicoDetails;
+
+//var tempLeft = new List<double>();
+//tempLeft.AddRange(temp.InsilicoMassLeft);
+//temp.InsilicoMassLeft = tempLeft;
+
+//var tempRight = new List<double>();
+//tempRight.AddRange(temp.InsilicoMassRight);
+//temp.InsilicoMassRight = tempRight;
+
+//var tempInsilicoMassLeftAo = new List<double>();
+//tempInsilicoMassLeftAo.AddRange(temp.InsilicoMassLeftAo);
+//temp.InsilicoMassLeftAo = tempInsilicoMassLeftAo;
+
+//var tempInsilicoMassLeftBo = new List<double>();
+//tempInsilicoMassLeftBo.AddRange(temp.InsilicoMassLeftBo);
+//temp.InsilicoMassLeftBo = tempInsilicoMassLeftBo;
+
+//var tempInsilicoMassLeftAstar = new List<double>();
+//tempInsilicoMassLeftAstar.AddRange(temp.InsilicoMassLeftAstar);
+//temp.InsilicoMassLeftAstar = tempInsilicoMassLeftAstar;
+
+
+//var tempInsilicoMassLeftBstar = new List<double>();
+//tempInsilicoMassLeftBstar.AddRange(temp.InsilicoMassLeftBstar);
+//temp.InsilicoMassLeftBstar = tempInsilicoMassLeftBstar;
+
+//var tempInsilicoMassRightYo = new List<double>();
+//tempInsilicoMassRightYo.AddRange(temp.InsilicoMassRightYo);
+//temp.InsilicoMassRightYo = tempInsilicoMassRightYo;
+
+//var tempInsilicoMassRightYstar = new List<double>();
+//tempInsilicoMassRightYstar.AddRange(temp.InsilicoMassRightYstar);
+//temp.InsilicoMassRightYstar = tempInsilicoMassRightYstar;
+
+//var tempInsilicoMassRightZo = new List<double>();
+//tempInsilicoMassRightZo.AddRange(temp.InsilicoMassRightZo);
+//temp.InsilicoMassRightZo = tempInsilicoMassRightZo;
+
+//var tempInsilicoMassRightZoo = new List<double>();
+//tempInsilicoMassRightZoo.AddRange(temp.InsilicoMassRightZoo);
+//temp.InsilicoMassRightZoo = tempInsilicoMassRightZoo;
