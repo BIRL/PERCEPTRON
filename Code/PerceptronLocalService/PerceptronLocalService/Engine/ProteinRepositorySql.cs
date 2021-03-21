@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-using Dapper;
-//using Mono.CSharp;
 using System.Text.RegularExpressions;
 using PerceptronLocalService.DTO;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.Utility;
-
-using System.Diagnostics;
 
 namespace PerceptronLocalService.Engine
 {
