@@ -894,8 +894,8 @@ namespace PerceptronLocalService
                 // HERE IT WILL BE PTMs_Generator_Insilico_Generator
                 for (int i = 0; i < candidateProteins.Count; i++)
                 {
-                    List<ProteinDto> ModifiedPtmProtein = _postTranslationalModificationModule.PTMs_Generator_Insilico_Generator(Experimentalmz, candidateProteins[i], parameters);
-                    UpdatedCandidatedProteinList.AddRange(ModifiedPtmProtein);
+                    //List<ProteinDto> ModifiedPtmProtein = _postTranslationalModificationModule.PTMs_Generator_Insilico_Generator(Experimentalmz, candidateProteins[i], parameters);
+                    //UpdatedCandidatedProteinList.AddRange(ModifiedPtmProtein);
                 }
             }
 
