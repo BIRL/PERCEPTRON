@@ -16,7 +16,7 @@ namespace PerceptronLocalService.DTO
         public double Score;
         public double MwScore;
         public double Mw;
-        public List<PostTranslationModificationsSiteDto> PtmParticulars;
+        public List<PostTranslationModificationsSiteDto> PtmParticulars = new List<PostTranslationModificationsSiteDto>();
         public BlindPtmInfo BlindPtmLocalizationInfo;
         public InsilicoObjectDto InsilicoDetails = new InsilicoObjectDto();
 
@@ -82,9 +82,6 @@ namespace PerceptronLocalService.DTO
             Score = protein.Score;
             MwScore = protein.MwScore;
             Mw = protein.Mw;
-
-
-            PtmParticulars = new List<PostTranslationModificationsSiteDto>();
 
             PtmParticulars.AddRange(protein.PtmParticulars);
 
