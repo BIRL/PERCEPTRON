@@ -340,8 +340,9 @@ namespace PerceptronLocalService
             Stopwatch EvalueTime = new Stopwatch();
             Stopwatch AddRangeTime = new Stopwatch();
 
-
-
+            double TotalSqlDataBaseTime = 0.0;
+            double TotalDbFetchDbProcessTime = 0.0;
+            double TotalUpdateCandTime = 0.0;
 
             //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
@@ -415,6 +416,8 @@ namespace PerceptronLocalService
                     {
                         var SQLDataBaseProteins = new List<ProteinDto>();
 
+                        Stopwatch SqlDataBaseTime = new Stopwatch();
+                        SqlDataBaseTime.Start();
                         if (iterations == 0)
                         {
                             SQLDataBaseProteins = SqlDatabases[0];  //For Simple Database
@@ -423,6 +426,9 @@ namespace PerceptronLocalService
                         {
                             SQLDataBaseProteins = SqlDatabases[1];  //For Decoy Database;
                         }
+                        SqlDataBaseTime.Stop();
+                        TotalSqlDataBaseTime = TotalSqlDataBaseTime + SqlDataBaseTime.ElapsedMilliseconds;
+
 
                         //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                         var candidateProteins = new List<ProteinDto>();
@@ -431,9 +437,15 @@ namespace PerceptronLocalService
 
                         //Fetching Candidate Proteins From User Selected DataBase
                         ////// SHOULD USE THIS........""  List<newMsPeaksDto> peakData2DList  ""
+                        ///
+
+                        Stopwatch DbFetchDbProcessTime = new Stopwatch();
+                        DbFetchDbProcessTime.Start();
                         var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, SQLDataBaseProteins, executionTimes);
                         candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                         CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
+                        DbFetchDbProcessTime.Stop();
+                        TotalDbFetchDbProcessTime = TotalDbFetchDbProcessTime + DbFetchDbProcessTime.ElapsedMilliseconds;
 
                         //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                         ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
@@ -442,7 +454,13 @@ namespace PerceptronLocalService
 
                         //////UpdatedParse_database.m
                         //candidateProteins = new List<ProteinDto>();
+
+                        Stopwatch UpdateCandTime = new Stopwatch();
+                        UpdateCandTime.Start();
                         candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
+                        UpdateCandTime.Stop();
+                        TotalUpdateCandTime = TotalUpdateCandTime + UpdateCandTime.ElapsedMilliseconds;
+
                         if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                         {
                             EmailMsg = "ProteinListEmpty"; // -1;
