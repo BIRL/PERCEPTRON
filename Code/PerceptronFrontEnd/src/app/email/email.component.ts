@@ -44,7 +44,7 @@ export class EmailComponent implements OnInit {
   onSubmit(formData) {
     if (formData.valid) {
       var x = this.router;
-      console.log(formData.value);
+      //console.log(formData.value);  //Commented: Updated 20210321
       var email = formData.value.email
       var password = formData.value.password;
       var cred = firebase.auth.EmailAuthProvider.credential(email, password);
