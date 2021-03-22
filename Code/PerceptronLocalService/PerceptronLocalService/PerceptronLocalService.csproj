@@ -312,6 +312,11 @@
     </None>
     <None Include="packages.config" />
     <None Include="PerceptronLocalService_TemporaryKey.pfx" />
+    <None Include="ProteinDatabasesInFastaFormat\EColi.fasta" />
+    <None Include="ProteinDatabasesInFastaFormat\EColiDecoyDB.fasta" />
+    <None Include="ProteinDatabasesInFastaFormat\EColi_Dummy.fasta" />
+    <None Include="ProteinDatabasesInFastaFormat\Human.fasta" />
+    <None Include="ProteinDatabasesInFastaFormat\HumanDecoyDB.fasta" />
     <None Include="Tools\OpenMS\share\CHEMISTRY\HMDB2StructMapping.tsv" />
     <None Include="Tools\OpenMS\share\CHEMISTRY\HMDBMappingFile.tsv" />
     <None Include="Tools\OpenMS\share\CHEMISTRY\MetaboliteIsoModel.scale" />
@@ -634,7 +639,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ProteinDatabasesInFastaFormat\New folder\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
