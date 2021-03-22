@@ -14,7 +14,7 @@ namespace PerceptronLocalService.Utility
         public List<PostTranslationModificationsSiteDto> MSO(string proteinSequence, double Tolerance)
         {
             var modName = "Sulfoxide";
-            double modWeight = ModificationTableClass.ModificationMWShiftTable(modName);
+            double modWeight = ModificationTableClass.ModificationMWShiftTable("MSO");   //Giving ModName Here MSO for fetching the mod weight of MSO //Updated 20210322
             var site = 'M';
 
             // variable score is initialized
