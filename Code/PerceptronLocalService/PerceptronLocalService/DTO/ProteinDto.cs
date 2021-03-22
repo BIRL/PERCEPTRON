@@ -119,10 +119,10 @@ namespace PerceptronLocalService.DTO
 
 
 
-        public static ProteinDto GetCopy(ProteinDto protein)
-        {
-            return Clone.DeepClone<ProteinDto>(protein);
-        }
+        //public static ProteinDto GetCopy(ProteinDto protein)
+        //{
+        //    return Clone.DeepClone<ProteinDto>(protein);
+        //}
 
 
         public ProteinDto(string cHeader, double cWholeProteinMass, string cSequence, List<double> InsilicoLeftIons, List<double> InsilicoRightIons)  // , string FastaHeader   ---Wait for FastaHeader
