@@ -12,7 +12,7 @@ try
 %Message = RegisterUser( BaseApiUrl, UserName,  EmailAddress, Password);
 
 %% Use VerfiyingEmailAddress for email verification, only needed to execute for one time
-%Message = VerfiyingEmailAddress( BaseApiUrl,  UserName, EmailAddress, Password, UserUniqueId);
+%Message = VerfiyingEmailAddress( BaseApiUrl,  UserName, EmailAddress, Password);
 
 FtpServerName = 'perceptron.lums.edu.pk';
 FtpUserName =  char("perceptron.lums.edu.pk" + "|" + UserName) ;
