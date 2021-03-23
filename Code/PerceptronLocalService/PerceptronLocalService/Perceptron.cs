@@ -117,8 +117,8 @@ namespace PerceptronLocalService
                         graphicsCard = property.Value.ToString();
                         if (graphicsCard.Contains("NVIDIA"))
                         {
-                            //NativeCudaCalls.InitializingGpu();
-                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                            NativeCudaCalls.InitializingGpu();
+                            IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
                         break;
                     }
@@ -313,7 +313,7 @@ namespace PerceptronLocalService
 
             //var counter = 0;
             string EmailMsg = "";
-            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -886,17 +886,27 @@ namespace PerceptronLocalService
             UpdatedCandidatedProteinList.AddRange(candidateProteins);
 
             /* WithoutPTM_ParseDatabase.m */
+            var ListString = new List<string>();
+            for (int iter=0; iter < UpdatedCandidatedProteinList.Count; iter++)
+            {
+                ListString.Add(UpdatedCandidatedProteinList[iter].Header);
+            }
+
 
             /* Updated_ParseDatabase.m */
 
             if (parameters.CysteineChemicalModification != "None" && parameters.MethionineChemicalModification != "None" && parameters.FixedModifications.Count > 0 && parameters.VariableModifications.Count > 0)
             {
                 // HERE IT WILL BE PTMs_Generator_Insilico_Generator
+                Stopwatch Uptime = new Stopwatch();
+                Uptime.Start();
                 for (int i = 0; i < candidateProteins.Count; i++)
                 {
-                    //List<ProteinDto> ModifiedPtmProtein = _postTranslationalModificationModule.PTMs_Generator_Insilico_Generator(Experimentalmz, candidateProteins[i], parameters);
-                    //UpdatedCandidatedProteinList.AddRange(ModifiedPtmProtein);
+                    List<ProteinDto> ModifiedPtmProtein = _postTranslationalModificationModule.PTMs_Generator_Insilico_Generator(Experimentalmz, candidateProteins[i], parameters);
+                    UpdatedCandidatedProteinList.AddRange(ModifiedPtmProtein);
                 }
+                Uptime.Stop();
+                int a = 1;
             }
 
             return UpdatedCandidatedProteinList;
@@ -1120,6 +1130,143 @@ namespace PerceptronLocalService
             return returnArray;
         }
 
+
+        private List<ProteinDto> ExecuteSpectralComparisonModuleGpu(ParametersToCpp Parameters, List<ProteinDto> candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp)
+        {
+            //candidateProteins.RemoveAt(0);
+            var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+            ProteinStruct[] CandidateProteinsToGpu = new ProteinStruct[candidateProteins.Count()];
+
+            for (int i = 0; i < candidateProteins.Count(); i++)
+            {
+                var SizeOfAllInsilicoArrays = new int[] { candidateProteins[i].InsilicoDetails.InsilicoMassLeft.Count, candidateProteins[i].InsilicoDetails.InsilicoMassRight.Count, candidateProteins[i].InsilicoDetails.InsilicoMassLeftAo.Count, candidateProteins[i].InsilicoDetails.InsilicoMassLeftBo.Count, candidateProteins[i].InsilicoDetails.InsilicoMassLeftAstar.Count,
+                    candidateProteins[i].InsilicoDetails.InsilicoMassLeftBstar.Count, candidateProteins[i].InsilicoDetails.InsilicoMassRightYo.Count, candidateProteins[i].InsilicoDetails.InsilicoMassRightYstar.Count, candidateProteins[i].InsilicoDetails.InsilicoMassRightZo.Count, candidateProteins[i].InsilicoDetails.InsilicoMassRightZoo.Count};
+
+                AssignPtrToArray _AssignPtrToArray = new AssignPtrToArray();
+                var InsilicoMassLeftPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassLeft);
+                var InsilicoMassRightPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassRight);
+                var InsilicoMassLeftAoPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassLeftAo);
+                var InsilicoMassLeftBoPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassLeftBo);
+                var InsilicoMassLeftAstarPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassLeftAstar);
+                var InsilicoMassLeftBstarPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassLeftBstar);
+                var InsilicoMassRightYoPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassRightYo);
+                var InsilicoMassRightYstarPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassRightYstar);
+                var InsilicoMassRightZoPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassRightZo);
+                var InsilicoMassRightZooPtr = _AssignPtrToArray.ArrayPtr(candidateProteins[i].InsilicoDetails.InsilicoMassRightZoo);
+
+                int sizeOfPtr = Marshal.SizeOf(SizeOfAllInsilicoArrays[0]) * SizeOfAllInsilicoArrays.Length;
+                var SizeOfAllInsilicoArraysPtr = Marshal.AllocHGlobal(sizeOfPtr);
+                Marshal.Copy(SizeOfAllInsilicoArrays, 0, SizeOfAllInsilicoArraysPtr, SizeOfAllInsilicoArrays.Length);
+
+                ProteinStruct temp = new ProteinStruct(candidateProteins[i].Header, InsilicoMassLeftPtr, InsilicoMassRightPtr, InsilicoMassLeftAoPtr, InsilicoMassLeftBoPtr,
+                    InsilicoMassLeftAstarPtr, InsilicoMassLeftBstarPtr, InsilicoMassRightYoPtr, InsilicoMassRightYstarPtr, InsilicoMassRightZoPtr, InsilicoMassRightZooPtr, SizeOfAllInsilicoArraysPtr);
+
+                CandidateProteinsToGpu[i] = temp;
+            }
+            IntPtr[] CandidateProteinsToGpuIntPtr = new IntPtr[CandidateProteinsToGpu.Length];
+            for (int I = 0; I < CandidateProteinsToGpu.Length; I++)
+            {
+                CandidateProteinsToGpuIntPtr[I] = Marshal.AllocHGlobal(Marshal.SizeOf(CandidateProteinsToGpu[I]));
+                Marshal.StructureToPtr(CandidateProteinsToGpu[I], CandidateProteinsToGpuIntPtr[I], false);
+            }
+
+            ////// FROM HERE //////////////////////////////
+            IntPtr[] pResultsFromGpu = new IntPtr[candidateProteins.Count()];
+
+
+            for (int i = 0; i < candidateProteins.Count(); i++)
+                pResultsFromGpu[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ProteinStructFromGpu)));
+
+            int SizeOfDataFromGpu = NativeCudaCalls.InsilicoSpectralComparisonGpu(Parameters, CandidateProteinsToGpuIntPtr, PeakListMasses, PeakListIntensitiesForSpectralComp, PeakListMasses.Count(), candidateProteins.Count, pResultsFromGpu);
+
+            ProteinStructFromGpu[] returnArray = new ProteinStructFromGpu[SizeOfDataFromGpu];
+            for (int i = 0; i < SizeOfDataFromGpu; i++)
+            {
+                returnArray[i] = (ProteinStructFromGpu)Marshal.PtrToStructure(pResultsFromGpu[i], typeof(ProteinStructFromGpu));
+
+                int HeaderIndex = returnArray[i].Header;
+                var CandProtwithInsilicoScores = candidateProteins[HeaderIndex];
+                //CandProtwithInsilicoScores.Header = candidateProteins[HeaderIndex].Header;
+                CandProtwithInsilicoScores.InsilicoScore = returnArray[i].InsilicoScore;
+                CandProtwithInsilicoScores.MatchCounter = returnArray[i].MatchCounter;
+
+                int sizeLeft = returnArray[i].LeftCount;
+                int[] LeftMatchedIndex = new int[sizeLeft];
+                int[] LeftPeakIndex = new int[sizeLeft];
+                int[] LeftType = new int[sizeLeft];
+                Marshal.Copy(returnArray[i].LeftMatchedIndex, LeftMatchedIndex, 0, sizeLeft);
+                Marshal.Copy(returnArray[i].LeftPeakIndex, LeftPeakIndex, 0, sizeLeft);
+                Marshal.Copy(returnArray[i].LeftType, LeftType, 0, sizeLeft);
+
+                int sizeRight = returnArray[i].RightCount;
+                int[] RightMatchedIndex = new int[sizeRight];
+                int[] RightPeakIndex = new int[sizeRight];
+                int[] RightType = new int[sizeRight];
+                Marshal.Copy(returnArray[i].RightMatchedIndex, RightMatchedIndex, 0, sizeRight);
+                Marshal.Copy(returnArray[i].RightPeakIndex, RightPeakIndex, 0, sizeRight);
+                Marshal.Copy(returnArray[i].RightType, RightType, 0, sizeRight);
+
+                var LeftMatchedIndexList = new List<int>();
+                var LeftPeakIndexList = new List<int>();
+                var LeftTypeList = new List<string>();
+                var RightMatchedIndexList = new List<int>();
+                var RightPeakIndexList = new List<int>();
+                var RightTypeList = new List<string>();
+
+                for (int InsilicoLeftInd = 0; InsilicoLeftInd < sizeLeft; InsilicoLeftInd++)
+                {
+                    LeftMatchedIndexList.Add(LeftMatchedIndex[InsilicoLeftInd]);
+                    LeftPeakIndexList.Add(LeftPeakIndex[InsilicoLeftInd]);
+                    string Type = LeftRightTypeConversion(LeftType[InsilicoLeftInd]);
+                    LeftTypeList.Add(Type);
+                }
+                for (int InsilicoRightInd = 0; InsilicoRightInd < sizeRight; InsilicoRightInd++)
+                {
+                    RightMatchedIndexList.Add(RightMatchedIndex[InsilicoRightInd]);
+                    RightPeakIndexList.Add(RightPeakIndex[InsilicoRightInd]);
+                    string Type = LeftRightTypeConversion(RightType[InsilicoRightInd]);
+                    RightTypeList.Add(Type);
+                }
+                CandProtwithInsilicoScores.LeftMatchedIndex = LeftMatchedIndexList;
+                CandProtwithInsilicoScores.LeftPeakIndex = LeftPeakIndexList;
+                CandProtwithInsilicoScores.LeftType = LeftTypeList;
+                CandProtwithInsilicoScores.RightMatchedIndex = RightMatchedIndexList;
+                CandProtwithInsilicoScores.RightPeakIndex = RightPeakIndexList;
+                CandProtwithInsilicoScores.RightType = RightTypeList;
+                CandidateProteinswithInsilicoScores.Add(CandProtwithInsilicoScores);
+            }
+            //////// TILL HERE ////////////////////////////
+
+            return CandidateProteinswithInsilicoScores;
+        }
+
+        public string LeftRightTypeConversion(int IntType)
+        {
+            string StringType = "";
+            if (IntType == 1)
+                StringType = "Left";
+            else if (IntType == 2)
+                StringType = "A'";
+            else if (IntType == 3)
+                StringType = "B'";
+            else if (IntType == 4)
+                StringType = "A*";
+            else if (IntType == 5)
+                StringType = "B*";
+            else if (IntType == 6)
+                StringType = "Right";
+            else if (IntType == 7)
+                StringType = "Y'";
+            else if (IntType == 8)
+                StringType = "Y*";
+            else if (IntType == 9)
+                StringType = "Z'";
+            else if (IntType == 10)
+                StringType = "Z''";
+            return StringType;
+        }
+
+
         private List<PstTagList> ConvertStructToPstTagList(MassTunerAndPstCombinedStruct[] MassTunerAndPstData)
         {
 
@@ -1156,11 +1303,7 @@ namespace PerceptronLocalService
         {
             MainInitializer();
         }
-        //private extern static double wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters);
-        //public static double WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters)
-        //{
-        //    return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters);
-        //}
+
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
         private extern static int wholeproteinmasstunerandpst(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters, IntPtr[] pResultsFromGpu);
         public static int WholeProteinMassTunerAndPstGpu(double[] PeakListMasses, double[] PeakListIntensities, int PeakListLength, [In, Out] ParametersToCpp Parameters, IntPtr[] pResultsFromGpu)
@@ -1168,14 +1311,63 @@ namespace PerceptronLocalService
             return wholeproteinmasstunerandpst(PeakListMasses, PeakListIntensities, PeakListLength, Parameters, pResultsFromGpu);
         }
 
-        [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
-        private extern static void insilicospectralcomparisongpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount);
-        public static void InsilicoSpectralComparisonGpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount)
+        [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]   /// CHANGED HERE!!!!
+        private extern static int insilicospectralcomparisongpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount, IntPtr[] pResultsFromGpu);
+        public static int InsilicoSpectralComparisonGpu([In, Out] ParametersToCpp Parameters, IntPtr[] candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp, int PeakListCount, int candidateProteinsCount, IntPtr[] pResultsFromGpu)
         {
-            insilicospectralcomparisongpu(Parameters, candidateProteins, PeakListMasses, PeakListIntensitiesForSpectralComp, PeakListCount, candidateProteinsCount);
+            return insilicospectralcomparisongpu(Parameters, candidateProteins, PeakListMasses, PeakListIntensitiesForSpectralComp, PeakListCount, candidateProteinsCount, pResultsFromGpu);
         }
-
     }
     // --- GPU Code Above ---   Updated: 20210223
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]   ///CHANGED HERE!!!
+    public struct ProteinStructFromGpu
+    {
+        public int Header; // const char* Header;
+        public int MatchCounter;
+        public double InsilicoScore;
+        public IntPtr LeftMatchedIndex;
+        public IntPtr RightMatchedIndex;
+        public IntPtr LeftPeakIndex;
+        public IntPtr RightPeakIndex;
+        public IntPtr LeftType;
+        public IntPtr RightType;
+        public int LeftCount;
+        public int RightCount;
+    }
+
 }
 
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct ProteinStruct
+{
+    public string Header;
+    public IntPtr InsilicoMassLeft;
+    public IntPtr InsilicoMassRight;
+    public IntPtr InsilicoMassLeftAo;
+    public IntPtr InsilicoMassLeftBo;
+    public IntPtr InsilicoMassLeftAstar;
+    public IntPtr InsilicoMassLeftBstar;
+    public IntPtr InsilicoMassRightYo;
+    public IntPtr InsilicoMassRightYstar;
+    public IntPtr InsilicoMassRightZo;
+    public IntPtr InsilicoMassRightZoo;
+    public IntPtr SizeOfAllInsilicoArrays;
+
+    public ProteinStruct(string Header, IntPtr InsilicoMassLeft, IntPtr InsilicoMassRight, IntPtr InsilicoMassLeftAo, IntPtr InsilicoMassLeftBo, IntPtr InsilicoMassLeftAstar, IntPtr InsilicoMassLeftBstar,
+            IntPtr InsilicoMassRightYo, IntPtr InsilicoMassRightYstar, IntPtr InsilicoMassRightZo, IntPtr InsilicoMassRightZoo, IntPtr SizeOfAllInsilicoArrays)
+    {
+        this.Header = Header;
+        this.InsilicoMassLeft = InsilicoMassLeft;
+        this.InsilicoMassRight = InsilicoMassRight;
+        this.InsilicoMassLeftAo = InsilicoMassLeftAo;
+        this.InsilicoMassLeftBo = InsilicoMassLeftBo;
+        this.InsilicoMassLeftAstar = InsilicoMassLeftAstar;
+        this.InsilicoMassLeftBstar = InsilicoMassLeftBstar;
+        this.InsilicoMassRightYo = InsilicoMassRightYo;
+        this.InsilicoMassRightYstar = InsilicoMassRightYstar;
+        this.InsilicoMassRightZo = InsilicoMassRightZo;
+        this.InsilicoMassRightZoo = InsilicoMassRightZoo;
+        this.SizeOfAllInsilicoArrays = SizeOfAllInsilicoArrays;
+    }
+}
