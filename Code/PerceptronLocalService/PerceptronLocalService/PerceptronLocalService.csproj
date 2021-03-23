@@ -232,6 +232,7 @@
     <Compile Include="Utility\Acetylation_CPU.cs" />
     <Compile Include="Utility\Amidation_CPU.cs" />
     <Compile Include="Utility\AminoAcidInfo.cs" />
+    <Compile Include="Utility\AssignPtrToArray.cs" />
     <Compile Include="Utility\Clone.cs" />
     <Compile Include="Utility\Combinations.cs" />
     <Compile Include="Utility\ConvertStringListToDoubleList.cs" />
