@@ -85,9 +85,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -129,6 +129,7 @@
     </Link>
     <CudaCompile>
       <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
