@@ -20,6 +20,7 @@
 #ifndef CudaHeaderFile_h
 #define CudaHeaderFile_h
 
+
 __device__ int dev_data[50];
 __device__ int dev_count = 0;
 __device__ int dev_wind_count = 0;
