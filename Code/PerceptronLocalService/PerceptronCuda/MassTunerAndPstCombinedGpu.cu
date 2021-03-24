@@ -350,6 +350,7 @@ wholeproteinmasstunerandpst(double PeakListMasses[], double PeakListIntensities[
 
 		cudaDeviceSynchronize();
 		return PeptideSequenceTags.size();
+
 	}
 
 	else
