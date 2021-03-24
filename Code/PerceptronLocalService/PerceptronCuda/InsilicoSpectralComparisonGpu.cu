@@ -623,10 +623,8 @@ insilicospectralcomparisongpu(ParametersToCpp Parameters, ProteinStructFromCS **
 	cudaMalloc((void**) &(d_a), sizeof(ProteinStructFromCS)*candidateProteinsCount);
 	cudaMemcpy(d_a, h_a, sizeof(ProteinStructFromCS)*candidateProteinsCount, cudaMemcpyHostToDevice);
 
-	/////////////////////////////////////////////////////////////////////////////
 	cudaMalloc((void**) &(d_return), sizeof(ProteinStructToReturn)*candidateProteinsCount);
 	cudaMemcpy(d_return, h_return, sizeof(ProteinStructToReturn)*candidateProteinsCount, cudaMemcpyHostToDevice);
-	//////////////////////////////////////////////////////////////////////////////
 
 	int NumOfThreadsToLaunch = 256;
 	int NoOfBlocks = candidateProteinsCount / NumOfThreadsToLaunch;	///HERE	
