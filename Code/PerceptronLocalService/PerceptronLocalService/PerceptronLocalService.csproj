@@ -145,6 +145,7 @@
     <Compile Include="DTO\MassTunerAndPstCombinedStruct.cs" />
     <Compile Include="DTO\MolecularWeightServiceParametersDto.cs" />
     <Compile Include="DTO\MsPeaksDto.cs" />
+    <Compile Include="DTO\MsPeaksDtoGpu.cs" />
     <Compile Include="DTO\newMsPeaksDto.cs" />
     <Compile Include="DTO\ParametersToCpp.cs" />
     <Compile Include="DTO\PerceptronSdkResults.cs" />
