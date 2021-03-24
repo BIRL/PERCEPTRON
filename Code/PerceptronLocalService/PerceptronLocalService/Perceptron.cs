@@ -169,8 +169,8 @@ namespace PerceptronLocalService
                     string time = TotalTime.Elapsed.ToString();
                     int a = 1;
 
-                    PerceptronSdkResultsAvailable(MainPathForResults, NewPath);
-                    DeleteOldResultFiles(MainPathForResults);  //COMMENTED FOR THE TIME BEING...!!!  //20201224
+                    //PerceptronSdkResultsAvailable(MainPathForResults, NewPath);
+                    //DeleteOldResultFiles(MainPathForResults);  //COMMENTED FOR THE TIME BEING...!!!  //20201224
                 }
                 //System.Threading.Thread.Sleep(10000);
             }
@@ -313,7 +313,7 @@ namespace PerceptronLocalService
 
             //var counter = 0;
             string EmailMsg = "";
-            int ProgressStatus = 0;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
+            int ProgressStatus = 10;  // If ProgressStatus = 10(Job is running) & ProgressStatus = 100 (Job is done) & ProgressStatus = -1 (Job is not complete an error occured) //Updated 20201118
             var numberOfPeaklistFiles = parameters.PeakListFileName.Length;  //Number of files uploaded by user
 
             WriteResultsFile _WriteResultsFile = new WriteResultsFile();
@@ -377,6 +377,7 @@ namespace PerceptronLocalService
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
                     var PstTags = new List<PstTagList>();
 
+                    var PeakData = new MsPeaksDtoGpu();
                     if (IsGpu == false)  // CPU side Mass Tuner & Pst
                     {
                         //Logging.DumpMwTunerResult(massSpectrometryData);
@@ -389,9 +390,11 @@ namespace PerceptronLocalService
                     }
                     else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
                     {
+                        PeakData = new MsPeaksDtoGpu(massSpectrometryData.Intensity, massSpectrometryData.Mass);
                         if (parameters.Autotune == "True" || parameters.DenovoAllow == "True")
                         {
-                            var MassTunerAndPstData = ExecuteMassTunerModuleGpu(massSpectrometryData, parameters, executionTimes);
+                            
+                            var MassTunerAndPstData = ExecuteMassTunerModuleGpu(PeakData, parameters, executionTimes);
                             PstTags = ConvertStructToPstTagList(MassTunerAndPstData);
                             massSpectrometryData.WholeProteinMolecularWeight = MassTunerAndPstData[0].MassTuner;
                         }
@@ -500,7 +503,26 @@ namespace PerceptronLocalService
                         //Step 4 - ??? Algorithm - Spectral Comparison
                         SpectralComparisonTime.Start();
                         var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
-                        CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+
+                        if (IsGpu == false)
+                        {
+                            CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+                        }
+                        else
+                        {
+                            if (parameters.InsilicoSweight > 0)
+                            {
+                                ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, 1, 1, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
+
+                                CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModuleGpu(Parameters_To_Cpp, candidateProteins, PeakData);
+                            }
+                            
+                        }
+
+
+                        
+
+
                         SpectralComparisonTime.Stop();
 
 
@@ -1081,22 +1103,11 @@ namespace PerceptronLocalService
             return peakList;
         }
 
-        private MassTunerAndPstCombinedStruct[] ExecuteMassTunerModuleGpu(MsPeaksDto massSpectrometryData, SearchParametersDto parameters, ExecutionTimeDto executionTimes)
+        private MassTunerAndPstCombinedStruct[] ExecuteMassTunerModuleGpu(MsPeaksDtoGpu PeakData, SearchParametersDto parameters, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
-            double[] PeakListMasses = new double[massSpectrometryData.Mass.Count];
-            double[] PeakListIntensities = new double[massSpectrometryData.Intensity.Count];
-            double[] PeakListIntensitiesForSpectralComp = new double[massSpectrometryData.Intensity.Count];
-            for (int i = 0; i < massSpectrometryData.Mass.Count; i++)
-            {
-                PeakListMasses[i] = massSpectrometryData.Mass[i];
-                PeakListIntensities[i] = massSpectrometryData.Intensity[i];
-                //if (massSpectrometryData.Intensity[i] < 0.000092)
-                //    PeakListIntensitiesForSpectralComp[i] = 0.001;
-                //else
-                //    PeakListIntensitiesForSpectralComp[i] = 1;
-            }
-            int PeakListLength = massSpectrometryData.Mass.Count;
+            
+            int PeakListLength = PeakData.PeakListMasses.Length;
             int AutoTune, DenovoAllow;
             if (parameters.Autotune == "True")
                 AutoTune = 1;
@@ -1109,14 +1120,12 @@ namespace PerceptronLocalService
 
             ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
 
-            //massSpectrometryData.WholeProteinMolecularWeight = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp);
-
             IntPtr[] pResultsFromGpu = new IntPtr[5000];
 
             for (int i = 0; i < 5000; i++)
                 pResultsFromGpu[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MassTunerAndPstCombinedStruct)));
 
-            int SizeOfDataFromGpu = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakListMasses, PeakListIntensities, PeakListLength, Parameters_To_Cpp, pResultsFromGpu);
+            int SizeOfDataFromGpu = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakData.PeakListMasses, PeakData.PeakListIntensities, PeakListLength, Parameters_To_Cpp, pResultsFromGpu);
 
             MassTunerAndPstCombinedStruct[] returnArray = new MassTunerAndPstCombinedStruct[SizeOfDataFromGpu];
             for (int i = 0; i < SizeOfDataFromGpu; i++)
@@ -1131,9 +1140,20 @@ namespace PerceptronLocalService
         }
 
 
-        private List<ProteinDto> ExecuteSpectralComparisonModuleGpu(ParametersToCpp Parameters, List<ProteinDto> candidateProteins, double[] PeakListMasses, double[] PeakListIntensitiesForSpectralComp)
+        private List<ProteinDto> ExecuteSpectralComparisonModuleGpu(ParametersToCpp Parameters, List<ProteinDto> candidateProteins, MsPeaksDtoGpu PeakData)
         {
-            //candidateProteins.RemoveAt(0);
+            var PeakListMasses = PeakData.PeakListMasses;
+
+            double[] PeakListIntensitiesForSpectralComp = new double[PeakListMasses.Length];
+
+            for (int i = 0; i < PeakListMasses.Length; i++)
+            {
+                if (PeakData.PeakListIntensities[i] < 0.000092)
+                    PeakListIntensitiesForSpectralComp[i] = 0.001;
+                else
+                    PeakListIntensitiesForSpectralComp[i] = 1;
+            }
+
             var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
             ProteinStruct[] CandidateProteinsToGpu = new ProteinStruct[candidateProteins.Count()];
 
@@ -1170,7 +1190,6 @@ namespace PerceptronLocalService
                 Marshal.StructureToPtr(CandidateProteinsToGpu[I], CandidateProteinsToGpuIntPtr[I], false);
             }
 
-            ////// FROM HERE //////////////////////////////
             IntPtr[] pResultsFromGpu = new IntPtr[candidateProteins.Count()];
 
 
@@ -1186,7 +1205,6 @@ namespace PerceptronLocalService
 
                 int HeaderIndex = returnArray[i].Header;
                 var CandProtwithInsilicoScores = candidateProteins[HeaderIndex];
-                //CandProtwithInsilicoScores.Header = candidateProteins[HeaderIndex].Header;
                 CandProtwithInsilicoScores.InsilicoScore = returnArray[i].InsilicoScore;
                 CandProtwithInsilicoScores.MatchCounter = returnArray[i].MatchCounter;
 
@@ -1235,8 +1253,6 @@ namespace PerceptronLocalService
                 CandProtwithInsilicoScores.RightType = RightTypeList;
                 CandidateProteinswithInsilicoScores.Add(CandProtwithInsilicoScores);
             }
-            //////// TILL HERE ////////////////////////////
-
             return CandidateProteinswithInsilicoScores;
         }
 
@@ -1296,7 +1312,7 @@ namespace PerceptronLocalService
     // --- GPU Code Below ---   Updated: 20210223
     public static class NativeCudaCalls
     {
-        private const string DllFilePath = @"E:\01_PERCEPTRON\GitHub\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
+        private const string DllFilePath = @"D:\01_PERCEPTRON\01_GitHub\PERCEPTRON\Code\PerceptronLocalService\x64\Debug\PerceptronCuda.dll";
         [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
         private extern static void MainInitializer();
         public static void InitializingGpu()
