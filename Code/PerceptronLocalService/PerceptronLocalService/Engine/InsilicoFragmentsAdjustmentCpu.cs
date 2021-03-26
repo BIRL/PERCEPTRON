@@ -41,15 +41,20 @@ namespace PerceptronLocalService.Engine
 
             //Stopwatch AddRangeTime = new Stopwatch();
             //AddRangeTime.Start();
-            var tempLeft = new List<double>();
-            tempLeft.AddRange(prot.InsilicoDetails.InsilicoMassLeft);
-            var leftIons = tempLeft;
+            //var tempLeft = new List<double>();
+            //tempLeft.AddRange(prot.InsilicoDetails.InsilicoMassLeft);
+            //var leftIons = tempLeft;
 
 
-            var tempRight = new List<double>();
-            tempRight.AddRange(prot.InsilicoDetails.InsilicoMassRight);
-            var rightIons = tempRight;
+            //var tempRight = new List<double>();
+            //tempRight.AddRange(prot.InsilicoDetails.InsilicoMassRight);
+            //var rightIons = tempRight;
             //AddRangeTime.Stop();
+
+
+
+            var leftIons = prot.InsilicoDetails.InsilicoMassLeft;
+            var rightIons = prot.InsilicoDetails.InsilicoMassRight;
 
             //var leftIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassLeft);    //Updated 20201113
             //var rightIons = Clone.DeepClone<List<double>>(prot.InsilicoDetails.InsilicoMassRight);    //Updated 20201113
