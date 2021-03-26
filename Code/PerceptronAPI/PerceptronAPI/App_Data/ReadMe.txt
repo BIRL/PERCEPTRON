@@ -1,0 +1,1 @@
+App_Data folder is essential for deploying PERCEPTRON.
