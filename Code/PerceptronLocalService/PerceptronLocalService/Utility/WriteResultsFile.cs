@@ -216,14 +216,6 @@ namespace PerceptronLocalService.Utility
             var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
             var sw = new StreamWriter(fout);
 
-            if (BatchModeFileProteins.Count == 0 || BatchModeFileProteins[0].BatchTargetList.Count == 0)  //For Empty File  Updated 20210111
-            {
-                sw.WriteLine("No Result Found Please search with another set of parameters");
-                sw.Close();
-                return FileWithPath;
-                
-            }
-
             //MAKING COLUMN NAMES
 
             var _TruncationIndexed = new TruncationIndexed();
@@ -232,10 +224,16 @@ namespace PerceptronLocalService.Utility
             string TruncationAtSite = "";
             if (FDRCutOff == "N/A")  // || FDRCutOff == "0")  // Will Work for Simple File // Updated 20210301 - Bug fix
             {
+
+                if (BatchModeFileProteins.Count == 0)  //For Empty File  Updated 20210326
+                {
+                    sw.WriteLine("No Result Found Please search with another set of parameters");
+                    sw.Close();
+                    return FileWithPath;
+                }
+
                 string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value";
                 sw.WriteLine(HeaderOfCsv);
-
-                
 
                 for (int i = 0; i < BatchModeFileProteins.Count; i++) //is this correct alternate for directorycontents
                 {
@@ -254,6 +252,14 @@ namespace PerceptronLocalService.Utility
 
             else  // Will Work for FDR - Decoy Side
             {
+
+                if (BatchModeFileProteins[0].BatchTargetList.Count == 0)  //For Empty File  Updated 20210326
+                {
+                    sw.WriteLine("No Result Found Please search with another set of parameters");
+                    sw.Close();
+                    return FileWithPath;
+                }
+
                 string HeaderOfCsv = "File Name,Protein Header,Terminal Modification,Protein Seqeunce,Protein Truncation,Truncation Position,Score,Molecular Weight,No of Modifications,No of Fragments Matched,Run Time,E-Value,FDR";
 
                 sw.WriteLine(HeaderOfCsv);
