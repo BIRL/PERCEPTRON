@@ -1,4 +1,9 @@
 
+*.mgf
+*.mzML
+*.mzXML
 *.csv
 *.ide-shm
 *.ide-wal
+*.zip
+*.txt
