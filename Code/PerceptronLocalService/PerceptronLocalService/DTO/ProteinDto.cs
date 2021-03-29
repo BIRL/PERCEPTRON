@@ -90,11 +90,16 @@ namespace PerceptronLocalService.DTO
 
             InsilicoDetails.InsilicoMassLeft.AddRange(protein.InsilicoDetails.InsilicoMassLeft);
             InsilicoDetails.InsilicoMassRight.AddRange(protein.InsilicoDetails.InsilicoMassRight);
+
             InsilicoDetails.InsilicoMassLeftAo.AddRange(protein.InsilicoDetails.InsilicoMassLeftAo);
-            InsilicoDetails.InsilicoMassLeftBo.AddRange(protein.InsilicoDetails.InsilicoMassLeftBo);
             InsilicoDetails.InsilicoMassLeftAstar.AddRange(protein.InsilicoDetails.InsilicoMassLeftAstar);
+
+            InsilicoDetails.InsilicoMassLeftBo.AddRange(protein.InsilicoDetails.InsilicoMassLeftBo);
+            InsilicoDetails.InsilicoMassLeftBstar.AddRange(protein.InsilicoDetails.InsilicoMassLeftBstar);     //Updated 20210329  --- Bug fix
+
             InsilicoDetails.InsilicoMassRightYo.AddRange(protein.InsilicoDetails.InsilicoMassRightYo);
             InsilicoDetails.InsilicoMassRightYstar.AddRange(protein.InsilicoDetails.InsilicoMassRightYstar);
+
             InsilicoDetails.InsilicoMassRightZo.AddRange(protein.InsilicoDetails.InsilicoMassRightZo);
             InsilicoDetails.InsilicoMassRightZoo.AddRange(protein.InsilicoDetails.InsilicoMassRightZoo);
 
