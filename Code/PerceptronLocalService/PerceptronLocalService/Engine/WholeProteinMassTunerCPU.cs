@@ -61,8 +61,15 @@ namespace PerceptronLocalService.Engine
 
             //double SlidingWindowValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200915 - Value for sliding the window  
             double SlidingWindowValue = 50.0;
-            if (parameters.SliderValue != 0)
+            if (parameters.SliderValue < 1)
+            {
+                SlidingWindowValue = 1.0;
+            }
+            else
+            {
                 SlidingWindowValue = parameters.SliderValue;
+            }
+                
             SlidingWindowValue = (SlidingWindowValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//20200915 - Value for sliding the window  
 
 
