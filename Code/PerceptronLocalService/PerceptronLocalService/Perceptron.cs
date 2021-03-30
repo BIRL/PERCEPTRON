@@ -59,24 +59,6 @@ namespace PerceptronLocalService
             _peakListFileReader = new PeakListFileReader();
             _Truncation = new TruncationCPU();
             _TerminalModifications = new TerminalModificationsCPU();
-
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////// THAT CODE WILL RUN THE GPU FILES(*Gpu.cs/*GPU.cs) FOR PROCESSING THE JOB/////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            ////_pstFilter = new PstFilterGpu();
-            //_pstGenerator = new PstGeneratorGpu();
-            //_dataLayer = new SQLDatabase();
-            //_wholeProteinMassTuner = new WholeProteinMassTunerGpu();
-            //_molecularWeightModule = new MwModule();
-            //_proteinRepository = new ProteinRepositorySql();
-            //_postTranslationalModificationModule = new PtmCpu();
-            //_insilicoFragmentsAdjustment = new InsilicoFragmentsAdjustmentCpu();
-            //_insilicoFilter = new InsilicoFilterCpu();
-            //_peakListFileReader = new PeakListFileReader();
-
         }
 
         private List<List<ProteinDto>> ParameterBasedDbSelection(SearchParametersDto parameters, List<List<ProteinDto>> AllDatabasesOfProteins)
@@ -117,8 +99,8 @@ namespace PerceptronLocalService
                         graphicsCard = property.Value.ToString();
                         if (graphicsCard.Contains("NVIDIA"))
                         {
-                            NativeCudaCalls.InitializingGpu();
-                            IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                            //NativeCudaCalls.InitializingGpu();
+                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
                         break;
                     }
@@ -139,6 +121,7 @@ namespace PerceptronLocalService
 
         public void Start()
         {
+            
             string MainPathForResults = CreateDirectory();
             //string OldPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\";
             string NewPath = @"E:\10_PERCEPTRON_Live\FtpRoot\LocalUser\";        //Would be vary according to User
@@ -230,8 +213,17 @@ namespace PerceptronLocalService
 
         public static void Sending_Email(SearchParametersDto p, string EmailMsg)
         {
+            StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
+            StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
+
+            string PerceptronEmailAddress = ReadPerceptronEmailAddress.ReadLine();
+            string PerceptronEmailPwd = ReadPerceptronEmailPassword.ReadLine();
+
+            string format = "yyyy/MM/dd HH:mm:ss";
+            var JobSubmissionTime = p.JobSubmission.ToString(format); // Formating creationTime and assigning
+
             var emailaddress = p.EmailId;
-            using (var mm = new MailMessage("dummyemail@lums.edu.pk", emailaddress))
+            using (var mm = new MailMessage(PerceptronEmailAddress, emailaddress))
             {
                 string BaseUrl = "https://perceptron.lums.edu.pk/";
 
@@ -239,10 +231,14 @@ namespace PerceptronLocalService
                 {
                     mm.Subject = "PERCEPTRON: Protein Search Results";
                     var body = "Dear User,";
-                    body += "<br/><br/> The results for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
+                    body += "<br/><br/> The results for protein search query submitted at " + JobSubmissionTime + " with job title \"" +
                             p.Title + "\" have been completed. The complete results are available at";
-                    body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                    body += " If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If you encounter any kind of problem, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
+                    body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>. " +
+                        "Results are kept on the server for two days. Please download your results. There is no way to retrieve the data older than 48 hours.";
+
+                    body += " If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and " +
+                        "our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. " +
+                        "If you encounter any kind of problem, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
 
                     body += "</br></br>Thank You for using Perceptron.";
                     body += "</br><b>The PERCEPTRON Team</b>";
@@ -253,11 +249,13 @@ namespace PerceptronLocalService
                 {
                     mm.Subject = "PERCEPTRON: Protein Search Results";
                     var body = "Dear User,";
-                    body += "<br/><br/> Search couldn't complete for protein search query submitted at " + DateTime.Now.ToString() + " with job title \"" +
+                    body += "<br/><br/> Search couldn't complete for protein search query submitted at " + JobSubmissionTime + " with job title \"" +
                             p.Title + "\" Please check your search parameters and data file.";
                     //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
-                    body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
-                    body += "</br> Results are kept on the server for two days. Please download your results. There is no way to retrieve the data older than 48 hours.";
+                    body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide and " +
+                        "our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If problem still persists, " +
+                        "please <a href=\'" + BaseUrl + "/index.html#/contact'> contact</a> us.";
+                    
 
                     body += "</br></br>Thank You for using Perceptron.";
                     body += "</br><b>The PERCEPTRON Team</b>";
@@ -281,7 +279,7 @@ namespace PerceptronLocalService
 
 
                 mm.IsBodyHtml = true;
-                var networkCred = new NetworkCredential("dummyemail@lums.edu.pk", "*****");
+                var networkCred = new NetworkCredential(PerceptronEmailAddress, PerceptronEmailPwd);
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.office365.com",
