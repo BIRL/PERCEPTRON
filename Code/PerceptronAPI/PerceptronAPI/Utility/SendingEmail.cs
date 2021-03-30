@@ -22,10 +22,9 @@ namespace PerceptronAPI.Utility
 
                 if (EmailMessage == "Error") // Email Msg for Something Wrong With Entered Query     // StringInfo 
                 {
-                    mm.Subject = "PERCEPTRON: Protein Search Results";
+                    mm.Subject = "PERCEPTRON: Protein Search Query Not Submitted";
                     var body = "Dear User,";
-                    body += "<br/><br/> Search couldn't complete for protein search query submitted at " + CreationTime + " with job title \"" +
-                            StringInfo + "\" Please check your search parameters and data file.";
+                    body += "<br/><br/> Search query couldn't submitted with job title \"" + StringInfo + "\" please check your search parameters and data file.";
                     //body += "&nbsp;<a href=\'" + BaseUrl + "/index.html#/scans/" + p.Queryid + " \'>link</a>.";
                     body += "</br> If you need help check out the <a href=\'" + BaseUrl + "/index.html#/getting \'>Getting Started</a> guide" +
                         " and our <a href=\'https://www.youtube.com/playlist?list=PLaNVq-kFOn0Z_7b-iL59M_CeV06JxEXmA'>Video Tutorials</a>. If " +
