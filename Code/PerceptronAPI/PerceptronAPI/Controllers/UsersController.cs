@@ -98,11 +98,7 @@ namespace PerceptronAPI.Controllers
                     {
                         SetResponse set = client.Set(@"CallingPerceptronApiUsers/" + NewUser.UserName, NewUser);
 
-
-                        StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
-                        StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
-
-                        SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), NewUser.EmailAddress, UniqueUserGuid, CreationTime, "VerifyEmail");
+                        SendingEmail.SendingEmailMethod(NewUser.EmailAddress, UniqueUserGuid, CreationTime, "PerceptronSdkEmailVerification");
                         return Message = "Dear User, please verfify your email address.";
                     }
                 }
