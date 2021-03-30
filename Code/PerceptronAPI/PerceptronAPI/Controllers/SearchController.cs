@@ -41,30 +41,13 @@ namespace PerceptronAPI.Controllers
             CreateDirectory();
             _dataLayer = new SqlDatabase();
 
-            //UsersController UserController = new UsersController();
-            //var ErrorMessage = UserController.VerfiyingEmailAddress();   // UserController
-            
-
-
-
-            //AuthenticateUserByFirebase();
-            // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
-
-
-            // CHECK TIME AND ADD HERE TO EXPIRE THE RESULTS 
-
-
-
-            //var blob = Database_Download();
-            //var Message = Database_Update();
-            //Server.MapPath("~");
         }
 
         [HttpPost]
         [Route("api/search/File_upload")]
         public async Task<HttpResponseMessage> File_upload()
         {
-            
+
             var queryId = Guid.NewGuid().ToString();
 
             var a = HttpContext.Current.Response.Cookies.Count;
@@ -93,7 +76,7 @@ namespace PerceptronAPI.Controllers
 
             try
             {
-                
+
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 var jsonData = provider.FormData.GetValues("Jsonfile");
@@ -129,28 +112,27 @@ namespace PerceptronAPI.Controllers
                 parametersDto.SearchQuerry.CreationTime = creationTime;
                 parametersDto.SearchQuerry.UserId = parametersDto.SearchParameters.UserId;
 
-                //////////////////
-                ///AAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDD
-                ///
                 InputFileProcessing(queryId, provider.FileData[0].LocalFileName, time, parametersDto);
 
-                var response = _dataLayer.StoreSearchParameters(parametersDto); //Search.ProteinSearch(parametersDto);
+                var response = _dataLayer.StoreSearchParameters(parametersDto);
+
+                SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "QuerySuccessfullySubmitted");
+
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
-            catch (DbEntityValidationException e)    //DbEntityValidationException
+            catch (Exception Error)
             {
-                var _DBErrorException = new DBErrorException();
-                _DBErrorException.DbEntitiyError(e);
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    //StreamReader ReadPerceptronEmailAddress = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailAddress.txt");
-                    //StreamReader ReadPerceptronEmailPassword = new StreamReader(@"C:\01_DoNotEnterPerceptronRelaventInfo\PerceptronEmailPassword.txt");
-
-                    //SendingEmail.SendingEmailMethod(ReadPerceptronEmailAddress.ReadLine(), ReadPerceptronEmailPassword.ReadLine(), parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
+                    if (Error.Message == "Error reading MIME multipart body part.")
+                    {
+                        SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
+                    }
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Error);
             }
         }
+
         private void InputFileProcessing(string queryId, string FileName, DateTime time, SearchParametersDto parametersDto)
         {
             var i = 0;
