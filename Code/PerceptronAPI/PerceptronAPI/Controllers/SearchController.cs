@@ -40,7 +40,6 @@ namespace PerceptronAPI.Controllers
         {
             CreateDirectory();
             _dataLayer = new SqlDatabase();
-
         }
 
         [HttpPost]
@@ -116,18 +115,17 @@ namespace PerceptronAPI.Controllers
 
                 var response = _dataLayer.StoreSearchParameters(parametersDto);
 
-                SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "QuerySuccessfullySubmitted");
-
+                if (parametersDto.SearchParameters.EmailId != "")
+                {
+                    SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "QuerySuccessfullySubmitted");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (Exception Error)
             {
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    if (Error.Message == "Error reading MIME multipart body part.")
-                    {
-                        SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
-                    }
+                    SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Error);
             }
