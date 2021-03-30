@@ -570,10 +570,10 @@ export class ProteinSearchComponent implements OnInit {
    
     if (form.EmailId != "")  // If User have verified Email ID or Guest gave its Email ID
     {
-      alert("Dear User,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear User,\nFor results, please visit 'Search Results & History' tab. In addition, search results will be sent to the email address you provided.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");    //   Your search query has been submitted.\n
     }
     else{
-      alert("Dear Guest,\nYour search query has been submitted.\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
+      alert("Dear Guest,\nFor results, please visit 'Search Results & History' tab.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");     /// Your search query has been submitted.\n
     }
 
     if (FileExtension == 'zip'){
