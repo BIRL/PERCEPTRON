@@ -90,3 +90,11 @@ float: left;
 /deep/ .mat-accent .mat-slider-track-fill {
   background-color: #201a93;
 } 
+
+#PageRefresh{
+  height:10px;
+  color:red;
+  font-size:15px;
+  font-style: italic;
+  float:right;
+}

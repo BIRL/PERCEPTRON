@@ -859,7 +859,9 @@
           type="reset" style="background-color: #212121; color:aliceblue" class="ui button">Reset</button>
         <label style="padding-right:15px;"></label>
       </mat-grid-tile>
-
+      
+      <!-- <label style="color:red;"> Once query has been submitted then, please do not refresh the page otherwise your job submission could be interupted.</label> -->      
+      
       <mat-grid-tile colspan="1" rowspan="1">
         <label style="padding-left:15px;"></label>
           <button mat-raised-button matTooltip="Click to submit job " class="button-sumbit" [disabled]="!f.valid || filenameModel || email.files.length>1"
@@ -868,5 +870,7 @@
       </mat-grid-tile>
     </mat-grid-list>
 
+    <div id="PageRefresh">Once query has been submitted then, please do not refresh the page otherwise your job submission could be interupted.</div>
+    <div style="height:10px;font-size:1px;">&nbsp;</div>
   </div>
 </form>
