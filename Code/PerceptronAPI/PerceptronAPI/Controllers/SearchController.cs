@@ -138,7 +138,10 @@ namespace PerceptronAPI.Controllers
             List<string> InputFileList = new List<string> { FileName };
             if (Path.GetExtension(InputFileList[0]) == ".zip") //Check If file is Zipped
             {
-                InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.
+                //InputFileList = ZipFileUnzipping(InputFileList); //Unzipping the zipped file.    // ITS HEALTHY ---- BEFORE DISCARD
+                string ZipFileNameWithUniqueID = _AddSuffixInName.AddSuffix(InputFileList[0], "-ID-" + queryId); //Adding QueryId with FileName
+                File.Move(InputFileList[0], ZipFileNameWithUniqueID);
+                InputFileList = ZipFileUnzipping(ZipFileNameWithUniqueID); //Unzipping the zipped file.
             }
 
             for (int index = 0; index < InputFileList.Count; index++)//foreach (var file in provider.FileData)
@@ -167,9 +170,9 @@ namespace PerceptronAPI.Controllers
             }
         }
 
-        private List<string> ZipFileUnzipping(List<string> InputFileList)
+        private List<string> ZipFileUnzipping(string ZipFilePath)
         {
-            string ZipFilePath = InputFileList[0];
+
             var FileName = Path.GetFileNameWithoutExtension(ZipFilePath);
             string FileDirectory = Path.GetDirectoryName(ZipFilePath) + "\\" + FileName;
             string ExtractZipFilePath = Path.GetDirectoryName(ZipFilePath) + "\\" + FileName + "\\";
@@ -185,11 +188,10 @@ namespace PerceptronAPI.Controllers
             //Extracting the names of the file
 
             var ZipExtractedFiles = Directory.GetFiles(ExtractZipFilePath); //Reading the contents of Unzipped Folder
-            InputFileList = new List<string> ( ZipExtractedFiles );  //Returning the List of Full File Names
+            var InputFileList = new List<string>(ZipExtractedFiles);  //Returning the List of Full File Names
 
             return InputFileList;
         }
-
 
         public string SearchQuery(string[] ParameterValues, string VerifiedUser, string FtpRootPath, string FtpUploadedFilePathKeepLocalCopy)
         {
