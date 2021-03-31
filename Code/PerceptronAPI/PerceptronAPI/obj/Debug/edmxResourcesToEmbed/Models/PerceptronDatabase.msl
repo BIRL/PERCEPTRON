@@ -4,14 +4,15 @@
     <EntitySetMapping Name="ExecutionTimes">
       <EntityTypeMapping TypeName="PerceptronDatabaseModel.ExecutionTime">
         <MappingFragment StoreEntitySet="ExecutionTimes">
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
           <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="InsilicoTime" ColumnName="InsilicoTime" />
           <ScalarProperty Name="PtmTime" ColumnName="PtmTime" />
           <ScalarProperty Name="TunerTime" ColumnName="TunerTime" />
           <ScalarProperty Name="MwFilterTime" ColumnName="MwFilterTime" />
           <ScalarProperty Name="PstTime" ColumnName="PstTime" />
           <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
-          <ScalarProperty Name="QueryId" ColumnName="QueryId" />
           <ScalarProperty Name="FileName" ColumnName="FileName" />
           <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
         </MappingFragment>

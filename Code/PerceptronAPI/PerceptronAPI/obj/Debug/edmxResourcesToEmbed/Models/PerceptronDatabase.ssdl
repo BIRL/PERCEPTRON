@@ -2,19 +2,20 @@
 <Schema Namespace="PerceptronDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="ExecutionTimes">
     <Key>
+      <PropertyRef Name="FileId" />
       <PropertyRef Name="JobSubmission" />
       <PropertyRef Name="QueryId" />
-      <PropertyRef Name="FileName" />
     </Key>
+    <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
+    <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
     <Property Name="InsilicoTime" Type="nvarchar(max)" />
     <Property Name="PtmTime" Type="nvarchar(max)" />
     <Property Name="TunerTime" Type="nvarchar(max)" />
     <Property Name="MwFilterTime" Type="nvarchar(max)" />
     <Property Name="PstTime" Type="nvarchar(max)" />
     <Property Name="TotalTime" Type="nvarchar(max)" />
-    <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-    <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
     <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="PeakListData">

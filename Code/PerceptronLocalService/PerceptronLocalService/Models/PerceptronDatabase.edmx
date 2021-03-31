@@ -7,19 +7,20 @@
       <Schema Namespace="PerceptronDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ExecutionTimes">
           <Key>
+            <PropertyRef Name="FileId" />
             <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
-            <PropertyRef Name="FileName" />
           </Key>
+          <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="JobSubmission" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="InsilicoTime" Type="nvarchar(max)" />
           <Property Name="PtmTime" Type="nvarchar(max)" />
           <Property Name="TunerTime" Type="nvarchar(max)" />
           <Property Name="MwFilterTime" Type="nvarchar(max)" />
           <Property Name="PstTime" Type="nvarchar(max)" />
           <Property Name="TotalTime" Type="nvarchar(max)" />
-          <Property Name="QueryId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PeakListData">
@@ -246,19 +247,20 @@
       <Schema Namespace="PerceptronDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="ExecutionTime">
           <Key>
+            <PropertyRef Name="FileId" />
             <PropertyRef Name="JobSubmission" />
             <PropertyRef Name="QueryId" />
-            <PropertyRef Name="FileName" />
           </Key>
+          <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="InsilicoTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PtmTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TunerTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MwFilterTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PstTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TotalTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PeakListData">
@@ -487,14 +489,15 @@
           <EntitySetMapping Name="ExecutionTimes">
             <EntityTypeMapping TypeName="PerceptronDatabaseModel.ExecutionTime">
               <MappingFragment StoreEntitySet="ExecutionTimes">
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="JobSubmission" ColumnName="JobSubmission" />
+                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="InsilicoTime" ColumnName="InsilicoTime" />
                 <ScalarProperty Name="PtmTime" ColumnName="PtmTime" />
                 <ScalarProperty Name="TunerTime" ColumnName="TunerTime" />
                 <ScalarProperty Name="MwFilterTime" ColumnName="MwFilterTime" />
                 <ScalarProperty Name="PstTime" ColumnName="PstTime" />
                 <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
-                <ScalarProperty Name="QueryId" ColumnName="QueryId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="TruncationEngineTime" ColumnName="TruncationEngineTime" />
               </MappingFragment>

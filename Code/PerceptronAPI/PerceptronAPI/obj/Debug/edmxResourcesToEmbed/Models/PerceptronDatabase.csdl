@@ -2,19 +2,20 @@
 <Schema Namespace="PerceptronDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityType Name="ExecutionTime">
     <Key>
+      <PropertyRef Name="FileId" />
       <PropertyRef Name="JobSubmission" />
       <PropertyRef Name="QueryId" />
-      <PropertyRef Name="FileName" />
     </Key>
+    <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="JobSubmission" Type="DateTime" Nullable="false" Precision="7" />
+    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="InsilicoTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="PtmTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TunerTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="MwFilterTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="PstTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TotalTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="QueryId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="TruncationEngineTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="PeakListData">
