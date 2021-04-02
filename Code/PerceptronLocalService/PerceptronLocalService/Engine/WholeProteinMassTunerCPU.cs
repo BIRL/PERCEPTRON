@@ -59,16 +59,7 @@ namespace PerceptronLocalService.Engine
             var count = new List<int>();   //CHANGE MY NAME...
             double olddiff = 1, newdiff = 0;
 
-            //double SlidingWindowValue = (parameters.SliderValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6); //20200915 - Value for sliding the window  
-            double SlidingWindowValue = 50.0;
-            if (parameters.SliderValue < 1)
-            {
-                SlidingWindowValue = 1.0;
-            }
-            else
-            {
-                SlidingWindowValue = parameters.SliderValue;
-            }
+            double SlidingWindowValue = parameters.SliderValue;
                 
             SlidingWindowValue = (SlidingWindowValue * peakData.WholeProteinMolecularWeight) / Math.Pow(10, 6);//20200915 - Value for sliding the window  
 
