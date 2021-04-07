@@ -1125,7 +1125,7 @@ namespace PerceptronLocalService
 
         private MassTunerAndPstCombinedStruct[] ExecuteMassTunerModuleGpu(MsPeaksDtoGpu PeakData, SearchParametersDto parameters, ExecutionTimeDto executionTimes)
         {
-            Stopwatch moduleTimer = Stopwatch.StartNew();
+            //Stopwatch moduleTimer = Stopwatch.StartNew();
             
             int PeakListLength = PeakData.PeakListMasses.Length;
             int AutoTune, DenovoAllow;
@@ -1153,8 +1153,12 @@ namespace PerceptronLocalService
                 returnArray[i] = (MassTunerAndPstCombinedStruct)Marshal.PtrToStructure(pResultsFromGpu[i], typeof(MassTunerAndPstCombinedStruct));
             }
 
-            moduleTimer.Stop();
-            executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
+            double MassTunerTimeGpu = returnArray[0].ElapsedTimeForMassTuner;
+            double PstTimeGpu = returnArray[0].ElapsedTimeForPst;
+            //moduleTimer.Stop();
+
+            executionTimes.TunerTime = MassTunerTimeGpu.ToString();
+            executionTimes.PstTime = PstTimeGpu.ToString();
 
             return returnArray;
         }
