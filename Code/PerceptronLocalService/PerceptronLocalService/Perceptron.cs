@@ -99,8 +99,8 @@ namespace PerceptronLocalService
                         graphicsCard = property.Value.ToString();
                         if (graphicsCard.Contains("NVIDIA"))
                         {
-                            //NativeCudaCalls.InitializingGpu();
-                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                            NativeCudaCalls.InitializingGpu();
+                            IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
                         break;
                     }
@@ -330,17 +330,19 @@ namespace PerceptronLocalService
             //_dataLayer.Set_Progress(JobStatusDataStoreInDb, parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
             _dataLayer.Set_Progress(parameters.Queryid, ProgressStatus);  // Showing Status of Query as Runnning...!!!
 
-            Stopwatch PstTime = new Stopwatch();
-            Stopwatch SpectralComparisonTime = new Stopwatch();
-            Stopwatch BlindPtmSearchTime = new Stopwatch();
-            Stopwatch TruncatedTime = new Stopwatch();
-            Stopwatch InsilicoFragTime = new Stopwatch();
-            Stopwatch EvalueTime = new Stopwatch();
-            Stopwatch AddRangeTime = new Stopwatch();
+            double MassTunerTime = 0.0;
+            double PstTime = 0.0;
+            double DbFetchTime = 0.0;
+            double UpdateCandTime = 0.0;
+            double InsilicoFragTime = 0.0;
+            double BlindPtmSearchTime = 0.0;
+            double SpectralComparisonTime = 0.0;
+            double TruncatedTime = 0.0;
+            double EvalueTime = 0.0;
 
-            double TotalSqlDataBaseTime = 0.0;
-            double TotalDbFetchDbProcessTime = 0.0;
-            double TotalUpdateCandTime = 0.0;
+            //double TotalSqlDataBaseTime = 0.0;
+            //double TotalDbFetchDbProcessTime = 0.0;
+            //double TotalUpdateCandTime = 0.0;
 
             //var SqlDatabases = _proteinRepository.FetchingSqlDatabaseProteins(parameters);
 
@@ -381,10 +383,10 @@ namespace PerceptronLocalService
                         //Logging.DumpMwTunerResult(massSpectrometryData);
                         ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
                         //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
-                        PstTime.Start();
+                        //PstTime.Start();
                         
                         PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
-                        PstTime.Stop();
+                        //PstTime.Stop();
                     }
                     else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
                     {
@@ -395,6 +397,9 @@ namespace PerceptronLocalService
                             var MassTunerAndPstData = ExecuteMassTunerModuleGpu(PeakData, parameters, executionTimes);
                             PstTags = ConvertStructToPstTagList(MassTunerAndPstData);
                             massSpectrometryData.WholeProteinMolecularWeight = MassTunerAndPstData[0].MassTuner;
+
+                            MassTunerTime = MassTunerTime + MassTunerAndPstData[0].ElapsedTimeForMassTuner;
+                            PstTime = PstTime + MassTunerAndPstData[0].ElapsedTimeForPst;
                         }
                         
                     }   //// --- GPU Code Above ---   Updated: 20210223
@@ -428,8 +433,7 @@ namespace PerceptronLocalService
                             SQLDataBaseProteins = SqlDatabases[1];  //For Decoy Database;
                         }
                         SqlDataBaseTime.Stop();
-                        TotalSqlDataBaseTime = TotalSqlDataBaseTime + SqlDataBaseTime.ElapsedMilliseconds;
-
+                        DbFetchTime = DbFetchTime + SqlDataBaseTime.Elapsed.TotalMilliseconds;
 
                         //Step 2 - (1st)Candidate Protein List (Simple) & Candidate Protein List Truncated  --- (In SPECTRUM: Score_Mol_Weight{Adding scores with respect to the Mass difference with Intact Mass})
                         var candidateProteins = new List<ProteinDto>();
@@ -446,7 +450,7 @@ namespace PerceptronLocalService
                         candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                         CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
                         DbFetchDbProcessTime.Stop();
-                        TotalDbFetchDbProcessTime = TotalDbFetchDbProcessTime + DbFetchDbProcessTime.ElapsedMilliseconds;
+                        DbFetchTime = DbFetchTime + DbFetchDbProcessTime.Elapsed.TotalMilliseconds;
 
                         //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
                         ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
@@ -456,11 +460,11 @@ namespace PerceptronLocalService
                         //////UpdatedParse_database.m
                         //candidateProteins = new List<ProteinDto>();
 
-                        Stopwatch UpdateCandTime = new Stopwatch();
-                        UpdateCandTime.Start();
+                        Stopwatch UpdateCandClock = new Stopwatch();
+                        UpdateCandClock.Start();
                         candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
-                        UpdateCandTime.Stop();
-                        TotalUpdateCandTime = TotalUpdateCandTime + UpdateCandTime.ElapsedMilliseconds;
+                        UpdateCandClock.Stop();
+                        UpdateCandTime = UpdateCandTime + UpdateCandClock.Elapsed.TotalMilliseconds;
 
                         if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                         {
@@ -485,66 +489,82 @@ namespace PerceptronLocalService
                             continue;
                         }
 
-                        InsilicoFragTime.Start();
+                        Stopwatch InsilicoFragClock = new Stopwatch();
+                        InsilicoFragClock.Start();
                         candidateProteins = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
-                        InsilicoFragTime.Stop();
+                        InsilicoFragClock.Stop();
+                        InsilicoFragTime = InsilicoFragTime + InsilicoFragClock.Elapsed.TotalMilliseconds;
 
                         // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
 
-                        BlindPtmSearchTime.Start();
+                        Stopwatch BlindPtmSearchClock = new Stopwatch();
+                        BlindPtmSearchClock.Start();
                         var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
                         CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
-                        BlindPtmSearchTime.Stop();
+                        BlindPtmSearchClock.Stop();
+                        BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock.Elapsed.TotalMilliseconds;
 
 
                         //Step 4 - ??? Algorithm - Spectral Comparison
-                        SpectralComparisonTime.Start();
+                        
                         var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
 
-                        if (IsGpu == false)
-                        {
-                            CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
-                        }
-                        else
-                        {
-                            if (parameters.InsilicoSweight > 0)
-                            {
-                                ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, 1, 1, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
-
-                                CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModuleGpu(Parameters_To_Cpp, candidateProteins, PeakData);
-                            }
-                            
-                        }
+                        Stopwatch SpectralComparisonClock = new Stopwatch();
+                        SpectralComparisonClock.Start();
+                        CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModule(parameters, candidateProteins, peakData2DList, executionTimes);
+                        SpectralComparisonClock.Stop();
+                        SpectralComparisonTime = SpectralComparisonTime + SpectralComparisonClock.Elapsed.TotalMilliseconds;
 
 
-                        
+                        //if (IsGpu == false)
+                        //{
+
+                        //}
+                        //else
+                        //{
+                        //    if (parameters.InsilicoSweight > 0)
+                        //    {
+                        //        ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, 1, 1, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
+
+                        //        CandidateProteinswithInsilicoScores = ExecuteSpectralComparisonModuleGpu(Parameters_To_Cpp, candidateProteins, PeakData);
+                        //    }
+
+                        //}
 
 
-                        SpectralComparisonTime.Stop();
+
+
+
+
 
 
 
                         //BlindPTMLocalization: Localizing Unknown mass shift
-                        BlindPtmSearchTime.Start();
+                        Stopwatch BlindPtmSearchClock2 = new Stopwatch();
+                        BlindPtmSearchClock2.Start();
                         CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
-                        BlindPtmSearchTime.Stop();
+                        BlindPtmSearchClock2.Stop();
+                        BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock2.Elapsed.TotalMilliseconds;
+
 
                         //Logging.DumpInsilicoScores(candidateProteins);
 
                         //Executing Truncation 
-                        TruncatedTime.Start();
+                        Stopwatch TruncatedClock = new Stopwatch();
+                        TruncatedClock.Start();
                         var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
-                        TruncatedTime.Stop();
+                        TruncatedClock.Stop();
+                        TruncatedTime = TruncatedTime + TruncatedClock.Elapsed.TotalMilliseconds;
 
-                        
+
                         int FinalCandidateProteinListCapacity = CandidateProteinswithInsilicoScores.Count + CandidateProteinListTrucnatedwithInsilicoScores.Count;
                         var FinalCandidateProteinListforFinalScoring = new List<ProteinDto>(FinalCandidateProteinListCapacity);    // Updated 20201203 Capacity defined
 
-                        AddRangeTime.Start();
+                        
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
-                        AddRangeTime.Stop();
+                        
 
                         if (FinalCandidateProteinListforFinalScoring.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)   //Updated 20200114
                         {
@@ -580,10 +600,12 @@ namespace PerceptronLocalService
                         FinalCandidateProteinListforFinalScoring = RankCandidateProteinsList(FinalCandidateProteinListforFinalScoring);
 
                         //Evalue 
-                        EvalueTime.Start();
+                        Stopwatch EvalueClock = new Stopwatch();
+                        EvalueClock.Start();
                         Evalue _Evalue = new Evalue();
                         _Evalue.ComputeEvalue(FinalCandidateProteinListforFinalScoring);
-                        EvalueTime.Stop();
+                        EvalueClock.Stop();
+                        EvalueTime = EvalueTime + EvalueClock.Elapsed.TotalMilliseconds;
 
                         //Logging.DumpTotalScores(candidateProteins);
                         if (iterations == 0)
