@@ -59,6 +59,7 @@ __global__ void GeneratingMultipleLengthPsts2(_PeptideSequenceTags *MultipleLeng
 	{
 		int HomePeak = DupletPSTs[tid].endIndex;
 		char *HomePeakAA = DupletPSTs[tid].PstTag;
+
 		int StartIndex = DupletPSTs[tid].startIndex;
 		for (int i = 0; i < num; i++)
 		{
@@ -79,8 +80,8 @@ __global__ void GeneratingMultipleLengthPsts2(_PeptideSequenceTags *MultipleLeng
 				MultipleLengthPst_ptr[insert_ptr].RMSE = (DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst;
 				double RMSE = (sqrt(DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst) * 10;
 				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = exp(-RMSE * 2);
-				//MultipleLengthPst_ptr[insert_ptr].PstErrorScore = (MultipleLengthPst_ptr[insert_ptr].PstTagLength * MultipleLengthPst_ptr[insert_ptr].PstFrequency) / RMSE;
 			}
 		}
+
 	}
 }
