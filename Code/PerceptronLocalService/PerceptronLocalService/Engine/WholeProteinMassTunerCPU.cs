@@ -16,7 +16,7 @@ namespace PerceptronLocalService.Engine
             double molTolerance = parameters.MwTolerance;
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             var peakDatalist = new List<peakData2Dlist>();
-            for (int row = 0; row <= peakData.Mass.Count - 1; row++)
+            for (int row = 1; row <= peakData.Mass.Count - 1; row++)   //Updated 20210408
             {
                 var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
                 peakDatalist.Add(dataforpeakDatalist);
@@ -25,9 +25,13 @@ namespace PerceptronLocalService.Engine
             //Sort the peakDatalist with respect to the Mass in ascending order
             var peakDatalistsort = peakDatalist.OrderBy(n => n.Mass).ToList();
 
+            peakDatalistsort.Add(new peakData2Dlist(peakData.Mass[0], peakData.Intensity[0]));   //Added 20210408
+
+
+
             //FIGURE 5: STEP 2:::: SUMMATIONS FOR EACH M/Z I,J IN MS2 DATA [REF: SPCTRUM PAPER]
             //Description::: Calculate Peak Sums and shortlist those falling within user specified tolerance.
-            
+
             var summationMassandaverageintensity = new List<peakData2Dlist>();
             for (int i = 0; i <= peakDatalistsort.Count - 2; i++) //i starts from 0 so that's why "peakDatalistsort.Count - 1" and according to Formula "n-1" gives peakDatalistsort.Count - 2
             {
