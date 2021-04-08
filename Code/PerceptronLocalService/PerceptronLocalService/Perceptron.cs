@@ -44,7 +44,7 @@ namespace PerceptronLocalService
         public Perceptron()
         {
             ///////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////// THAT CODE WILL RUN THE CPU FILES(*Cpu.cs/*CPU.cs) FOR PROCESSING THE JOB/////////////////
+            ///////////////// THAT CODE WILL RUN THE CPU FILES(*Cpu.csCPU.cs) FOR PROCESSING THE JOB/////////////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
             _pstFilter = new PstFilterCpu();
             _pstGenerator = new PstGeneratorCpu();
@@ -382,9 +382,12 @@ namespace PerceptronLocalService
                     //  Logging.DumpMsData(massSpectrometryData);
 
 
+
                     //Step 1 - 1st Algorithm - Mass Tuner 
                     var old = massSpectrometryData.WholeProteinMolecularWeight;
                     var PstTags = new List<PstTagList>();
+
+                    List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
 
                     var PeakData = new MsPeaksDtoGpu();
                     if (IsGpu == false)  // CPU side Mass Tuner & Pst
@@ -413,6 +416,13 @@ namespace PerceptronLocalService
                         
                     }   //// --- GPU Code Above ---   Updated: 20210223
 
+
+                    var ListPst = new List<string>();
+                    for (int i = 0; i < PstTags.Count; i++)
+                    {
+                        ListPst.Add(PstTags[i].PstTags);
+                    }
+
                     if (massSpectrometryData.WholeProteinMolecularWeight == 0)
                     {
                         massSpectrometryData.WholeProteinMolecularWeight = old; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
@@ -421,10 +431,10 @@ namespace PerceptronLocalService
                     
 
                     //Logging.DumpModifiedProteins(candidateProteins);
-                    List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
+                    
 
                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                    //* From Here Simple Database and decoy database work will start  //Updated 20201116 *//
+                    //* From Here Simple Database and decoy database work will start  //Updated 20201116 /
                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
                     for (int iterations = 0; iterations < iterate; iterations++)   // This Loop's first iteration is used for Search with UniProtDB and second iteration for  Search with DecoyDB
@@ -1147,7 +1157,9 @@ namespace PerceptronLocalService
             else
                 DenovoAllow = 0;
 
-            ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue, parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, parameters.PeptideToleranceUnit, parameters.PeptideTolerance);
+            ParametersToCpp Parameters_To_Cpp = new ParametersToCpp(parameters.MwTolerance, parameters.NeutralLoss, parameters.SliderValue,
+                parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, 
+                parameters.PeptideToleranceUnit, parameters.PeptideTolerance, parameters.PSTTolerance);
 
             IntPtr[] pResultsFromGpu = new IntPtr[5000];
 
@@ -1420,3 +1432,14 @@ public struct ProteinStruct
         this.SizeOfAllInsilicoArrays = SizeOfAllInsilicoArrays;
     }
 }
+
+
+
+////// DO NOT DELETE THE BELOW DESCRIPTION ////  20210408
+///  In Engine > WholeProteinMassTunerCPU.cs   &   PSTGeneratorCPU.cs peakData2Dlist class
+///  In DTO > MsPeaksDto.cs   ,   newMsPeaksDto.cs   &    MsPeaksDtoGpu.cs classes
+///  All are using relatively for same purpose (just minor differences) so in future they 
+///  can be combined after taking all considerations.
+
+
+
