@@ -169,8 +169,6 @@ namespace PerceptronLocalService.Utility
                             sw.WriteLine("Modification Name: Unknown | Modification Weight: " + Protein.BlindPtmLocalizationInfo.Mass
                                 + " | Modification lies between index: " + Protein.BlindPtmLocalizationInfo.Start + " - " + Protein.BlindPtmLocalizationInfo.End);
                         }
-
-
                     }
                     sw.Close();
                 }
@@ -182,7 +180,7 @@ namespace PerceptronLocalService.Utility
                     var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
 
                     var sw = new StreamWriter(fout);
-                    sw.WriteLine("No Result Found Please search with another set of parameters");
+                    sw.WriteLine("No results found. Please search with another set of search parameters or verify if the input file is valid.");
                     sw.Close();
 
                 }
