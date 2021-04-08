@@ -27,7 +27,7 @@ namespace PerceptronLocalService.Engine
 
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             var peakDatalist = new List<peakData2Dlist>();
-            for (int row = 0; row <= peakData.Mass.Count - 1; row++)
+            for (int row = 1; row <= peakData.Mass.Count - 1; row++)   //Updated 20210408
             {
                 var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
                 peakDatalist.Add(dataforpeakDatalist);
@@ -35,6 +35,7 @@ namespace PerceptronLocalService.Engine
             }
             //Sort the peakDatalist with respect to the Mass in ascending order
             var peakDatalistsort = peakDatalist.OrderBy(n => n.Mass).ToList();
+            peakDatalistsort.Add(new peakData2Dlist(peakData.Mass[0], peakData.Intensity[0]));   //Added 20210408
 
             var singleLengthPstTagList = GenerateSingleLengthPstList(parameters, peakDatalistsort);   // This method will extract Single Length PST Tags 
             var multipleLenghtTagList = GenerateMultipleLenghtPstList(parameters, singleLengthPstTagList); // This method will extract Multiple Length PST Tags 
@@ -53,9 +54,29 @@ namespace PerceptronLocalService.Engine
                 //If 2 or more Tags are same AT SAME POSITION then keep ONLY just one
                 List<Psts> FirstUniquePstTagInfoList = UniquePsts(PstTagList);
 
+                var ListString = new List<string>();
+                for (int i=0; i< FirstUniquePstTagInfoList.Count; i++)
+                {
+                    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
+                }
+
+
                 var AccomodatePsts = AccomodateIsoforms(FirstUniquePstTagInfoList, parameters);
 
+                ListString = new List<string>();
+                for (int i = 0; i < FirstUniquePstTagInfoList.Count; i++)
+                {
+                    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
+                }
+
+
                 List<Psts> SecondUniquePstTagInfoList = UniquePsts(AccomodatePsts);
+
+                var ListString_Sec = new List<string>();
+                for (int i = 0; i < SecondUniquePstTagInfoList.Count; i++)
+                {
+                    ListString_Sec.Add(SecondUniquePstTagInfoList[i].psttags);
+                }
 
                 FinalPstTags = FilteredPsts(SecondUniquePstTagInfoList, parameters);
             }
@@ -69,10 +90,10 @@ namespace PerceptronLocalService.Engine
             //m/z(of MS2) value differences for each Fragment-pair
 
             //startIndex and endIndex are selecting upper triangle(in Matrix) for calculation to avoid Mirror Image Values {Means: startIndex = 1(means peak 1) and endIndex = 2 (means peak 2) is Equal to startIndex = 2(means peak 2) and endIndex = 1 (means peak 1) WHEN GIVING differences}
-            for (var home_peakIndexsingle = 0; home_peakIndexsingle <= peakDatalistsort.Count - 2; home_peakIndexsingle++) // startIndex=0 so that's why its "-1" and according to formula "n-1" which gives us peakData.Mass.Count - 2 //Starting from peak 1(startIndex = 0)
+            for (var home_peakIndexsingle = 0; home_peakIndexsingle < peakDatalistsort.Count - 2; home_peakIndexsingle++)  //Updated 20210408 // startIndex=0 so that's why its "-1" and according to formula "n-1" which gives us peakData.Mass.Count - 2 //Starting from peak 1(startIndex = 0)
             {
                 // for each element of peaklist after ith element
-                for (var hop_peakIndexsingle = home_peakIndexsingle + 1; hop_peakIndexsingle <= peakDatalistsort.Count - 1; hop_peakIndexsingle++) //endIndex starts from 0 so that's why peakData.Mass.Count - 1 and according to Formula just "n"
+                for (var hop_peakIndexsingle = home_peakIndexsingle + 1; hop_peakIndexsingle < peakDatalistsort.Count - 1; hop_peakIndexsingle++) //Updated 20210408   //endIndex starts from 0 so that's why peakData.Mass.Count - 1 and according to Formula just "n"
                 {
                     var massDifferenceBetweenPeaks = peakDatalistsort[hop_peakIndexsingle].Mass - peakDatalistsort[home_peakIndexsingle].Mass; //Mass difference between two peaks
 
@@ -143,6 +164,20 @@ namespace PerceptronLocalService.Engine
                     }
                 }
             }
+
+
+            var ListPst = new List<string>();
+            for (int i = 0; i < DoubleTagPstTags.Count; i++)
+            {
+                string Tag = "";
+                for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
+                {
+                    Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
+                }
+                ListPst.Add(Tag);
+            }
+
+
             //AFTER GENERATING DUPLICATE TAGS NOW GENERATING MULTIPLE TAGS
             var MultipleTags = MultipleTagsGeneration(DoubleTagPstTags, parameters, 2, singleLengthPstTagList);
 
@@ -203,6 +238,18 @@ namespace PerceptronLocalService.Engine
             }
 
             var MultipleTags = new List<List<PstTagsDto>>(DoubleTagPstTags); //Because of referenced based deep clonning (here more precisely because of safe side).
+
+            var ListPst = new List<string>();
+            for (int i = 0; i < DoubleTagPstTags.Count; i++)
+            {
+                string Tag = "";
+                for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
+                {
+                    Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
+                }
+                ListPst.Add(Tag);
+            }
+
             return MultipleTags;
         }
 
