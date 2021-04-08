@@ -696,5 +696,27 @@ insilicospectralcomparisongpu(ParametersToCpp Parameters, ProteinStructFromCS **
 		}
 	}
 
+	cudaFree(d_arr);
+	cudaFree(d_arrRight);
+	cudaFree(d_arrLeftAo);
+	cudaFree(d_arrLeftBo);
+	cudaFree(d_arrLeftAstar);
+	cudaFree(d_arrLeftBstar);
+	cudaFree(d_arrRightYo);
+	cudaFree(d_arrRightYstar);
+	cudaFree(d_arrRightZo);
+	cudaFree(d_arrRightZoo);
+	cudaFree(d_arrSizes);
+	cudaFree(d_LeftMatchedIndex);
+	cudaFree(d_RightMatchedIndex);
+	cudaFree(d_LeftPeakIndex);
+	cudaFree(d_RightPeakIndex);
+	cudaFree(d_LeftType);
+	cudaFree(d_RightType);
+	cudaFree(d_a);
+	cudaFree(d_return);
+	cudaFree(dev_masses);
+	cudaFree(dev_intensities);
+
 	return SizeOfDataToReturn;
 }
