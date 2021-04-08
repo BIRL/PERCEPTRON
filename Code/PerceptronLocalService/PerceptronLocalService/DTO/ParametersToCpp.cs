@@ -20,8 +20,11 @@ namespace PerceptronLocalService.DTO
         public int MaximumPstLength;
         public string PeptideToleranceUnit;
         public double PeptideTolerance;
+        public double PSTTolerance;
 
-        public ParametersToCpp(double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshhold, int Autotune, int DenovoAllow, int MinimumPstLength, int MaximumPstLength, string PeptideToleranceUnit, double PeptideTolerance)
+        public ParametersToCpp(double MwTolerance, double NeutralLoss, double SliderValue, double HopThreshhold,
+            int Autotune, int DenovoAllow, int MinimumPstLength, int MaximumPstLength, string PeptideToleranceUnit,
+            double PeptideTolerance, double PSTTolerance)
         {
             this.MwTolerance = MwTolerance;
             this.NeutralLoss = NeutralLoss;
@@ -33,6 +36,7 @@ namespace PerceptronLocalService.DTO
             this.MaximumPstLength = MaximumPstLength;
             this.PeptideToleranceUnit = PeptideToleranceUnit;
             this.PeptideTolerance = PeptideTolerance;
+            this.PSTTolerance = PSTTolerance;
         }
     }
 }
