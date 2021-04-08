@@ -16,6 +16,8 @@ namespace PerceptronLocalService.DTO
         public double MassTuner;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
         public char[] PstTags;
+        public int ElapsedTimeForMassTuner;
+        public int ElapsedTimeForPst;
         //public MassTunerAndPstCombinedStruct (int PstTagLength, char[] PstTags, double PstErrorScore, double PstFrequency, double MassTuner)
         //{
         //    this.PstTagLength = PstTagLength;
