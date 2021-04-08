@@ -370,6 +370,15 @@ namespace PerceptronLocalService
 
                     //Step 0 - Reading the Peaklist File
                     var massSpectrometryData = PeakListFileReaderModuleModule(parameters, fileNumber, executionTimes);
+
+                    if (massSpectrometryData.Mass.Count <= 1 || massSpectrometryData.Mass[0] == 1.0073)
+                    {
+                        var CandidateListEmpty = new List<ProteinDto>();   // This "CandidateListEmpty" would be empty 
+                        var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), CandidateListEmpty);
+                        ResultsDownloadToBeWriteList.Add(tempResultsDownloadToBeWriteList);
+                        continue;
+                    }
+
                     //  Logging.DumpMsData(massSpectrometryData);
 
 
