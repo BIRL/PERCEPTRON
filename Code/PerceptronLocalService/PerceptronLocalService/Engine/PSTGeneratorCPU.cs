@@ -20,22 +20,23 @@ namespace PerceptronLocalService.Engine
         public string[] AminoAcidName = { "Gly", "Ala", "Ser", "Pro", "Val", "Thr", "Cys", "Leu", "Asn", "Asp", "Gln", "Lys", "Glu", "Met", "His", "Phe", "Arg", "Tyr", "Sec", "Trp", "Pyl" };
 
         // Extracts a list Peptide Sequence Tags from the MS/MS peaklist
-        public List<PstTagList> GeneratePeptideSequenceTags(SearchParametersDto parameters, MsPeaksDto peakData)
+        public List<PstTagList> GeneratePeptideSequenceTags(SearchParametersDto parameters, List<newMsPeaksDto> peakData2DList)
         {
 
             List<PstTagList> FinalPstTags = new List<PstTagList>();
 
-            //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
-            var peakDatalist = new List<peakData2Dlist>();
-            for (int row = 1; row <= peakData.Mass.Count - 1; row++)   //Updated 20210408
-            {
-                var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
-                peakDatalist.Add(dataforpeakDatalist);
+            var peakDatalistsort = peakData2DList;
+            ////Making a 2D list(peakDatalist) in which Mass & Intensity includes 
+            //var peakDatalist = new List<peakData2Dlist>();
+            //for (int row = 1; row <= peakData.Mass.Count - 1; row++)   //Updated 20210408
+            //{
+            //    var dataforpeakDatalist = new peakData2Dlist(peakData.Mass[row], peakData.Intensity[row]);
+            //    peakDatalist.Add(dataforpeakDatalist);
 
-            }
-            //Sort the peakDatalist with respect to the Mass in ascending order
-            var peakDatalistsort = peakDatalist.OrderBy(n => n.Mass).ToList();
-            peakDatalistsort.Add(new peakData2Dlist(peakData.Mass[0], peakData.Intensity[0]));   //Added 20210408
+            //}
+            ////Sort the peakDatalist with respect to the Mass in ascending order
+            //var peakDatalistsort = peakDatalist.OrderBy(n => n.Mass).ToList();
+            //peakDatalistsort.Add(new peakData2Dlist(peakData.Mass[0], peakData.Intensity[0]));   //Added 20210408
 
             var singleLengthPstTagList = GenerateSingleLengthPstList(parameters, peakDatalistsort);   // This method will extract Single Length PST Tags 
             var multipleLenghtTagList = GenerateMultipleLenghtPstList(parameters, singleLengthPstTagList); // This method will extract Multiple Length PST Tags 
@@ -83,7 +84,7 @@ namespace PerceptronLocalService.Engine
             return FinalPstTags;
         }
 
-        private List<PstTagsDto> GenerateSingleLengthPstList(SearchParametersDto parameters, List<peakData2Dlist> peakDatalistsort)
+        private List<PstTagsDto> GenerateSingleLengthPstList(SearchParametersDto parameters, List<newMsPeaksDto> peakDatalistsort)
         {
             // SINGLE LENGTH PSTs
             var GenerateSingleLengthPstList = new List<PstTagsDto>();
@@ -585,22 +586,22 @@ namespace PerceptronLocalService.Engine
 
 
 
-    public class peakData2Dlist
-    {//(double Mass, double Intenstity){
-        public double Mass { get; set; }
-        public double Intensity { get; set; }
+    ////public class peakData2Dlist       // Depreciated 20210409
+    ////{//(double Mass, double Intenstity){
+    ////    public double Mass { get; set; }
+    ////    public double Intensity { get; set; }
 
-        public peakData2Dlist(double i, double j)  /*!< Parameterized constructor */
-        {
-            Mass = i;
-            Intensity = j;
-        }
-        //*** WHAT IS THE PURPOSE OF DEFAULT CONSTRUCTOR?***//
-        public peakData2Dlist()
-        {
-            Mass = 0;
-            Intensity = 0;
-        }
-    }
+    ////    public peakData2Dlist(double i, double j)  /*!< Parameterized constructor */
+    ////    {
+    ////        Mass = i;
+    ////        Intensity = j;
+    ////    }
+    ////    //*** WHAT IS THE PURPOSE OF DEFAULT CONSTRUCTOR?***//
+    ////    public peakData2Dlist()
+    ////    {
+    ////        Mass = 0;
+    ////        Intensity = 0;
+    ////    }
+    ////}
 
 }

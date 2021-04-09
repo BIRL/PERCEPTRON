@@ -99,8 +99,8 @@ namespace PerceptronLocalService
                         graphicsCard = property.Value.ToString();
                         if (graphicsCard.Contains("NVIDIA"))
                         {
-                            NativeCudaCalls.InitializingGpu();
-                            IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                            //NativeCudaCalls.InitializingGpu();
+                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
                         break;
                     }
@@ -369,9 +369,9 @@ namespace PerceptronLocalService
 
 
                     //Step 0 - Reading the Peaklist File
-                    var massSpectrometryData = PeakListFileReaderModuleModule(parameters, fileNumber, executionTimes);
+                    var peakData2DList = PeakListFileReaderModuleModule(parameters, fileNumber, executionTimes);
 
-                    if (massSpectrometryData.Mass.Count <= 1 || massSpectrometryData.Mass[0] == 1.0073)
+                    if (peakData2DList.Count <= 1 || peakData2DList[peakData2DList.Count-1].Mass == 1.0073)
                     {
                         var CandidateListEmpty = new List<ProteinDto>();   // This "CandidateListEmpty" would be empty 
                         var tempResultsDownloadToBeWriteList = new ResultsDownloadToBeWrite(System.IO.Path.GetFileNameWithoutExtension(parameters.PeakListFileName[fileNumber]), CandidateListEmpty);
@@ -384,31 +384,33 @@ namespace PerceptronLocalService
 
 
                     //Step 1 - 1st Algorithm - Mass Tuner 
-                    var old = massSpectrometryData.WholeProteinMolecularWeight;
+                    //var old = massSpectrometryData.WholeProteinMolecularWeight;
                     var PstTags = new List<PstTagList>();
 
-                    List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
+                    //List<newMsPeaksDto> peakData2DList = peakDataList(massSpectrometryData); //Another "Peak data" storing List //Temporary
 
                     var PeakData = new MsPeaksDtoGpu();
+                    double TunnedMass = 0.0;
+                    double IntactProteinMass = peakData2DList[peakData2DList.Count - 1].Mass;
                     if (IsGpu == false)  // CPU side Mass Tuner & Pst
                     {
                         //Logging.DumpMwTunerResult(massSpectrometryData);
-                        ExecuteMassTunerModule(parameters, massSpectrometryData, executionTimes);
+                        TunnedMass = ExecuteMassTunerModule(parameters, peakData2DList, executionTimes);
                         //Step  - 2nd Algorithm - Peptide Sequence Tags (PSTs)
                         //PstTime.Start();
                         
-                        PstTags = ExecuteDenovoModule(parameters, massSpectrometryData, executionTimes);
+                        PstTags = ExecuteDenovoModule(parameters, peakData2DList, executionTimes);
                         //PstTime.Stop();
                     }
                     else  // GPU side Mass Tuner & Pst  //// --- GPU Code Below ---   Updated: 20210223
                     {
-                        PeakData = new MsPeaksDtoGpu(massSpectrometryData.Intensity, massSpectrometryData.Mass);
+                        PeakData = new MsPeaksDtoGpu(peakData2DList);
                         if (parameters.Autotune == "True" || parameters.DenovoAllow == "True")
                         {
                             
                             var MassTunerAndPstData = ExecuteMassTunerModuleGpu(PeakData, parameters, executionTimes);
                             PstTags = ConvertStructToPstTagList(MassTunerAndPstData);
-                            massSpectrometryData.WholeProteinMolecularWeight = MassTunerAndPstData[0].MassTuner;
+                            TunnedMass = MassTunerAndPstData[0].MassTuner;
 
                             MassTunerTime = MassTunerTime + MassTunerAndPstData[0].ElapsedTimeForMassTuner;
                             PstTime = PstTime + MassTunerAndPstData[0].ElapsedTimeForPst;
@@ -423,12 +425,11 @@ namespace PerceptronLocalService
                         ListPst.Add(PstTags[i].PstTags);
                     }
 
-                    if (massSpectrometryData.WholeProteinMolecularWeight == 0)
+                    if (TunnedMass != 0)    //Updated 20210409
                     {
-                        massSpectrometryData.WholeProteinMolecularWeight = old; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
+                        IntactProteinMass = TunnedMass; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
                     }
-
-                    
+                                        
 
                     //Logging.DumpModifiedProteins(candidateProteins);
                     
@@ -465,25 +466,40 @@ namespace PerceptronLocalService
 
                         Stopwatch DbFetchDbProcessTime = new Stopwatch();
                         DbFetchDbProcessTime.Start();
-                        var CandidateProteinListsInfo = GetCandidateProtein(parameters, massSpectrometryData, PstTags, SQLDataBaseProteins, executionTimes);
+                        var CandidateProteinListsInfo = GetCandidateProtein(parameters, IntactProteinMass, PstTags, SQLDataBaseProteins, executionTimes);
                         candidateProteins = CandidateProteinListsInfo.CandidateProteinList;
                         CandidateProteinListTruncated = CandidateProteinListsInfo.CandidateProteinListTruncated;
                         DbFetchDbProcessTime.Stop();
                         DbFetchTime = DbFetchTime + DbFetchDbProcessTime.Elapsed.TotalMilliseconds;
 
                         //Score Proteins on Intact Protein Mass  (Adding scores with respect to the Mass difference with Intact Mass)
-                        ScoringByMolecularWeight(parameters, massSpectrometryData.WholeProteinMolecularWeight, candidateProteins); // Scoring for Simple Candidate Protein List
+                        ScoringByMolecularWeight(parameters, IntactProteinMass, candidateProteins); // Scoring for Simple Candidate Protein List
 
                         //Logging.DumpCandidateProteins(candidateProteins);
 
                         //////UpdatedParse_database.m
                         //candidateProteins = new List<ProteinDto>();
 
+                        var ProtiensBeforeUpdate = new List<string>();
+                        for (int i = 0; i < candidateProteins.Count; i++)
+                        {
+                            ProtiensBeforeUpdate.Add(candidateProteins[i].Header);
+                        }
+
+
+
                         Stopwatch UpdateCandClock = new Stopwatch();
                         UpdateCandClock.Start();
-                        candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, peakData2DList[0].Mass);
+                        candidateProteins = UpdateGetCandidateProtein(parameters, PstTags, candidateProteins, IntactProteinMass);
                         UpdateCandClock.Stop();
                         UpdateCandTime = UpdateCandTime + UpdateCandClock.Elapsed.TotalMilliseconds;
+
+                        var ProtiensAfterUpdate = new List<string>();
+                        for (int i = 0; i < candidateProteins.Count; i++)
+                        {
+                            ProtiensAfterUpdate.Add(candidateProteins[i].Header);
+                        }
+
 
                         if (candidateProteins.Count == 0 && CandidateProteinListTruncated.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)
                         {
@@ -523,6 +539,12 @@ namespace PerceptronLocalService
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
                         BlindPtmSearchClock.Stop();
                         BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock.Elapsed.TotalMilliseconds;
+
+                        var ProteinAfterBlind = new List<string>();
+                        for (int i = 0; i < CandidateProteinListBlindPtmModified.Count; i++)
+                        {
+                            ProteinAfterBlind.Add(CandidateProteinListBlindPtmModified[i].Header);
+                        }
 
 
                         //Step 4 - ??? Algorithm - Spectral Comparison
@@ -567,6 +589,12 @@ namespace PerceptronLocalService
                         BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock2.Elapsed.TotalMilliseconds;
 
 
+                        var BeforeTruncationCandTrunc = new List<string>();
+                        for (int i = 0; i< CandidateProteinListTruncated.Count; i++)
+                        {
+                            BeforeTruncationCandTrunc.Add(CandidateProteinListTruncated[i].Header);
+                        }
+
                         //Logging.DumpInsilicoScores(candidateProteins);
 
                         //Executing Truncation 
@@ -583,7 +611,14 @@ namespace PerceptronLocalService
                         
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinswithInsilicoScores);
                         FinalCandidateProteinListforFinalScoring.AddRange(CandidateProteinListTrucnatedwithInsilicoScores);
-                        
+
+                        var FinalListHeader = new List<string>();
+                        for (int i = 0; i< FinalCandidateProteinListforFinalScoring.Count; i++)
+                        {
+                            FinalListHeader.Add(FinalCandidateProteinListforFinalScoring[i].Header);
+                        }
+
+
 
                         if (FinalCandidateProteinListforFinalScoring.Count == 0) // Its Beacuse Data File Having not Enough Info(Number of MS2s are vary few)   //Updated 20200114
                         {
@@ -883,29 +918,30 @@ namespace PerceptronLocalService
 
 
         //Mass Tunner
-        private void ExecuteMassTunerModule(SearchParametersDto parameters, MsPeaksDto peakData, ExecutionTimeDto executionTimes)
+        private double ExecuteMassTunerModule(SearchParametersDto parameters, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
-
+            double TunnedMass = 0.0;
             if (parameters.Autotune == "True")
             {
-                _wholeProteinMassTuner.TuneWholeProteinMass(peakData, parameters);
+                TunnedMass = _wholeProteinMassTuner.TuneWholeProteinMass(peakData2DList, parameters);
             }
             moduleTimer.Stop();
             executionTimes.TunerTime = moduleTimer.Elapsed.ToString();
+            return TunnedMass;
         }
 
 
 
         //PST: Peptide Sequence Tags
-        private List<PstTagList> ExecuteDenovoModule(SearchParametersDto parameters, MsPeaksDto massSpectrometryData, ExecutionTimeDto executionTimes)
+        private List<PstTagList> ExecuteDenovoModule(SearchParametersDto parameters, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch moduleTimer = Stopwatch.StartNew();
             var pstTags = new List<PstTagList>();
             if (parameters.DenovoAllow == "True")
             {
 
-                pstTags = _pstGenerator.GeneratePeptideSequenceTags(parameters, massSpectrometryData);
+                pstTags = _pstGenerator.GeneratePeptideSequenceTags(parameters, peakData2DList);
                 //Logging.DumpPstTags(pstTags);
 
             }
@@ -915,12 +951,12 @@ namespace PerceptronLocalService
         }
         //GetCandidateProtein(parameters, massSpectrometryData, PstTags, executionTimes, 
 
-        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, MsPeaksDto peakData, List<PstTagList> PstTags, List<ProteinDto> SQLDataBaseProteins, ExecutionTimeDto executionTimes)
+        private CandidateProteinListsDto GetCandidateProtein(SearchParametersDto parameters, double IntactProteinMass, List<PstTagList> PstTags, List<ProteinDto> SQLDataBaseProteins, ExecutionTimeDto executionTimes)
         {
 
             Stopwatch moduleTimer = Stopwatch.StartNew();
 
-            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(peakData.WholeProteinMolecularWeight, parameters, PstTags, SQLDataBaseProteins);
+            var CandidateProteinListsInfo = _proteinRepository.ExtractProteins(IntactProteinMass, parameters, PstTags, SQLDataBaseProteins);
 
             moduleTimer.Stop();
 
@@ -1104,7 +1140,7 @@ namespace PerceptronLocalService
 
 
         //Peak List: Extracting from data file 
-        private MsPeaksDto PeakListFileReaderModuleModule(SearchParametersDto parameters, int fileNumber, ExecutionTimeDto executionTimes)
+        private List<newMsPeaksDto> PeakListFileReaderModuleModule(SearchParametersDto parameters, int fileNumber, ExecutionTimeDto executionTimes)
         {
             var moduleTimer = new Stopwatch();
             moduleTimer.Start();
@@ -1125,22 +1161,35 @@ namespace PerceptronLocalService
                 peakData.Intensity[peakDataindex] = peakData.Intensity[peakDataindex] / maxIntensity; //Normalized by dividing the selected maximum intensity 
             }
 
-            moduleTimer.Stop();
-            executionTimes.FileReadingTime = moduleTimer.Elapsed.ToString();
-            return peakData;
-        }
 
-        public List<newMsPeaksDto> peakDataList(MsPeaksDto peakData) // #En Temporary Until Adjustments 
-        {
             newMsPeaksDto tempData;
-            List<newMsPeaksDto> peakList = new List<newMsPeaksDto>();
-            for (int index = 0; index < peakData.Mass.Count; index++)
+            List<newMsPeaksDto> PeakData2DList = new List<newMsPeaksDto>();
+            for (int index = 1; index < peakData.Mass.Count; index++) // Updated 20210408   // Will start from MS2s
             {
                 tempData = new newMsPeaksDto(peakData.Mass[index], peakData.Intensity[index]);
-                peakList.Add(tempData);
+                PeakData2DList.Add(tempData);
             }
-            return peakList;
+
+            PeakData2DList.Add(new newMsPeaksDto(peakData.Mass[0], peakData.Intensity[0]));   // Updated 20210409  // Intact Mass will at the end of the list
+
+            moduleTimer.Stop();
+            executionTimes.FileReadingTime = moduleTimer.Elapsed.ToString();
+            return PeakData2DList;
         }
+
+        //public List<newMsPeaksDto> peakDataList(MsPeaksDto peakData) // #En Temporary Until Adjustments 
+        //{
+        //    newMsPeaksDto tempData;
+        //    List<newMsPeaksDto> peakList = new List<newMsPeaksDto>();
+        //    for (int index = 1; index < peakData.Mass.Count; index++) // Updated 20210408   // Will start from MS2s
+        //    {
+        //        tempData = new newMsPeaksDto(peakData.Mass[index], peakData.Intensity[index]);
+        //        peakList.Add(tempData);
+        //    }
+
+        //    peakList.Add(new newMsPeaksDto(peakData.Mass[0], peakData.Intensity[0]));   // Updated 20210409  // Intact Mass will at the end of the list 
+        //    return peakList;
+        //}
 
         private MassTunerAndPstCombinedStruct[] ExecuteMassTunerModuleGpu(MsPeaksDtoGpu PeakData, SearchParametersDto parameters, ExecutionTimeDto executionTimes)
         {
@@ -1432,14 +1481,4 @@ public struct ProteinStruct
         this.SizeOfAllInsilicoArrays = SizeOfAllInsilicoArrays;
     }
 }
-
-
-
-////// DO NOT DELETE THE BELOW DESCRIPTION ////  20210408
-///  In Engine > WholeProteinMassTunerCPU.cs   &   PSTGeneratorCPU.cs peakData2Dlist class
-///  In DTO > MsPeaksDto.cs   ,   newMsPeaksDto.cs   &    MsPeaksDtoGpu.cs classes
-///  All are using relatively for same purpose (just minor differences) so in future they 
-///  can be combined after taking all considerations.
-
-
 

@@ -1,10 +1,10 @@
 ﻿using PerceptronLocalService.DTO;
+using System.Collections.Generic;
 
 namespace PerceptronLocalService.Interfaces
 {
     public interface IWholeProteinMassTuner
     {
-        void TuneWholeProteinMass(MsPeaksDto peakData, SearchParametersDto parameters);
-        
+        double TuneWholeProteinMass(List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters);
     }
 }

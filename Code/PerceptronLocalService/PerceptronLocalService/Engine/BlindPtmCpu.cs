@@ -15,7 +15,7 @@ namespace PerceptronLocalService.Engine
         public BlindPTMDto BlindPTMExtraction(List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters)
         {
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
+            var ExperimentalSpectrum = peakData2DList; //peakData2DList.OrderBy(n => n.Mass).ToList();     // Updated 20210409
             var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;// Molar weight that is the last row of the peak list
             var UserHopThreshold = 1;
 
@@ -79,7 +79,8 @@ namespace PerceptronLocalService.Engine
             return BlindPTMExtractionInfo;
         }
 
-        public List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, List<newMsPeaksDto> peakData2DList, double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction)
+        public List<ProteinDto> BlindPTMGeneral(List<ProteinDto> CandidateProtList, List<newMsPeaksDto> peakData2DList, 
+            double UserHopThreshold, BlindPTMDto BlindPTMExtractionInfo, SearchParametersDto parameters, string TypeOfFunction)
         //A general function for BlindPTM, BlindPTM_Truncation_Left and BlindPTM_Truncation_Right
         {
             //Variable initialization
@@ -93,7 +94,7 @@ namespace PerceptronLocalService.Engine
             List<ProteinDto> CandidateProtListModified = new List<ProteinDto>();
 
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
+            var ExperimentalSpectrum = peakData2DList; //peakData2DList.OrderBy(n => n.Mass).ToList();  //Updated 20210409
             var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;    // Molar weight that is the last row of the peak list   /// *R peakData.Mass[peakData.Mass.Count - 1]  *W peakData2DList[peakData2DList.Count - 1].Mass
             double tolConv = 0;
 
@@ -316,7 +317,8 @@ namespace PerceptronLocalService.Engine
             return Matches;
         }
 
-        public List<ProteinDto> PTMTruncation_Modification(List<ProteinDto> CandidateProtListInput, List<newMsPeaksDto> peakData2DList, SearchParametersDto parameters, string FunctionType)
+        public List<ProteinDto> PTMTruncation_Modification(List<ProteinDto> CandidateProtListInput, List<newMsPeaksDto> peakData2DList,
+            SearchParametersDto parameters, string FunctionType)
         {
             //Making a 2D list(peakDatalist) in which Mass & Intensity includes 
             //var peakDatalist = new List<peakData2Dlist>();
@@ -328,7 +330,7 @@ namespace PerceptronLocalService.Engine
             //    peakDatalist.Add(dataforpeakDatalist);
             //}
             //Sorting the peakDatalist with respect to the Mass in ascending order
-            var ExperimentalSpectrum = peakData2DList.OrderBy(n => n.Mass).ToList();
+            var ExperimentalSpectrum = peakData2DList; // peakData2DList.OrderBy(n => n.Mass).ToList();    //Updated 20210409
             var MolW = ExperimentalSpectrum[ExperimentalSpectrum.Count - 1].Mass;    // Molar weight that is the last row of the peak list
             double tolConv = 0;
             string cleavageType = parameters.InsilicoFragType;

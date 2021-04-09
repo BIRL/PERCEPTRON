@@ -10,7 +10,7 @@ using PerceptronLocalService.DTO;
 namespace PerceptronLocalService.Engine
 {
     //Tuple Sums: Sums of MS1 and MS2s with each other
-    public class WholeProteinMassTunerGpu : IWholeProteinMassTuner
+    public class WholeProteinMassTunerGpu // : IWholeProteinMassTuner
     {
         private const int NumberOfThreads = 1024;
 
