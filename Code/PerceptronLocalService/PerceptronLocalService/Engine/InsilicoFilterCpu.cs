@@ -71,7 +71,7 @@ namespace PerceptronLocalService.Engine
                         int OldConsec2 = -1;     // Updated 20200917   -- Changed from 0 to -1
                         int ConsecutiveRegion = 0;
 
-                        for (int indexPeakList = 1; indexPeakList < peakData2DList.Count; indexPeakList++)//Starts from One!!! Do not interested in Intact Protein Mass  /////EXPERIMENTAL PEAK LIST
+                        for (int indexPeakList = 0; indexPeakList < peakData2DList.Count - 1; indexPeakList++)  // Updated 20210409 //Added: Now started from Zero and Count -1 !!! Because we do not interested in Intact Protein Mass  /////EXPERIMENTAL PEAK LIST
                         {
                             double peakDifferenceTolerance = ComputeDifferenceThreshold(tol, pepUnit, peakData2DList[indexPeakList].Mass); //peakList[0]
                             //if (proteinList[indexProteinList].Header == "P02652" && indexPeakList == 31)
