@@ -585,7 +585,7 @@ export class ProteinSearchComponent implements OnInit {
       alert("Dear User,\nPlease note that searches with single input files can not be used to compute false discovery rates. Click OK to proceed without computing FDR.\n\nThank you for using PERCEPTRON!\nThe PERCEPTRON Team");
     }
 
-    if(form.MwSweight == "0" && form.PstSweight == "0" && form.InsilicoSweight == "0"){
+    if(this.Slider1 == "0" && this.Slider2 == "0" && this.Slider3 == "0"){
       alert("Dear User,\nYou did not select any weightage from 'Set Scoring Components Weight'.\nSo, PERCEPTRON will select Spectral Comparisons Score Weightage (100%) by default.");
     }
    
