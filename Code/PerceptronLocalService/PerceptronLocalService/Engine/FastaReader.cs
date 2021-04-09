@@ -23,7 +23,8 @@ namespace PerceptronLocalService.Engine
 
             string CurrentDirectory = Directory.GetCurrentDirectory();
             string DatabasesFolder = CurrentDirectory.Replace("\\bin\\Debug", "\\ProteinDatabasesInFastaFormat\\");
-            List<string> DatabaseFileNames = new List<string>() { "Human.fasta", "HumanDecoyDB.fasta", "EColi.fasta", "EColiDecoyDB.fasta" };
+            List<string> DatabaseFileNames = new List<string>()
+            { "Human.fasta", "HumanDecoyDB.fasta", "EColi.fasta", "EColiDecoyDB.fasta", "Bovine.fasta",  "BovineDecoyDB.fasta"};
             
             for (int index = 0; index < DatabaseFileNames.Count; index++)
             {

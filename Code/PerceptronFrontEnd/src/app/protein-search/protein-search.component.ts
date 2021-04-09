@@ -39,7 +39,8 @@ export class ProteinSearchComponent implements OnInit {
     // { value: 'Swissprot', viewValue: 'Swissprot' },
     // { value: 'TrEMBL', viewValue: 'TrEMBL' },
     { value: 'Human', viewValue: 'Human' },
-    { value: 'Ecoli', viewValue: 'Ecoli' }
+    { value: 'Ecoli', viewValue: 'Ecoli' },
+    { value: 'Bovine', viewValue: 'Bovine' }
   ];
 
   YesNo = [
@@ -50,7 +51,8 @@ export class ProteinSearchComponent implements OnInit {
 
   states = [
     { name: 'Human', viewValue: 'Human' },
-    { name: 'Ecoli', viewValue: 'Ecoli' }
+    { name: 'Ecoli', viewValue: 'Ecoli' },
+    { name: 'Bovine', viewValue: 'Bovine' }
   ]; //    { name: 'Swissprot', viewValue: 'Swissprot' }, { name: 'TrEMBL', viewValue: 'TrEMBL' },
 
   diableEmail: boolean;
