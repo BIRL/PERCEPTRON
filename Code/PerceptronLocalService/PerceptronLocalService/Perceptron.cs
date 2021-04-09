@@ -73,12 +73,22 @@ namespace PerceptronLocalService
                     SqlDatabases[1] = AllDatabasesOfProteins[1];
                 }
             }
-            else       // For Selecting Simple Ecoli Database
+
+            else if (parameters.ProtDb == "Ecoli")      // For Selecting Simple Ecoli Database
             {
                 SqlDatabases[0] = AllDatabasesOfProteins[2];
                 if (parameters.FDRCutOff != "N/A")       // Will work for FDR side. ...For Selecting Ecoli Decoy Database
                 {
                     SqlDatabases[1] = AllDatabasesOfProteins[3];
+                }
+            }
+
+            else if (parameters.ProtDb == "Bovine")      // For Selecting Simple Bovine Database
+            {
+                SqlDatabases[0] = AllDatabasesOfProteins[4];
+                if (parameters.FDRCutOff != "N/A")       // Will work for FDR side. ...For Selecting Ecoli Decoy Database
+                {
+                    SqlDatabases[1] = AllDatabasesOfProteins[5];
                 }
             }
             return SqlDatabases;
@@ -600,7 +610,7 @@ namespace PerceptronLocalService
                         //Executing Truncation 
                         Stopwatch TruncatedClock = new Stopwatch();
                         TruncatedClock.Start();
-                        var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(IntactProteinMass, parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
+                        var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
                         TruncatedClock.Stop();
                         TruncatedTime = TruncatedTime + TruncatedClock.Elapsed.TotalMilliseconds;
 
@@ -816,10 +826,12 @@ namespace PerceptronLocalService
             }
         }
 
-        private List<ProteinDto> Truncation_Engine(double IntactProteinMass, SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
+        private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, 
+            List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
         {
             Stopwatch modulerTimer = Stopwatch.StartNew();
 
+            
             var CandidateProteinListUnModified = new List<ProteinDto>();
             var CandidateProteinListTrucnatedwithInsilicoScores = new List<ProteinDto>();
             var CandidateProteinList = new List<ProteinDto>();
@@ -844,6 +856,7 @@ namespace PerceptronLocalService
                 string PtmAllow = parameters.PtmAllow;
                 /* (Above) Updated 20201207  -- For Time Efficiancy  */
 
+                double ProteinExperimentalMw = peakData2DList[peakData2DList.Count - 1].Mass;
 
                 var CandidateProteinListTruncatedLeft = new List<ProteinDto>(ListCount);
                 var CandidateProteinListTruncatedRight = new List<ProteinDto>(Capacity);
@@ -860,32 +873,54 @@ namespace PerceptronLocalService
 
                 OnlyPreTruncation.Start();    // DELME Execution Time Working
 
-                _Truncation.PreTruncation(IntactProteinMass, MwTolerance, IndividualModifications, CandidateProteinListTruncated, 
+                _Truncation.PreTruncation(ProteinExperimentalMw, MwTolerance, IndividualModifications, CandidateProteinListTruncated, 
                     CandidateProteinListTruncatedLeft, CandidateProteinListTruncatedRight, peakData2DList);
 
+
+                //DELME BELOW
                 var ListTruncatedLeft = new List<string>();
                 for (int i = 0; i < CandidateProteinListTruncated.Count; i++)
                 {
                     ListTruncatedLeft.Add(CandidateProteinListTruncated[i].Header);
                 }
 
+                string FileWithPath = @"C:\PerceptronResultsDownload\ResultsReadilyAvailable\test.txt";
+                if (File.Exists(FileWithPath))
+                    File.Delete(FileWithPath); //Deleted Pre-existing file
+
+                var fout = new FileStream(FileWithPath, FileMode.OpenOrCreate);
+                var sw = new StreamWriter(fout);
                 var ListTruncatedRight = new List<string>();
                 for (int i = 0; i < CandidateProteinListTruncatedRight.Count; i++)
                 {
-                    ListTruncatedRight.Add(CandidateProteinListTruncatedRight[i].Header);
+                    sw.WriteLine(CandidateProteinListTruncatedRight[i].Header);
+                    //ListTruncatedRight.Add(CandidateProteinListTruncatedRight[i].Header);
                 }
-
-
+                sw.Close();
+                //DELME ABOVE
 
                 OnlyPreTruncation.Stop();           // DELME Execution Time Working
 
                 OnlyTruncationLeft.Start(); // DELME Execution Time Working
-                _Truncation.TruncationLeft(IntactProteinMass, PtmAllow, CandidateProteinListTruncatedLeft, CandidateListTruncationLeftProcessed,
+                _Truncation.TruncationLeft(ProteinExperimentalMw, PtmAllow, CandidateProteinListTruncatedLeft, CandidateListTruncationLeftProcessed,
                     RemainingProteinsLeft, peakData2DList);  //ITS HEALTHY 
                 OnlyTruncationLeft.Stop();           // DELME Execution Time Working
 
+
+                //DELME BELOW
+                var tempRemainingProteinsLeft = new List<string>();
+                for (int i = 0; i < CandidateListTruncationLeftProcessed.Count; i++)
+                {
+                    tempRemainingProteinsLeft.Add(CandidateListTruncationLeftProcessed[i].Header);
+                }
+
+
+
+                //DELME ABOVE
+
+
                 OnlyTruncationRight.Start();    // DELME Execution Time Working
-                _Truncation.TruncationRight(IntactProteinMass, PtmAllow, CandidateProteinListTruncatedRight, CandidateListTruncationRightProcessed,
+                _Truncation.TruncationRight(ProteinExperimentalMw, PtmAllow, CandidateProteinListTruncatedRight, CandidateListTruncationRightProcessed,
                     RemainingProteinsRight, peakData2DList);
                 OnlyTruncationRight.Stop();           // DELME Execution Time Working
 
