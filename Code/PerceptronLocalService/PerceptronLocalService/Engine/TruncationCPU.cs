@@ -16,9 +16,10 @@ namespace PerceptronLocalService.Engine
         ////private const double MethionineWeight = 42.0106;
         //double MethionineWeight = 131.04049; //RECEIVING so for the #TIMEBEING//= AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight;
 
-        public void PreTruncation(double MwTolerance, List<string> IndividualModifications, List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
+        public void PreTruncation(double IntactProteinMass, double MwTolerance, List<string> IndividualModifications, 
+            List<ProteinDto> proteinList, List<ProteinDto> proteinListLeft, List<ProteinDto> proteinListRight, List<newMsPeaksDto> peakData2DList)
         {
-            var proteinExperimentalMw = peakData2DList[0].Mass;
+            var proteinExperimentalMw = IntactProteinMass;
 
             /* (Below) Updated 20201130  -- For Time Efficiancy  */
             RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy 
@@ -286,9 +287,10 @@ namespace PerceptronLocalService.Engine
             }
         }
 
-        public void TruncationLeft(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft, List<newMsPeaksDto> peakData2DList)
+        public void TruncationLeft(double IntactProteinMass, string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, 
+            List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft, List<newMsPeaksDto> peakData2DList)
         {
-            var IntactProteinMass = peakData2DList[0].Mass;
+            
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
             if (PtmAllow == "True")  // if PtmAllow is just only BlindPTM otherwise make separate BlindPTM...
@@ -296,18 +298,21 @@ namespace PerceptronLocalService.Engine
                 // HERE WHEN BE BLIND PTM...
                 NEEDTOBEDECIDED = 128;
                 factor = 0;
-                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
+                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor,
+                    CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
             }
             else
             {
                 NEEDTOBEDECIDED = 256;
                 factor = 1;
-                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor, CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
+                subTruncationLeft(PtmAllow, CandidateProteinListTruncatedLeft, IntactProteinMass, tol, NEEDTOBEDECIDED, factor,
+                    CandidateListTruncationLeftProcessed, RemainingProteinsLeft);
             }
 
         }
 
-        public void subTruncationLeft(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft)
+        public void subTruncationLeft(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedLeft, double IntactProteinMass,
+            int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationLeftProcessed, List<ProteinDto> RemainingProteinsLeft)
         {
             Stopwatch subTruncationLeftTime = new Stopwatch();        // DELME Execution Time Working
             Stopwatch subTruncationLeftInMemory = new Stopwatch();        // DELME Execution Time Working
@@ -392,10 +397,10 @@ namespace PerceptronLocalService.Engine
             subTruncationLeftTime.Stop();     // DELME Execution Time Working;
         }
 
-        public void TruncationRight(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList)
+        public void TruncationRight(double IntactProteinMass, string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, 
+            List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight, List<newMsPeaksDto> peakData2DList)
         {
             RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy 
-            var IntactProteinMass = peakData2DList[0].Mass;
             const int tol = 2;
             int NEEDTOBEDECIDED; int factor;
             if (PtmAllow == "True") //parameters.PtmAllow  == BlindPtm
@@ -411,7 +416,8 @@ namespace PerceptronLocalService.Engine
             }
         }
 
-        public void subTruncationRight(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, double IntactProteinMass, int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight)
+        public void subTruncationRight(string PtmAllow, List<ProteinDto> CandidateProteinListTruncatedRight, double IntactProteinMass,
+            int tol, int NEEDTOBEDECIDED, int factor, List<ProteinDto> CandidateListTruncationRightProcessed, List<ProteinDto> RemainingProteinsRight)
         {
             double MassOfHydrogen = MassAdjustment.H;   //Updated 20201130  -- For Time Efficiancy 
             double MassOfOxygen = MassAdjustment.O;   //Updated 20201130  -- For Time Efficiancy 
