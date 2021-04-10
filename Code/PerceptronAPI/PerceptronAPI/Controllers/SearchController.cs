@@ -164,7 +164,7 @@ namespace PerceptronAPI.Controllers
                 };
                 parametersDto.SearchFiles.Add(x);
             }
-            if (parametersDto.SearchFiles.Count == 1)
+            if (parametersDto.SearchFiles.Count == 1 || parametersDto.SearchParameters.FDRCutOff == "")
             {
                 parametersDto.SearchParameters.FDRCutOff = "N/A";  //Updated 20210209
             }
