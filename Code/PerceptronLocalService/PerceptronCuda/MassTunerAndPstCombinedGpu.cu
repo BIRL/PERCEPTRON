@@ -237,7 +237,7 @@ vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<
 
 	int MultipleLengthPstsCount = Final_MultipleLengthPsts.size();	// Updated 20210325 --- Added
 	vector<_PeptideSequenceTags> Filtered_MultipleLengthPsts;
-	if (MultipleLengthPstsCount > 1) // Updated 20210410 --- BELOW
+	if (MultipleLengthPstsCount > 0) // Updated 20210410 --- BELOW
 	{
 		FindingUniquePSTs(Final_MultipleLengthPsts);	// Function call to extract unique PSTs
 		AccomodateIsoforms(Final_MultipleLengthPsts, Parameters);	// Isoforms are being accomodated here and then their unique is taken
