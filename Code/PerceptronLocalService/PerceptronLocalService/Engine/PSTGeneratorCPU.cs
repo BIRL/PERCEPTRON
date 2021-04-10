@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using PerceptronLocalService.Interfaces;
 using PerceptronLocalService.DTO;
-using PerceptronLocalService.Utility;
-using System.Collections;
-using System.Text; // For ArrayList
-using PerceptronLocalService.Engine;
 
 namespace PerceptronLocalService.Engine
 {
@@ -55,20 +50,20 @@ namespace PerceptronLocalService.Engine
                 //If 2 or more Tags are same AT SAME POSITION then keep ONLY just one
                 List<Psts> FirstUniquePstTagInfoList = UniquePsts(PstTagList);
 
-                var ListString = new List<string>();
-                for (int i=0; i< FirstUniquePstTagInfoList.Count; i++)
-                {
-                    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
-                }
+                //var ListString = new List<string>();
+                //for (int i=0; i< FirstUniquePstTagInfoList.Count; i++)
+                //{
+                //    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
+                //}
 
 
                 var AccomodatePsts = AccomodateIsoforms(FirstUniquePstTagInfoList, parameters);
 
-                ListString = new List<string>();
-                for (int i = 0; i < FirstUniquePstTagInfoList.Count; i++)
-                {
-                    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
-                }
+                //ListString = new List<string>();
+                //for (int i = 0; i < FirstUniquePstTagInfoList.Count; i++)
+                //{
+                //    ListString.Add(FirstUniquePstTagInfoList[i].psttags);
+                //}
 
 
                 List<Psts> SecondUniquePstTagInfoList = UniquePsts(AccomodatePsts);
@@ -124,6 +119,7 @@ namespace PerceptronLocalService.Engine
             }
             return GenerateSingleLengthPstList;
         }
+
         private List<List<PstTagsDto>> GenerateMultipleLenghtPstList(SearchParametersDto parameters, List<PstTagsDto> singleLengthPstTagList)
         { //FIGURE 6: STEP 3:::: OBTAIN AMINO ACIDS CORRESPONDING TO FRAGMENT-PAIR DIFFERENCES
             //Hops having equal starting peak and ending peak values were joined together to form PST ladders
@@ -167,16 +163,16 @@ namespace PerceptronLocalService.Engine
             }
 
 
-            var ListPst = new List<string>();
-            for (int i = 0; i < DoubleTagPstTags.Count; i++)
-            {
-                string Tag = "";
-                for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
-                {
-                    Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
-                }
-                ListPst.Add(Tag);
-            }
+            //var ListPst = new List<string>();
+            //for (int i = 0; i < DoubleTagPstTags.Count; i++)
+            //{
+            //    string Tag = "";
+            //    for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
+            //    {
+            //        Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
+            //    }
+            //    ListPst.Add(Tag);
+            //}
 
 
             //AFTER GENERATING DUPLICATE TAGS NOW GENERATING MULTIPLE TAGS
@@ -240,16 +236,16 @@ namespace PerceptronLocalService.Engine
 
             var MultipleTags = new List<List<PstTagsDto>>(DoubleTagPstTags); //Because of referenced based deep clonning (here more precisely because of safe side).
 
-            var ListPst = new List<string>();
-            for (int i = 0; i < DoubleTagPstTags.Count; i++)
-            {
-                string Tag = "";
-                for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
-                {
-                    Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
-                }
-                ListPst.Add(Tag);
-            }
+            //var ListPst = new List<string>();
+            //for (int i = 0; i < DoubleTagPstTags.Count; i++)
+            //{
+            //    string Tag = "";
+            //    for (int j = 0; j < DoubleTagPstTags[i].Count; j++)
+            //    {
+            //        Tag = Tag + DoubleTagPstTags[i][j].AminoAcidSymbol;
+            //    }
+            //    ListPst.Add(Tag);
+            //}
 
             return MultipleTags;
         }
@@ -283,19 +279,19 @@ namespace PerceptronLocalService.Engine
                 }
             }
 
-            ///////////////DELME  /// POINT-1
-            var Tag2 = new List<string>();
-            for (int i = 0; i < breakmultipleLenghtTags.Count; i++)
-            {
-                string tag = "";
-                for (int j = 0; j < breakmultipleLenghtTags[i].Count; j++)
-                {
-                    tag = String.Concat(tag, breakmultipleLenghtTags[i][j].AminoAcidSymbol);
-                }
-                Tag2.Add(tag);
+            /////////////////DELME  /// POINT-1
+            //var Tag2 = new List<string>();
+            //for (int i = 0; i < breakmultipleLenghtTags.Count; i++)
+            //{
+            //    string tag = "";
+            //    for (int j = 0; j < breakmultipleLenghtTags[i].Count; j++)
+            //    {
+            //        tag = String.Concat(tag, breakmultipleLenghtTags[i][j].AminoAcidSymbol);
+            //    }
+            //    Tag2.Add(tag);
 
-            }
-            ///////////////DELME
+            //}
+            /////////////////DELME
 
             //Filtering the PST Tags:
             List<List<PstTagsDto>> filteredmultipleLenghtTags = new List<List<PstTagsDto>>(); //Filtering the Tags according to Minimum-Maximum Range Length of PST
@@ -308,19 +304,19 @@ namespace PerceptronLocalService.Engine
             }
 
 
-            ///////////////DELME  /// POINT-3
-            var Tag3 = new List<string>();
-            for (int i = 0; i < filteredmultipleLenghtTags.Count; i++)
-            {
-                string tag = "";
-                for (int j = 0; j < filteredmultipleLenghtTags[i].Count; j++)
-                {
-                    tag = String.Concat(tag, filteredmultipleLenghtTags[i][j].AminoAcidSymbol);
-                }
-                Tag3.Add(tag);
+            /////////////////DELME  /// POINT-3
+            //var Tag3 = new List<string>();
+            //for (int i = 0; i < filteredmultipleLenghtTags.Count; i++)
+            //{
+            //    string tag = "";
+            //    for (int j = 0; j < filteredmultipleLenghtTags[i].Count; j++)
+            //    {
+            //        tag = String.Concat(tag, filteredmultipleLenghtTags[i][j].AminoAcidSymbol);
+            //    }
+            //    Tag3.Add(tag);
 
-            }
-            ///////////////DELME
+            //}
+            /////////////////DELME
             ///
             return filteredmultipleLenghtTags;
         }
