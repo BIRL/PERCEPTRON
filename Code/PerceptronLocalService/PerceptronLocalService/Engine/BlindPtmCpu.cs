@@ -387,7 +387,7 @@ namespace PerceptronLocalService.Engine
                             var diff_left = protein.InsilicoDetails.InsilicoMassLeft[ind] - TruncationMass;
                             if (Math.Abs(diff_left) <= tol)
                                 Index = ind;
-                            else if (Math.Abs(diff_left) > tol)
+                            if (diff_left > tol)  //Updated 20210410
                                 break;
                         }
                         else if (FunctionType == "Truncation_Right_Modification")
@@ -395,7 +395,7 @@ namespace PerceptronLocalService.Engine
                             var diff_right = protein.InsilicoDetails.InsilicoMassRight[ind] - TruncationMass;
                             if (Math.Abs(diff_right) <= tol)
                                 Index = ind;
-                            else if (Math.Abs(diff_right) > tol)
+                            if (diff_right > tol)     //Updated 20210410
                                 break;
                         }
                     }
