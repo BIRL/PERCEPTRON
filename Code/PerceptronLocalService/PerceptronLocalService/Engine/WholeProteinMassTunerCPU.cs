@@ -65,7 +65,7 @@ namespace PerceptronLocalService.Engine
             double olddiff = 1, newdiff = 0;
 
             double SlidingWindowValue = parameters.SliderValue;
-                
+
             SlidingWindowValue = (SlidingWindowValue * IntactProteinMass) / Math.Pow(10, 6);//20200915 - Value for sliding the window  
 
 
@@ -97,7 +97,7 @@ namespace PerceptronLocalService.Engine
                 else if (windowcapturedelementsnew.Count == windowcapturedelementsold.Count)
                 {
                     olddiff = Math.Abs((windowcapturedelementsold[windowcapturedelementsold.Count - 1].Mass) - IntactProteinMass);
-                    newdiff = Math.Abs((windowcapturedelementsnew[windowcapturedelementsnew.Count -1].Mass) - IntactProteinMass);
+                    newdiff = Math.Abs((windowcapturedelementsnew[windowcapturedelementsnew.Count - 1].Mass) - IntactProteinMass);
 
                     if (olddiff >= newdiff)
                     {
@@ -106,11 +106,17 @@ namespace PerceptronLocalService.Engine
                     }
                 }
                 windowposition = windowposition + SlidingWindowValue;
-                
+
+            }
+
+            int WindowCaptured = windowcapturedelementsold.Count;
+            if (WindowCaptured == 0) // Updated 20210410
+            {
+                return TunnedMass;
             }
 
             //FIGURE 5: STEP 5:::: Applying formula [REF: SPCTRUM PAPER]
-            double[] dataforsumoftunedmassesandintensities = new double[windowcapturedelementsold.Count];//Its tunedmassnominator according to SPECTRUM's formula for TunedMass
+            double[] dataforsumoftunedmassesandintensities = new double[WindowCaptured];//Its tunedmassnominator according to SPECTRUM's formula for TunedMass
 
             double sumoftunedmassesandintensities = 0;
             double sumoftunedintensities = 0;
