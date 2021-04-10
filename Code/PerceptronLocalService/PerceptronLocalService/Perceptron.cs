@@ -455,10 +455,23 @@ namespace PerceptronLocalService
                     {
                         IntactProteinMass = TunnedMass; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
                     }
-                                        
-
                     //Logging.DumpModifiedProteins(candidateProteins);
-                    
+
+
+                    Stopwatch BlindPtmSearchClock = new Stopwatch();
+                    BlindPtmSearchClock.Start();
+                    Stopwatch BlindPtmModuleTimer1of3 = new Stopwatch();
+                    BlindPtmModuleTimer1of3.Start();
+                    var BlindPTMExtractionInfo = new BlindPTMDto();
+
+                    if (parameters.PtmAllow == "True")
+                    {
+                        BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);
+                    }
+
+                    BlindPtmModuleTimer1of3.Stop();
+                    BlindPtmSearchClock.Stop();
+                    BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock.Elapsed.TotalMilliseconds;
 
                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
                     //* From Here Simple Database and decoy database work will start  //Updated 20201116 /
@@ -558,10 +571,21 @@ namespace PerceptronLocalService
 
                         // Blind PTM Algos (BlindPTMExtraction & BlindPTMGeneral)
 
-                        Stopwatch BlindPtmSearchClock = new Stopwatch();
+
+                        
+                        BlindPtmSearchClock = new Stopwatch();
                         BlindPtmSearchClock.Start();
                         var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
-                        CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
+                        Stopwatch BlindPtmModuleTimer2of3 = new Stopwatch();
+                        BlindPtmModuleTimer2of3.Start();
+                        if (parameters.PtmAllow == "True")
+                        {
+                            CandidateProteinListBlindPtmModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(candidateProteins, peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM"); //WHy UserHopThreshold = 1
+                        }
+                        BlindPtmModuleTimer2of3.Stop();
+                        
+
+                        //CandidateProteinListBlindPtmModified = ExecutePostTranslationalModificationsModule(parameters, candidateProteins, peakData2DList, executionTimes);
                         candidateProteins.AddRange(CandidateProteinListBlindPtmModified);
                         BlindPtmSearchClock.Stop();
                         BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock.Elapsed.TotalMilliseconds;
@@ -599,21 +623,18 @@ namespace PerceptronLocalService
 
                         //}
 
-
-
-
-
-
-
-
-
                         //BlindPTMLocalization: Localizing Unknown mass shift
-                        Stopwatch BlindPtmSearchClock2 = new Stopwatch();
-                        BlindPtmSearchClock2.Start();
-                        CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
-                        BlindPtmSearchClock2.Stop();
-                        BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock2.Elapsed.TotalMilliseconds;
+                        BlindPtmSearchClock = new Stopwatch();
+                        BlindPtmSearchClock.Start();
+                        Stopwatch BlindPtmModuleTimer3of3 = new Stopwatch();
+                        BlindPtmModuleTimer3of3.Start();
 
+                        CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
+
+                        BlindPtmModuleTimer3of3.Stop();
+                        BlindPtmSearchClock.Stop();
+                        BlindPtmSearchTime = BlindPtmSearchTime + BlindPtmSearchClock.Elapsed.TotalMilliseconds;
+                        executionTimes.PtmTime = (BlindPtmModuleTimer1of3.Elapsed + BlindPtmModuleTimer2of3.Elapsed + BlindPtmModuleTimer3of3.Elapsed).ToString();
 
                         //var BeforeTruncationCandTrunc = new List<string>();   //DELME
                         //for (int i = 0; i< CandidateProteinListTruncated.Count; i++)
@@ -626,7 +647,7 @@ namespace PerceptronLocalService
                         //Executing Truncation 
                         Stopwatch TruncatedClock = new Stopwatch();
                         TruncatedClock.Start();
-                        var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, executionTimes);
+                        var CandidateProteinListTrucnatedwithInsilicoScores = Truncation_Engine(parameters, CandidateProteinListTruncated, PstTags, peakData2DList, BlindPTMExtractionInfo, executionTimes);
                         TruncatedClock.Stop();
                         TruncatedTime = TruncatedTime + TruncatedClock.Elapsed.TotalMilliseconds;
 
@@ -843,7 +864,7 @@ namespace PerceptronLocalService
         }
 
         private List<ProteinDto> Truncation_Engine(SearchParametersDto parameters, List<ProteinDto> CandidateProteinListTruncated, 
-            List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
+            List<PstTagList> PstTags, List<newMsPeaksDto> peakData2DList, BlindPTMDto BlindPTMExtractionInfo, ExecutionTimeDto executionTimes)
         {
             Stopwatch modulerTimer = Stopwatch.StartNew();
 
@@ -957,7 +978,7 @@ namespace PerceptronLocalService
                     RemainingProteinsRight = _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(RemainingProteinsRight,
                         parameters.InsilicoFragType, parameters.HandleIons);
 
-                    var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);  // #MAKE IT COMMON...
+                    //var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);  // #MAKE IT COMMON...
 
                     var RemainingProteinsLeftModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(RemainingProteinsLeft,
                         peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM_Truncation_Left"); //WHy UserHopThreshold = 1???
@@ -1161,24 +1182,24 @@ namespace PerceptronLocalService
         }
 
         //Post Translational Modifcations (PTM)
-        private List<ProteinDto> ExecutePostTranslationalModificationsModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
-        {
-            Stopwatch moduleTimer = Stopwatch.StartNew();
-            var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
-            if (parameters.PtmAllow == "True")
-            {
-                var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);
-                CandidateProteinListBlindPtmModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(candidateProteins, peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM"); //WHy UserHopThreshold = 1??? 
-            }
-            else
-            {
-                CandidateProteinListBlindPtmModified = new List<ProteinDto>();
-            }
+        //private List<ProteinDto> ExecutePostTranslationalModificationsModule(SearchParametersDto parameters, List<ProteinDto> candidateProteins, List<newMsPeaksDto> peakData2DList, ExecutionTimeDto executionTimes)
+        //{
+        //    Stopwatch moduleTimer = Stopwatch.StartNew();
+        //    var CandidateProteinListBlindPtmModified = new List<ProteinDto>();
+        //    if (parameters.PtmAllow == "True")
+        //    {
+        //        var BlindPTMExtractionInfo = _BlindPostTranslationalModificationModule.BlindPTMExtraction(peakData2DList, parameters);
+        //        CandidateProteinListBlindPtmModified = _BlindPostTranslationalModificationModule.BlindPTMGeneral(candidateProteins, peakData2DList, 1, BlindPTMExtractionInfo, parameters, "BlindPTM"); //WHy UserHopThreshold = 1??? 
+        //    }
+        //    else
+        //    {
+        //        CandidateProteinListBlindPtmModified = new List<ProteinDto>();
+        //    }
 
-            moduleTimer.Stop();
-            executionTimes.PtmTime = moduleTimer.Elapsed.ToString();
-            return CandidateProteinListBlindPtmModified;
-        }
+        //    moduleTimer.Stop();
+        //    executionTimes.PtmTime = moduleTimer.Elapsed.ToString();
+        //    return CandidateProteinListBlindPtmModified;
+        //}
 
         private void StoreSearchResults(SearchParametersDto parameters, List<ProteinDto> candidateProteins, ExecutionTimeDto executionTimes, int fileNumber)
         {
