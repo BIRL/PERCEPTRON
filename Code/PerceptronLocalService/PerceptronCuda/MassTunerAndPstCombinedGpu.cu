@@ -235,12 +235,15 @@ vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<
 		[](const _PeptideSequenceTags &pst1, const _PeptideSequenceTags &pst2)
 	{ return strcmp(pst1.PstTag, pst2.PstTag) < 0; });
 
-	int MultipleLengthPstsCount = Final_MultipleLengthPsts.size();	// Added today 20210325
-	if (MultipleLengthPstsCount > 1)
+	int MultipleLengthPstsCount = Final_MultipleLengthPsts.size();	// Updated 20210325 --- Added
+	vector<_PeptideSequenceTags> Filtered_MultipleLengthPsts;
+	if (MultipleLengthPstsCount > 1) // Updated 20210410 --- BELOW
+	{
 		FindingUniquePSTs(Final_MultipleLengthPsts);	// Function call to extract unique PSTs
+		AccomodateIsoforms(Final_MultipleLengthPsts, Parameters);	// Isoforms are being accomodated here and then their unique is taken
+		Filtered_MultipleLengthPsts = FilterPsts(Final_MultipleLengthPsts, Parameters);
+	}
 
-	AccomodateIsoforms(Final_MultipleLengthPsts, Parameters);	// Isoforms are being accomodated here and then their unique is taken
-	vector<_PeptideSequenceTags> Filtered_MultipleLengthPsts = FilterPsts(Final_MultipleLengthPsts, Parameters);
 	return Filtered_MultipleLengthPsts;
 }
 
