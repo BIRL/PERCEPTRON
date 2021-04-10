@@ -44,10 +44,10 @@ namespace PerceptronLocalService.DTO
             tempPeakListMasses[0] = peakData2DList[SizeOfArray - 1].Mass;
             tempPeakListIntensities[0] = peakData2DList[SizeOfArray - 1].Intensity;
 
-            for (int index = 1; index < peakData2DList.Count; index++)
+            for (int index = 0; index < peakData2DList.Count - 1; index++)
             {
-                tempPeakListMasses[index] = peakData2DList[index].Mass;
-                tempPeakListIntensities[index] = peakData2DList[index].Intensity;
+                tempPeakListMasses[index + 1] = peakData2DList[index].Mass;
+                tempPeakListIntensities[index + 1] = peakData2DList[index].Intensity;
             }
 
             PeakListMasses = tempPeakListMasses;
