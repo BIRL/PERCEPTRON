@@ -153,6 +153,8 @@ namespace PerceptronLocalService
                     //Send_Results_Link(searchParameters);
                     //_dataLayer.Set_Progress(searchParameters.Queryid, 100);
 
+                    
+
                     var SqlDatabases = ParameterBasedDbSelection(searchParameters, AllDatabasesOfProteins);
 
                     var TotalTime = new Stopwatch();
@@ -450,11 +452,17 @@ namespace PerceptronLocalService
                     //{
                     //    ListPst.Add(PstTags[i].PstTags);
                     //}
+                    //////if (TunnedMass != 0)    //Updated 20210409     // ITS HEALTHY...
+                    //////{
+                    //////    IntactProteinMass = TunnedMass; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
+                    //////}
+                    ///
 
-                    if (TunnedMass != 0)    //Updated 20210409
+                    if (Math.Abs(TunnedMass - IntactProteinMass) < 3)
                     {
-                        IntactProteinMass = TunnedMass; //If Mass Tuner gives tunned mass = 0 etc. then, use the Peak list file Intact mass 
+                        IntactProteinMass = TunnedMass;
                     }
+
                     //Logging.DumpModifiedProteins(candidateProteins);
 
 
@@ -632,7 +640,7 @@ namespace PerceptronLocalService
                         BlindPtmModuleTimer3of3.Start();
                         BlindPtmSearchClock.Start();
 
-                        CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, peakData2DList[0].Mass, parameters);
+                        CandidateProteinswithInsilicoScores = _BlindPostTranslationalModificationModule.BlindPTMLocalization(CandidateProteinswithInsilicoScores, IntactProteinMass, parameters);
 
                         BlindPtmSearchClock.Stop();
                         BlindPtmModuleTimer3of3.Stop();
