@@ -1321,9 +1321,11 @@ namespace PerceptronLocalService
                 parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, 
                 parameters.PeptideToleranceUnit, parameters.PeptideTolerance, parameters.PSTTolerance);
 
-            IntPtr[] pResultsFromGpu = new IntPtr[5000];
+            int Limit = 20000;   //Updated 20210417
 
-            for (int i = 0; i < 5000; i++)
+            IntPtr[] pResultsFromGpu = new IntPtr[Limit];
+
+            for (int i = 0; i < Limit; i++)   //Updated 20210417
                 pResultsFromGpu[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MassTunerAndPstCombinedStruct)));
 
             int SizeOfDataFromGpu = NativeCudaCalls.WholeProteinMassTunerAndPstGpu(PeakData.PeakListMasses, PeakData.PeakListIntensities, PeakListLength, Parameters_To_Cpp, pResultsFromGpu);
