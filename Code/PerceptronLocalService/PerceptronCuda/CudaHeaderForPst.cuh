@@ -43,8 +43,9 @@ __global__ void GeneratingMultipleLengthPsts(_PeptideSequenceTags *MultipleLengt
 				MultipleLengthPst_ptr[insert_ptr].IntensitySum = SingleLengthPSTs[tid].averageIntensity + SingleLengthPSTs[i].averageIntensity;
 				MultipleLengthPst_ptr[insert_ptr].PstFrequency = ((SingleLengthPSTs[tid].averageIntensity + SingleLengthPSTs[i].averageIntensity) / 2)*(2 * 2);
 				MultipleLengthPst_ptr[insert_ptr].ErrorSum = SingleLengthPSTs[tid].TagError + SingleLengthPSTs[i].TagError;
-				MultipleLengthPst_ptr[insert_ptr].RMSE = MultipleLengthPst_ptr[insert_ptr].ErrorSum / 2;
 				double RMSE = (sqrt(MultipleLengthPst_ptr[insert_ptr].ErrorSum) / 2) * 10;
+				MultipleLengthPst_ptr[insert_ptr].RMSE = RMSE; //Updated 20210427 // MultipleLengthPst_ptr[insert_ptr].ErrorSum / 2;
+				
 				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = exp(-RMSE * 2);
 				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = (MultipleLengthPst_ptr[insert_ptr].PstTagLength * MultipleLengthPst_ptr[insert_ptr].PstFrequency) / RMSE;
 			}
@@ -77,7 +78,8 @@ __global__ void GeneratingMultipleLengthPsts2(_PeptideSequenceTags *MultipleLeng
 				MultipleLengthPst_ptr[insert_ptr].IntensitySum = DupletPSTs[tid].IntensitySum + SingleLengthPSTs[i].averageIntensity;
 				MultipleLengthPst_ptr[insert_ptr].PstFrequency = ((DupletPSTs[tid].IntensitySum + SingleLengthPSTs[i].averageIntensity) / SizeOfPst)*(SizeOfPst*SizeOfPst);
 				MultipleLengthPst_ptr[insert_ptr].ErrorSum = DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError;
-				MultipleLengthPst_ptr[insert_ptr].RMSE = (DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst;
+				//MultipleLengthPst_ptr[insert_ptr].RMSE = (DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst;  //Updated Below 20210427
+				MultipleLengthPst_ptr[insert_ptr].RMSE = (sqrt(DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst) * 10;   //Updated 20210427
 				double RMSE = (sqrt(DupletPSTs[tid].ErrorSum + SingleLengthPSTs[i].TagError) / SizeOfPst) * 10;
 				MultipleLengthPst_ptr[insert_ptr].PstErrorScore = exp(-RMSE * 2);
 			}
