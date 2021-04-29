@@ -177,7 +177,7 @@ vector<_PeptideSequenceTags> CalculatingPeptideSequenceTags(thrust::host_vector<
 
 	_DataForPsts *Final_SingleLengthPSTs_ptr = thrust::raw_pointer_cast(Final_SingleLengthPSTs.data());	// Pointer pointing to single length PST vector that is to be sent to gpu
 
-	thrust::device_vector<_PeptideSequenceTags> dev_MultipleLengthPst(20000);      //Updated 20210417
+	thrust::device_vector<_PeptideSequenceTags> dev_MultipleLengthPst(21000);      //Updated 20210429
 	_PeptideSequenceTags *MultipleLengthPst_ptr = thrust::raw_pointer_cast(dev_MultipleLengthPst.data());	// multiple length PSTs pointer
 
 	int numOfThr = Final_SingleLengthPSTs.size();	// each single length PST will be compared with the others in each thread

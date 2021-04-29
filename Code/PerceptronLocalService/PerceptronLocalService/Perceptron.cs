@@ -1321,7 +1321,7 @@ namespace PerceptronLocalService
                 parameters.HopThreshhold, AutoTune, DenovoAllow, parameters.MinimumPstLength, parameters.MaximumPstLength, 
                 parameters.PeptideToleranceUnit, parameters.PeptideTolerance, parameters.PSTTolerance);
 
-            int Limit = 20000;   //Updated 20210417
+            int Limit = 21000;   //Updated 20210429
 
             IntPtr[] pResultsFromGpu = new IntPtr[Limit];
 
