@@ -117,7 +117,7 @@ namespace PerceptronAPI.Controllers
 
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "QuerySuccessfullySubmitted");
+                    //SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "QuerySuccessfullySubmitted");
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
@@ -125,7 +125,7 @@ namespace PerceptronAPI.Controllers
             {
                 if (parametersDto.SearchParameters.EmailId != "")
                 {
-                    SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
+                    //SendingEmail.SendingEmailMethod(parametersDto.SearchParameters.EmailId, parametersDto.SearchParameters.Title, creationTime, "Error");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, Error);
             }
