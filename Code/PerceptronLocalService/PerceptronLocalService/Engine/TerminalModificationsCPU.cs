@@ -88,22 +88,12 @@ namespace PerceptronLocalService.Engine
             //double AcetylationWeight = MassAdjustment.AcetylationWeight;
             //double MethionineWeight = AminoAcidInfo.AminoAcidMasses.TryGetValue('M', out MethionineWeight) ? MethionineWeight : MethionineWeight; 
 
-            /*      Time Efficiency         BELOW       */
-            Stopwatch TimeTerminalModification = new Stopwatch();
-            Stopwatch InMemoryCopy = new Stopwatch();
-            TimeTerminalModification.Start();     // DELME Execution Time Working
-
-            /*      Time Efficiency         ABOVE       */
-
             RemoveMass _MassRemove = new RemoveMass();   //Added 20201201  -- For Time Efficiancy
 
             if (IndividualModifications[0] == "None")
             {
-
-                InMemoryCopy.Start();   //DELME
                 var newProtein = new ProteinDto(tempprotein);
                 //var newProtein = ProteinDto.GetCopy(tempprotein);
-                InMemoryCopy.Stop();
 
                 newProtein.TerminalModification = "None";
                 newProtein.Mw = molW;
@@ -180,7 +170,6 @@ namespace PerceptronLocalService.Engine
                     tempCandidateProteins.Add(newProtein);
                 }
             }
-            TimeTerminalModification.Stop();
         }
     }
 }
