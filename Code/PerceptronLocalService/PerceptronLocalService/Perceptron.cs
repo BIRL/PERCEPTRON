@@ -109,8 +109,8 @@ namespace PerceptronLocalService
                         graphicsCard = property.Value.ToString();
                         if (graphicsCard.Contains("NVIDIA"))
                         {
-                            NativeCudaCalls.InitializingGpu();
-                            IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
+                            //NativeCudaCalls.InitializingGpu();
+                            //IsGpu = true;         //UNCOMMENT ME!!!  NewDate!!!
                         }
                         break;
                     }
@@ -1094,12 +1094,6 @@ namespace PerceptronLocalService
             UpdatedCandidatedProteinList.AddRange(candidateProteins);
 
             /* WithoutPTM_ParseDatabase.m */
-            var ListString = new List<string>();
-            for (int iter=0; iter < UpdatedCandidatedProteinList.Count; iter++)
-            {
-                ListString.Add(UpdatedCandidatedProteinList[iter].Header);
-            }
-
 
             /* Updated_ParseDatabase.m */
 
