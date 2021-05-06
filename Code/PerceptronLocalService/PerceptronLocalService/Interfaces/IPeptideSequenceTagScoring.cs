@@ -5,7 +5,7 @@ namespace PerceptronLocalService.Interfaces
 {
     interface IPeptideSequenceTagScoring
     {
-        void ScoreProteinsByPst(List<PstTagList> pstList, List<ProteinDto> mwProt);
-  
+        void ScoreProteinsByPst(SearchParametersDto parameters, List<PstTagList> pstList, List<ProteinDto> mwProt);   //Updated 20210505
+
     }
 }
