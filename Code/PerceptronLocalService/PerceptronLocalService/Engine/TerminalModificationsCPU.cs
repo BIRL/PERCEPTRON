@@ -30,7 +30,7 @@ namespace PerceptronLocalService.Engine
             var tempCandidateProteins = new List<ProteinDto>(Capacity);
             for (int index = 0; index < candidateProteins.Count; index++)
             {
-                if (parameters.DenovoAllow == "True" && candidateProteins[index].PstScore == 0)
+                if (parameters.DenovoAllow == "True" && candidateProteins[index].PstTagsWithComma == "")  //Updated 20210505
                 {
                     continue;
                 }
