@@ -1083,10 +1083,10 @@ namespace PerceptronLocalService
         {
             List<ProteinDto> UpdatedCandidatedProteinList = new List<ProteinDto>();
             /* WithoutPTM_ParseDatabase.m */
-            if (parameters.DenovoAllow == "True")
+            if (parameters.DenovoAllow == "True")   //No Change 20210505
             {
                 // Here just adding PST scores of each protein but those proteins have zero PST score are not removed from candidate protein list but will do in this (_TerminalModifications.EachProteinTerminalModifications(parameters, candidateProteins))
-                _pstFilter.ScoreProteinsByPst(PstTags, candidateProteins);
+                _pstFilter.ScoreProteinsByPst(parameters, PstTags, candidateProteins);
                 //Irrespective to WithoutPTM_ParseDatabase.m  there is no need to assign PSTScore = 0 if DenovoAllow is false because we already initialize PSTScore = 0.0
             }
 
@@ -1164,11 +1164,18 @@ namespace PerceptronLocalService
             Stopwatch moduleTimer = Stopwatch.StartNew();
             //if (parameters.InsilicoSweight != 0)
 
-            var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
 
-            //ITS HEALTHY!!! 20200203
-            CandidateProteinswithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+            // Commented BELOW 20210505
+            //var CandidateProteinswithInsilicoScores = new List<ProteinDto>();
+            //CandidateProteinswithInsilicoScores = _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+            // Commented ABOVE 20210505
 
+            // Added BELOW 20210505
+            if (parameters.InsilicoSweight != 0)
+            {
+                candidateProteins = _insilicoFilter.ComputeInsilicoScore(candidateProteins, peakData2DList, parameters.PeptideTolerance, parameters.PeptideToleranceUnit);
+            }
+            // Added ABOVE 20210505
 
             //if (parameters.PtmAllow == 0)  // ITS HEALTHY
             //    _insilicoFragmentsAdjustment.adjustForFragmentTypeAndSpecialIons(candidateProteins, parameters.InsilicoFragType, parameters.HandleIons);
@@ -1184,7 +1191,7 @@ namespace PerceptronLocalService
             //}
             moduleTimer.Stop();
             executionTimes.InsilicoTime = moduleTimer.Elapsed.ToString();
-            return CandidateProteinswithInsilicoScores;
+            return candidateProteins;
         }
 
         //Post Translational Modifcations (PTM)
